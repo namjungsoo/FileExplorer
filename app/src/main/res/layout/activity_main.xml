@@ -5,21 +5,50 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.duongame.fileexplorer.MainActivity">
+    tools:context="com.duongame.fileexplorer.activity.MainActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="horizontal">
         <Button
             android:layout_width="60dp"
             android:layout_height="wrap_content"
-            android:text="위로"
+            android:text="Up"
+            />
+        <Button
+            android:layout_width="60dp"
+            android:layout_height="wrap_content"
+            android:text="Grid"
+            />
+        <Button
+            android:layout_width="60dp"
+            android:layout_height="wrap_content"
+            android:text="List"
+            />
+        <Button
+            android:layout_width="60dp"
+            android:layout_height="wrap_content"
+            android:text="All"
+            />
+        <Button
+            android:layout_width="60dp"
+            android:layout_height="wrap_content"
+            android:text="Del"
             />
     </LinearLayout>
-    <ListView
-        android:id="@+id/list_explorer"
+    <!--<ListView-->
+        <!--android:id="@+id/list_explorer"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+         <!--/>-->
+    <GridView
+        android:id="@+id/grid_explorer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-         />
+        android:columnWidth="80dp"
+        android:gravity="center"
+        android:numColumns="auto_fit"
+        android:stretchMode="columnWidth">
+    </GridView>
 </LinearLayout>

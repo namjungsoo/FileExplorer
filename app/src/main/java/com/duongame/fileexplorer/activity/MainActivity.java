@@ -1,4 +1,4 @@
-package com.duongame.fileexplorer;
+package com.duongame.fileexplorer.activity;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
@@ -7,8 +7,13 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.CheckBox;
-import android.widget.ListView;
+import android.widget.GridView;
+
+import com.duongame.fileexplorer.ExplorerFileItem;
+import com.duongame.fileexplorer.ExplorerSearcher;
+import com.duongame.fileexplorer.R;
+import com.duongame.fileexplorer.adapter.ExplorerAdapter;
+import com.duongame.fileexplorer.adapter.ExplorerGridAdapter;
 
 import java.util.ArrayList;
 
@@ -26,42 +31,56 @@ public class MainActivity extends AppCompatActivity {
         fileList = new ArrayList<>();
         searcher = new ExplorerSearcher();
 
-        ListView listView = (ListView)findViewById(R.id.list_explorer);
 
-        adapter = new ExplorerAdapter(this, fileList, searcher);
-        listView.setAdapter(adapter);
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        adapter = new ExplorerGridAdapter(this, fileList, searcher);
+//        ListView listView = (ListView)findViewById(R.id.list_explorer);
+//        listView.setAdapter(adapter);
+//        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                ExplorerFileItem item = fileList.get(position);
+//                if(item.type == ExplorerFileItem.FileType.DIRECTORY) {
+//                    String newPath = searcher.getLastPath() + "/" + item.name;
+//                    fileList = searcher.search(newPath);
+//                    adapter.setFileList(fileList);
+//                    adapter.notifyDataSetChanged();
+//                }
+//            }
+//        });
+//        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+//            @Override
+//            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+//                CheckBox checkBox = (CheckBox)view.findViewById(R.id.check_file);
+//                if(checkBox != null) {
+//                    checkBox.setVisibility(View.VISIBLE);
+//                }
+//
+//                return true;
+//            }
+//        });
+//
+        GridView gridView = (GridView)findViewById(R.id.grid_explorer);
+        gridView.setAdapter(adapter);
+        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 ExplorerFileItem item = fileList.get(position);
                 if(item.type == ExplorerFileItem.FileType.DIRECTORY) {
                     String newPath = searcher.getLastPath() + "/" + item.name;
-                    fileList = searcher.search(newPath);
-                    adapter.setFileList(fileList);
-                    adapter.notifyDataSetChanged();
-                }
-            }
-        });
-        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                CheckBox checkBox = (CheckBox)view.findViewById(R.id.check_file);
-                if(checkBox != null) {
-                    checkBox.setVisibility(View.VISIBLE);
-                }
 
-                return true;
+                    updateFileList(newPath);
+                }
             }
         });
 
         if(checkStoragePermissions()) {
-            updateFileList();
+            updateFileList(null);
         }
 
     }
 
-    void updateFileList() {
-        fileList = searcher.search(null);
+    void updateFileList(String path) {
+        fileList = searcher.search(path);
         adapter.setFileList(fileList);
         adapter.notifyDataSetChanged();
     }
@@ -84,7 +103,17 @@ public class MainActivity extends AppCompatActivity {
         }
 
         if (readEnable && writeEnable) {
-            updateFileList();
+            updateFileList(null);
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        if(!searcher.isInitialPath()) {
+            String path = searcher.getLastPath();
+            path = path.substring(0,path.lastIndexOf('/'));
+
+            updateFileList(path);
         }
     }
 

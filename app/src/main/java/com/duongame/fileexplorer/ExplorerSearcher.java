@@ -16,11 +16,15 @@ import java.util.Date;
 
 public class ExplorerSearcher {
     private String lastPath;
-    private String initialPath = Environment.getExternalStorageDirectory().getAbsolutePath();
-    private SimpleDateFormat dateFormat = new SimpleDateFormat("yy-MM-dd(E) hh:mm:ss a");
+    private final String initialPath = Environment.getExternalStorageDirectory().getAbsolutePath();
+    private final SimpleDateFormat dateFormat = new SimpleDateFormat("yy-MM-dd(E) hh:mm:ss a");
 
     public String getLastPath() {
         return lastPath;
+    }
+
+    public boolean isInitialPath() {
+        return lastPath.equals(initialPath);
     }
 
     public ArrayList<ExplorerFileItem> search(String path) {
@@ -55,7 +59,7 @@ public class ExplorerSearcher {
             String date = dateFormat.format(dateSource);
             String size = String.valueOf(eachFile.length());
 
-            ExplorerFileItem.FileType type = eachFile.isDirectory() ? ExplorerFileItem.FileType.DIRECTORY : ExplorerFileItem.FileType.NORMAL;
+            ExplorerFileItem.FileType type = getFileType(eachFile);
 
             ExplorerFileItem item = new ExplorerFileItem(name, date, size, type);
             if(type == ExplorerFileItem.FileType.DIRECTORY) {
@@ -76,6 +80,30 @@ public class ExplorerSearcher {
         fileList.addAll(directoryList);
         fileList.addAll(normalList);
         return fileList;
+    }
+
+    public ExplorerFileItem.FileType getFileType(File eachFile) {
+        ExplorerFileItem.FileType type = eachFile.isDirectory() ? ExplorerFileItem.FileType.DIRECTORY : ExplorerFileItem.FileType.FILE;
+
+        if(eachFile.getName().toLowerCase().endsWith(".jpg")
+                || eachFile.getName().toLowerCase().endsWith(".jpeg")
+                || eachFile.getName().toLowerCase().endsWith(".gif")
+                || eachFile.getName().toLowerCase().endsWith(".png")
+                ) {
+            type = ExplorerFileItem.FileType.IMAGE;
+        }
+        if(eachFile.getName().toLowerCase().endsWith(".zip"))
+            type = ExplorerFileItem.FileType.ZIP;
+        if(eachFile.getName().toLowerCase().endsWith(".rar"))
+            type = ExplorerFileItem.FileType.RAR;
+        if(eachFile.getName().toLowerCase().endsWith(".pdf"))
+            type = ExplorerFileItem.FileType.PDF;
+        if(eachFile.getName().toLowerCase().endsWith(".mp3"))
+            type = ExplorerFileItem.FileType.AUDIO;
+        if(eachFile.getName().toLowerCase().endsWith(".txt"))
+            type = ExplorerFileItem.FileType.TEXT;
+
+        return type;
     }
 
     class FileTypeCompare implements Comparator<ExplorerFileItem> {

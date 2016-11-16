@@ -1,25 +1,27 @@
 package com.duongame.fileexplorer;
 
-import android.graphics.Bitmap;
-
 /**
  * Created by namjungsoo on 2016-11-06.
  */
 
-class ExplorerFileItem {
+public class ExplorerFileItem {
     public enum FileType {
         DIRECTORY,
         IMAGE,
         VIDEO,
-        COMPRESSED,
-        NORMAL,
+        AUDIO,
+        ZIP,
+        RAR,
+        PDF,
+        TEXT,
+        FILE,
     }
 
-    String name;
-    String date;
-    String size;
-    FileType type;
-    public Bitmap bitmap;
+    public String name;
+    public String date;
+    public String size;
+    public FileType type;
+
     public String path;
 
     public ExplorerFileItem(String name, String date, String size, FileType type) {
