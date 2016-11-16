@@ -1,5 +1,7 @@
 package com.duongame.fileexplorer;
 
+import android.graphics.Bitmap;
+
 /**
  * Created by namjungsoo on 2016-11-06.
  */
@@ -17,6 +19,8 @@ class ExplorerFileItem {
     String date;
     String size;
     FileType type;
+    public Bitmap bitmap;
+    public String path;
 
     public ExplorerFileItem(String name, String date, String size, FileType type) {
         this.name = name;

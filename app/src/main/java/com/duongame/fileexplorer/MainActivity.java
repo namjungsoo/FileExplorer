@@ -28,7 +28,7 @@ public class MainActivity extends AppCompatActivity {
 //        fileList.add(new ExplorerFileItem("file2", "2016-11-05 11:10 AM", "1.0MB", ExplorerFileItem.FileType.DIRECTORY));
 //        fileList.add(new ExplorerFileItem("file3", "2016-11-05 11:10 AM", "1.0MB", ExplorerFileItem.FileType.DIRECTORY));
 
-        adapter = new ExplorerAdapter(this, fileList);
+        adapter = new ExplorerAdapter(this, fileList, searcher);
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
