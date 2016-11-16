@@ -15,6 +15,7 @@ public class ExplorerFileItem {
         PDF,
         TEXT,
         FILE,
+        ALL
     }
 
     public String name;

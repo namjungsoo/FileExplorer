@@ -14,7 +14,7 @@
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:layout_marginRight="5dp"
-            fresco:placeholderImage="@mipmap/ic_launcher"
+            fresco:placeholderImage="@drawable/explorer"
             />
 
         <!--<ImageView-->

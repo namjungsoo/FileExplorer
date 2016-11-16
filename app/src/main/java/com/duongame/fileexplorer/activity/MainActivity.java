@@ -19,9 +19,10 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
     private final static int PERMISSION_STORAGE = 1;
-    ExplorerAdapter adapter;
-    ExplorerSearcher searcher;
-    ArrayList<ExplorerFileItem> fileList;
+
+    private ExplorerAdapter adapter;
+    private ExplorerSearcher searcher;
+    private ArrayList<ExplorerFileItem> fileList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,8 +31,6 @@ public class MainActivity extends AppCompatActivity {
 
         fileList = new ArrayList<>();
         searcher = new ExplorerSearcher();
-
-
         adapter = new ExplorerGridAdapter(this, fileList, searcher);
 //        ListView listView = (ListView)findViewById(R.id.list_explorer);
 //        listView.setAdapter(adapter);

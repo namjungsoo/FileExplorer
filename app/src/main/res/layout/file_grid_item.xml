@@ -13,7 +13,7 @@
             android:layout_width="72dp"
             android:layout_height="72dp"
             android:layout_gravity="center_horizontal"
-            fresco:placeholderImage="@mipmap/ic_launcher"
+            fresco:placeholderImage="@drawable/explorer"
             />
         <TextView
             android:layout_width="match_parent"
