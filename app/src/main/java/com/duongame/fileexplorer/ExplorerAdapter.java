@@ -58,17 +58,17 @@ class ExplorerAdapter extends BaseAdapter {
         ViewHolder viewHolder;
 
         if (convertView == null) {
-            convertView = context.getLayoutInflater().inflate(R.layout.file_item, parent, false);
+            convertView = context.getLayoutInflater().inflate(R.layout.file_list_item, parent, false);
 
             viewHolder = new ViewHolder();
-            viewHolder.icon = (SimpleDraweeView)convertView.findViewById(R.id.file_icon);
-            viewHolder.name = (TextView)convertView.findViewById(R.id.text_name);
-            viewHolder.date = (TextView)convertView.findViewById(R.id.text_date);
-            viewHolder.size = (TextView)convertView.findViewById(R.id.text_size);
+            viewHolder.icon = (SimpleDraweeView) convertView.findViewById(R.id.file_icon);
+            viewHolder.name = (TextView) convertView.findViewById(R.id.text_name);
+            viewHolder.date = (TextView) convertView.findViewById(R.id.text_date);
+            viewHolder.size = (TextView) convertView.findViewById(R.id.text_size);
 
             convertView.setTag(viewHolder);
         } else {
-            viewHolder = (ViewHolder)convertView.getTag();
+            viewHolder = (ViewHolder) convertView.getTag();
         }
 
         ExplorerFileItem item = fileList.get(position);
@@ -77,22 +77,22 @@ class ExplorerAdapter extends BaseAdapter {
         viewHolder.date.setText(item.date);
         viewHolder.size.setText(item.size);
 
-        if(item.path == null) {
+        if (item.path == null) {
             item.path = searcher.getLastPath() + "/" + item.name;
-            Log.d(TAG, "path="+item.path);
+            Log.d(TAG, "path=" + item.path);
         }
 
-        //if(item.bitmap == null)
-        {
-            item.bitmap = getThumbnail(item.path);
-            if(item.bitmap != null) {
-                viewHolder.icon.setImageBitmap(item.bitmap);
-            } else {
-                if(item.type == ExplorerFileItem.FileType.NORMAL)
-                    viewHolder.icon.setImageResource(R.drawable.file);
-                else if(item.type == ExplorerFileItem.FileType.DIRECTORY)
-                    viewHolder.icon.setImageResource(R.drawable.folder);
-            }
+        if (item.bitmap != null)
+            item.bitmap.recycle();
+
+        item.bitmap = getThumbnail(item.path);
+        if (item.bitmap != null) {
+            viewHolder.icon.setImageBitmap(item.bitmap);
+        } else {
+            if (item.type == ExplorerFileItem.FileType.NORMAL)
+                viewHolder.icon.setImageResource(R.drawable.file);
+            else if (item.type == ExplorerFileItem.FileType.DIRECTORY)
+                viewHolder.icon.setImageResource(R.drawable.folder);
         }
 
         return convertView;
@@ -102,10 +102,9 @@ class ExplorerAdapter extends BaseAdapter {
         this.fileList = fileList;
     }
 
-    private Bitmap getThumbnail(String path)
-    {
-        Cursor cursor = context.getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, new String[] { MediaStore.MediaColumns._ID }, MediaStore.MediaColumns.DATA + "=?",
-                new String[] { path }, null);
+    private Bitmap getThumbnail(String path) {
+        Cursor cursor = context.getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, new String[]{MediaStore.MediaColumns._ID}, MediaStore.MediaColumns.DATA + "=?",
+                new String[]{path}, null);
         if (cursor != null && cursor.moveToFirst()) {
             int id = cursor.getInt(cursor.getColumnIndex(MediaStore.MediaColumns._ID));
             cursor.close();

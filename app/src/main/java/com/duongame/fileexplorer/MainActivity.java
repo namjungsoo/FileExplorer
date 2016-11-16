@@ -1,5 +1,8 @@
 package com.duongame.fileexplorer;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -10,6 +13,7 @@ import android.widget.ListView;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
+    private final static int PERMISSION_STORAGE = 1;
     ExplorerAdapter adapter;
     ExplorerSearcher searcher;
     ArrayList<ExplorerFileItem> fileList;
@@ -23,10 +27,6 @@ public class MainActivity extends AppCompatActivity {
         searcher = new ExplorerSearcher();
 
         ListView listView = (ListView)findViewById(R.id.list_explorer);
-        fileList = searcher.search(null);
-//        fileList.add(new ExplorerFileItem("파일명이 졸라 길때를 테스트 해보자.", "2016-11-05", "1.0MB", ExplorerFileItem.FileType.DIRECTORY));
-//        fileList.add(new ExplorerFileItem("file2", "2016-11-05 11:10 AM", "1.0MB", ExplorerFileItem.FileType.DIRECTORY));
-//        fileList.add(new ExplorerFileItem("file3", "2016-11-05 11:10 AM", "1.0MB", ExplorerFileItem.FileType.DIRECTORY));
 
         adapter = new ExplorerAdapter(this, fileList, searcher);
         listView.setAdapter(adapter);
@@ -54,6 +54,48 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        if(checkStoragePermissions()) {
+            updateFileList();
+        }
+
+    }
+
+    void updateFileList() {
+        fileList = searcher.search(null);
+        adapter.setFileList(fileList);
         adapter.notifyDataSetChanged();
     }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        final String read = Manifest.permission.READ_EXTERNAL_STORAGE;
+        final String write = Manifest.permission.WRITE_EXTERNAL_STORAGE;
+
+        boolean readEnable = false;
+        boolean writeEnable = false;
+
+        for (int i = 0; i < permissions.length; i++) {
+            if (read.equals(permissions[i]) && grantResults[i] == 0)
+                readEnable = true;
+            if (write.equals(permissions[i]) && grantResults[i] == 0)
+                writeEnable = true;
+        }
+
+        if (readEnable && writeEnable) {
+            updateFileList();
+        }
+    }
+
+    private boolean checkStoragePermissions() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED || checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, PERMISSION_STORAGE);
+                return false;
+            }
+        }
+        return true;
+    }
+
 }
