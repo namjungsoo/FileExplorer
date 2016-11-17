@@ -1,7 +1,6 @@
 package com.duongame.fileexplorer;
 
 import android.os.Environment;
-import android.util.Log;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -15,19 +14,20 @@ import java.util.Date;
  */
 
 public class ExplorerSearcher {
-    private String lastPath;
-    private final String initialPath = Environment.getExternalStorageDirectory().getAbsolutePath();
-    private final SimpleDateFormat dateFormat = new SimpleDateFormat("yy-MM-dd(E) hh:mm:ss a");
+    private static String lastPath;
+    private static final String initialPath = Environment.getExternalStorageDirectory().getAbsolutePath();
+    private static final SimpleDateFormat dateFormat = new SimpleDateFormat("yy-MM-dd(E) hh:mm:ss a");
+    private static ArrayList<ExplorerFileItem> imageList = new ArrayList<>();
 
-    public String getLastPath() {
+    public static String getLastPath() {
         return lastPath;
     }
 
-    public boolean isInitialPath() {
+    public static boolean isInitialPath() {
         return lastPath.equals(initialPath);
     }
 
-    public ArrayList<ExplorerFileItem> search(String path) {
+    public static ArrayList<ExplorerFileItem> search(String path) {
         if(path == null) {
             path = initialPath;
         }
@@ -61,16 +61,14 @@ public class ExplorerSearcher {
 
             ExplorerFileItem.FileType type = getFileType(eachFile);
 
-            ExplorerFileItem item = new ExplorerFileItem(name, date, size, type);
+            ExplorerFileItem item = new ExplorerFileItem(path, name, date, size, type);
             if(type == ExplorerFileItem.FileType.DIRECTORY) {
                 item.size = "";
                 directoryList.add(item);
             } else {
-//                item.size = String.valueOf(eachFile.length());
                 normalList.add(item);
             }
-//            fileList.add(item);
-            Log.d("TAG", item.toString());
+//            Log.d("TAG", item.toString());
         }
 
         // 디렉토리 우선 정렬 및 가나다 정렬
@@ -79,10 +77,21 @@ public class ExplorerSearcher {
 
         fileList.addAll(directoryList);
         fileList.addAll(normalList);
+
+        imageList.clear();
+        for(int i=0; i<normalList.size(); i++) {
+            if(normalList.get(i).type == ExplorerFileItem.FileType.IMAGE) {
+                imageList.add(normalList.get(i));
+            }
+        }
         return fileList;
     }
 
-    public ExplorerFileItem.FileType getFileType(File eachFile) {
+    public static ArrayList<ExplorerFileItem> getImageList() {
+        return imageList;
+    }
+
+    public static ExplorerFileItem.FileType getFileType(File eachFile) {
         ExplorerFileItem.FileType type = eachFile.isDirectory() ? ExplorerFileItem.FileType.DIRECTORY : ExplorerFileItem.FileType.FILE;
 
         if(eachFile.getName().toLowerCase().endsWith(".jpg")
@@ -92,6 +101,7 @@ public class ExplorerSearcher {
                 ) {
             type = ExplorerFileItem.FileType.IMAGE;
         }
+
         if(eachFile.getName().toLowerCase().endsWith(".zip"))
             type = ExplorerFileItem.FileType.ZIP;
         if(eachFile.getName().toLowerCase().endsWith(".rar"))
@@ -106,7 +116,7 @@ public class ExplorerSearcher {
         return type;
     }
 
-    class FileTypeCompare implements Comparator<ExplorerFileItem> {
+    private static class FileTypeCompare implements Comparator<ExplorerFileItem> {
         @Override
         public int compare(ExplorerFileItem lhs, ExplorerFileItem rhs) {
             return lhs.name.compareToIgnoreCase(rhs.name);

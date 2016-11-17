@@ -11,11 +11,9 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.duongame.fileexplorer.BitmapCache;
+import com.duongame.fileexplorer.bitmap.BitmapCacheManager;
 import com.duongame.fileexplorer.ExplorerFileItem;
-import com.duongame.fileexplorer.ExplorerSearcher;
 import com.duongame.fileexplorer.R;
-import com.facebook.drawee.view.SimpleDraweeView;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -27,21 +25,20 @@ import java.util.ArrayList;
 public class ExplorerAdapter extends BaseAdapter {
     protected ArrayList<ExplorerFileItem> fileList;
     protected Activity context;
-    protected ExplorerSearcher searcher;
 
-    public class LoadBitmapTask extends AsyncTask<String, Void, Bitmap> {
-        private final WeakReference<SimpleDraweeView> imageViewReference;
+    public class LoadThumbnailTask extends AsyncTask<String, Void, Bitmap> {
+        private final WeakReference<ImageView> imageViewReference;
 
-        public LoadBitmapTask(SimpleDraweeView imageView) {
-            imageViewReference = new WeakReference<SimpleDraweeView>(imageView);
+        public LoadThumbnailTask(ImageView imageView) {
+            imageViewReference = new WeakReference<ImageView>(imageView);
         }
 
         @Override
         protected Bitmap doInBackground(String... params) {
-            Bitmap bitmap = BitmapCache.getBitmap(params[0]);
+            Bitmap bitmap = BitmapCacheManager.getThumbnail(params[0]);
             if(bitmap == null) {
                 bitmap = getThumbnail(params[0]);
-                BitmapCache.setBitmap(params[0], bitmap);
+                BitmapCacheManager.setThumbnail(params[0], bitmap);
             }
             return bitmap;
         }
@@ -58,8 +55,7 @@ public class ExplorerAdapter extends BaseAdapter {
         }
     }
 
-    public ExplorerAdapter(Activity context, ArrayList<ExplorerFileItem> fileList, ExplorerSearcher searcher) {
-        this.searcher = searcher;
+    public ExplorerAdapter(Activity context, ArrayList<ExplorerFileItem> fileList) {
         this.context = context;
         this.fileList = fileList;
     }
@@ -80,7 +76,7 @@ public class ExplorerAdapter extends BaseAdapter {
     }
 
     public static class ViewHolder {
-        public SimpleDraweeView icon;
+        public ImageView icon;
         public TextView name;
         public TextView date;
         public TextView size;
@@ -108,7 +104,7 @@ public class ExplorerAdapter extends BaseAdapter {
         return null;
     }
 
-    void setTypeIcon(ExplorerFileItem.FileType type, SimpleDraweeView icon) {
+    void setTypeIcon(ExplorerFileItem.FileType type, ImageView icon) {
         if (type == ExplorerFileItem.FileType.FILE)
             icon.setImageResource(R.drawable.file);
         else if (type == ExplorerFileItem.FileType.DIRECTORY)

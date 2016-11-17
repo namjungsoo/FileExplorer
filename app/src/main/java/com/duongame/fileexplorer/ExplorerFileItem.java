@@ -21,11 +21,11 @@ public class ExplorerFileItem {
     public String name;
     public String date;
     public String size;
+    public String path;
     public FileType type;
 
-    public String path;
-
-    public ExplorerFileItem(String name, String date, String size, FileType type) {
+    public ExplorerFileItem(String path, String name, String date, String size, FileType type) {
+        this.path = path + "/" + name;
         this.name = name;
         this.date = date;
         this.size = size;
@@ -33,6 +33,6 @@ public class ExplorerFileItem {
     }
 
     public String toString() {
-        return "name="+name + " date="+date + " size="+size + " type="+type;
+        return "path="+ path + " name="+name + " date="+date + " size="+size + " type="+type;
     }
 }

@@ -1,12 +1,12 @@
 package com.duongame.fileexplorer.activity;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
@@ -25,7 +25,6 @@ public class MainActivity extends AppCompatActivity {
     private final static int PERMISSION_STORAGE = 1;
 
     private ExplorerAdapter adapter;
-    private ExplorerSearcher searcher;
     private ArrayList<ExplorerFileItem> fileList;
     private SwipeRefreshLayout swipeRefreshLayout;
     private TextView textPath;
@@ -40,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                updateFileList(searcher.getLastPath());
+                updateFileList(ExplorerSearcher.getLastPath());
                 swipeRefreshLayout.setRefreshing(false);
             }
         });
@@ -49,8 +48,7 @@ public class MainActivity extends AppCompatActivity {
         scrollPath = (HorizontalScrollView)findViewById(R.id.scroll_path);
 
         fileList = new ArrayList<>();
-        searcher = new ExplorerSearcher();
-        adapter = new ExplorerGridAdapter(this, fileList, searcher);
+        adapter = new ExplorerGridAdapter(this, fileList);
 //        ListView listView = (ListView)findViewById(R.id.list_explorer);
 //        listView.setAdapter(adapter);
 //        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -84,9 +82,13 @@ public class MainActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 ExplorerFileItem item = fileList.get(position);
                 if(item.type == ExplorerFileItem.FileType.DIRECTORY) {
-                    String newPath = searcher.getLastPath() + "/" + item.name;
+                    String newPath = ExplorerSearcher.getLastPath() + "/" + item.name;
 
                     updateFileList(newPath);
+                } else if(item.type == ExplorerFileItem.FileType.IMAGE) {
+                    Intent intent = new Intent(MainActivity.this, ViewerActivity.class);
+                    intent.putExtra("name", item.name);
+                    startActivity(intent);
                 }
             }
         });
@@ -98,12 +100,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     void updateFileList(String path) {
-        Log.d("tag", "updateFileList");
-        fileList = searcher.search(path);
+        fileList = ExplorerSearcher.search(path);
         adapter.setFileList(fileList);
         adapter.notifyDataSetChanged();
 
-        textPath.setText(searcher.getLastPath());
+        textPath.setText(ExplorerSearcher.getLastPath());
         textPath.requestLayout();
 
         // 가장 오른쪽으로 스크롤
@@ -111,9 +112,6 @@ public class MainActivity extends AppCompatActivity {
                                    @Override
                                    public void run() {
                                        scrollPath.fullScroll(View.FOCUS_RIGHT);
-                                       Log.d("tag", "textPath="+textPath.getWidth());
-                                       Log.d("tag", "scrollPath="+scrollPath.getWidth());
-
                                    }
                                }
         );
@@ -143,8 +141,8 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        if(!searcher.isInitialPath()) {
-            String path = searcher.getLastPath();
+        if(!ExplorerSearcher.isInitialPath()) {
+            String path = ExplorerSearcher.getLastPath();
             path = path.substring(0,path.lastIndexOf('/'));
 
             updateFileList(path);
