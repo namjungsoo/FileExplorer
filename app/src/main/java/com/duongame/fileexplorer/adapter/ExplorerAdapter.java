@@ -25,6 +25,7 @@ import java.util.ArrayList;
 public class ExplorerAdapter extends BaseAdapter {
     protected ArrayList<ExplorerFileItem> fileList;
     protected Activity context;
+    protected ArrayList<LoadThumbnailTask> taskList = new ArrayList<LoadThumbnailTask> ();
 
     public class LoadThumbnailTask extends AsyncTask<String, Void, Bitmap> {
         private final WeakReference<ImageView> imageViewReference;
@@ -38,7 +39,7 @@ public class ExplorerAdapter extends BaseAdapter {
             Bitmap bitmap = BitmapCacheManager.getThumbnail(params[0]);
             if(bitmap == null) {
                 bitmap = getThumbnail(params[0]);
-                BitmapCacheManager.setThumbnail(params[0], bitmap);
+                BitmapCacheManager.setThumbnail(params[0], bitmap, imageViewReference.get());
             }
             return bitmap;
         }
@@ -120,6 +121,13 @@ public class ExplorerAdapter extends BaseAdapter {
             icon.setImageResource(R.drawable.mp3);
         else if (type == ExplorerFileItem.FileType.TEXT)
             icon.setImageResource(R.drawable.text);
+    }
+
+    public void stopAllTasks() {
+        for(LoadThumbnailTask task : taskList) {
+            task.cancel(true);
+        }
+        taskList.clear();
     }
 
 }

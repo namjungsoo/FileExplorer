@@ -37,15 +37,16 @@ public class ExplorerGridAdapter extends ExplorerAdapter {
         }
 
         ExplorerFileItem item = fileList.get(position);
-
         viewHolder.name.setText(item.name);
 
         if(item.type == ExplorerFileItem.FileType.IMAGE) {
             LoadThumbnailTask task = new LoadThumbnailTask(viewHolder.icon);
             task.execute(item.path);
+            taskList.add(task);
         }
 
         setTypeIcon(item.type, viewHolder.icon);
+
         return convertView;
     }
 }

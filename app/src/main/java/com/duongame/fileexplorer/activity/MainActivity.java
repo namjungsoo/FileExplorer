@@ -30,6 +30,7 @@ public class MainActivity extends AppCompatActivity {
     private SwipeRefreshLayout swipeRefreshLayout;
     private TextView textPath;
     private HorizontalScrollView scrollPath;
+    private GridView gridView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
 //            }
 //        });
 //
-        GridView gridView = (GridView)findViewById(R.id.grid_explorer);
+        gridView = (GridView)findViewById(R.id.grid_explorer);
         gridView.setAdapter(adapter);
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -101,11 +102,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
     void updateFileList(String path) {
+        adapter.stopAllTasks();
+
+        BitmapCacheManager.recycleThumbnail();
+
         fileList = ExplorerSearcher.search(path);
         adapter.setFileList(fileList);
         adapter.notifyDataSetChanged();
-
-        BitmapCacheManager.recycleThumbnail();
 
         textPath.setText(ExplorerSearcher.getLastPath());
         textPath.requestLayout();

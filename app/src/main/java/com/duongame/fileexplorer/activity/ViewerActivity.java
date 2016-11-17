@@ -70,11 +70,6 @@ public class ViewerActivity extends AppCompatActivity {
     }
 
     private static Bitmap decodeBitmapAndRemoveSides(String path, String prev, String next, ImageView imageView) {
-        if(prev != null)
-            BitmapCacheManager.removeBitmap(prev);
-        if(next != null)
-            BitmapCacheManager.removeBitmap(next);
-
         Bitmap bitmap = BitmapCacheManager.getBitmap(path);
         if(bitmap == null) {
             bitmap = BitmapFactory.decodeFile(path);
@@ -82,7 +77,14 @@ public class ViewerActivity extends AppCompatActivity {
         }
 
         return bitmap;
+    }
 
+    public static class RemoveBitmapTask extends AsyncTask<String, Void, Void> {
+
+        @Override
+        protected Void doInBackground(String... params) {
+            return null;
+        }
     }
 
     public static class LoadBitmapTask extends AsyncTask<String, Void, Bitmap> {
@@ -98,8 +100,7 @@ public class ViewerActivity extends AppCompatActivity {
             String prev = params[1];
             String next = params[2];
 
-//            return decodeBitmapAndRemoveSides(path, prev, next);
-            return null;
+            return decodeBitmapAndRemoveSides(path, prev, next, imageViewReference.get());
         }
 
         @Override
@@ -169,17 +170,29 @@ public class ViewerActivity extends AppCompatActivity {
         }
 
         @Override
+        public void onDestroy() {
+            super.onDestroy();
+            Log.d("PageFragment", "onDestroy");
+
+            BitmapCacheManager.removeBitmapImage(path);
+            BitmapCacheManager.removeBitmap(path);
+
+            // 나중에 쓰레드로 지우면 OOM 발생
+//            RemoveBitmapTask task = new RemoveBitmapTask();
+//            task.execute(path);
+        }
+
+        @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
             ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_page, container, false);
             ImageView imageView = (ImageView) rootView.findViewById(R.id.image_viewer);
 
-            Log.d("tag", "prev="+prev + " next="+next);
-            Bitmap bitmap = decodeBitmapAndRemoveSides(path, prev, next, imageView);
-            imageView.setImageBitmap(bitmap);
+            Log.d("tag", "path="+path +" prev="+prev + " next="+next);
 
-//            LoadBitmapTask task = new LoadBitmapTask(imageView);
-//            task.execute(path, prev, next);
+            // 로딩은 동적으로
+            LoadBitmapTask task = new LoadBitmapTask(imageView);
+            task.execute(path, prev, next);
 
             return rootView;
         }
