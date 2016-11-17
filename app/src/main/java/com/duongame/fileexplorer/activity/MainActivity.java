@@ -18,6 +18,7 @@ import com.duongame.fileexplorer.ExplorerSearcher;
 import com.duongame.fileexplorer.R;
 import com.duongame.fileexplorer.adapter.ExplorerAdapter;
 import com.duongame.fileexplorer.adapter.ExplorerGridAdapter;
+import com.duongame.fileexplorer.bitmap.BitmapCacheManager;
 
 import java.util.ArrayList;
 
@@ -103,6 +104,8 @@ public class MainActivity extends AppCompatActivity {
         fileList = ExplorerSearcher.search(path);
         adapter.setFileList(fileList);
         adapter.notifyDataSetChanged();
+
+        BitmapCacheManager.recycleThumbnail();
 
         textPath.setText(ExplorerSearcher.getLastPath());
         textPath.requestLayout();

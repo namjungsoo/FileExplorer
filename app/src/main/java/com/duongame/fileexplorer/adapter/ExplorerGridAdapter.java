@@ -40,8 +40,10 @@ public class ExplorerGridAdapter extends ExplorerAdapter {
 
         viewHolder.name.setText(item.name);
 
-        LoadThumbnailTask task = new LoadThumbnailTask(viewHolder.icon);
-        task.execute(item.path);
+        if(item.type == ExplorerFileItem.FileType.IMAGE) {
+            LoadThumbnailTask task = new LoadThumbnailTask(viewHolder.icon);
+            task.execute(item.path);
+        }
 
         setTypeIcon(item.type, viewHolder.icon);
         return convertView;
