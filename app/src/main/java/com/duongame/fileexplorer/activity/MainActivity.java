@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
@@ -23,11 +24,21 @@ public class MainActivity extends AppCompatActivity {
     private ExplorerAdapter adapter;
     private ExplorerSearcher searcher;
     private ArrayList<ExplorerFileItem> fileList;
+    SwipeRefreshLayout swipeRefreshLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_layout);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                updateFileList(searcher.getLastPath());
+                swipeRefreshLayout.setRefreshing(false);
+            }
+        });
 
         fileList = new ArrayList<>();
         searcher = new ExplorerSearcher();
