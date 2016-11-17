@@ -6,9 +6,12 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.HorizontalScrollView;
+import android.widget.TextView;
 
 import com.duongame.fileexplorer.ExplorerFileItem;
 import com.duongame.fileexplorer.ExplorerSearcher;
@@ -24,7 +27,9 @@ public class MainActivity extends AppCompatActivity {
     private ExplorerAdapter adapter;
     private ExplorerSearcher searcher;
     private ArrayList<ExplorerFileItem> fileList;
-    SwipeRefreshLayout swipeRefreshLayout;
+    private SwipeRefreshLayout swipeRefreshLayout;
+    private TextView textPath;
+    private HorizontalScrollView scrollPath;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +44,9 @@ public class MainActivity extends AppCompatActivity {
                 swipeRefreshLayout.setRefreshing(false);
             }
         });
+
+        textPath = (TextView)findViewById(R.id.text_path);
+        scrollPath = (HorizontalScrollView)findViewById(R.id.scroll_path);
 
         fileList = new ArrayList<>();
         searcher = new ExplorerSearcher();
@@ -90,9 +98,25 @@ public class MainActivity extends AppCompatActivity {
     }
 
     void updateFileList(String path) {
+        Log.d("tag", "updateFileList");
         fileList = searcher.search(path);
         adapter.setFileList(fileList);
         adapter.notifyDataSetChanged();
+
+        textPath.setText(searcher.getLastPath());
+        textPath.requestLayout();
+
+        // 가장 오른쪽으로 스크롤
+        scrollPath.post(new Runnable() {
+                                   @Override
+                                   public void run() {
+                                       scrollPath.fullScroll(View.FOCUS_RIGHT);
+                                       Log.d("tag", "textPath="+textPath.getWidth());
+                                       Log.d("tag", "scrollPath="+scrollPath.getWidth());
+
+                                   }
+                               }
+        );
     }
 
     @Override

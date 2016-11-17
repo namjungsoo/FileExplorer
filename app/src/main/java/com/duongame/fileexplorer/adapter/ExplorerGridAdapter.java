@@ -1,7 +1,6 @@
 package com.duongame.fileexplorer.adapter;
 
 import android.app.Activity;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -12,8 +11,6 @@ import com.duongame.fileexplorer.R;
 import com.facebook.drawee.view.SimpleDraweeView;
 
 import java.util.ArrayList;
-
-import static android.content.ContentValues.TAG;
 
 /**
  * Created by namjungsoo on 2016-11-16.
@@ -46,7 +43,7 @@ public class ExplorerGridAdapter extends ExplorerAdapter {
 
         if (item.path == null) {
             item.path = searcher.getLastPath() + "/" + item.name;
-            Log.d(TAG, "path=" + item.path);
+//            Log.d(TAG, "path=" + item.path);
         }
 
         LoadBitmapTask task = new LoadBitmapTask(viewHolder.icon);

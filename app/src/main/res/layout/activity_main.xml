@@ -9,6 +9,19 @@
     android:layout_width="match_parent"
     android:orientation="vertical">
 
+    <HorizontalScrollView
+        android:layout_width="wrap_content"
+        android:layout_height="32dp"
+        android:scrollbars="none"
+        android:id="@+id/scroll_path"
+        >
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/text_path"
+            android:gravity="center_vertical"
+            android:textSize="20sp"/>
+    </HorizontalScrollView>
     <LinearLayout
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
