@@ -20,6 +20,4 @@ public class ExplorerPathView extends View {
     public ExplorerPathView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
     }
-
-
 }

@@ -24,6 +24,7 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
     private final static int PERMISSION_STORAGE = 1;
+    private final static int MAX_THUMBNAILS = 100;
 
     private ExplorerAdapter adapter;
     private ArrayList<ExplorerFileItem> fileList;
@@ -104,7 +105,8 @@ public class MainActivity extends AppCompatActivity {
     void updateFileList(String path) {
         adapter.stopAllTasks();
 
-        BitmapCacheManager.recycleThumbnail();
+        if(BitmapCacheManager.getThumbnailCount() > MAX_THUMBNAILS)
+            BitmapCacheManager.recycleThumbnail();
 
         fileList = ExplorerSearcher.search(path);
         adapter.setFileList(fileList);
@@ -164,5 +166,4 @@ public class MainActivity extends AppCompatActivity {
         }
         return true;
     }
-
 }
