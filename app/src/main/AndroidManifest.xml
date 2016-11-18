@@ -19,7 +19,7 @@
 
         </activity>
         <activity android:name=".activity.ImageActivity"
-
+            android:theme="@style/ComicViewerTheme"
             />
     </application>
 

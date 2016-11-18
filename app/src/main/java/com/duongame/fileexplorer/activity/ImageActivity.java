@@ -1,11 +1,11 @@
 package com.duongame.fileexplorer.activity;
 
 import android.content.Intent;
-import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
-import android.widget.FrameLayout;
+import android.view.MotionEvent;
+import android.view.View;
 
 import com.duongame.fileexplorer.ExplorerFileItem;
 import com.duongame.fileexplorer.ExplorerSearcher;
@@ -32,22 +32,20 @@ public class ImageActivity extends ViewerActivity {
         pager = (ViewPager) findViewById(R.id.pager);
         pagerAdapter = new ExplorerPagerAdapter(this);
 
-//        updatePagerLayoutMargin();
+        pager.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                Log.d(TAG,"onTouch");
+                if(motionEvent.getAction() == MotionEvent.ACTION_UP) {
+                    setFullscreen(!isFullscreen);
+                    return true;
+                }
+                return false;
+            }
+        });
 
         initAdapter();
         processIntent();
-    }
-
-    private void updatePagerLayoutMargin() {
-        Resources resources = this.getResources();
-        int resourceId = resources.getIdentifier("navigation_bar_height", "dimen", "android");
-        if (resourceId > 0) {
-            int deviceHeight = resources.getDimensionPixelSize(resourceId);
-            Log.d(TAG, "deviceHeight=" + deviceHeight);
-            FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) pager.getLayoutParams();
-            params.topMargin = deviceHeight;
-            pager.setLayoutParams(params);
-        }
     }
 
     private void initAdapter() {
