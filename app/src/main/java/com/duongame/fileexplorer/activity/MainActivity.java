@@ -19,6 +19,7 @@ import android.widget.ViewSwitcher;
 
 import com.duongame.fileexplorer.ExplorerFileItem;
 import com.duongame.fileexplorer.ExplorerSearcher;
+import com.duongame.fileexplorer.Helper.PreferenceHelper;
 import com.duongame.fileexplorer.R;
 import com.duongame.fileexplorer.adapter.ExplorerAdapter;
 import com.duongame.fileexplorer.adapter.ExplorerGridAdapter;
@@ -52,10 +53,21 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         initUI();
-        switchToList();
+
+        int viewType = PreferenceHelper.getViewType(this);
+        switch(viewType) {
+            case SWITCH_LIST:
+                switchToList();
+
+                break;
+            case SWITCH_GRID:
+                switchToGrid();
+                break;
+        }
 
         if (checkStoragePermissions()) {
-            updateFileList(null);
+            final String lastPath = PreferenceHelper.getLastPath(MainActivity.this);
+            updateFileList(lastPath);
         }
 
         // long click
@@ -87,8 +99,10 @@ public class MainActivity extends AppCompatActivity {
                 Button btn = (Button)view;
                 if(viewType == SWITCH_LIST) {
                     switchToGrid();
+                    PreferenceHelper.setViewType(MainActivity.this, SWITCH_GRID);
                 } else {
                     switchToList();
+                    PreferenceHelper.setViewType(MainActivity.this, SWITCH_LIST);
                 }
             }
         });
@@ -216,6 +230,13 @@ public class MainActivity extends AppCompatActivity {
                             }
                         }
         );
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                PreferenceHelper.setLastPath(MainActivity.this, ExplorerSearcher.getLastPath());
+            }
+        }).start();
     }
 
     @Override
