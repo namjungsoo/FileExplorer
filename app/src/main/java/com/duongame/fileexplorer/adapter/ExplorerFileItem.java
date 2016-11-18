@@ -1,4 +1,4 @@
-package com.duongame.fileexplorer;
+package com.duongame.fileexplorer.adapter;
 
 /**
  * Created by namjungsoo on 2016-11-06.

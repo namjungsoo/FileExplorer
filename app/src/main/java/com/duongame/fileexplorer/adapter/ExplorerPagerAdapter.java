@@ -11,7 +11,6 @@ import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.duongame.fileexplorer.ExplorerFileItem;
 import com.duongame.fileexplorer.R;
 import com.duongame.fileexplorer.bitmap.BitmapCacheManager;
 import com.duongame.fileexplorer.bitmap.BitmapLoader;

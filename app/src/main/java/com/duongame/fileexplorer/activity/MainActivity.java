@@ -17,8 +17,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.ViewSwitcher;
 
-import com.duongame.fileexplorer.ExplorerFileItem;
-import com.duongame.fileexplorer.ExplorerSearcher;
+import com.duongame.fileexplorer.adapter.ExplorerFileItem;
+import com.duongame.fileexplorer.Helper.ExplorerSearcher;
 import com.duongame.fileexplorer.Helper.PreferenceHelper;
 import com.duongame.fileexplorer.R;
 import com.duongame.fileexplorer.adapter.ExplorerAdapter;

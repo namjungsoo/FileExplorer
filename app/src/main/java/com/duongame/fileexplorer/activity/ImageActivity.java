@@ -7,8 +7,8 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
-import com.duongame.fileexplorer.ExplorerFileItem;
-import com.duongame.fileexplorer.ExplorerSearcher;
+import com.duongame.fileexplorer.adapter.ExplorerFileItem;
+import com.duongame.fileexplorer.Helper.ExplorerSearcher;
 import com.duongame.fileexplorer.R;
 import com.duongame.fileexplorer.adapter.ExplorerPagerAdapter;
 import com.duongame.fileexplorer.bitmap.BitmapCacheManager;

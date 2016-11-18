@@ -1,4 +1,4 @@
-package com.duongame.fileexplorer;
+package com.duongame.fileexplorer.view;
 
 import android.content.Context;
 import android.util.AttributeSet;

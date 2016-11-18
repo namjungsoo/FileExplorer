@@ -1,6 +1,8 @@
-package com.duongame.fileexplorer;
+package com.duongame.fileexplorer.Helper;
 
 import android.os.Environment;
+
+import com.duongame.fileexplorer.adapter.ExplorerFileItem;
 
 import java.io.File;
 import java.text.SimpleDateFormat;

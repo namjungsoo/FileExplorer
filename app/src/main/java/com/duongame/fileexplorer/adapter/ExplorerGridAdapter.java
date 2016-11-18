@@ -6,7 +6,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.duongame.fileexplorer.ExplorerFileItem;
 import com.duongame.fileexplorer.R;
 
 import java.util.ArrayList;

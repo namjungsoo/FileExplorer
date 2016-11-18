@@ -12,4 +12,32 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         />
+    <LinearLayout
+        android:id="@+id/bottomToolBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|center_horizontal"
+        android:background="@color/colorPrimaryTransparent"
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/textViewPage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|center_horizontal"
+            android:padding="5dp"
+            android:text="0/0"
+            android:textColor="#ffffffff"
+            android:textSize="12dp" />
+
+        <SeekBar
+            android:id="@+id/seekBarPage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|center_horizontal"
+            android:max="100"
+            android:progress="50" >
+        </SeekBar>
+    </LinearLayout>
+
 </FrameLayout>
