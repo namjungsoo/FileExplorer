@@ -18,7 +18,9 @@
             </intent-filter>
 
         </activity>
-        <activity android:name=".activity.ViewerActivity"/>
+        <activity android:name=".activity.ImageActivity"
+
+            />
     </application>
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />

@@ -11,9 +11,9 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.duongame.fileexplorer.bitmap.BitmapCacheManager;
 import com.duongame.fileexplorer.ExplorerFileItem;
 import com.duongame.fileexplorer.R;
+import com.duongame.fileexplorer.bitmap.BitmapCacheManager;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -25,7 +25,7 @@ import java.util.ArrayList;
 public class ExplorerAdapter extends BaseAdapter {
     protected ArrayList<ExplorerFileItem> fileList;
     protected Activity context;
-    protected ArrayList<LoadThumbnailTask> taskList = new ArrayList<LoadThumbnailTask> ();
+    protected ArrayList<LoadThumbnailTask> taskList = new ArrayList<LoadThumbnailTask>();
 
     public class LoadThumbnailTask extends AsyncTask<String, Void, Bitmap> {
         private final WeakReference<ImageView> imageViewReference;
@@ -37,7 +37,7 @@ public class ExplorerAdapter extends BaseAdapter {
         @Override
         protected Bitmap doInBackground(String... params) {
             Bitmap bitmap = BitmapCacheManager.getThumbnail(params[0]);
-            if(bitmap == null) {
+            if (bitmap == null) {
                 bitmap = getThumbnail(params[0]);
                 BitmapCacheManager.setThumbnail(params[0], bitmap, imageViewReference.get());
             }
@@ -124,7 +124,7 @@ public class ExplorerAdapter extends BaseAdapter {
     }
 
     public void stopAllTasks() {
-        for(LoadThumbnailTask task : taskList) {
+        for (LoadThumbnailTask task : taskList) {
             task.cancel(true);
         }
         taskList.clear();

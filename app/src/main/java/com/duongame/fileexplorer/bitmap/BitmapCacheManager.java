@@ -16,7 +16,7 @@ public class BitmapCacheManager {
     static HashMap<String, ImageView> thumbnailImageCache = new HashMap<>();
 
     public static void setBitmap(String path, Bitmap bitmap) {
-        if(bitmapCache.get(path) == null) {
+        if (bitmapCache.get(path) == null) {
             bitmapCache.put(path, bitmap);
         }
     }
@@ -26,7 +26,7 @@ public class BitmapCacheManager {
     }
 
     public static void removeBitmap(String path) {
-        if(bitmapCache.get(path) != null) {
+        if (bitmapCache.get(path) != null) {
             bitmapCache.get(path).recycle();
             bitmapCache.remove(path);
         }
@@ -42,7 +42,7 @@ public class BitmapCacheManager {
 
     // thumbnail
     public static void setThumbnail(String path, Bitmap bitmap, ImageView imageView) {
-        if(thumbnailCache.get(path) == null) {
+        if (thumbnailCache.get(path) == null) {
             thumbnailCache.put(path, bitmap);
             thumbnailImageCache.put(path, imageView);
         }
@@ -58,7 +58,7 @@ public class BitmapCacheManager {
 
     public static void recycleThumbnail() {
         for (String key : thumbnailCache.keySet()) {
-            if(thumbnailImageCache.get(key) != null)
+            if (thumbnailImageCache.get(key) != null)
                 thumbnailImageCache.get(key).setImageBitmap(null);
             thumbnailCache.get(key).recycle();
         }

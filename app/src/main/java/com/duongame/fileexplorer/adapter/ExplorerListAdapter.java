@@ -7,6 +7,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.duongame.fileexplorer.ExplorerFileItem;
+import com.duongame.fileexplorer.FileSizeUtil;
 import com.duongame.fileexplorer.R;
 
 import java.util.ArrayList;
@@ -42,10 +43,13 @@ public class ExplorerListAdapter extends ExplorerAdapter {
 
         viewHolder.name.setText(item.name);
         viewHolder.date.setText(item.date);
-        viewHolder.size.setText(item.size);
+        viewHolder.size.setText(FileSizeUtil.getMinimizedSize(item.size));
 
-        LoadThumbnailTask task = new LoadThumbnailTask(viewHolder.icon);
-        task.execute(item.path);
+        if (item.type == ExplorerFileItem.FileType.IMAGE) {
+            LoadThumbnailTask task = new LoadThumbnailTask(viewHolder.icon);
+            task.execute(item.path);
+            taskList.add(task);
+        }
 
         setTypeIcon(item.type, viewHolder.icon);
         return convertView;

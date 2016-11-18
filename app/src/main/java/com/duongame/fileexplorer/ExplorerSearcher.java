@@ -28,7 +28,7 @@ public class ExplorerSearcher {
     }
 
     public static ArrayList<ExplorerFileItem> search(String path) {
-        if(path == null) {
+        if (path == null) {
             path = initialPath;
         }
         lastPath = path;
@@ -39,17 +39,17 @@ public class ExplorerSearcher {
 
         File file = new File(path);
         if (file == null)
-            return null;
+            return fileList;
 
         // 모든 파일 가져옴
         File[] files = file.listFiles();
         if (files == null)
-            return null;
+            return fileList;
 
         // 파일로 아이템을 만듬
-        for(int i=0; i<files.length; i++) {
+        for (int i = 0; i < files.length; i++) {
             File eachFile = files[i];
-            if(eachFile.getName().startsWith(".")) {// .으로 시작되면 패스 함
+            if (eachFile.getName().startsWith(".")) {// .으로 시작되면 패스 함
                 continue;
             }
 
@@ -57,13 +57,13 @@ public class ExplorerSearcher {
             Date dateSource = new Date(eachFile.lastModified());
 
             String date = dateFormat.format(dateSource);
-            String size = String.valueOf(eachFile.length());
+            long size = eachFile.length();
 
             ExplorerFileItem.FileType type = getFileType(eachFile);
 
             ExplorerFileItem item = new ExplorerFileItem(path, name, date, size, type);
-            if(type == ExplorerFileItem.FileType.DIRECTORY) {
-                item.size = "";
+            if (type == ExplorerFileItem.FileType.DIRECTORY) {
+                item.size = -1;
                 directoryList.add(item);
             } else {
                 normalList.add(item);
@@ -79,8 +79,8 @@ public class ExplorerSearcher {
         fileList.addAll(normalList);
 
         imageList.clear();
-        for(int i=0; i<normalList.size(); i++) {
-            if(normalList.get(i).type == ExplorerFileItem.FileType.IMAGE) {
+        for (int i = 0; i < normalList.size(); i++) {
+            if (normalList.get(i).type == ExplorerFileItem.FileType.IMAGE) {
                 imageList.add(normalList.get(i));
             }
         }
@@ -94,7 +94,7 @@ public class ExplorerSearcher {
     public static ExplorerFileItem.FileType getFileType(File eachFile) {
         ExplorerFileItem.FileType type = eachFile.isDirectory() ? ExplorerFileItem.FileType.DIRECTORY : ExplorerFileItem.FileType.FILE;
 
-        if(eachFile.getName().toLowerCase().endsWith(".jpg")
+        if (eachFile.getName().toLowerCase().endsWith(".jpg")
                 || eachFile.getName().toLowerCase().endsWith(".jpeg")
                 || eachFile.getName().toLowerCase().endsWith(".gif")
                 || eachFile.getName().toLowerCase().endsWith(".png")
@@ -102,15 +102,15 @@ public class ExplorerSearcher {
             type = ExplorerFileItem.FileType.IMAGE;
         }
 
-        if(eachFile.getName().toLowerCase().endsWith(".zip"))
+        if (eachFile.getName().toLowerCase().endsWith(".zip"))
             type = ExplorerFileItem.FileType.ZIP;
-        if(eachFile.getName().toLowerCase().endsWith(".rar"))
+        if (eachFile.getName().toLowerCase().endsWith(".rar"))
             type = ExplorerFileItem.FileType.RAR;
-        if(eachFile.getName().toLowerCase().endsWith(".pdf"))
+        if (eachFile.getName().toLowerCase().endsWith(".pdf"))
             type = ExplorerFileItem.FileType.PDF;
-        if(eachFile.getName().toLowerCase().endsWith(".mp3"))
+        if (eachFile.getName().toLowerCase().endsWith(".mp3"))
             type = ExplorerFileItem.FileType.AUDIO;
-        if(eachFile.getName().toLowerCase().endsWith(".txt"))
+        if (eachFile.getName().toLowerCase().endsWith(".txt"))
             type = ExplorerFileItem.FileType.TEXT;
 
         return type;

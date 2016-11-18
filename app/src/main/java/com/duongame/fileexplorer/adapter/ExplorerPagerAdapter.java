@@ -43,12 +43,12 @@ public class ExplorerPagerAdapter extends PagerAdapter {
         protected Bitmap doInBackground(String... params) {
             for (int i = 0; i < params.length; i++) {
                 final String path = params[i];
-                Log.d(TAG, "preload path="+path);
+                Log.d(TAG, "preload path=" + path);
                 Bitmap bitmap = BitmapCacheManager.getBitmap(path);
                 if (bitmap == null) {
                     bitmap = BitmapLoader.decodeSampleBitmapFromFile(path, width, height);
                     BitmapCacheManager.setBitmap(path, bitmap);
-                    Log.d(TAG, "preload cache path="+path);
+                    Log.d(TAG, "preload cache path=" + path);
                 }
             }
             return null;

@@ -1,74 +1,111 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-
     android:id="@+id/activity_main"
-    android:layout_height="match_parent"
     android:layout_width="match_parent"
-    android:orientation="vertical">
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.duongame.fileexplorer.activity.MainActivity">
 
     <HorizontalScrollView
+        android:id="@+id/scroll_path"
         android:layout_width="wrap_content"
         android:layout_height="32dp"
-        android:scrollbars="none"
-        android:id="@+id/scroll_path"
-        >
+        android:scrollbars="none">
+
         <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
             android:id="@+id/text_path"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:gravity="center_vertical"
-            android:textSize="20sp"/>
+            android:textSize="20sp" />
     </HorizontalScrollView>
+
     <LinearLayout
-        android:layout_height="wrap_content"
         android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="horizontal">
 
         <Button
-            android:layout_height="wrap_content"
             android:layout_width="60dp"
-            android:text="Up" />
+            android:layout_height="wrap_content"
+            android:text="Up"
+            android:id="@+id/btn_up"
+            android:textAllCaps="false"
+            />
 
         <Button
+            android:layout_width="70dp"
             android:layout_height="wrap_content"
-            android:layout_width="60dp"
-            android:text="Grid" />
+            android:text="Home"
+            android:id="@+id/btn_home"
+            android:textAllCaps="false"
+            />
 
         <Button
-            android:layout_height="wrap_content"
             android:layout_width="60dp"
-            android:text="List" />
+            android:layout_height="wrap_content"
+            android:text="List"
+            android:id="@+id/btn_view"
+            android:textAllCaps="false"
+            />
 
         <Button
-            android:layout_height="wrap_content"
             android:layout_width="60dp"
-            android:text="All" />
+            android:layout_height="wrap_content"
+            android:text="All"
+            android:id="@+id/btn_all"
+            android:enabled="false"
+            android:textAllCaps="false"
+            />
 
         <Button
-            android:layout_height="wrap_content"
             android:layout_width="60dp"
-            android:text="Del" />
+            android:layout_height="wrap_content"
+            android:text="Del"
+            android:id="@+id/btn_del"
+            android:enabled="false"
+            android:textAllCaps="false"
+            />
+
+        <Button
+            android:layout_width="40dp"
+            android:layout_height="wrap_content"
+            android:text=" + "
+            android:id="@+id/btn_create"
+            android:textAllCaps="false"
+            />
     </LinearLayout>
-    <!--<ListView-->
-    <!--android:id="@+id/list_explorer"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--/>-->
-    <android.support.v4.widget.SwipeRefreshLayout
-        android:id="@+id/swipe_layout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:context="com.duongame.fileexplorer.activity.MainActivity">
 
-        <GridView
-            android:id="@+id/grid_explorer"
+
+    <ViewSwitcher
+        android:id="@+id/switcher"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <android.support.v4.widget.SwipeRefreshLayout
+            android:id="@+id/refresh_list"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:columnWidth="80dp"
-            android:gravity="center"
-            android:numColumns="auto_fit"
-            android:stretchMode="columnWidth"></GridView>
-    </android.support.v4.widget.SwipeRefreshLayout>
+            android:layout_height="match_parent">
+            <ListView
+                android:id="@+id/list_explorer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </android.support.v4.widget.SwipeRefreshLayout>
+
+        <android.support.v4.widget.SwipeRefreshLayout
+            android:id="@+id/refresh_grid"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <GridView
+                android:id="@+id/grid_explorer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:columnWidth="80dp"
+                android:gravity="center"
+                android:numColumns="auto_fit"
+                android:stretchMode="columnWidth" />
+        </android.support.v4.widget.SwipeRefreshLayout>
+
+    </ViewSwitcher>
 </LinearLayout>
