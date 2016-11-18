@@ -86,12 +86,8 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Button btn = (Button)view;
                 if(viewType == SWITCH_LIST) {
-                    viewType = SWITCH_GRID;
-                    btn.setText("Grid");
                     switchToGrid();
                 } else {
-                    btn.setText("List");
-                    viewType = SWITCH_LIST;
                     switchToList();
                 }
             }
@@ -137,6 +133,10 @@ public class MainActivity extends AppCompatActivity {
                 onAdapterItemClick(position);
             }
         });
+
+        final Button view = (Button) findViewById(R.id.btn_view);
+        view.setText("Grid");
+        viewType = SWITCH_LIST;
     }
 
     void switchToGrid() {
@@ -162,6 +162,10 @@ public class MainActivity extends AppCompatActivity {
                 onAdapterItemClick(position);
             }
         });
+
+        final Button view = (Button) findViewById(R.id.btn_view);
+        view.setText("List");
+        viewType = SWITCH_GRID;
     }
 
     void refreshThumbnail(String path) {
