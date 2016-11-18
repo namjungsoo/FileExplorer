@@ -3,6 +3,7 @@ package com.duongame.fileexplorer.activity;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -120,6 +121,7 @@ public class MainActivity extends AppCompatActivity {
         refresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
+                refreshThumbnail(ExplorerSearcher.getLastPath());
                 updateFileList(ExplorerSearcher.getLastPath());
                 refresh.setRefreshing(false);
             }
@@ -144,6 +146,7 @@ public class MainActivity extends AppCompatActivity {
         refresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
+                refreshThumbnail(ExplorerSearcher.getLastPath());
                 updateFileList(ExplorerSearcher.getLastPath());
                 refresh.setRefreshing(false);
             }
@@ -159,6 +162,13 @@ public class MainActivity extends AppCompatActivity {
                 onAdapterItemClick(position);
             }
         });
+    }
+
+    void refreshThumbnail(String path) {
+        ArrayList<ExplorerFileItem> imageList = ExplorerSearcher.getImageList();
+        for(ExplorerFileItem item : imageList) {
+            sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse("file://"+ item.path)));
+        }
     }
 
     void onAdapterItemClick(int position) {

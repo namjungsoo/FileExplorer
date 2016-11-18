@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.duongame.fileexplorer.ExplorerFileItem;
 import com.duongame.fileexplorer.R;
 import com.duongame.fileexplorer.bitmap.BitmapCacheManager;
+import com.duongame.fileexplorer.bitmap.BitmapLoader;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -36,10 +37,17 @@ public class ExplorerAdapter extends BaseAdapter {
 
         @Override
         protected Bitmap doInBackground(String... params) {
-            Bitmap bitmap = BitmapCacheManager.getThumbnail(params[0]);
+            final String path = params[0];
+
+            Bitmap bitmap = BitmapCacheManager.getThumbnail(path);
             if (bitmap == null) {
-                bitmap = getThumbnail(params[0]);
-                BitmapCacheManager.setThumbnail(params[0], bitmap, imageViewReference.get());
+                bitmap = getThumbnail(path);
+                if(bitmap == null) {
+                    bitmap = BitmapLoader.decodeSampleBitmapFromFile(path, 96, 96);// MICRO_KIND
+                }
+                if(bitmap != null) {
+                    BitmapCacheManager.setThumbnail(path, bitmap, imageViewReference.get());
+                }
             }
             return bitmap;
         }
