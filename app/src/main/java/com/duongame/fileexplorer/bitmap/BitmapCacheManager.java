@@ -15,6 +15,7 @@ public class BitmapCacheManager {
 
     static HashMap<String, ImageView> thumbnailImageCache = new HashMap<>();
 
+    // image bitmap
     public static void setBitmap(String path, Bitmap bitmap) {
         if (bitmapCache.get(path) == null) {
             bitmapCache.put(path, bitmap);

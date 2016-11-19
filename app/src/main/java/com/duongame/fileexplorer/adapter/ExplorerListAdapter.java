@@ -3,11 +3,11 @@ package com.duongame.fileexplorer.adapter;
 import android.app.Activity;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.duongame.fileexplorer.Helper.FileSizeUtil;
+import com.duongame.fileexplorer.Helper.FileSizeHelper;
 import com.duongame.fileexplorer.R;
+import com.duongame.fileexplorer.view.RoundedImageView;
 
 import java.util.ArrayList;
 
@@ -28,7 +28,7 @@ public class ExplorerListAdapter extends ExplorerAdapter {
             convertView = context.getLayoutInflater().inflate(R.layout.file_list_item, parent, false);
 
             viewHolder = new ViewHolder();
-            viewHolder.icon = (ImageView) convertView.findViewById(R.id.file_icon);
+            viewHolder.icon = (RoundedImageView) convertView.findViewById(R.id.file_icon);
             viewHolder.name = (TextView) convertView.findViewById(R.id.text_name);
             viewHolder.date = (TextView) convertView.findViewById(R.id.text_date);
             viewHolder.size = (TextView) convertView.findViewById(R.id.text_size);
@@ -39,10 +39,10 @@ public class ExplorerListAdapter extends ExplorerAdapter {
         }
 
         ExplorerFileItem item = fileList.get(position);
-
         viewHolder.name.setText(item.name);
         viewHolder.date.setText(item.date);
-        viewHolder.size.setText(FileSizeUtil.getMinimizedSize(item.size));
+        viewHolder.size.setText(FileSizeHelper.getMinimizedSize(item.size));
+        viewHolder.icon.setRadiusDp(5);
 
         if (item.type == ExplorerFileItem.FileType.IMAGE) {
             LoadThumbnailTask task = new LoadThumbnailTask(viewHolder.icon);

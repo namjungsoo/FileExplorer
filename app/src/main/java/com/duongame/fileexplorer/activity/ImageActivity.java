@@ -7,9 +7,9 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
-import com.duongame.fileexplorer.adapter.ExplorerFileItem;
 import com.duongame.fileexplorer.Helper.ExplorerSearcher;
 import com.duongame.fileexplorer.R;
+import com.duongame.fileexplorer.adapter.ExplorerFileItem;
 import com.duongame.fileexplorer.adapter.ExplorerPagerAdapter;
 import com.duongame.fileexplorer.bitmap.BitmapCacheManager;
 
@@ -35,8 +35,8 @@ public class ImageActivity extends ViewerActivity {
         pager.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
-                Log.d(TAG,"onTouch");
-                if(motionEvent.getAction() == MotionEvent.ACTION_UP) {
+                Log.d(TAG, "onTouch");
+                if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
                     setFullscreen(!isFullscreen);
                     return true;
                 }

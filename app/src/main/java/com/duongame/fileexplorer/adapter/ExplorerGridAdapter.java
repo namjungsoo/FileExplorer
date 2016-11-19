@@ -3,10 +3,10 @@ package com.duongame.fileexplorer.adapter;
 import android.app.Activity;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.duongame.fileexplorer.R;
+import com.duongame.fileexplorer.view.RoundedImageView;
 
 import java.util.ArrayList;
 
@@ -27,7 +27,7 @@ public class ExplorerGridAdapter extends ExplorerAdapter {
             convertView = context.getLayoutInflater().inflate(R.layout.file_grid_item, parent, false);
 
             viewHolder = new ViewHolder();
-            viewHolder.icon = (ImageView) convertView.findViewById(R.id.file_icon);
+            viewHolder.icon = (RoundedImageView) convertView.findViewById(R.id.file_icon);
             viewHolder.name = (TextView) convertView.findViewById(R.id.text_name);
 
             convertView.setTag(viewHolder);
@@ -37,6 +37,7 @@ public class ExplorerGridAdapter extends ExplorerAdapter {
 
         ExplorerFileItem item = fileList.get(position);
         viewHolder.name.setText(item.name);
+        viewHolder.icon.setRadiusDp(5);
 
         if(item.type == ExplorerFileItem.FileType.IMAGE) {
             LoadThumbnailTask task = new LoadThumbnailTask(viewHolder.icon);
@@ -45,7 +46,6 @@ public class ExplorerGridAdapter extends ExplorerAdapter {
         }
 
         setTypeIcon(item.type, viewHolder.icon);
-
         return convertView;
     }
 }

@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.duongame.fileexplorer.R;
 import com.duongame.fileexplorer.bitmap.BitmapCacheManager;
 import com.duongame.fileexplorer.bitmap.BitmapLoader;
+import com.duongame.fileexplorer.view.RoundedImageView;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -84,7 +85,7 @@ public class ExplorerAdapter extends BaseAdapter {
     }
 
     public static class ViewHolder {
-        public ImageView icon;
+        public RoundedImageView icon;
         public TextView name;
         public TextView date;
         public TextView size;
@@ -113,21 +114,36 @@ public class ExplorerAdapter extends BaseAdapter {
     }
 
     void setTypeIcon(ExplorerFileItem.FileType type, ImageView icon) {
-        if (type == ExplorerFileItem.FileType.FILE)
-            icon.setImageResource(R.drawable.file);
-        else if (type == ExplorerFileItem.FileType.DIRECTORY)
-            icon.setImageResource(R.drawable.directory);
+        switch(type) {
+            case IMAGE:
+                return;
+            case FILE:
+                icon.setImageResource(R.drawable.file);
+                break;
+            case DIRECTORY:
+                icon.setImageResource(R.drawable.directory);
+                break;
+            case ZIP:
+                icon.setImageResource(R.drawable.zip);
+                break;
+            case RAR:
+                icon.setImageResource(R.drawable.rar);
+                break;
+            case PDF:
+                icon.setImageResource(R.drawable.pdf);
+                break;
+            case AUDIO:
+                icon.setImageResource(R.drawable.mp3);
+                break;
+            case TEXT:
+                icon.setImageResource(R.drawable.text);
+                break;
+            case VIDEO:
+                break;
+            default:
+                return;
+        }
 
-        else if (type == ExplorerFileItem.FileType.ZIP)
-            icon.setImageResource(R.drawable.zip);
-        else if (type == ExplorerFileItem.FileType.RAR)
-            icon.setImageResource(R.drawable.rar);
-        else if (type == ExplorerFileItem.FileType.PDF)
-            icon.setImageResource(R.drawable.pdf);
-        else if (type == ExplorerFileItem.FileType.AUDIO)
-            icon.setImageResource(R.drawable.mp3);
-        else if (type == ExplorerFileItem.FileType.TEXT)
-            icon.setImageResource(R.drawable.text);
     }
 
     public void stopAllTasks() {

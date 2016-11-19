@@ -10,7 +10,7 @@
         android:layout_marginLeft="9dp"
         android:layout_marginRight="9dp"
         >
-        <ImageView
+        <com.duongame.fileexplorer.view.RoundedImageView
             android:id="@+id/file_icon"
             android:layout_width="60dp"
             android:layout_height="60dp"
