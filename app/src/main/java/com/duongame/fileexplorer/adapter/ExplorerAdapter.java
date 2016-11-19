@@ -45,7 +45,8 @@ public class ExplorerAdapter extends BaseAdapter {
             if (bitmap == null) {
                 bitmap = getThumbnail(path);
                 if(bitmap == null) {
-                    bitmap = BitmapLoader.decodeSampleBitmapFromFile(path, 96, 96);// MICRO_KIND
+                    //bitmap = BitmapLoader.decodeSampleBitmapFromFile(path, 96, 96);// MICRO_KIND
+                    bitmap = BitmapLoader.decodeSquareThumbnailFromFile(path, 96);
                 }
                 if(bitmap != null) {
                     BitmapCacheManager.setThumbnail(path, bitmap, imageViewReference.get());

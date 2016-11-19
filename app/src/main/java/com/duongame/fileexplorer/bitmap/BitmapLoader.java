@@ -3,6 +3,10 @@ package com.duongame.fileexplorer.bitmap;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.BitmapRegionDecoder;
+import android.graphics.Rect;
+
+import java.io.IOException;
 
 /**
  * Created by namjungsoo on 2016. 11. 17..
@@ -45,6 +49,44 @@ public class BitmapLoader {
         return BitmapFactory.decodeFile(path, options);
     }
 
+    public static Bitmap decodeSquareThumbnailFromFile(String path, int size) {
+        final BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true;
+        BitmapFactory.decodeFile(path, options);
+
+        int width = size;
+        int height = size;
+
+        // 종횡비 계산해야 함
+        float ratio = (float)options.outHeight / (float)options.outWidth;
+        if (ratio > 1) {
+            height = (int)(size * ratio);
+        } else {
+            width = (int)(size * ratio);
+        }
+        options.inSampleSize = calculateInSampleSize(options, width, height);
+
+        // 로드하기 위해서는 위에서 true 로 설정했던 inJustDecodeBounds 의 값을 false 로 설정합니다.
+        options.inJustDecodeBounds = false;
+        try {
+            BitmapRegionDecoder decoder = BitmapRegionDecoder.newInstance(path, false);
+            if(ratio > 1) {
+                int top = (decoder.getHeight() - decoder.getWidth()) >> 1;
+                Bitmap bitmap = decoder.decodeRegion(new Rect(0, top, decoder.getWidth(), top + decoder.getWidth()), options);
+                decoder.recycle();
+                return bitmap;
+            } else {
+                int left = (decoder.getWidth() - decoder.getHeight()) >> 1;
+                Bitmap bitmap = decoder.decodeRegion(new Rect(left, 0, left + decoder.getHeight(), decoder.getHeight()), options);
+                decoder.recycle();
+                return bitmap;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
     public static Bitmap decodeSampleBitmapFromResource(Resources res, int resId, int reqWidth, int reqHeight) {
         final BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
@@ -54,8 +96,6 @@ public class BitmapLoader {
 
         // 로드하기 위해서는 위에서 true 로 설정했던 inJustDecodeBounds 의 값을 false 로 설정합니다.
         options.inJustDecodeBounds = false;
-        //options.inDither = true;
-        //options.inPreferQualityOverSpeed = true;
         return BitmapFactory.decodeResource(res, resId, options);
     }
 }
