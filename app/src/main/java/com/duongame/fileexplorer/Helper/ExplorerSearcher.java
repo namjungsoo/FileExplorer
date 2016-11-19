@@ -8,7 +8,6 @@ import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 
 /**
@@ -75,8 +74,8 @@ public class ExplorerSearcher {
         }
 
         // 디렉토리 우선 정렬 및 가나다 정렬
-        Collections.sort(directoryList, new FileTypeCompare());
-        Collections.sort(normalList, new FileTypeCompare());
+        Collections.sort(directoryList, new FileHelper.FileNameCompare());
+        Collections.sort(normalList, new FileHelper.FileNameCompare());
 
         fileList.addAll(directoryList);
         fileList.addAll(normalList);
@@ -98,11 +97,7 @@ public class ExplorerSearcher {
         ExplorerFileItem.FileType type = eachFile.isDirectory() ? ExplorerFileItem.FileType.DIRECTORY : ExplorerFileItem.FileType.FILE;
         final String lower = eachFile.getName().toLowerCase();
 
-        if (lower.endsWith(".jpg")
-                || lower.endsWith(".jpeg")
-                || lower.endsWith(".gif")
-                || lower.endsWith(".png")
-                ) {
+        if (FileHelper.isImage(eachFile.getName())) {
             type = ExplorerFileItem.FileType.IMAGE;
         }
 
@@ -118,12 +113,5 @@ public class ExplorerSearcher {
             type = ExplorerFileItem.FileType.TEXT;
 
         return type;
-    }
-
-    private static class FileTypeCompare implements Comparator<ExplorerFileItem> {
-        @Override
-        public int compare(ExplorerFileItem lhs, ExplorerFileItem rhs) {
-            return lhs.name.compareToIgnoreCase(rhs.name);
-        }
     }
 }

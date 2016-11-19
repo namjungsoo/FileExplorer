@@ -17,17 +17,14 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.ViewSwitcher;
 
-import com.duongame.fileexplorer.adapter.ExplorerFileItem;
-import com.duongame.fileexplorer.helper.ExplorerSearcher;
-import com.duongame.fileexplorer.helper.PreferenceHelper;
 import com.duongame.fileexplorer.R;
 import com.duongame.fileexplorer.adapter.ExplorerAdapter;
+import com.duongame.fileexplorer.adapter.ExplorerFileItem;
 import com.duongame.fileexplorer.adapter.ExplorerGridAdapter;
 import com.duongame.fileexplorer.adapter.ExplorerListAdapter;
 import com.duongame.fileexplorer.bitmap.BitmapCacheManager;
-import com.duongame.fileexplorer.bitmap.ZipLoader;
-
-import net.lingala.zip4j.exception.ZipException;
+import com.duongame.fileexplorer.helper.ExplorerSearcher;
+import com.duongame.fileexplorer.helper.PreferenceHelper;
 
 import java.util.ArrayList;
 
@@ -88,6 +85,7 @@ public class MainActivity extends AppCompatActivity {
 //        });
 //
     }
+
 
     void initUI() {
         switcher = (ViewSwitcher) findViewById(R.id.switcher);
@@ -205,16 +203,17 @@ public class MainActivity extends AppCompatActivity {
 
                 updateFileList(newPath);
                 break;
-            case IMAGE:
-                Intent intent = new Intent(MainActivity.this, PhotoActivity.class);
-                intent.putExtra("name", item.name);
-                startActivity(intent);
+            case IMAGE: {
+                    Intent intent = new Intent(MainActivity.this, PhotoActivity.class);
+                    intent.putExtra("name", item.name);
+                    startActivity(intent);
+                }
                 break;
-            case ZIP:
-                try {
-                    ZipLoader.load(item.path);
-                } catch (Exception e) {
-                    e.printStackTrace();
+            case ZIP: {
+                    Intent intent = new Intent(MainActivity.this, ZipActivity.class);
+                    intent.putExtra("path", item.path);
+                    intent.putExtra("page", 0);
+                    startActivity(intent);
                 }
                 break;
         }

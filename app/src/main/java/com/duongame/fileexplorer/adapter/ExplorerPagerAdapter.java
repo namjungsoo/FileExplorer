@@ -5,7 +5,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.support.v4.view.PagerAdapter;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
@@ -24,7 +23,7 @@ import static com.duongame.fileexplorer.bitmap.BitmapLoader.decodeSampleBitmapFr
 /**
  * Created by namjungsoo on 2016-11-17.
  */
-
+//TODO: Zip파일 양면 읽기용으로 상속받아야 함. Pdf 파일 버전으로 따로 만들어야 함.
 public class ExplorerPagerAdapter extends PagerAdapter {
     private static final String TAG = "ExplorerPagerAdapter";
 
@@ -81,6 +80,7 @@ public class ExplorerPagerAdapter extends PagerAdapter {
         private int width, height;
 
         public LoadBitmapTask(ImageView imageView, int width, int height) {
+//            Log.d(TAG, "LoadBitmapTask ctor");
             imageViewReference = new WeakReference<ImageView>(imageView);
             this.width = width;
             this.height = height;
@@ -88,6 +88,7 @@ public class ExplorerPagerAdapter extends PagerAdapter {
 
         @Override
         protected Bitmap doInBackground(String... params) {
+//            Log.d(TAG, "LoadBitmapTask doInBackground");
             final String path = params[0];
 
             Bitmap bitmap = BitmapCacheManager.getBitmap(path);
@@ -158,7 +159,8 @@ public class ExplorerPagerAdapter extends PagerAdapter {
 //                    Log.d(TAG, "onGlobalLayout width=" + width + " height=" + height);
 
                     LoadBitmapTask task = new LoadBitmapTask(imageView, width, height);
-                    task.execute(path);
+                    task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, path);
+//                    Log.d(TAG, "LoadBitmapTask execute");
 
                     container.getViewTreeObserver().removeGlobalOnLayoutListener(this);
                 }
@@ -166,7 +168,7 @@ public class ExplorerPagerAdapter extends PagerAdapter {
 
         } else {
             LoadBitmapTask task = new LoadBitmapTask(imageView, width, height);
-            task.execute(path);
+            task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, path);
         }
 
         return rootView;
@@ -184,17 +186,17 @@ public class ExplorerPagerAdapter extends PagerAdapter {
 
     private void runPreloadTask(int position, int width, int height) {
         ArrayList<String> preloadList = new ArrayList<String>();
-        if (position - 2 >= 0) {
-            preloadList.add(imageList.get(position - 2).path);
-        }
         if (position + 2 < imageList.size()) {
             preloadList.add(imageList.get(position + 2).path);
+        }
+        if (position - 2 >= 0) {
+            preloadList.add(imageList.get(position - 2).path);
         }
         String[] preloadArray = new String[preloadList.size()];
         preloadList.toArray(preloadArray);
 
         PreloadBitmapTask task = new PreloadBitmapTask(width, height);
-        task.execute(preloadArray);
+        task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, preloadArray);
     }
 
     private void runRemoveTask(int position) {
@@ -209,7 +211,7 @@ public class ExplorerPagerAdapter extends PagerAdapter {
         removeList.toArray(removeArray);
 
         RemoveBitmapTask task = new RemoveBitmapTask();
-        task.execute(removeArray);
+        task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, removeArray);
     }
 
     @Override

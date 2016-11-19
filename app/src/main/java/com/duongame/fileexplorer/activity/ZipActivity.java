@@ -4,7 +4,11 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import com.duongame.fileexplorer.adapter.ExplorerFileItem;
+import com.duongame.fileexplorer.bitmap.ZipLoader;
 
+import net.lingala.zip4j.exception.ZipException;
+
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 
 /**
@@ -18,16 +22,16 @@ public class ZipActivity extends PagerActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        initPagerAdapter();
+//        initPagerAdapter();
 
         processIntent();
     }
 
-    private void initPagerAdapter() {
-        final ArrayList<ExplorerFileItem> imageList = getImageList();
-        pagerAdapter.setImageList(imageList);
-        pager.setAdapter(pagerAdapter);
-    }
+//    private void initPagerAdapter() {
+//        final ArrayList<ExplorerFileItem> imageList = getImageList();
+//        pagerAdapter.setImageList(imageList);
+//        pager.setAdapter(pagerAdapter);
+//    }
 
     protected ArrayList<ExplorerFileItem> getImageList() {
         return null;
@@ -41,8 +45,31 @@ public class ZipActivity extends PagerActivity {
             path = extras.getString("path");
 
             // zip 파일을 로딩한다.
+            try {
+                final ArrayList<ExplorerFileItem> imageList = ZipLoader.load(this, path, new ZipLoader.ZipLoaderListener() {
+                    @Override
+                    public void onSuccess(int i) {
+                        if(i == page) {
+                            pager.setCurrentItem(page);
+//                            Log.d("ZipActivity", "setCurrentItem "+i);
+                        }
+                    }
 
-            pager.setCurrentItem(page);
+                    @Override
+                    public void onFail() {
+
+                    }
+                });
+                pagerAdapter.setImageList(imageList);
+                pager.setAdapter(pagerAdapter);
+//                Log.d("ZipActivity", "pager init");
+
+            } catch (ZipException e) {
+                e.printStackTrace();
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+
         }
     }
 }

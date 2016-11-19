@@ -1,6 +1,7 @@
 package com.duongame.fileexplorer.adapter;
 
 import android.app.Activity;
+import android.os.AsyncTask;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -41,7 +42,7 @@ public class ExplorerGridAdapter extends ExplorerAdapter {
 
         if (item.type == ExplorerFileItem.FileType.IMAGE) {
             LoadThumbnailTask task = new LoadThumbnailTask(viewHolder.icon);
-            task.execute(item.path);
+            task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, item.path);
             taskList.add(task);
         } else {
             if (viewHolder.type != item.type)
