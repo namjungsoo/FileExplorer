@@ -10,7 +10,7 @@ import android.view.VelocityTracker;
 import android.view.View;
 import android.view.ViewConfiguration;
 
-import com.duongame.fileexplorer.Helper.ExplorerSearcher;
+import com.duongame.fileexplorer.helper.ExplorerSearcher;
 import com.duongame.fileexplorer.R;
 import com.duongame.fileexplorer.adapter.ExplorerFileItem;
 import com.duongame.fileexplorer.adapter.ExplorerPagerAdapter;
@@ -28,7 +28,7 @@ public class ImageActivity extends ViewerActivity {
     private ExplorerPagerAdapter pagerAdapter;
 
     // touch
-    private boolean isPagerIdle = false;
+    private boolean isPagerIdle = true;
     private boolean isBeingDragged = false;
     private PointF lastMotionPt = new PointF();
     private PointF initialMotionPt = new PointF();

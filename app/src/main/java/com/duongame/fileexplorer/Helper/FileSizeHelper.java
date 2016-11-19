@@ -1,4 +1,4 @@
-package com.duongame.fileexplorer.Helper;
+package com.duongame.fileexplorer.helper;
 
 import java.text.DecimalFormat;
 

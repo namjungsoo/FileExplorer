@@ -7,7 +7,7 @@ import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.widget.ImageView;
 
-import com.duongame.fileexplorer.Helper.UnitConverter;
+import com.duongame.fileexplorer.helper.UnitConverter;
 
 /**
  * Created by namjungsoo on 2016-06-19.

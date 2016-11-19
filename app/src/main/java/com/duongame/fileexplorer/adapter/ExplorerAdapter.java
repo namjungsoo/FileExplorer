@@ -101,11 +101,25 @@ public class ExplorerAdapter extends BaseAdapter {
     }
 
     protected Bitmap getThumbnail(String path) {
-        Cursor cursor = context.getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, new String[]{MediaStore.MediaColumns._ID}, MediaStore.MediaColumns.DATA + "=?",
+        Cursor cursor = context.getContentResolver().query(
+                MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                new String[]{MediaStore.MediaColumns._ID},
+                MediaStore.MediaColumns.DATA + "=?",
                 new String[]{path}, null);
         if (cursor != null && cursor.moveToFirst()) {
             int id = cursor.getInt(cursor.getColumnIndex(MediaStore.MediaColumns._ID));
+
             cursor.close();
+//            cursor = context.getContentResolver().query(
+//                    MediaStore.Images.Thumbnails.EXTERNAL_CONTENT_URI,
+//                    new String[]{MediaStore.Images.Thumbnails.DATA},
+//                    MediaStore.Images.Thumbnails.IMAGE_ID + "=?",
+//                    new String[]{String.valueOf(id)}, null);
+//            if (cursor != null && cursor.moveToFirst()) {
+//                String fullPath = cursor.getString(0);
+//                cursor.close();
+//                return BitmapFactory.decodeFile(fullPath);
+//            }
             return MediaStore.Images.Thumbnails.getThumbnail(context.getContentResolver(), id, MediaStore.Images.Thumbnails.MICRO_KIND, null);
         }
 

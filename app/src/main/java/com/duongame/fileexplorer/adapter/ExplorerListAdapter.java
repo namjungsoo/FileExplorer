@@ -5,7 +5,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.duongame.fileexplorer.Helper.FileSizeHelper;
+import com.duongame.fileexplorer.helper.FileSizeHelper;
 import com.duongame.fileexplorer.R;
 import com.duongame.fileexplorer.view.RoundedImageView;
 

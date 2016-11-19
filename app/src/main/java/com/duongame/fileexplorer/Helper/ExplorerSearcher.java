@@ -1,4 +1,4 @@
-package com.duongame.fileexplorer.Helper;
+package com.duongame.fileexplorer.helper;
 
 import android.os.Environment;
 
@@ -51,7 +51,8 @@ public class ExplorerSearcher {
         // 파일로 아이템을 만듬
         for (int i = 0; i < files.length; i++) {
             File eachFile = files[i];
-            if (eachFile.getName().startsWith(".")) {// .으로 시작되면 패스 함
+            if (eachFile.getName().equals(".") ||
+                    eachFile.getName().equals("..")) {// .으로 시작되면 패스 함
                 continue;
             }
 
@@ -95,24 +96,25 @@ public class ExplorerSearcher {
 
     public static ExplorerFileItem.FileType getFileType(File eachFile) {
         ExplorerFileItem.FileType type = eachFile.isDirectory() ? ExplorerFileItem.FileType.DIRECTORY : ExplorerFileItem.FileType.FILE;
+        final String lower = eachFile.getName().toLowerCase();
 
-        if (eachFile.getName().toLowerCase().endsWith(".jpg")
-                || eachFile.getName().toLowerCase().endsWith(".jpeg")
-                || eachFile.getName().toLowerCase().endsWith(".gif")
-                || eachFile.getName().toLowerCase().endsWith(".png")
+        if (lower.endsWith(".jpg")
+                || lower.endsWith(".jpeg")
+                || lower.endsWith(".gif")
+                || lower.endsWith(".png")
                 ) {
             type = ExplorerFileItem.FileType.IMAGE;
         }
 
-        if (eachFile.getName().toLowerCase().endsWith(".zip"))
+        if (lower.endsWith(".zip"))
             type = ExplorerFileItem.FileType.ZIP;
-        if (eachFile.getName().toLowerCase().endsWith(".rar"))
+        if (lower.endsWith(".rar"))
             type = ExplorerFileItem.FileType.RAR;
-        if (eachFile.getName().toLowerCase().endsWith(".pdf"))
+        if (lower.endsWith(".pdf"))
             type = ExplorerFileItem.FileType.PDF;
-        if (eachFile.getName().toLowerCase().endsWith(".mp3"))
+        if (lower.endsWith(".mp3"))
             type = ExplorerFileItem.FileType.AUDIO;
-        if (eachFile.getName().toLowerCase().endsWith(".txt"))
+        if (lower.endsWith(".txt"))
             type = ExplorerFileItem.FileType.TEXT;
 
         return type;

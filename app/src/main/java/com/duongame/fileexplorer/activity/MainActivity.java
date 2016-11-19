@@ -18,13 +18,16 @@ import android.widget.TextView;
 import android.widget.ViewSwitcher;
 
 import com.duongame.fileexplorer.adapter.ExplorerFileItem;
-import com.duongame.fileexplorer.Helper.ExplorerSearcher;
-import com.duongame.fileexplorer.Helper.PreferenceHelper;
+import com.duongame.fileexplorer.helper.ExplorerSearcher;
+import com.duongame.fileexplorer.helper.PreferenceHelper;
 import com.duongame.fileexplorer.R;
 import com.duongame.fileexplorer.adapter.ExplorerAdapter;
 import com.duongame.fileexplorer.adapter.ExplorerGridAdapter;
 import com.duongame.fileexplorer.adapter.ExplorerListAdapter;
 import com.duongame.fileexplorer.bitmap.BitmapCacheManager;
+import com.duongame.fileexplorer.bitmap.ZipLoader;
+
+import net.lingala.zip4j.exception.ZipException;
 
 import java.util.ArrayList;
 
@@ -191,19 +194,29 @@ public class MainActivity extends AppCompatActivity {
 
     void onAdapterItemClick(int position) {
         ExplorerFileItem item = fileList.get(position);
-        if (item.type == ExplorerFileItem.FileType.DIRECTORY) {
-            String newPath;
-            if(ExplorerSearcher.getLastPath().equals("/")) {
-                newPath = ExplorerSearcher.getLastPath() + item.name;
-            } else {
-                newPath = ExplorerSearcher.getLastPath() + "/" + item.name;
-            }
+        switch(item.type) {
+            case DIRECTORY:
+                String newPath;
+                if(ExplorerSearcher.getLastPath().equals("/")) {
+                    newPath = ExplorerSearcher.getLastPath() + item.name;
+                } else {
+                    newPath = ExplorerSearcher.getLastPath() + "/" + item.name;
+                }
 
-            updateFileList(newPath);
-        } else if (item.type == ExplorerFileItem.FileType.IMAGE) {
-            Intent intent = new Intent(MainActivity.this, ImageActivity.class);
-            intent.putExtra("name", item.name);
-            startActivity(intent);
+                updateFileList(newPath);
+                break;
+            case IMAGE:
+                Intent intent = new Intent(MainActivity.this, ImageActivity.class);
+                intent.putExtra("name", item.name);
+                startActivity(intent);
+                break;
+            case ZIP:
+                try {
+                    ZipLoader.load(item.path);
+                } catch (ZipException e) {
+                    e.printStackTrace();
+                }
+                break;
         }
     }
 
