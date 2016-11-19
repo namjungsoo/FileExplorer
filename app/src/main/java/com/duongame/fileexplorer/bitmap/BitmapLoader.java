@@ -24,6 +24,13 @@ public class BitmapLoader {
         return inSampleSize;
     }
 
+    public static BitmapFactory.Options decodeBounds(String path) {
+        final BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true;
+        BitmapFactory.decodeFile(path, options);
+        return options;
+    }
+
     public static Bitmap decodeSampleBitmapFromFile(String path, int reqWidth, int reqHeight) {
         final BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;

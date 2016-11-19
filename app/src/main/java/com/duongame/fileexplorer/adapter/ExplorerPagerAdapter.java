@@ -2,6 +2,7 @@ package com.duongame.fileexplorer.adapter;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.support.v4.view.PagerAdapter;
 import android.util.Log;
@@ -45,6 +46,16 @@ public class ExplorerPagerAdapter extends PagerAdapter {
                 Log.d(TAG, "preload path=" + path);
                 Bitmap bitmap = BitmapCacheManager.getBitmap(path);
                 if (bitmap == null) {
+                    BitmapFactory.Options options = BitmapLoader.decodeBounds(path);
+                    float bitmapRatio = (float) options.outHeight / (float) options.outWidth;
+                    float screenRatio = (float) height / (float) width;
+
+                    if (screenRatio > bitmapRatio) {
+                        height = (int) (width * bitmapRatio);
+                    } else {
+                        height = (int) (width * screenRatio);
+                    }
+
                     bitmap = BitmapLoader.decodeSampleBitmapFromFile(path, width, height);
                     BitmapCacheManager.setBitmap(path, bitmap);
                     Log.d(TAG, "preload cache path=" + path);
@@ -81,6 +92,16 @@ public class ExplorerPagerAdapter extends PagerAdapter {
 
             Bitmap bitmap = BitmapCacheManager.getBitmap(path);
             if (bitmap == null) {
+                BitmapFactory.Options options = BitmapLoader.decodeBounds(path);
+                float bitmapRatio = (float) options.outHeight / (float) options.outWidth;
+                float screenRatio = (float) height / (float) width;
+
+                if (screenRatio > bitmapRatio) {
+                    height = (int) (width * bitmapRatio);
+                } else {
+                    height = (int) (width * screenRatio);
+                }
+
                 bitmap = decodeSampleBitmapFromFile(path, width, height);
                 BitmapCacheManager.setBitmap(path, bitmap);
                 Log.d(TAG, "LoadBitmapTask path=" + path);
