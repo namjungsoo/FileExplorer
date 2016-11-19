@@ -5,8 +5,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.duongame.fileexplorer.helper.FileSizeHelper;
 import com.duongame.fileexplorer.R;
+import com.duongame.fileexplorer.helper.FileSizeHelper;
 import com.duongame.fileexplorer.view.RoundedImageView;
 
 import java.util.ArrayList;
@@ -48,9 +48,12 @@ public class ExplorerListAdapter extends ExplorerAdapter {
             LoadThumbnailTask task = new LoadThumbnailTask(viewHolder.icon);
             task.execute(item.path);
             taskList.add(task);
+        } else {
+            if(viewHolder.type != item.type)
+                setTypeIcon(item.type, viewHolder.icon);
         }
 
-        setTypeIcon(item.type, viewHolder.icon);
+        viewHolder.type = item.type;
         return convertView;
     }
 }

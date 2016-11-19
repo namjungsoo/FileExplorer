@@ -1,6 +1,8 @@
 package com.duongame.fileexplorer.bitmap;
 
+import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.widget.ImageView;
 
 import java.util.HashMap;
@@ -12,8 +14,20 @@ import java.util.HashMap;
 public class BitmapCacheManager {
     static HashMap<String, Bitmap> thumbnailCache = new HashMap<String, Bitmap>();
     static HashMap<String, Bitmap> bitmapCache = new HashMap<>();
+    static HashMap<Integer, Bitmap> resourceCache = new HashMap<>();
 
     static HashMap<String, ImageView> thumbnailImageCache = new HashMap<>();
+
+    // resource bitmap
+    public static Bitmap getResourceBitmap(Resources res, int resId) {
+        Bitmap bitmap = resourceCache.get(resId);
+        if(bitmap == null) {
+            BitmapFactory.Options options = new BitmapFactory.Options();
+//            options.inSampleSize = 2;
+            bitmap = BitmapFactory.decodeResource(res, resId, options);
+        }
+        return bitmap;
+    }
 
     // image bitmap
     public static void setBitmap(String path, Bitmap bitmap) {

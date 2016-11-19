@@ -19,6 +19,8 @@ import com.duongame.fileexplorer.view.RoundedImageView;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
+import static com.duongame.fileexplorer.bitmap.BitmapCacheManager.getResourceBitmap;
+
 /**
  * Created by namjungsoo on 2016-11-06.
  */
@@ -89,6 +91,7 @@ public class ExplorerAdapter extends BaseAdapter {
         public TextView name;
         public TextView date;
         public TextView size;
+        public ExplorerFileItem.FileType type;
     }
 
     @Override
@@ -132,32 +135,31 @@ public class ExplorerAdapter extends BaseAdapter {
             case IMAGE:
                 return;
             case FILE:
-                icon.setImageResource(R.drawable.file);
+                icon.setImageBitmap(getResourceBitmap(context.getResources(), R.drawable.file));
                 break;
             case DIRECTORY:
-                icon.setImageResource(R.drawable.directory);
+                icon.setImageBitmap(getResourceBitmap(context.getResources(), R.drawable.directory));
                 break;
             case ZIP:
-                icon.setImageResource(R.drawable.zip);
+                icon.setImageBitmap(getResourceBitmap(context.getResources(), R.drawable.zip));
                 break;
             case RAR:
-                icon.setImageResource(R.drawable.rar);
+                icon.setImageBitmap(getResourceBitmap(context.getResources(), R.drawable.rar));
                 break;
             case PDF:
-                icon.setImageResource(R.drawable.pdf);
+                icon.setImageBitmap(getResourceBitmap(context.getResources(), R.drawable.pdf));
                 break;
             case AUDIO:
-                icon.setImageResource(R.drawable.mp3);
+                icon.setImageBitmap(getResourceBitmap(context.getResources(), R.drawable.mp3));
                 break;
             case TEXT:
-                icon.setImageResource(R.drawable.text);
+                icon.setImageBitmap(getResourceBitmap(context.getResources(), R.drawable.text));
                 break;
             case VIDEO:
                 break;
             default:
                 return;
         }
-
     }
 
     public void stopAllTasks() {
