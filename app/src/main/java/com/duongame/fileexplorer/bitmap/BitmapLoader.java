@@ -62,14 +62,18 @@ public class BitmapLoader {
         if (ratio > 1) {
             height = (int)(size * ratio);
         } else {
-            width = (int)(size * ratio);
+            width = (int)(size / ratio);
         }
+
         options.inSampleSize = calculateInSampleSize(options, width, height);
+//        Log.d("tag", "original path=" +path + " width="+options.outWidth + " height="+options.outHeight + " sample="+options.inSampleSize);
+//        Log.d("tag", "thumb path=" +path + " width="+width + " height="+height);
 
         // 로드하기 위해서는 위에서 true 로 설정했던 inJustDecodeBounds 의 값을 false 로 설정합니다.
         options.inJustDecodeBounds = false;
         try {
             BitmapRegionDecoder decoder = BitmapRegionDecoder.newInstance(path, false);
+//            Log.d("tag", "decoder path=" + path + " width="+width + " height="+height);
             if(ratio > 1) {
                 int top = (decoder.getHeight() - decoder.getWidth()) >> 1;
                 Bitmap bitmap = decoder.decodeRegion(new Rect(0, top, decoder.getWidth(), top + decoder.getWidth()), options);

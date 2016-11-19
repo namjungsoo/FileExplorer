@@ -7,21 +7,42 @@
     android:orientation="vertical"
     tools:context="com.duongame.fileexplorer.activity.MainActivity">
 
-    <HorizontalScrollView
-        android:id="@+id/scroll_path"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:scrollbars="none">
+        android:orientation="horizontal">
 
-        <TextView
-            android:id="@+id/text_path"
+        <Button
+            android:id="@+id/btn_up"
+            android:layout_width="40dp"
+            android:layout_height="wrap_content"
+            android:text="U"
+            android:textAllCaps="false" />
+
+        <Button
+            android:id="@+id/btn_home"
+            android:layout_width="40dp"
+            android:layout_height="wrap_content"
+            android:text="H"
+            android:textAllCaps="false" />
+
+        <HorizontalScrollView
+            android:id="@+id/scroll_path"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_margin="5dp"
-            android:gravity="center_vertical"
-            android:textSize="16sp"
-            android:textStyle="bold"/>
-    </HorizontalScrollView>
+            android:scrollbars="none">
+
+            <TextView
+                android:id="@+id/text_path"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_margin="5dp"
+                android:gravity="center_vertical"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+        </HorizontalScrollView>
+
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -29,54 +50,34 @@
         android:orientation="horizontal">
 
         <Button
-            android:layout_width="60dp"
-            android:layout_height="wrap_content"
-            android:text="Up"
-            android:id="@+id/btn_up"
-            android:textAllCaps="false"
-            />
-
-        <Button
-            android:layout_width="70dp"
-            android:layout_height="wrap_content"
-            android:text="Home"
-            android:id="@+id/btn_home"
-            android:textAllCaps="false"
-            />
-
-        <Button
+            android:id="@+id/btn_view"
             android:layout_width="60dp"
             android:layout_height="wrap_content"
             android:text="List"
-            android:id="@+id/btn_view"
-            android:textAllCaps="false"
-            />
+            android:textAllCaps="false" />
 
         <Button
-            android:layout_width="60dp"
-            android:layout_height="wrap_content"
-            android:text="All"
             android:id="@+id/btn_all"
-            android:enabled="false"
-            android:textAllCaps="false"
-            />
-
-        <Button
             android:layout_width="60dp"
             android:layout_height="wrap_content"
-            android:text="Del"
-            android:id="@+id/btn_del"
             android:enabled="false"
-            android:textAllCaps="false"
-            />
+            android:text="All"
+            android:textAllCaps="false" />
 
         <Button
+            android:id="@+id/btn_del"
+            android:layout_width="60dp"
+            android:layout_height="wrap_content"
+            android:enabled="false"
+            android:text="Del"
+            android:textAllCaps="false" />
+
+        <Button
+            android:id="@+id/btn_create"
             android:layout_width="40dp"
             android:layout_height="wrap_content"
             android:text=" + "
-            android:id="@+id/btn_create"
-            android:textAllCaps="false"
-            />
+            android:textAllCaps="false" />
     </LinearLayout>
 
 
@@ -89,6 +90,7 @@
             android:id="@+id/refresh_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
+
             <ListView
                 android:id="@+id/list_explorer"
                 android:layout_width="match_parent"
@@ -99,6 +101,7 @@
             android:id="@+id/refresh_grid"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
+
             <GridView
                 android:id="@+id/grid_explorer"
                 android:layout_width="match_parent"

@@ -206,14 +206,14 @@ public class MainActivity extends AppCompatActivity {
                 updateFileList(newPath);
                 break;
             case IMAGE:
-                Intent intent = new Intent(MainActivity.this, ImageActivity.class);
+                Intent intent = new Intent(MainActivity.this, PhotoActivity.class);
                 intent.putExtra("name", item.name);
                 startActivity(intent);
                 break;
             case ZIP:
                 try {
                     ZipLoader.load(item.path);
-                } catch (ZipException e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
                 break;

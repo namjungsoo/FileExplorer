@@ -43,7 +43,7 @@ public class ExplorerPagerAdapter extends PagerAdapter {
         protected Bitmap doInBackground(String... params) {
             for (int i = 0; i < params.length; i++) {
                 final String path = params[i];
-                Log.d(TAG, "preload path=" + path);
+//                Log.d(TAG, "preload path=" + path);
                 Bitmap bitmap = BitmapCacheManager.getBitmap(path);
                 if (bitmap == null) {
                     BitmapFactory.Options options = BitmapLoader.decodeBounds(path);
@@ -58,7 +58,7 @@ public class ExplorerPagerAdapter extends PagerAdapter {
 
                     bitmap = BitmapLoader.decodeSampleBitmapFromFile(path, width, height);
                     BitmapCacheManager.setBitmap(path, bitmap);
-                    Log.d(TAG, "preload cache path=" + path);
+//                    Log.d(TAG, "preload cache path=" + path);
                 }
             }
             return null;
@@ -104,9 +104,9 @@ public class ExplorerPagerAdapter extends PagerAdapter {
 
                 bitmap = decodeSampleBitmapFromFile(path, width, height);
                 BitmapCacheManager.setBitmap(path, bitmap);
-                Log.d(TAG, "LoadBitmapTask path=" + path);
+//                Log.d(TAG, "LoadBitmapTask path=" + path);
             } else {
-                Log.d(TAG, "LoadBitmapTask cache path=" + path);
+//                Log.d(TAG, "LoadBitmapTask cache path=" + path);
             }
             return bitmap;
         }
@@ -133,7 +133,7 @@ public class ExplorerPagerAdapter extends PagerAdapter {
 
     @Override
     public Object instantiateItem(final ViewGroup container, int position) {
-        Log.d(TAG, "instantiateItem position=" + position);
+//        Log.d(TAG, "instantiateItem position=" + position);
 
         final ViewGroup rootView = (ViewGroup) context.getLayoutInflater().inflate(R.layout.fragment_page, container, false);
         final ImageView imageView = (ImageView) rootView.findViewById(R.id.image_viewer);
@@ -147,7 +147,7 @@ public class ExplorerPagerAdapter extends PagerAdapter {
 
         final int width = container.getWidth();
         final int height = container.getHeight();
-        Log.d(TAG, "instantiateItem width=" + width + " height=" + height);
+//        Log.d(TAG, "instantiateItem width=" + width + " height=" + height);
 
         if (width == 0 || height == 0) {
             container.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
@@ -155,7 +155,7 @@ public class ExplorerPagerAdapter extends PagerAdapter {
                 public void onGlobalLayout() {
                     int width = container.getWidth();
                     int height = container.getHeight();
-                    Log.d(TAG, "onGlobalLayout width=" + width + " height=" + height);
+//                    Log.d(TAG, "onGlobalLayout width=" + width + " height=" + height);
 
                     LoadBitmapTask task = new LoadBitmapTask(imageView, width, height);
                     task.execute(path);
@@ -174,7 +174,7 @@ public class ExplorerPagerAdapter extends PagerAdapter {
 
     @Override
     public void destroyItem(ViewGroup container, int position, Object object) {
-        Log.d(TAG, "destroyItem position=" + position);
+//        Log.d(TAG, "destroyItem position=" + position);
         container.removeView((View) object);
 
         ViewGroup rootView = (ViewGroup) object;
@@ -226,7 +226,7 @@ public class ExplorerPagerAdapter extends PagerAdapter {
                 public void onGlobalLayout() {
                     int width = container.getWidth();
                     int height = container.getHeight();
-                    Log.d(TAG, "onGlobalLayout width=" + width + " height=" + height);
+//                    Log.d(TAG, "onGlobalLayout width=" + width + " height=" + height);
 
                     runPreloadTask(position, width, height);
                     container.getViewTreeObserver().removeGlobalOnLayoutListener(this);

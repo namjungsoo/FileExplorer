@@ -17,6 +17,7 @@ import com.duongame.fileexplorer.R;
  * Created by namjungsoo on 2016-11-16.
  */
 
+// 전체 화면을 지원한다.
 public class ViewerActivity extends AppCompatActivity {
     private static final String TAG = "ComicViewerActivity";
 
@@ -28,6 +29,7 @@ public class ViewerActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         initActionBar();
+
         // 전체 화면으로 들어감
         setFullscreen(true);
     }

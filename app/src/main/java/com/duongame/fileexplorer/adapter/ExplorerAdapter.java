@@ -144,18 +144,18 @@ public class ExplorerAdapter extends BaseAdapter {
             case ZIP:
                 icon.setImageBitmap(getResourceBitmap(context.getResources(), R.drawable.zip));
                 break;
-            case RAR:
-                icon.setImageBitmap(getResourceBitmap(context.getResources(), R.drawable.rar));
-                break;
-            case PDF:
-                icon.setImageBitmap(getResourceBitmap(context.getResources(), R.drawable.pdf));
-                break;
-            case AUDIO:
-                icon.setImageBitmap(getResourceBitmap(context.getResources(), R.drawable.mp3));
-                break;
-            case TEXT:
-                icon.setImageBitmap(getResourceBitmap(context.getResources(), R.drawable.text));
-                break;
+//            case RAR:
+//                icon.setImageBitmap(getResourceBitmap(context.getResources(), R.drawable.rar));
+//                break;
+//            case PDF:
+//                icon.setImageBitmap(getResourceBitmap(context.getResources(), R.drawable.pdf));
+//                break;
+//            case AUDIO:
+//                icon.setImageBitmap(getResourceBitmap(context.getResources(), R.drawable.mp3));
+//                break;
+//            case TEXT:
+//                icon.setImageBitmap(getResourceBitmap(context.getResources(), R.drawable.text));
+//                break;
             case VIDEO:
                 break;
             default:
