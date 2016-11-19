@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.view.VelocityTracker;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -23,13 +22,6 @@ public class ViewerActivity extends AppCompatActivity {
 
     protected boolean isFullscreen = true;
     private ActionBar actionBar;
-
-    // configuration
-    protected VelocityTracker mVelocityTracker = null;
-    protected int mMaxVelocity = 0;
-    protected int mSnapVelocity = 0;
-    protected int mTouchSlop = 0;
-    protected static final int VELOCITY_UNIT = 1000;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -1,11 +1,14 @@
 package com.duongame.fileexplorer.activity;
 
 import android.content.Intent;
+import android.graphics.PointF;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.MotionEvent;
+import android.view.VelocityTracker;
 import android.view.View;
+import android.view.ViewConfiguration;
 
 import com.duongame.fileexplorer.Helper.ExplorerSearcher;
 import com.duongame.fileexplorer.R;
@@ -24,6 +27,16 @@ public class ImageActivity extends ViewerActivity {
     private ViewPager pager;
     private ExplorerPagerAdapter pagerAdapter;
 
+    // touch
+    private boolean isPagerIdle = false;
+    private boolean isBeingDragged = false;
+    private PointF lastMotionPt = new PointF();
+    private PointF initialMotionPt = new PointF();
+
+    // configuration
+    protected VelocityTracker velocityTracker = null;
+    protected int touchSlop = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,20 +45,98 @@ public class ImageActivity extends ViewerActivity {
         pager = (ViewPager) findViewById(R.id.pager);
         pagerAdapter = new ExplorerPagerAdapter(this);
 
+        initAdapter();
+        initPagerListeners();
+        processIntent();
+    }
+
+    private void startDragIfNeeded(MotionEvent ev) {
+        final float x = ev.getX(0);
+        final float xSignedDiff = x - initialMotionPt.x;
+        final float xDiff = Math.abs(xSignedDiff);
+        if (xDiff < touchSlop) {
+            isBeingDragged = false;
+            return;
+        }
+        isBeingDragged = true;
+    }
+
+    private void initPagerListeners() {
+        final ViewConfiguration configuration = ViewConfiguration.get(this);
+        touchSlop = configuration.getScaledTouchSlop() >> 1;
+
+        pager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+                switch (state) {
+                    case ViewPager.SCROLL_STATE_IDLE:
+                        isPagerIdle = true;
+                        break;
+                    case ViewPager.SCROLL_STATE_DRAGGING:
+                    case ViewPager.SCROLL_STATE_SETTLING:
+                        isPagerIdle = false;
+                        break;
+                }
+            }
+        });
+
         pager.setOnTouchListener(new View.OnTouchListener() {
             @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
+            public boolean onTouch(View view, MotionEvent ev) {
                 Log.d(TAG, "onTouch");
-                if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
-                    setFullscreen(!isFullscreen);
-                    return true;
+
+                if (velocityTracker == null) {
+                    velocityTracker = VelocityTracker.obtain();
+                }
+                velocityTracker.addMovement(ev);
+
+                switch (ev.getAction()) {
+                    case MotionEvent.ACTION_DOWN: {
+                        lastMotionPt.x = initialMotionPt.x = ev.getX(0);
+                        lastMotionPt.y = initialMotionPt.y = ev.getY(0);
+                        break;
+                    }
+
+                    case MotionEvent.ACTION_MOVE: {
+                        if (!isBeingDragged) {
+                            startDragIfNeeded(ev);
+                        }
+                        final float x = ev.getX(0);
+                        final float y = ev.getY(0);
+                        lastMotionPt.x = x;
+                        lastMotionPt.y = y;
+                        break;
+                    }
+
+                    case MotionEvent.ACTION_CANCEL:
+                    case MotionEvent.ACTION_UP: {
+                        if (velocityTracker != null) {
+                            velocityTracker.recycle();
+                            velocityTracker = null;
+                        }
+                        if (!isBeingDragged && isPagerIdle) {
+                            setFullscreen(!isFullscreen);
+                            return true;
+                        } else {
+                            isBeingDragged = false;
+                        }
+                        break;
+                    }
                 }
                 return false;
             }
         });
 
-        initAdapter();
-        processIntent();
     }
 
     private void initAdapter() {
