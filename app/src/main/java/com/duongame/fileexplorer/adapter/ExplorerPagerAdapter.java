@@ -189,6 +189,9 @@ public class ExplorerPagerAdapter extends PagerAdapter {
         if (position + 2 < imageList.size()) {
             preloadList.add(imageList.get(position + 2).path);
         }
+        if (position + 3 < imageList.size()) {
+            preloadList.add(imageList.get(position + 3).path);
+        }
         if (position - 2 >= 0) {
             preloadList.add(imageList.get(position - 2).path);
         }
@@ -204,8 +207,8 @@ public class ExplorerPagerAdapter extends PagerAdapter {
         if (position - 3 >= 0) {
             removeList.add(imageList.get(position - 3).path);
         }
-        if (position + 3 < imageList.size()) {
-            removeList.add(imageList.get(position + 3).path);
+        if (position + 4 < imageList.size()) {
+            removeList.add(imageList.get(position + 4).path);
         }
         String[] removeArray = new String[removeList.size()];
         removeList.toArray(removeArray);
