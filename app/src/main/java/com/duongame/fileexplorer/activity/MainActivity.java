@@ -6,9 +6,9 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.GridView;
@@ -34,12 +34,13 @@ public class MainActivity extends AppCompatActivity {
 
     private ExplorerAdapter adapter;
     private ArrayList<ExplorerFileItem> fileList;
-    private SwipeRefreshLayout refresh;
     private TextView textPath;
     private HorizontalScrollView scrollPath;
 
     private GridView gridView;
     private ListView listView;
+    private AbsListView currentView;
+
     private ViewSwitcher switcher;
 
     private final static int SWITCH_LIST = 0;
@@ -55,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
         initUI();
 
         int viewType = PreferenceHelper.getViewType(this);
-        switch(viewType) {
+        switch (viewType) {
             case SWITCH_LIST:
                 switchToList();
 
@@ -86,6 +87,12 @@ public class MainActivity extends AppCompatActivity {
 //
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        updateFileList(ExplorerSearcher.getLastPath());
+        refreshThumbnail(ExplorerSearcher.getLastPath());
+    }
 
     void initUI() {
         switcher = (ViewSwitcher) findViewById(R.id.switcher);
@@ -97,8 +104,8 @@ public class MainActivity extends AppCompatActivity {
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Button btn = (Button)view;
-                if(viewType == SWITCH_LIST) {
+                Button btn = (Button) view;
+                if (viewType == SWITCH_LIST) {
                     switchToGrid();
                     PreferenceHelper.setViewType(MainActivity.this, SWITCH_GRID);
                 } else {
@@ -128,16 +135,6 @@ public class MainActivity extends AppCompatActivity {
     void switchToList() {
         switcher.setDisplayedChild(SWITCH_LIST);
 
-        refresh = (SwipeRefreshLayout) findViewById(R.id.refresh_list);
-        refresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                refreshThumbnail(ExplorerSearcher.getLastPath());
-                updateFileList(ExplorerSearcher.getLastPath());
-                refresh.setRefreshing(false);
-            }
-        });
-
         adapter = new ExplorerListAdapter(this, fileList);
 
         listView = (ListView) findViewById(R.id.list_explorer);
@@ -151,21 +148,13 @@ public class MainActivity extends AppCompatActivity {
 
         final Button view = (Button) findViewById(R.id.btn_view);
         view.setText("Grid");
+
         viewType = SWITCH_LIST;
+        currentView = listView;
     }
 
     void switchToGrid() {
         switcher.setDisplayedChild(SWITCH_GRID);
-
-        refresh = (SwipeRefreshLayout) findViewById(R.id.refresh_grid);
-        refresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                refreshThumbnail(ExplorerSearcher.getLastPath());
-                updateFileList(ExplorerSearcher.getLastPath());
-                refresh.setRefreshing(false);
-            }
-        });
 
         adapter = new ExplorerGridAdapter(this, fileList);
 
@@ -180,42 +169,48 @@ public class MainActivity extends AppCompatActivity {
 
         final Button view = (Button) findViewById(R.id.btn_view);
         view.setText("List");
+
         viewType = SWITCH_GRID;
+        currentView = gridView;
     }
 
     void refreshThumbnail(String path) {
         ArrayList<ExplorerFileItem> imageList = ExplorerSearcher.getImageList();
-        for(ExplorerFileItem item : imageList) {
-            sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse("file://"+ item.path)));
+        for (ExplorerFileItem item : imageList) {
+            sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse("file://" + item.path)));
         }
     }
 
     void onAdapterItemClick(int position) {
         ExplorerFileItem item = fileList.get(position);
-        switch(item.type) {
+        switch (item.type) {
             case DIRECTORY:
                 String newPath;
-                if(ExplorerSearcher.getLastPath().equals("/")) {
+                if (ExplorerSearcher.getLastPath().equals("/")) {
                     newPath = ExplorerSearcher.getLastPath() + item.name;
                 } else {
                     newPath = ExplorerSearcher.getLastPath() + "/" + item.name;
                 }
 
+//                View view = currentView.getChildAt(0);
+//                int scrollY = view.getTop();
+//                Log.d("MainActivity", "position=" + scrollY);
+
                 updateFileList(newPath);
                 break;
             case IMAGE: {
-                    Intent intent = new Intent(MainActivity.this, PhotoActivity.class);
-                    intent.putExtra("name", item.name);
-                    startActivity(intent);
-                }
-                break;
+                Intent intent = new Intent(MainActivity.this, PhotoActivity.class);
+                intent.putExtra("name", item.name);
+                startActivity(intent);
+            }
+            break;
             case ZIP: {
-                    Intent intent = new Intent(MainActivity.this, ZipActivity.class);
-                    intent.putExtra("path", item.path);
-                    intent.putExtra("page", 0);
-                    startActivity(intent);
-                }
-                break;
+                Intent intent = new Intent(MainActivity.this, ZipActivity.class);
+                intent.putExtra("path", item.path);
+                intent.putExtra("page", 0);
+                startActivity(intent);
+            }
+            break;
         }
     }
 

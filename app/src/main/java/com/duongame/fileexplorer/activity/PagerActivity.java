@@ -3,6 +3,7 @@ package com.duongame.fileexplorer.activity;
 import android.graphics.PointF;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
 import android.view.View;
@@ -118,7 +119,28 @@ public class PagerActivity extends ViewerActivity {
                             velocityTracker = null;
                         }
                         if (!isBeingDragged && isPagerIdle) {
-                            setFullscreen(!isFullscreen);
+
+                            // 터치 영역을 확인하여 좌/중/우를 확인하자.
+                            int width = pager.getWidth();
+                            int height = pager.getHeight();
+                            Log.d(TAG, "width="+width + " height="+height);
+
+                            int left = width / 3;
+                            int right = width * 2 / 3;
+
+                            if (lastMotionPt.x < left) {
+                                int page = pager.getCurrentItem();
+                                if (page > 0)
+                                    pager.setCurrentItem(page - 1, true);
+                            } else if (lastMotionPt.x > right) {
+                                //int count = pager.getChildCount();
+                                int count = pagerAdapter.getCount();
+                                int page = pager.getCurrentItem();
+                                if (page < count + 1)
+                                    pager.setCurrentItem(page + 1, true);
+                            } else {
+                                setFullscreen(!isFullscreen);
+                            }
                             return true;
                         } else {
                             isBeingDragged = false;
@@ -129,7 +151,6 @@ public class PagerActivity extends ViewerActivity {
                 return false;
             }
         });
-
     }
 
     @Override
