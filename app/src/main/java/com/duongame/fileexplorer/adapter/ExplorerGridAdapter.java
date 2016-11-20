@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.os.AsyncTask;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.duongame.fileexplorer.R;
@@ -30,6 +31,7 @@ public class ExplorerGridAdapter extends ExplorerAdapter {
             viewHolder = new ViewHolder();
             viewHolder.icon = (RoundedImageView) convertView.findViewById(R.id.file_icon);
             viewHolder.name = (TextView) convertView.findViewById(R.id.text_name);
+            viewHolder.small_icon = (ImageView) convertView.findViewById(R.id.file_small_icon);
 
             convertView.setTag(viewHolder);
         } else {
@@ -39,9 +41,14 @@ public class ExplorerGridAdapter extends ExplorerAdapter {
         ExplorerFileItem item = fileList.get(position);
         viewHolder.name.setText(item.name);
         viewHolder.icon.setRadiusDp(5);
+        viewHolder.small_icon.setVisibility(View.INVISIBLE);
 
         if (item.type == ExplorerFileItem.FileType.IMAGE) {
             LoadThumbnailTask task = new LoadThumbnailTask(viewHolder.icon);
+            task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, item.path);
+            taskList.add(task);
+        } else if(item.type == ExplorerFileItem.FileType.ZIP) {
+            LoadZipThumbnailTask task = new LoadZipThumbnailTask(context, viewHolder.icon, viewHolder.small_icon);
             task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, item.path);
             taskList.add(task);
         } else {

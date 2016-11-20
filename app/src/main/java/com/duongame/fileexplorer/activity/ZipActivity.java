@@ -8,7 +8,6 @@ import com.duongame.fileexplorer.bitmap.ZipLoader;
 
 import net.lingala.zip4j.exception.ZipException;
 
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 
 /**
@@ -65,8 +64,6 @@ public class ZipActivity extends PagerActivity {
 //                Log.d("ZipActivity", "pager init");
 
             } catch (ZipException e) {
-                e.printStackTrace();
-            } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
             }
 

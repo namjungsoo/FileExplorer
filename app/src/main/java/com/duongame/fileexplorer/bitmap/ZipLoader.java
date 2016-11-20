@@ -11,7 +11,6 @@ import net.lingala.zip4j.exception.ZipException;
 import net.lingala.zip4j.model.FileHeader;
 
 import java.io.File;
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -67,11 +66,32 @@ public class ZipLoader {
         }
     }
 
-    public static ArrayList<ExplorerFileItem> load(Context context, String filename, ZipLoaderListener listener) throws ZipException, UnsupportedEncodingException {
-//        if (checkCachedPath(context, filename)) {
-//            return null;
-//        }
+    public static String getFirstImage(Context context, String filename) throws ZipException {
+        // 일단 무조건 압축 풀자
+        checkCachedPath(context, filename);
 
+        ZipFile zipFile = new ZipFile(filename);
+        zipFile.setFileNameCharset("EUC-KR");// 일단 무조건 한국 사용자를 위해서 이렇게 설정함
+        zipFile.setRunInThread(true);
+
+        ArrayList<ExplorerFileItem> imageList = new ArrayList<ExplorerFileItem>();
+        List<FileHeader> headers = zipFile.getFileHeaders();
+
+        String path = FileHelper.getZipCachePath(context, filename);
+
+        for (FileHeader header : headers) {
+            String name = header.getFileName();
+            if (FileHelper.isImage(name)) {
+                imageList.add(new ExplorerFileItem(path, name, "", 0, ExplorerFileItem.FileType.IMAGE));
+            }
+        }
+
+        Collections.sort(imageList, new FileHelper.FileNameCompare());
+
+        return imageList.get(0).path;
+    }
+
+    public static ArrayList<ExplorerFileItem> load(Context context, String filename, ZipLoaderListener listener) throws ZipException {
         // 일단 무조건 압축 풀자
         checkCachedPath(context, filename);
 

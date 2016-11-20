@@ -1,6 +1,7 @@
 package com.duongame.fileexplorer.adapter;
 
 import android.app.Activity;
+import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
@@ -14,11 +15,15 @@ import android.widget.TextView;
 import com.duongame.fileexplorer.R;
 import com.duongame.fileexplorer.bitmap.BitmapCacheManager;
 import com.duongame.fileexplorer.bitmap.BitmapLoader;
+import com.duongame.fileexplorer.bitmap.ZipLoader;
 import com.duongame.fileexplorer.view.RoundedImageView;
+
+import net.lingala.zip4j.exception.ZipException;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
+import static com.duongame.fileexplorer.adapter.ExplorerFileItem.FileType.ZIP;
 import static com.duongame.fileexplorer.bitmap.BitmapCacheManager.getResourceBitmap;
 
 /**
@@ -28,7 +33,61 @@ import static com.duongame.fileexplorer.bitmap.BitmapCacheManager.getResourceBit
 public class ExplorerAdapter extends BaseAdapter {
     protected ArrayList<ExplorerFileItem> fileList;
     protected Activity context;
-    protected ArrayList<LoadThumbnailTask> taskList = new ArrayList<LoadThumbnailTask>();
+    protected ArrayList<AsyncTask> taskList = new ArrayList<AsyncTask>();
+
+    public class LoadZipThumbnailTask extends AsyncTask<String, Void, Bitmap> {
+        private final WeakReference<ImageView> imageViewReference;
+        private final WeakReference<ImageView> smallImageViewReference;
+        private final Context context;
+
+        public LoadZipThumbnailTask(Context context, ImageView imageView, ImageView smallImageView) {
+            imageViewReference = new WeakReference<ImageView>(imageView);
+            smallImageViewReference = new WeakReference<ImageView>(smallImageView);
+            this.context = context;
+        }
+
+        @Override
+        protected Bitmap doInBackground(String... params) {
+            final String path = params[0];
+
+            Bitmap bitmap = BitmapCacheManager.getThumbnail(path);
+            if (bitmap == null) {
+                String image = null;
+                try {
+                    image = ZipLoader.getFirstImage(context, path);
+                } catch (ZipException e) {
+                    e.printStackTrace();
+                }
+
+                if (image == null) {
+                    return null;
+                }
+
+                bitmap = BitmapLoader.decodeSquareThumbnailFromFile(image, 96);
+                if (bitmap != null) {
+                    BitmapCacheManager.setThumbnail(path, bitmap, imageViewReference.get());
+                }
+            }
+
+            return bitmap;
+        }
+
+        @Override
+        protected void onPostExecute(Bitmap bitmap) {
+            super.onPostExecute(bitmap);
+            if (imageViewReference != null && bitmap != null) {
+                final ImageView imageView = imageViewReference.get();
+                if (imageView != null) {
+                    imageView.setImageBitmap(bitmap);
+                }
+                setTypeIcon(ZIP, smallImageViewReference.get());
+                smallImageViewReference.get().setVisibility(View.VISIBLE);
+            } else {
+                setTypeIcon(ZIP, imageViewReference.get());
+                smallImageViewReference.get().setVisibility(View.INVISIBLE);
+            }
+        }
+    }
 
     public class LoadThumbnailTask extends AsyncTask<String, Void, Bitmap> {
         private final WeakReference<ImageView> imageViewReference;
@@ -44,11 +103,10 @@ public class ExplorerAdapter extends BaseAdapter {
             Bitmap bitmap = BitmapCacheManager.getThumbnail(path);
             if (bitmap == null) {
                 bitmap = getThumbnail(path);
-                if(bitmap == null) {
-                    //bitmap = BitmapLoader.decodeSampleBitmapFromFile(path, 96, 96);// MICRO_KIND
+                if (bitmap == null) {
                     bitmap = BitmapLoader.decodeSquareThumbnailFromFile(path, 96);
                 }
-                if(bitmap != null) {
+                if (bitmap != null) {
                     BitmapCacheManager.setThumbnail(path, bitmap, imageViewReference.get());
                 }
             }
@@ -88,6 +146,7 @@ public class ExplorerAdapter extends BaseAdapter {
     }
 
     public static class ViewHolder {
+        public ImageView small_icon;
         public RoundedImageView icon;
         public TextView name;
         public TextView date;
@@ -132,7 +191,7 @@ public class ExplorerAdapter extends BaseAdapter {
     }
 
     void setTypeIcon(ExplorerFileItem.FileType type, ImageView icon) {
-        switch(type) {
+        switch (type) {
             case IMAGE:
                 return;
             case FILE:
@@ -164,7 +223,7 @@ public class ExplorerAdapter extends BaseAdapter {
     }
 
     public void stopAllTasks() {
-        for (LoadThumbnailTask task : taskList) {
+        for (AsyncTask task : taskList) {
             task.cancel(true);
         }
         taskList.clear();
