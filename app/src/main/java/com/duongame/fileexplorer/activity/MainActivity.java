@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
@@ -24,11 +25,13 @@ import com.duongame.fileexplorer.adapter.ExplorerGridAdapter;
 import com.duongame.fileexplorer.adapter.ExplorerListAdapter;
 import com.duongame.fileexplorer.bitmap.BitmapCacheManager;
 import com.duongame.fileexplorer.helper.ExplorerSearcher;
+import com.duongame.fileexplorer.helper.PositionManager;
 import com.duongame.fileexplorer.helper.PreferenceHelper;
 
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
+    private final static String TAG = "MainActivity";
     private final static int PERMISSION_STORAGE = 1;
     private final static int MAX_THUMBNAILS = 100;
 
@@ -68,6 +71,10 @@ public class MainActivity extends AppCompatActivity {
 
         if (checkStoragePermissions()) {
             final String lastPath = PreferenceHelper.getLastPath(MainActivity.this);
+            final int position = PreferenceHelper.getLastPosition(MainActivity.this);
+
+            Log.d(TAG, "onCreate path=" + lastPath + " position=" + position);
+            PositionManager.setPosition(lastPath, position);
             updateFileList(lastPath);
         }
 
@@ -90,8 +97,24 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        Log.d(TAG, "onPause");
+
+        // 밖에 나갔다 들어오면 리프레시함
         updateFileList(ExplorerSearcher.getLastPath());
-        refreshThumbnail(ExplorerSearcher.getLastPath());
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        final int position = currentView.getFirstVisiblePosition();
+        Log.d(TAG, "onPause position=" + position);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                PreferenceHelper.setLastPosition(MainActivity.this, position);
+            }
+        }).start();
     }
 
     void initUI() {
@@ -151,6 +174,8 @@ public class MainActivity extends AppCompatActivity {
 
         viewType = SWITCH_LIST;
         currentView = listView;
+
+        moveToSelection(ExplorerSearcher.getLastPath());
     }
 
     void switchToGrid() {
@@ -172,6 +197,8 @@ public class MainActivity extends AppCompatActivity {
 
         viewType = SWITCH_GRID;
         currentView = gridView;
+
+        moveToSelection(ExplorerSearcher.getLastPath());
     }
 
     void refreshThumbnail(String path) {
@@ -192,10 +219,7 @@ public class MainActivity extends AppCompatActivity {
                     newPath = ExplorerSearcher.getLastPath() + "/" + item.name;
                 }
 
-//                View view = currentView.getChildAt(0);
-//                int scrollY = view.getTop();
-//                Log.d("MainActivity", "position=" + scrollY);
-
+                PositionManager.setPosition(ExplorerSearcher.getLastPath(), currentView.getFirstVisiblePosition());
                 updateFileList(newPath);
                 break;
             case IMAGE: {
@@ -212,6 +236,21 @@ public class MainActivity extends AppCompatActivity {
             }
             break;
         }
+    }
+
+    void moveToSelection(String path) {
+        final int position = PositionManager.getPosition(path);
+        Log.d(TAG, "updateFileList path=" + path + " position=" + position);
+
+        currentView.clearFocus();
+        currentView.post(new Runnable() {
+            @Override
+            public void run() {
+                currentView.requestFocusFromTouch();
+                currentView.setSelection(position);
+                currentView.requestFocus();
+            }
+        });
     }
 
     void updateFileList(String path) {
@@ -238,12 +277,15 @@ public class MainActivity extends AppCompatActivity {
                         }
         );
 
+        moveToSelection(path);
+
         new Thread(new Runnable() {
             @Override
             public void run() {
                 PreferenceHelper.setLastPath(MainActivity.this, ExplorerSearcher.getLastPath());
             }
         }).start();
+        refreshThumbnail(path);
     }
 
     @Override
@@ -264,6 +306,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         if (readEnable && writeEnable) {
+            // 최초 이므로 무조건 null
             updateFileList(null);
         }
     }
@@ -274,6 +317,7 @@ public class MainActivity extends AppCompatActivity {
         if (path.length() == 0) {
             path = "/";
         }
+        PositionManager.setPosition(ExplorerSearcher.getLastPath(), currentView.getFirstVisiblePosition());
         updateFileList(path);
     }
 
