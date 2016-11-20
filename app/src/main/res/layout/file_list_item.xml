@@ -49,7 +49,7 @@
                     android:layout_height="40dp"
                     android:id="@+id/text_name"
                     android:gravity="bottom|left"
-                    android:textSize="16sp"
+                    android:textSize="14sp"
                     android:textColor="#000000"/>
             </RelativeLayout>
             <LinearLayout
@@ -61,7 +61,7 @@
                     android:layout_weight="1"
                     android:id="@+id/text_size"
                     android:gravity="right"
-                    android:textSize="14sp"
+                    android:textSize="13sp"
                     />
                 <TextView
                     android:layout_width="0dp"
@@ -69,7 +69,7 @@
                     android:layout_weight="2"
                     android:id="@+id/text_date"
                     android:gravity="right"
-                    android:textSize="14sp"/>
+                    android:textSize="13sp"/>
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>

@@ -46,6 +46,7 @@ public class ExplorerListAdapter extends ExplorerAdapter {
         viewHolder.date.setText(item.date);
         viewHolder.size.setText(FileSizeHelper.getMinimizedSize(item.size));
         viewHolder.icon.setRadiusDp(5);
+        viewHolder.small_icon.setVisibility(View.INVISIBLE);
 
         if (item.type == ExplorerFileItem.FileType.IMAGE) {
             LoadThumbnailTask task = new LoadThumbnailTask(viewHolder.icon);
