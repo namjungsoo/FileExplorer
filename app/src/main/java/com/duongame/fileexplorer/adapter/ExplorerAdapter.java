@@ -172,7 +172,9 @@ public abstract class ExplorerAdapter extends BaseAdapter {
         }
 
         ExplorerFileItem item = fileList.get(position);
+
         setViewHolder(viewHolder, item);
+        setIcon(viewHolder, item);
 
         return convertView;
     }
@@ -206,6 +208,36 @@ public abstract class ExplorerAdapter extends BaseAdapter {
 
         cursor.close();
         return null;
+    }
+
+    void setIcon(ViewHolder viewHolder, ExplorerFileItem item) {
+        if (item.type == ExplorerFileItem.FileType.IMAGE) {
+            Bitmap bitmap = BitmapCacheManager.getThumbnail(item.path);
+            if (bitmap == null) {
+                LoadThumbnailTask task = new LoadThumbnailTask(viewHolder.icon);
+                task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, item.path);
+                taskList.add(task);
+            } else {
+                viewHolder.icon.setImageBitmap(bitmap);
+            }
+        } else if (item.type == ExplorerFileItem.FileType.ZIP) {
+            Bitmap bitmap = BitmapCacheManager.getThumbnail(item.path);
+            if (bitmap == null) {
+                LoadZipThumbnailTask task = new LoadZipThumbnailTask(context, viewHolder.icon, viewHolder.small_icon);
+                task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, item.path);
+                taskList.add(task);
+            } else {
+                viewHolder.icon.setImageBitmap(bitmap);
+                // 사용시 느려짐
+//                setTypeIcon(ZIP, viewHolder.small_icon);
+//                viewHolder.small_icon.setVisibility(View.VISIBLE);
+            }
+        } else {
+            if (viewHolder.type != item.type)
+                setTypeIcon(item.type, viewHolder.icon);
+        }
+
+        viewHolder.type = item.type;
     }
 
     void setTypeIcon(ExplorerFileItem.FileType type, ImageView icon) {
