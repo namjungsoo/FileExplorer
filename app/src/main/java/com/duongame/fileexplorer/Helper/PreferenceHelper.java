@@ -21,6 +21,7 @@ public class PreferenceHelper {
     private static final String VIEW_TYPE = "view_type";
     private static final String LAST_PATH = "last_path";
     private static final String LAST_POSITION = "last_position";
+    private static final String LAST_TOP = "last_top";
 
     private static SharedPreferences pref = null;
 
@@ -106,6 +107,19 @@ public class PreferenceHelper {
         checkPrefManager(context);
         final SharedPreferences.Editor editor = pref.edit();
         editor.putInt(LAST_POSITION, lastPosition);
+        editor.commit();
+    }
+
+    public static int getLastTop(Context context) {
+        checkPrefManager(context);
+        final int lastTop = pref.getInt(LAST_TOP, 0);
+        return lastTop;
+    }
+
+    public static void setLastTop(Context context, int lastTop) {
+        checkPrefManager(context);
+        final SharedPreferences.Editor editor = pref.edit();
+        editor.putInt(LAST_TOP, lastTop);
         editor.commit();
     }
 

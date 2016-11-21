@@ -72,9 +72,13 @@ public class MainActivity extends AppCompatActivity {
         if (checkStoragePermissions()) {
             final String lastPath = PreferenceHelper.getLastPath(MainActivity.this);
             final int position = PreferenceHelper.getLastPosition(MainActivity.this);
+            final int top = PreferenceHelper.getLastTop(MainActivity.this);
 
-            Log.d(TAG, "onCreate path=" + lastPath + " position=" + position);
+            Log.d(TAG, "onCreate path=" + lastPath + " position=" + position + " top="+top);
+
             PositionManager.setPosition(lastPath, position);
+            PositionManager.setTop(lastPath, top);
+
             updateFileList(lastPath);
         }
 
@@ -108,11 +112,13 @@ public class MainActivity extends AppCompatActivity {
         super.onPause();
 
         final int position = currentView.getFirstVisiblePosition();
-        Log.d(TAG, "onPause position=" + position);
+        final int top = getCurrentViewScrollTop();
+        Log.d(TAG, "onPause position=" + position + " top="+top);
         new Thread(new Runnable() {
             @Override
             public void run() {
                 PreferenceHelper.setLastPosition(MainActivity.this, position);
+                PreferenceHelper.setLastTop(MainActivity.this, top);
             }
         }).start();
     }
@@ -220,15 +226,23 @@ public class MainActivity extends AppCompatActivity {
                 }
 
                 PositionManager.setPosition(ExplorerSearcher.getLastPath(), currentView.getFirstVisiblePosition());
+                PositionManager.setTop(ExplorerSearcher.getLastPath(), getCurrentViewScrollTop());
+
                 updateFileList(newPath);
                 break;
             case IMAGE: {
+                PositionManager.setPosition(ExplorerSearcher.getLastPath(), currentView.getFirstVisiblePosition());
+                PositionManager.setTop(ExplorerSearcher.getLastPath(), getCurrentViewScrollTop());
+
                 Intent intent = new Intent(MainActivity.this, PhotoActivity.class);
                 intent.putExtra("name", item.name);
                 startActivity(intent);
             }
             break;
             case ZIP: {
+                PositionManager.setPosition(ExplorerSearcher.getLastPath(), currentView.getFirstVisiblePosition());
+                PositionManager.setTop(ExplorerSearcher.getLastPath(), getCurrentViewScrollTop());
+
                 Intent intent = new Intent(MainActivity.this, ZipActivity.class);
                 intent.putExtra("path", item.path);
                 intent.putExtra("page", 0);
@@ -238,16 +252,31 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    int getCurrentViewScrollTop() {
+        if(currentView.getChildCount() > 0) {
+            return currentView.getChildAt(0).getTop();
+        }
+        return 0;
+    }
+
     void moveToSelection(String path) {
         final int position = PositionManager.getPosition(path);
-        Log.d(TAG, "updateFileList path=" + path + " position=" + position);
+        final int top = PositionManager.getTop(path);
+
+        Log.d(TAG, "updateFileList path=" + path + " position=" + position + " top="+top);
 
         currentView.clearFocus();
         currentView.post(new Runnable() {
             @Override
             public void run() {
                 currentView.requestFocusFromTouch();
-                currentView.setSelection(position);
+                if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    // only for gingerbread and newer versions
+                    currentView.setSelectionFromTop(position, top);
+                } else {
+                    currentView.setSelection(position);
+                }
+
                 currentView.requestFocus();
             }
         });
@@ -318,6 +347,8 @@ public class MainActivity extends AppCompatActivity {
             path = "/";
         }
         PositionManager.setPosition(ExplorerSearcher.getLastPath(), currentView.getFirstVisiblePosition());
+        PositionManager.setTop(ExplorerSearcher.getLastPath(), getCurrentViewScrollTop());
+
         updateFileList(path);
     }
 
