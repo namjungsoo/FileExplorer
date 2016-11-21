@@ -86,15 +86,18 @@ public class ZipLoader {
 
         Collections.sort(imageList, new FileHelper.FileNameCompare());
 
-        // 파일을 풀어놓고 리턴한다
-        final File file = new File(imageList.get(0).path);
-        if(file != null) {
-            if(file.exists())
-                return imageList.get(0).path;
+        if(imageList.size() > 0) {
+            // 파일을 풀어놓고 리턴한다
+            final File file = new File(imageList.get(0).path);
+            if(file != null) {
+                if(file.exists())
+                    return imageList.get(0).path;
+            }
+            Log.d(TAG, "name=" +imageList.get(0).name + " path="+path);
+            zipFile.extractFile(imageList.get(0).name, path);
+            return imageList.get(0).path;
         }
-        Log.d(TAG, "name=" +imageList.get(0).name + " path="+path);
-        zipFile.extractFile(imageList.get(0).name, path);
-        return imageList.get(0).path;
+        return null;
     }
 
     public static ArrayList<ExplorerFileItem> load(Context context, String filename, ZipLoaderListener listener) throws ZipException {

@@ -15,7 +15,6 @@ public class BitmapCacheManager {
     static HashMap<String, Bitmap> thumbnailCache = new HashMap<String, Bitmap>();
     static HashMap<String, Bitmap> bitmapCache = new HashMap<>();
     static HashMap<Integer, Bitmap> resourceCache = new HashMap<>();
-
     static HashMap<String, ImageView> thumbnailImageCache = new HashMap<>();
 
     // resource bitmap
@@ -23,8 +22,10 @@ public class BitmapCacheManager {
         Bitmap bitmap = resourceCache.get(resId);
         if(bitmap == null) {
             BitmapFactory.Options options = new BitmapFactory.Options();
-//            options.inSampleSize = 2;
             bitmap = BitmapFactory.decodeResource(res, resId, options);
+            if (bitmap != null) {
+                resourceCache.put(resId, bitmap);
+            }
         }
         return bitmap;
     }
@@ -52,7 +53,6 @@ public class BitmapCacheManager {
             if (bitmapCache.get(key) != null)
                 bitmapCache.get(key).recycle();
         }
-
         bitmapCache.clear();
     }
 
@@ -77,10 +77,11 @@ public class BitmapCacheManager {
             if (thumbnailImageCache.get(key) != null)
                 thumbnailImageCache.get(key).setImageBitmap(null);
 
-            if (thumbnailCache.get(key) != null)
-                thumbnailCache.get(key).recycle();
+            if (thumbnailCache.get(key) != null) {
+                if(!resourceCache.containsValue(thumbnailCache.get(key)))
+                    thumbnailCache.get(key).recycle();
+            }
         }
-
         thumbnailCache.clear();
         thumbnailImageCache.clear();
     }

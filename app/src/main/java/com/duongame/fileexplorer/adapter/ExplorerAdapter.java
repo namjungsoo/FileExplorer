@@ -23,7 +23,6 @@ import net.lingala.zip4j.exception.ZipException;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
-import static com.duongame.fileexplorer.adapter.ExplorerFileItem.FileType.ZIP;
 import static com.duongame.fileexplorer.bitmap.BitmapCacheManager.getResourceBitmap;
 
 /**
@@ -37,12 +36,10 @@ public abstract class ExplorerAdapter extends BaseAdapter {
 
     public class LoadZipThumbnailTask extends AsyncTask<String, Void, Bitmap> {
         private final WeakReference<ImageView> imageViewReference;
-        private final WeakReference<ImageView> smallImageViewReference;
         private final Context context;
 
-        public LoadZipThumbnailTask(Context context, ImageView imageView, ImageView smallImageView) {
+        public LoadZipThumbnailTask(Context context, ImageView imageView) {
             imageViewReference = new WeakReference<ImageView>(imageView);
-            smallImageViewReference = new WeakReference<ImageView>(smallImageView);
             this.context = context;
         }
 
@@ -60,17 +57,16 @@ public abstract class ExplorerAdapter extends BaseAdapter {
                 }
 
                 if (image == null) {
-                    return null;
+                    bitmap = getResourceBitmap(context.getResources(), R.drawable.zip);
+                    if(bitmap != null)
+                        BitmapCacheManager.setThumbnail(path, bitmap, imageViewReference.get());
                 }
-
-                bitmap = BitmapLoader.decodeSquareThumbnailFromFile(image, 96);
-                if (bitmap != null) {
-                    BitmapCacheManager.setThumbnail(path, bitmap, imageViewReference.get());
+                else {
+                    bitmap = BitmapLoader.decodeSquareThumbnailFromFile(image, 96);
+                    if(bitmap != null)
+                        BitmapCacheManager.setThumbnail(path, bitmap, imageViewReference.get());
                 }
-            } else {
-//                Log.d("TAG", "getThumbnail OK path="+path);
             }
-
             return bitmap;
         }
 
@@ -82,11 +78,6 @@ public abstract class ExplorerAdapter extends BaseAdapter {
                 if (imageView != null) {
                     imageView.setImageBitmap(bitmap);
                 }
-//                setTypeIcon(ZIP, smallImageViewReference.get());
-//                smallImageViewReference.get().setVisibility(View.VISIBLE);
-            } else {
-                setTypeIcon(ZIP, imageViewReference.get());
-                smallImageViewReference.get().setVisibility(View.INVISIBLE);
             }
         }
     }
@@ -223,7 +214,7 @@ public abstract class ExplorerAdapter extends BaseAdapter {
         } else if (item.type == ExplorerFileItem.FileType.ZIP) {
             Bitmap bitmap = BitmapCacheManager.getThumbnail(item.path);
             if (bitmap == null) {
-                LoadZipThumbnailTask task = new LoadZipThumbnailTask(context, viewHolder.icon, viewHolder.small_icon);
+                LoadZipThumbnailTask task = new LoadZipThumbnailTask(context, viewHolder.icon);
                 task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, item.path);
                 taskList.add(task);
             } else {
@@ -232,6 +223,14 @@ public abstract class ExplorerAdapter extends BaseAdapter {
 //                setTypeIcon(ZIP, viewHolder.small_icon);
 //                viewHolder.small_icon.setVisibility(View.VISIBLE);
             }
+//        }
+//        else if (item.type == ExplorerFileItem.FileType.APK) {
+//            Bitmap bitmap = BitmapCacheManager.getThumbnail(item.path);
+//            if (bitmap == null) {
+//
+//            } else {
+//                viewHolder.icon.setImageBitmap(bitmap);
+//            }
         } else {
             if (viewHolder.type != item.type)
                 setTypeIcon(item.type, viewHolder.icon);
@@ -250,9 +249,9 @@ public abstract class ExplorerAdapter extends BaseAdapter {
             case DIRECTORY:
                 icon.setImageBitmap(getResourceBitmap(context.getResources(), R.drawable.directory));
                 break;
-            case ZIP:
-                icon.setImageBitmap(getResourceBitmap(context.getResources(), R.drawable.zip));
-                break;
+//            case ZIP:
+//                icon.setImageBitmap(getResourceBitmap(context.getResources(), R.drawable.zip));
+//                break;
 //            case RAR:
 //                icon.setImageBitmap(getResourceBitmap(context.getResources(), R.drawable.rar));
 //                break;

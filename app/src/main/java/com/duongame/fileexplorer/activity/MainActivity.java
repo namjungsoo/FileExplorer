@@ -33,7 +33,7 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity {
     private final static String TAG = "MainActivity";
     private final static int PERMISSION_STORAGE = 1;
-    private final static int MAX_THUMBNAILS = 100;
+    private final static int MAX_THUMBNAILS = 20;
 
     private ExplorerAdapter adapter;
     private ArrayList<ExplorerFileItem> fileList;

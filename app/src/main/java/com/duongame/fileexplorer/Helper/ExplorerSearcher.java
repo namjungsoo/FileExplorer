@@ -100,17 +100,18 @@ public class ExplorerSearcher {
         if (FileHelper.isImage(eachFile.getName())) {
             type = ExplorerFileItem.FileType.IMAGE;
         }
-
-        if (lower.endsWith(".zip"))
+        else if (lower.endsWith(".zip"))
             type = ExplorerFileItem.FileType.ZIP;
-        if (lower.endsWith(".rar"))
+        else if (lower.endsWith(".rar"))
             type = ExplorerFileItem.FileType.RAR;
-        if (lower.endsWith(".pdf"))
+        else if (lower.endsWith(".pdf"))
             type = ExplorerFileItem.FileType.PDF;
-        if (lower.endsWith(".mp3"))
+        else if (lower.endsWith(".mp3"))
             type = ExplorerFileItem.FileType.AUDIO;
-        if (lower.endsWith(".txt"))
+        else if (lower.endsWith(".txt"))
             type = ExplorerFileItem.FileType.TEXT;
+//        else if (lower.endsWith(".apk"))
+//            type = ExplorerFileItem.FileType.APK;
 
         return type;
     }
