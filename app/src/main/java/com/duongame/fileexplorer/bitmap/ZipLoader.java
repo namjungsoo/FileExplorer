@@ -2,6 +2,7 @@ package com.duongame.fileexplorer.bitmap;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.util.Log;
 
 import com.duongame.fileexplorer.adapter.ExplorerFileItem;
 import com.duongame.fileexplorer.helper.FileHelper;
@@ -20,6 +21,7 @@ import java.util.List;
  */
 
 public class ZipLoader {
+    private static final String TAG="ZipLoader";
     public interface ZipLoaderListener {
         void onSuccess(int i);
         void onFail();
@@ -44,9 +46,6 @@ public class ZipLoader {
                 for (int i = 0; i < imageList.size(); i++) {
                     zipFile.extractFile(imageList.get(i).name, path);
                     publishProgress(i);
-//                    Log.d("ZipExtractTask", "extract "+i);
-//                    if(i==3)
-//                    break;
                 }
             } catch (ZipException e) {
                 e.printStackTrace();
@@ -67,17 +66,16 @@ public class ZipLoader {
     }
 
     public static String getFirstImage(Context context, String filename) throws ZipException {
-        // 일단 무조건 압축 풀자
         checkCachedPath(context, filename);
 
-        ZipFile zipFile = new ZipFile(filename);
+        final ZipFile zipFile = new ZipFile(filename);
         zipFile.setFileNameCharset("EUC-KR");// 일단 무조건 한국 사용자를 위해서 이렇게 설정함
         zipFile.setRunInThread(true);
 
-        ArrayList<ExplorerFileItem> imageList = new ArrayList<ExplorerFileItem>();
-        List<FileHeader> headers = zipFile.getFileHeaders();
+        final ArrayList<ExplorerFileItem> imageList = new ArrayList<ExplorerFileItem>();
+        final List<FileHeader> headers = zipFile.getFileHeaders();
 
-        String path = FileHelper.getZipCachePath(context, filename);
+        final String path = FileHelper.getZipCachePath(context, filename);
 
         for (FileHeader header : headers) {
             String name = header.getFileName();
@@ -88,6 +86,14 @@ public class ZipLoader {
 
         Collections.sort(imageList, new FileHelper.FileNameCompare());
 
+        // 파일을 풀어놓고 리턴한다
+        final File file = new File(imageList.get(0).path);
+        if(file != null) {
+            if(file.exists())
+                return imageList.get(0).path;
+        }
+        Log.d(TAG, "name=" +imageList.get(0).name + " path="+path);
+        zipFile.extractFile(imageList.get(0).name, path);
         return imageList.get(0).path;
     }
 
@@ -97,7 +103,7 @@ public class ZipLoader {
 
         ZipFile zipFile = new ZipFile(filename);
         zipFile.setFileNameCharset("EUC-KR");// 일단 무조건 한국 사용자를 위해서 이렇게 설정함
-        zipFile.setRunInThread(true);
+//        zipFile.setRunInThread(true);
 
         ArrayList<ExplorerFileItem> imageList = new ArrayList<ExplorerFileItem>();
         List<FileHeader> headers = zipFile.getFileHeaders();

@@ -49,7 +49,8 @@ public class BitmapCacheManager {
 
     public static void recycleBitmap() {
         for (String key : bitmapCache.keySet()) {
-            bitmapCache.get(key).recycle();
+            if (bitmapCache.get(key) != null)
+                bitmapCache.get(key).recycle();
         }
 
         bitmapCache.clear();
@@ -75,7 +76,9 @@ public class BitmapCacheManager {
         for (String key : thumbnailCache.keySet()) {
             if (thumbnailImageCache.get(key) != null)
                 thumbnailImageCache.get(key).setImageBitmap(null);
-            thumbnailCache.get(key).recycle();
+
+            if (thumbnailCache.get(key) != null)
+                thumbnailCache.get(key).recycle();
         }
 
         thumbnailCache.clear();

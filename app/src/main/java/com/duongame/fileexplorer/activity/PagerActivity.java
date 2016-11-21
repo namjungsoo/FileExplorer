@@ -3,7 +3,6 @@ package com.duongame.fileexplorer.activity;
 import android.graphics.PointF;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
 import android.view.View;
@@ -123,10 +122,10 @@ public class PagerActivity extends ViewerActivity {
                             // 터치 영역을 확인하여 좌/중/우를 확인하자.
                             int width = pager.getWidth();
                             int height = pager.getHeight();
-                            Log.d(TAG, "width="+width + " height="+height);
+//                            Log.d(TAG, "width="+width + " height="+height);
 
-                            int left = width / 3;
-                            int right = width * 2 / 3;
+                            int left = width / 4;
+                            int right = width * 3 / 4;
 
                             if (lastMotionPt.x < left) {
                                 int page = pager.getCurrentItem();

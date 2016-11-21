@@ -30,7 +30,7 @@ import static com.duongame.fileexplorer.bitmap.BitmapCacheManager.getResourceBit
  * Created by namjungsoo on 2016-11-06.
  */
 
-public class ExplorerAdapter extends BaseAdapter {
+public abstract class ExplorerAdapter extends BaseAdapter {
     protected ArrayList<ExplorerFileItem> fileList;
     protected Activity context;
     protected ArrayList<AsyncTask> taskList = new ArrayList<AsyncTask>();
@@ -67,6 +67,8 @@ public class ExplorerAdapter extends BaseAdapter {
                 if (bitmap != null) {
                     BitmapCacheManager.setThumbnail(path, bitmap, imageViewReference.get());
                 }
+            } else {
+//                Log.d("TAG", "getThumbnail OK path="+path);
             }
 
             return bitmap;
@@ -80,8 +82,8 @@ public class ExplorerAdapter extends BaseAdapter {
                 if (imageView != null) {
                     imageView.setImageBitmap(bitmap);
                 }
-                setTypeIcon(ZIP, smallImageViewReference.get());
-                smallImageViewReference.get().setVisibility(View.VISIBLE);
+//                setTypeIcon(ZIP, smallImageViewReference.get());
+//                smallImageViewReference.get().setVisibility(View.VISIBLE);
             } else {
                 setTypeIcon(ZIP, imageViewReference.get());
                 smallImageViewReference.get().setVisibility(View.INVISIBLE);
@@ -156,7 +158,23 @@ public class ExplorerAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        return null;
+        ViewHolder viewHolder;
+
+        if (convertView == null) {
+            convertView = inflateLayout(parent);
+
+            viewHolder = new ViewHolder();
+            initViewHolder(viewHolder, convertView);
+
+            convertView.setTag(viewHolder);
+        } else {
+            viewHolder = (ViewHolder) convertView.getTag();
+        }
+
+        ExplorerFileItem item = fileList.get(position);
+        setViewHolder(viewHolder, item);
+
+        return convertView;
     }
 
     public void setFileList(ArrayList<ExplorerFileItem> fileList) {
@@ -229,4 +247,9 @@ public class ExplorerAdapter extends BaseAdapter {
         taskList.clear();
     }
 
+    public abstract void initViewHolder(ViewHolder viewHolder, View convertView);
+
+    public abstract void setViewHolder(ViewHolder viewHolder, ExplorerFileItem item);
+
+    public abstract View inflateLayout(ViewGroup parent);
 }
