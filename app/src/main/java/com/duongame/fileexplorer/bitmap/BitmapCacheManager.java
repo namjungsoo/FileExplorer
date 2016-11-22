@@ -3,6 +3,7 @@ package com.duongame.fileexplorer.bitmap;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.widget.ImageView;
 
 import java.util.HashMap;
@@ -13,9 +14,12 @@ import java.util.HashMap;
 
 public class BitmapCacheManager {
     static HashMap<String, Bitmap> thumbnailCache = new HashMap<String, Bitmap>();
+    static HashMap<String, ImageView> thumbnailImageCache = new HashMap<>();
+
     static HashMap<String, Bitmap> bitmapCache = new HashMap<>();
     static HashMap<Integer, Bitmap> resourceCache = new HashMap<>();
-    static HashMap<String, ImageView> thumbnailImageCache = new HashMap<>();
+
+    static HashMap<String, Drawable> drawableCache = new HashMap<>();
 
     // resource bitmap
     public static Bitmap getResourceBitmap(Resources res, int resId) {
@@ -28,6 +32,17 @@ public class BitmapCacheManager {
             }
         }
         return bitmap;
+    }
+
+    // drawable 
+    public static void setDrawable(String path, Drawable drawable) {
+        if (drawableCache.get(path) == null) {
+            drawableCache.put(path, drawable);
+        }
+    }
+
+    public static Drawable getDrawable(String path) {
+        return drawableCache.get(path);
     }
 
     // image bitmap

@@ -110,8 +110,8 @@ public class ExplorerSearcher {
             type = ExplorerFileItem.FileType.AUDIO;
         else if (lower.endsWith(".txt"))
             type = ExplorerFileItem.FileType.TEXT;
-//        else if (lower.endsWith(".apk"))
-//            type = ExplorerFileItem.FileType.APK;
+        else if (lower.endsWith(".apk"))
+            type = ExplorerFileItem.FileType.APK;
 
         return type;
     }

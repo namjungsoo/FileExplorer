@@ -2,8 +2,11 @@ package com.duongame.fileexplorer.adapter;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.provider.MediaStore;
 import android.view.View;
@@ -231,6 +234,17 @@ public abstract class ExplorerAdapter extends BaseAdapter {
 //            } else {
 //                viewHolder.icon.setImageBitmap(bitmap);
 //            }
+        } else if (item.type == ExplorerFileItem.FileType.APK) {
+            Drawable drawable = BitmapCacheManager.getDrawable(item.path);
+            if (drawable == null) {
+                final PackageManager pm = context.getPackageManager();
+                final PackageInfo pi = pm.getPackageArchiveInfo(item.path, 0);
+                // the secret are these two lines....
+                pi.applicationInfo.sourceDir = item.path;
+                pi.applicationInfo.publicSourceDir = item.path;
+                drawable = pi.applicationInfo.loadIcon(pm);
+            }
+            viewHolder.icon.setImageDrawable(drawable);
         } else {
             if (viewHolder.type != item.type)
                 setTypeIcon(item.type, viewHolder.icon);
