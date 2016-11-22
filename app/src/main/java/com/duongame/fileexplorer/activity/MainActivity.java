@@ -285,8 +285,10 @@ public class MainActivity extends AppCompatActivity {
     void updateFileList(String path) {
         adapter.stopAllTasks();
 
-        if (BitmapCacheManager.getThumbnailCount() > MAX_THUMBNAILS)
+        if (BitmapCacheManager.getThumbnailCount() > MAX_THUMBNAILS) {
+            Log.d(TAG, "recycleThumbnail");
             BitmapCacheManager.recycleThumbnail();
+        }
 
         fileList = ExplorerSearcher.search(path);
         if (fileList != null) {

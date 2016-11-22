@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.widget.ImageView;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
@@ -34,7 +35,7 @@ public class BitmapCacheManager {
         return bitmap;
     }
 
-    // drawable 
+    // drawable
     public static void setDrawable(String path, Drawable drawable) {
         if (drawableCache.get(path) == null) {
             drawableCache.put(path, drawable);
@@ -88,16 +89,24 @@ public class BitmapCacheManager {
     }
 
     public static void recycleThumbnail() {
+        ArrayList<String> recycleList = new ArrayList<>();
         for (String key : thumbnailCache.keySet()) {
             if (thumbnailImageCache.get(key) != null)
                 thumbnailImageCache.get(key).setImageBitmap(null);
 
             if (thumbnailCache.get(key) != null) {
-                if(!resourceCache.containsValue(thumbnailCache.get(key)))
+                // 리소스(아이콘)용 썸네일이 아니면 삭제
+                if(!resourceCache.containsValue(thumbnailCache.get(key))) {
                     thumbnailCache.get(key).recycle();
+
+                    recycleList.add(key);
+                }
             }
         }
-        thumbnailCache.clear();
+
+        for (String key : recycleList) {
+            thumbnailCache.remove(key);
+        }
         thumbnailImageCache.clear();
     }
 }
