@@ -19,6 +19,7 @@ import java.io.IOException;
 
 public class BitmapLoader {
     public static Bitmap getThumbnail(Activity context, String path) {
+//        Log.d("BitmapLoader", "getThumbnail path="+path);
         Cursor cursor = context.getContentResolver().query(
                 MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
                 new String[]{MediaStore.MediaColumns._ID},

@@ -1,12 +1,14 @@
 package com.duongame.explorer.fragment;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,11 +29,14 @@ import com.duongame.explorer.adapter.ExplorerFileItem;
 import com.duongame.explorer.adapter.ExplorerGridAdapter;
 import com.duongame.explorer.adapter.ExplorerListAdapter;
 import com.duongame.explorer.bitmap.BitmapCacheManager;
+import com.duongame.explorer.bitmap.BitmapLoader;
 import com.duongame.explorer.helper.ExplorerSearcher;
 import com.duongame.explorer.helper.PositionManager;
 import com.duongame.explorer.helper.PreferenceHelper;
 
 import java.util.ArrayList;
+
+import static com.duongame.explorer.bitmap.BitmapCacheManager.getThumbnail;
 
 /**
  * Created by namjungsoo on 2016-11-23.
@@ -57,6 +62,7 @@ public class ExplorerFragment extends Fragment {
     private View rootView;
 
     private Handler handler;
+    private Thread thread;
 
     @Nullable
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
@@ -251,7 +257,7 @@ public class ExplorerFragment extends Fragment {
     }
 
     int getCurrentViewScrollTop() {
-        if(currentView.getChildCount() > 0) {
+        if (currentView.getChildCount() > 0) {
             return currentView.getChildAt(0).getTop();
         }
         return 0;
@@ -280,29 +286,77 @@ public class ExplorerFragment extends Fragment {
         });
     }
 
+    private void threadStart() {
+        thread = new Thread(new Runnable() {
+            private void load(ExplorerFileItem item) {
+                Bitmap bitmap = getThumbnail(item.path);
+
+                if (bitmap == null) {
+                    bitmap = BitmapLoader.getThumbnail(getActivity(), item.path);
+
+                    if (bitmap == null) {
+                        bitmap = BitmapLoader.decodeSquareThumbnailFromFile(item.path, 96);
+                    }
+                    if (bitmap != null) {
+                        BitmapCacheManager.setThumbnail(item.path, bitmap, null);
+                    }
+                }
+            }
+
+            private int findImage(String path) {
+                final ArrayList<ExplorerFileItem> imageList = ExplorerSearcher.getImageList();
+                for (int i = 0; i < imageList.size(); i++) {
+                    if (imageList.get(i).path.equals(path))
+                        return i;
+                }
+                return 0;
+            }
+
+            @Override
+            public void run() {
+                final ArrayList<ExplorerFileItem> newFileList = new ArrayList<>();
+                final ArrayList<ExplorerFileItem> newImageList = new ArrayList<>();
+
+                newFileList.addAll(fileList);
+                newImageList.addAll(ExplorerSearcher.getImageList());
+
+                final int position = currentView.getFirstVisiblePosition();
+                final String startPath = newFileList.get(position).path;
+                final int startPosition = findImage(startPath);
+
+                for (int i = startPosition; i < newImageList.size(); i++) {
+                    final ExplorerFileItem item = newImageList.get(i);
+                    if(Thread.currentThread().isInterrupted())
+                        return;
+                    load(item);
+                }
+                for (int i = 0; i < startPosition; i++) {
+                    final ExplorerFileItem item = newImageList.get(i);
+                    if(Thread.currentThread().isInterrupted())
+                        return;
+                    load(item);
+                }
+            }
+        });
+        thread.start();
+        Log.d(TAG, "threadStart");
+    }
+
+    private void threadStop() {
+        if(thread != null && thread.isAlive())
+            thread.interrupt();
+        Log.d(TAG, "threadStop");
+    }
+
     public void updateFileList(String path) {
         adapter.stopAllTasks();
-
-//        if(currentView != null)
-//            currentView.removeAllViews();
-
-//        adapter.setFileList(null);
-//        adapter.notifyDataSetChanged();
-
-//        if(currentView != null) {
-//            for(int i=0; i<currentView.getChildCount(); i++) {
-//                ExplorerAdapter.ViewHolder viewHolder = (ExplorerAdapter.ViewHolder)currentView.getChildAt(i).getTag();
-//                if(viewHolder.icon != null) {
-//                    Log.w(TAG, "setImageBitmap null");
-//                    viewHolder.icon.setImageBitmap(null);
-//                }
-//            }
-//        }
 
         if (BitmapCacheManager.getThumbnailCount() > MAX_THUMBNAILS) {
 //            Log.w(TAG, "recycleThumbnail");
             BitmapCacheManager.recycleThumbnail();
         }
+
+//        threadStop();
 
         fileList = ExplorerSearcher.search(path);
         if (fileList != null) {
@@ -310,6 +364,8 @@ public class ExplorerFragment extends Fragment {
             adapter.setFileList(fileList);
             adapter.notifyDataSetChanged();
         }
+
+//        threadStart();
 
         textPath.setText(ExplorerSearcher.getLastPath());
         textPath.requestLayout();

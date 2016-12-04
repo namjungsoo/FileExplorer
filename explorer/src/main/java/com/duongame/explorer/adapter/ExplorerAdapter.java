@@ -22,6 +22,7 @@ import com.duongame.explorer.view.RoundedImageView;
 import net.lingala.zip4j.exception.ZipException;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import static com.duongame.explorer.adapter.ExplorerFileItem.FileType.IMAGE;
 import static com.duongame.explorer.bitmap.BitmapCacheManager.getThumbnail;
@@ -33,7 +34,7 @@ import static com.duongame.explorer.bitmap.BitmapCacheManager.getThumbnail;
 public abstract class ExplorerAdapter extends BaseAdapter {
     protected ArrayList<ExplorerFileItem> fileList;
     protected Activity context;
-    protected ArrayList<AsyncTask> taskList = new ArrayList<AsyncTask>();
+    protected HashMap<ImageView, AsyncTask> taskMap = new HashMap<ImageView, AsyncTask>();
 
     public class LoadZipThumbnailTask extends AsyncTask<String, Void, Bitmap> {
         private final ImageView imageView;
@@ -48,7 +49,11 @@ public abstract class ExplorerAdapter extends BaseAdapter {
         protected Bitmap doInBackground(String... params) {
             final String path = params[0];
 
+            if(isCancelled())
+                return null;
             Bitmap bitmap = getThumbnail(path);
+            if(isCancelled())
+                return bitmap;
             if (bitmap == null) {
                 String image = null;
                 try {
@@ -56,6 +61,8 @@ public abstract class ExplorerAdapter extends BaseAdapter {
                 } catch (ZipException e) {
                     e.printStackTrace();
                 }
+                if(isCancelled())
+                    return bitmap;
 
                 if (image == null) {
                     bitmap = BitmapCacheManager.getResourceBitmap(context.getResources(), R.drawable.zip);
@@ -94,9 +101,18 @@ public abstract class ExplorerAdapter extends BaseAdapter {
         protected Bitmap doInBackground(String... params) {
             path = params[0];
 
+            if(isCancelled())
+                return null;
+
             Bitmap bitmap = getThumbnail(path);
+            if(isCancelled())
+                return bitmap;
+
             if (bitmap == null) {
                 bitmap = BitmapLoader.getThumbnail(context, path);
+                if(isCancelled())
+                    return bitmap;
+
                 if (bitmap == null) {
                     bitmap = BitmapLoader.decodeSquareThumbnailFromFile(path, 96);
                 }
@@ -178,26 +194,41 @@ public abstract class ExplorerAdapter extends BaseAdapter {
         this.fileList = fileList;
     }
 
-    void setIcon(ViewHolder viewHolder, ExplorerFileItem item) {
+    void setIcon(final ViewHolder viewHolder, ExplorerFileItem item) {
         if (item.type == IMAGE) {
-            Bitmap bitmap = getThumbnail(item.path);
+            if(taskMap.get(viewHolder.icon) != null)
+                taskMap.get(viewHolder.icon).cancel(true);
+
+            final Bitmap bitmap = getThumbnail(item.path);
             if (bitmap == null) {
+                viewHolder.icon.setImageResource(android.R.color.transparent);
+
                 LoadThumbnailTask task = new LoadThumbnailTask(viewHolder.icon);
                 task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, item.path);
-                taskList.add(task);
-            } else {
+                taskMap.put(viewHolder.icon, task);
+            }
+            else {
+//                Log.w(TAG,"cache hit path="+item.path);
                 viewHolder.icon.setImageBitmap(bitmap);
             }
         } else if (item.type == ExplorerFileItem.FileType.ZIP) {
-            Bitmap bitmap = getThumbnail(item.path);
+            if(taskMap.get(viewHolder.icon) != null)
+                taskMap.get(viewHolder.icon).cancel(true);
+
+            final Bitmap bitmap = getThumbnail(item.path);
             if (bitmap == null) {
+                viewHolder.icon.setImageResource(android.R.color.transparent);
+
                 LoadZipThumbnailTask task = new LoadZipThumbnailTask(context, viewHolder.icon);
                 task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, item.path);
-                taskList.add(task);
-            } else {
+                taskMap.put(viewHolder.icon, task);
+            }
+            else {
+//                Log.w(TAG,"cache hit path="+item.path);
                 viewHolder.icon.setImageBitmap(bitmap);
             }
         } else if (item.type == ExplorerFileItem.FileType.APK) {
+            //TODO: 동적으로 읽기
             Drawable drawable = BitmapCacheManager.getDrawable(item.path);
             if (drawable == null) {
                 final PackageManager pm = context.getPackageManager();
@@ -253,10 +284,10 @@ public abstract class ExplorerAdapter extends BaseAdapter {
     }
 
     public void stopAllTasks() {
-        for (AsyncTask task : taskList) {
+        for (AsyncTask task : taskMap.values()) {
             task.cancel(true);
         }
-        taskList.clear();
+        taskMap.clear();
     }
 
     public abstract void initViewHolder(ViewHolder viewHolder, View convertView);

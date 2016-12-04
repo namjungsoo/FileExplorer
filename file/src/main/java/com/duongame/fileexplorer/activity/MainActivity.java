@@ -6,11 +6,9 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 
 import com.duongame.explorer.fragment.ExplorerFragment;
 import com.duongame.explorer.helper.ExplorerSearcher;
-import com.duongame.explorer.helper.PositionManager;
 import com.duongame.explorer.helper.PreferenceHelper;
 import com.duongame.fileexplorer.R;
 
@@ -58,10 +56,10 @@ public class MainActivity extends AppCompatActivity {
 
 //            Log.d(TAG, "onCreate path=" + lastPath + " position=" + position + " top="+top);
 
-            PositionManager.setPosition(lastPath, position);
-            PositionManager.setTop(lastPath, top);
-
-            fragment.updateFileList(lastPath);
+//            PositionManager.setPosition(lastPath, position);
+//            PositionManager.setTop(lastPath, top);
+//
+//            fragment.updateFileList(lastPath);
         }
     }
 
