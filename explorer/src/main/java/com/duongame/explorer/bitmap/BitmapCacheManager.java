@@ -91,14 +91,16 @@ public class BitmapCacheManager {
     public static void recycleThumbnail() {
         ArrayList<String> recycleList = new ArrayList<>();
         for (String key : thumbnailCache.keySet()) {
-            if (thumbnailImageCache.get(key) != null)
+            // 이미지를 먼저 null로 하고
+            if (thumbnailImageCache.get(key) != null) {
                 thumbnailImageCache.get(key).setImageBitmap(null);
+//                Log.d(TAG, "image "+thumbnailImageCache.get(key)+" + remove "+ key);
+            }
 
             if (thumbnailCache.get(key) != null) {
                 // 리소스(아이콘)용 썸네일이 아니면 삭제
                 if(!resourceCache.containsValue(thumbnailCache.get(key))) {
                     thumbnailCache.get(key).recycle();
-
                     recycleList.add(key);
                 }
             }
@@ -106,6 +108,7 @@ public class BitmapCacheManager {
 
         for (String key : recycleList) {
             thumbnailCache.remove(key);
+//            Log.d(TAG, "thumbnail remove "+ key);
         }
         thumbnailImageCache.clear();
     }

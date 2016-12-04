@@ -287,6 +287,7 @@ public class ExplorerFragment extends Fragment {
 
         fileList = ExplorerSearcher.search(path);
         if (fileList != null) {
+            Log.d(TAG, "fileList size="+fileList.size());
             adapter.setFileList(fileList);
             adapter.notifyDataSetChanged();
         }

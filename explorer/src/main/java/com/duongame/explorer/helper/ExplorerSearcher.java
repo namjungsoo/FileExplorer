@@ -50,8 +50,8 @@ public class ExplorerSearcher {
         // 파일로 아이템을 만듬
         for (int i = 0; i < files.length; i++) {
             File eachFile = files[i];
-            if (eachFile.getName().equals(".") ||
-                    eachFile.getName().equals("..")) {// .으로 시작되면 패스 함
+            //if (eachFile.getName().equals(".") || eachFile.getName().equals("..")) {// .으로 시작되면 패스 함
+            if (eachFile.getName().startsWith(".")) {// .으로 시작되면 패스 함
                 continue;
             }
 

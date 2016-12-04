@@ -198,14 +198,6 @@ public abstract class ExplorerAdapter extends BaseAdapter {
 //                setTypeIcon(ZIP, viewHolder.small_icon);
 //                viewHolder.small_icon.setVisibility(View.VISIBLE);
             }
-//        }
-//        else if (item.type == ExplorerFileItem.FileType.APK) {
-//            Bitmap bitmap = BitmapCacheManager.getThumbnail(item.path);
-//            if (bitmap == null) {
-//
-//            } else {
-//                viewHolder.icon.setImageBitmap(bitmap);
-//            }
         } else if (item.type == ExplorerFileItem.FileType.APK) {
             Drawable drawable = BitmapCacheManager.getDrawable(item.path);
             if (drawable == null) {
@@ -219,8 +211,10 @@ public abstract class ExplorerAdapter extends BaseAdapter {
             }
             viewHolder.icon.setImageDrawable(drawable);
         } else {
-            if (viewHolder.type != item.type)
+            if (viewHolder.type != item.type) {
+//                Log.d(TAG, "item.path="+item.path);
                 setTypeIcon(item.type, viewHolder.icon);
+            }
         }
 
         viewHolder.type = item.type;
@@ -230,6 +224,8 @@ public abstract class ExplorerAdapter extends BaseAdapter {
         switch (type) {
             case IMAGE:
                 return;
+            case PDF:
+            case TEXT:
             case FILE:
                 icon.setImageBitmap(BitmapCacheManager.getResourceBitmap(context.getResources(), R.drawable.file));
                 break;
