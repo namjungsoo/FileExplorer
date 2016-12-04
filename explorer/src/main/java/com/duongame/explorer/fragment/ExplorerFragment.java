@@ -4,9 +4,9 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,7 +40,7 @@ import java.util.ArrayList;
 public class ExplorerFragment extends Fragment {
     private final static String TAG = "ExplorerFragment";
 
-    private final static int MAX_THUMBNAILS = 20;
+    private final static int MAX_THUMBNAILS = 100;
     private final static int SWITCH_LIST = 0;
     private final static int SWITCH_GRID = 1;
 
@@ -56,11 +56,14 @@ public class ExplorerFragment extends Fragment {
     private ViewSwitcher switcher;
     private View rootView;
 
+    private Handler handler;
+
     @Nullable
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
                              Bundle savedInstanceState) {
         //setContentView(R.layout.fragment_explorer);
         rootView = inflater.inflate(R.layout.fragment_explorer, container, false);
+        handler = new Handler();
 
         initUI();
         initViewType();
@@ -71,7 +74,7 @@ public class ExplorerFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        Log.d(TAG, "onPause");
+//        Log.d(TAG, "onPause");
 
         // 밖에 나갔다 들어오면 리프레시함
         updateFileList(ExplorerSearcher.getLastPath());
@@ -83,7 +86,7 @@ public class ExplorerFragment extends Fragment {
 
         final int position = currentView.getFirstVisiblePosition();
         final int top = getCurrentViewScrollTop();
-        Log.d(TAG, "onPause position=" + position + " top="+top);
+//        Log.d(TAG, "onPause position=" + position + " top="+top);
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -258,7 +261,7 @@ public class ExplorerFragment extends Fragment {
         final int position = PositionManager.getPosition(path);
         final int top = PositionManager.getTop(path);
 
-        Log.d(TAG, "updateFileList path=" + path + " position=" + position + " top="+top);
+//        Log.d(TAG, "updateFileList path=" + path + " position=" + position + " top="+top);
 
         currentView.clearFocus();
         currentView.post(new Runnable() {
@@ -280,14 +283,30 @@ public class ExplorerFragment extends Fragment {
     public void updateFileList(String path) {
         adapter.stopAllTasks();
 
+//        if(currentView != null)
+//            currentView.removeAllViews();
+
+//        adapter.setFileList(null);
+//        adapter.notifyDataSetChanged();
+
+//        if(currentView != null) {
+//            for(int i=0; i<currentView.getChildCount(); i++) {
+//                ExplorerAdapter.ViewHolder viewHolder = (ExplorerAdapter.ViewHolder)currentView.getChildAt(i).getTag();
+//                if(viewHolder.icon != null) {
+//                    Log.w(TAG, "setImageBitmap null");
+//                    viewHolder.icon.setImageBitmap(null);
+//                }
+//            }
+//        }
+
         if (BitmapCacheManager.getThumbnailCount() > MAX_THUMBNAILS) {
-            Log.d(TAG, "recycleThumbnail");
+//            Log.w(TAG, "recycleThumbnail");
             BitmapCacheManager.recycleThumbnail();
         }
 
         fileList = ExplorerSearcher.search(path);
         if (fileList != null) {
-            Log.d(TAG, "fileList size="+fileList.size());
+//            Log.d(TAG, "fileList size="+fileList.size());
             adapter.setFileList(fileList);
             adapter.notifyDataSetChanged();
         }

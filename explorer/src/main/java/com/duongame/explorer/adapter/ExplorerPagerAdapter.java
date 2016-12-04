@@ -15,7 +15,6 @@ import com.duongame.explorer.R;
 import com.duongame.explorer.bitmap.BitmapCacheManager;
 import com.duongame.explorer.bitmap.BitmapLoader;
 
-import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
 /**
@@ -74,12 +73,12 @@ public class ExplorerPagerAdapter extends PagerAdapter {
     }
 
     public static class LoadBitmapTask extends AsyncTask<String, Void, Bitmap> {
-        private final WeakReference<ImageView> imageViewReference;
+        private final ImageView imageView;
         private int width, height;
 
         public LoadBitmapTask(ImageView imageView, int width, int height) {
 //            Log.d(TAG, "LoadBitmapTask ctor");
-            imageViewReference = new WeakReference<ImageView>(imageView);
+            this.imageView = imageView;
             this.width = width;
             this.height = height;
         }
@@ -113,8 +112,7 @@ public class ExplorerPagerAdapter extends PagerAdapter {
         @Override
         protected void onPostExecute(Bitmap bitmap) {
             super.onPostExecute(bitmap);
-            if (imageViewReference != null && bitmap != null) {
-                final ImageView imageView = imageViewReference.get();
+            if (imageView != null && bitmap != null) {
                 if (imageView != null) {
                     imageView.setImageBitmap(bitmap);
                 }

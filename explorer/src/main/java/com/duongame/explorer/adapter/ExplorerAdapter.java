@@ -21,7 +21,6 @@ import com.duongame.explorer.view.RoundedImageView;
 
 import net.lingala.zip4j.exception.ZipException;
 
-import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
 import static com.duongame.explorer.adapter.ExplorerFileItem.FileType.IMAGE;
@@ -37,11 +36,11 @@ public abstract class ExplorerAdapter extends BaseAdapter {
     protected ArrayList<AsyncTask> taskList = new ArrayList<AsyncTask>();
 
     public class LoadZipThumbnailTask extends AsyncTask<String, Void, Bitmap> {
-        private final WeakReference<ImageView> imageViewReference;
+        private final ImageView imageView;
         private final Context context;
 
         public LoadZipThumbnailTask(Context context, ImageView imageView) {
-            imageViewReference = new WeakReference<ImageView>(imageView);
+            this.imageView = imageView;
             this.context = context;
         }
 
@@ -61,12 +60,12 @@ public abstract class ExplorerAdapter extends BaseAdapter {
                 if (image == null) {
                     bitmap = BitmapCacheManager.getResourceBitmap(context.getResources(), R.drawable.zip);
                     if(bitmap != null)
-                        BitmapCacheManager.setThumbnail(path, bitmap, imageViewReference.get());
+                        BitmapCacheManager.setThumbnail(path, bitmap, imageView);
                 }
                 else {
                     bitmap = BitmapLoader.decodeSquareThumbnailFromFile(image, 96);
                     if(bitmap != null)
-                        BitmapCacheManager.setThumbnail(path, bitmap, imageViewReference.get());
+                        BitmapCacheManager.setThumbnail(path, bitmap, imageView);
                 }
             }
             return bitmap;
@@ -75,8 +74,7 @@ public abstract class ExplorerAdapter extends BaseAdapter {
         @Override
         protected void onPostExecute(Bitmap bitmap) {
             super.onPostExecute(bitmap);
-            if (imageViewReference != null && bitmap != null) {
-                final ImageView imageView = imageViewReference.get();
+            if (imageView != null && bitmap != null) {
                 if (imageView != null) {
                     imageView.setImageBitmap(bitmap);
                 }
@@ -85,15 +83,16 @@ public abstract class ExplorerAdapter extends BaseAdapter {
     }
 
     public class LoadThumbnailTask extends AsyncTask<String, Void, Bitmap> {
-        private final WeakReference<ImageView> imageViewReference;
+        private final ImageView imageView;
+        private String path;
 
         public LoadThumbnailTask(ImageView imageView) {
-            imageViewReference = new WeakReference<ImageView>(imageView);
+            this.imageView = imageView;
         }
 
         @Override
         protected Bitmap doInBackground(String... params) {
-            final String path = params[0];
+            path = params[0];
 
             Bitmap bitmap = getThumbnail(path);
             if (bitmap == null) {
@@ -102,7 +101,7 @@ public abstract class ExplorerAdapter extends BaseAdapter {
                     bitmap = BitmapLoader.decodeSquareThumbnailFromFile(path, 96);
                 }
                 if (bitmap != null) {
-                    BitmapCacheManager.setThumbnail(path, bitmap, imageViewReference.get());
+                    BitmapCacheManager.setThumbnail(path, bitmap, imageView);
                 }
             }
             return bitmap;
@@ -111,10 +110,10 @@ public abstract class ExplorerAdapter extends BaseAdapter {
         @Override
         protected void onPostExecute(Bitmap bitmap) {
             super.onPostExecute(bitmap);
-            if (imageViewReference != null && bitmap != null) {
-                final ImageView imageView = imageViewReference.get();
+            if (imageView != null && bitmap != null) {
                 if (imageView != null) {
                     imageView.setImageBitmap(bitmap);
+                    imageView.setTag(path);
                 }
             }
         }
@@ -127,6 +126,9 @@ public abstract class ExplorerAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
+        if(fileList == null)
+            return 0;
+
         return fileList.size();
     }
 
@@ -194,9 +196,6 @@ public abstract class ExplorerAdapter extends BaseAdapter {
                 taskList.add(task);
             } else {
                 viewHolder.icon.setImageBitmap(bitmap);
-                // 사용시 느려짐
-//                setTypeIcon(ZIP, viewHolder.small_icon);
-//                viewHolder.small_icon.setVisibility(View.VISIBLE);
             }
         } else if (item.type == ExplorerFileItem.FileType.APK) {
             Drawable drawable = BitmapCacheManager.getDrawable(item.path);
@@ -212,7 +211,6 @@ public abstract class ExplorerAdapter extends BaseAdapter {
             viewHolder.icon.setImageDrawable(drawable);
         } else {
             if (viewHolder.type != item.type) {
-//                Log.d(TAG, "item.path="+item.path);
                 setTypeIcon(item.type, viewHolder.icon);
             }
         }

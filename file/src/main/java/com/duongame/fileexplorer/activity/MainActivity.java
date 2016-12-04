@@ -56,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
             final int position = PreferenceHelper.getLastPosition(MainActivity.this);
             final int top = PreferenceHelper.getLastTop(MainActivity.this);
 
-            Log.d(TAG, "onCreate path=" + lastPath + " position=" + position + " top="+top);
+//            Log.d(TAG, "onCreate path=" + lastPath + " position=" + position + " top="+top);
 
             PositionManager.setPosition(lastPath, position);
             PositionManager.setTop(lastPath, top);

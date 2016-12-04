@@ -93,7 +93,7 @@ public class ZipLoader {
                 if(file.exists())
                     return imageList.get(0).path;
             }
-            Log.d(TAG, "name=" +imageList.get(0).name + " path="+path);
+//            Log.d(TAG, "name=" +imageList.get(0).name + " path="+path);
             zipFile.extractFile(imageList.get(0).name, path);
             return imageList.get(0).path;
         }
