@@ -243,6 +243,7 @@ public abstract class ExplorerAdapter extends BaseAdapter {
                 pi.applicationInfo.sourceDir = item.path;
                 pi.applicationInfo.publicSourceDir = item.path;
                 drawable = pi.applicationInfo.loadIcon(pm);
+                BitmapCacheManager.setDrawable(item.path, drawable);
             }
             viewHolder.icon.setImageDrawable(drawable);
         } else {

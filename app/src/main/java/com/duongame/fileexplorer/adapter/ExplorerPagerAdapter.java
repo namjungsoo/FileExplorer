@@ -136,7 +136,7 @@ public class ExplorerPagerAdapter extends PagerAdapter {
     public Object instantiateItem(final ViewGroup container, int position) {
 //        Log.d(TAG, "instantiateItem position=" + position);
 
-        final ViewGroup rootView = (ViewGroup) context.getLayoutInflater().inflate(R.layout.fragment_page, container, false);
+        final ViewGroup rootView = (ViewGroup) context.getLayoutInflater().inflate(R.layout.viewer_page, container, false);
         final ImageView imageView = (ImageView) rootView.findViewById(R.id.image_viewer);
 
         final String path = imageList.get(position).path;
