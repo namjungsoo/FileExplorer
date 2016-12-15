@@ -5,23 +5,44 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#ff000000"
-    tools:context="com.duongame.fileexplorer.activity.MainActivity">
+    tools:context="com.duongame.explorer.activity.PagerActivity">
 
     <android.support.v4.view.ViewPager
         android:id="@+id/pager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         />
+
+    <TextView
+        android:layout_gravity="center_horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/text_path"
+        android:textColor="@android:color/holo_orange_dark"
+        android:textSize="12sp"
+        android:visibility="invisible"
+        android:ellipsize="start"/>
+
+    <TextView
+        android:layout_gravity="center_horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/text_name"
+        android:textColor="@android:color/holo_orange_light"
+        android:textSize="12sp"
+        android:visibility="invisible"/>
+
     <LinearLayout
-        android:id="@+id/bottomToolBox"
+        android:id="@+id/tool_box"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|center_horizontal"
         android:background="@color/colorPrimaryTransparent"
-        android:orientation="vertical" >
+        android:orientation="vertical"
+        android:visibility="invisible">
 
         <TextView
-            android:id="@+id/textViewPage"
+            android:id="@+id/text_page"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|center_horizontal"
@@ -31,7 +52,7 @@
             android:textSize="12dp" />
 
         <SeekBar
-            android:id="@+id/seekBarPage"
+            android:id="@+id/seek_page"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|center_horizontal"

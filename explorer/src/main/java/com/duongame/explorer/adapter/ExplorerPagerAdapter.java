@@ -169,6 +169,10 @@ public class ExplorerPagerAdapter extends PagerAdapter {
         this.imageList = imageList;
     }
 
+    public ArrayList<ExplorerFileItem> getImageList() {
+        return imageList;
+    }
+
     @Override
     public Object instantiateItem(final ViewGroup container, int position) {
 //        Log.d(TAG, "instantiateItem position=" + position);
@@ -191,11 +195,11 @@ public class ExplorerPagerAdapter extends PagerAdapter {
             container.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
                 @Override
                 public void onGlobalLayout() {
-                    int width = container.getWidth();
-                    int height = container.getHeight();
+                    final int width = container.getWidth();
+                    final int height = container.getHeight();
 //                    Log.d(TAG, "onGlobalLayout width=" + width + " height=" + height);
 
-                    LoadBitmapTask task = new LoadBitmapTask(imageView, width, height);
+                    final LoadBitmapTask task = new LoadBitmapTask(imageView, width, height);
                     task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, path);
 //                    Log.d(TAG, "LoadBitmapTask execute");
 
@@ -204,7 +208,7 @@ public class ExplorerPagerAdapter extends PagerAdapter {
             });
 
         } else {
-            LoadBitmapTask task = new LoadBitmapTask(imageView, width, height);
+            final LoadBitmapTask task = new LoadBitmapTask(imageView, width, height);
             task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, path);
         }
 
@@ -216,13 +220,14 @@ public class ExplorerPagerAdapter extends PagerAdapter {
 //        Log.d(TAG, "destroyItem position=" + position);
         container.removeView((View) object);
 
-        ViewGroup rootView = (ViewGroup) object;
-        ImageView imageView = (ImageView) rootView.findViewById(R.id.image_viewer);
+        final ViewGroup rootView = (ViewGroup) object;
+        final ImageView imageView = (ImageView) rootView.findViewById(R.id.image_viewer);
         imageView.setImageBitmap(null);
     }
 
     private void runPreloadTask(int position, int width, int height) {
-        ArrayList<String> preloadList = new ArrayList<String>();
+        final ArrayList<String> preloadList = new ArrayList<String>();
+
         if (position + 2 < imageList.size()) {
             preloadList.add(imageList.get(position + 2).path);
         }
@@ -232,25 +237,28 @@ public class ExplorerPagerAdapter extends PagerAdapter {
         if (position - 2 >= 0) {
             preloadList.add(imageList.get(position - 2).path);
         }
-        String[] preloadArray = new String[preloadList.size()];
+
+        final String[] preloadArray = new String[preloadList.size()];
         preloadList.toArray(preloadArray);
 
-        PreloadBitmapTask task = new PreloadBitmapTask(width, height);
+        final PreloadBitmapTask task = new PreloadBitmapTask(width, height);
         task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, preloadArray);
     }
 
     private void runRemoveTask(int position) {
-        ArrayList<String> removeList = new ArrayList<String>();
+        final ArrayList<String> removeList = new ArrayList<String>();
+
         if (position - 3 >= 0) {
             removeList.add(imageList.get(position - 3).path);
         }
         if (position + 4 < imageList.size()) {
             removeList.add(imageList.get(position + 4).path);
         }
-        String[] removeArray = new String[removeList.size()];
+
+        final String[] removeArray = new String[removeList.size()];
         removeList.toArray(removeArray);
 
-        RemoveBitmapTask task = new RemoveBitmapTask();
+        final RemoveBitmapTask task = new RemoveBitmapTask();
         task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, removeArray);
     }
 
@@ -266,8 +274,8 @@ public class ExplorerPagerAdapter extends PagerAdapter {
             container.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
                 @Override
                 public void onGlobalLayout() {
-                    int width = container.getWidth();
-                    int height = container.getHeight();
+                    final int width = container.getWidth();
+                    final int height = container.getHeight();
 //                    Log.d(TAG, "onGlobalLayout width=" + width + " height=" + height);
 
                     runPreloadTask(position, width, height);

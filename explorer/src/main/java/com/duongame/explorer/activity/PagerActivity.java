@@ -3,10 +3,14 @@ package com.duongame.explorer.activity;
 import android.graphics.PointF;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
 import android.view.View;
 import android.view.ViewConfiguration;
+import android.widget.LinearLayout;
+import android.widget.SeekBar;
+import android.widget.TextView;
 
 import com.duongame.explorer.R;
 import com.duongame.explorer.adapter.ExplorerPagerAdapter;
@@ -16,11 +20,25 @@ import com.duongame.explorer.bitmap.BitmapCacheManager;
  * Created by namjungsoo on 2016-11-19.
  */
 
-// 전체화면 + 뷰페이저를 지원함
+// 지원 목록: Photo, Pdf, Zip
+// +전체화면
+//
+// +뷰페이저
+// +하단 툴박스
 public class PagerActivity extends ViewerActivity {
     private final static String TAG = "PagerActivity";
+
+    protected String path;
+    protected String name;
     protected ViewPager pager;
     protected ExplorerPagerAdapter pagerAdapter;
+
+    protected TextView textName;
+    protected TextView textPath;
+
+    protected LinearLayout toolBox;
+    protected TextView textPage;
+    protected SeekBar seekPage;
 
     // touch
     private boolean isPagerIdle = true;
@@ -37,10 +55,48 @@ public class PagerActivity extends ViewerActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_viewer);
 
-        pager = (ViewPager) findViewById(R.id.pager);
-        pagerAdapter = new ExplorerPagerAdapter(this);
+        initToolBox();
 
+        initPager();
         initPagerListeners();
+
+        // 전체 화면으로 들어감
+        setFullscreen(true);
+    }
+
+    protected int getNavigationBarHeight() {
+        int result = 0;
+        int resourceId = getResources().getIdentifier("navigation_bar_height", "dimen", "android");
+        if (resourceId > 0) {
+            result = getResources().getDimensionPixelSize(resourceId);
+            return result;
+        }
+        return 0;
+    }
+
+    public int getStatusBarHeight() {
+        int result = 0;
+        int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
+        if (resourceId > 0) {
+            result = getResources().getDimensionPixelSize(resourceId);
+        }
+        return result;
+    }
+
+    protected void setFullscreen(boolean fullscreen) {
+        super.setFullscreen(fullscreen);
+
+        // 툴박스 보이기
+        //TODO: 알파 애니메이션은 나중에 하자
+        if (!fullscreen) {
+            toolBox.setVisibility(View.VISIBLE);
+            textName.setVisibility(View.VISIBLE);
+            textPath.setVisibility(View.VISIBLE);
+        } else {
+            toolBox.setVisibility(View.INVISIBLE);
+            textName.setVisibility(View.INVISIBLE);
+            textPath.setVisibility(View.INVISIBLE);
+        }
     }
 
     private void startDragIfNeeded(MotionEvent ev) {
@@ -54,7 +110,64 @@ public class PagerActivity extends ViewerActivity {
         isBeingDragged = true;
     }
 
+    protected void initToolBox() {
+        textPath = (TextView)findViewById(R.id.text_path);
+        textName = (TextView)findViewById(R.id.text_name);
+        textName.setY(getStatusBarHeight());
+
+        toolBox = (LinearLayout) findViewById(R.id.tool_box);
+        textPage = (TextView) findViewById(R.id.text_page);
+        seekPage = (SeekBar) findViewById(R.id.seek_page);
+
+        int height = getNavigationBarHeight();
+        toolBox.setY(toolBox.getY() - height);
+
+        seekPage.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                //seekPage.setProgress(progress);
+                //pager.setCurrentItem(progress-1);
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                final int page = seekBar.getProgress() - 1;
+                pager.setCurrentItem(page, false);
+            }
+        });
+    }
+
+    protected void initPager() {
+        pager = (ViewPager) findViewById(R.id.pager);
+        pagerAdapter = new ExplorerPagerAdapter(this);
+    }
+
     protected void initPagerListeners() {
+        pager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+//                Log.d("PagerActivity", "onPageScrolled position=" + position);
+                textPage.setText((position + 1) + "/" + pagerAdapter.getCount());
+                seekPage.setProgress(position + 1);
+                textName.setText(pagerAdapter.getImageList().get(position).name);
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
+
         final ViewConfiguration configuration = ViewConfiguration.get(this);
         touchSlop = configuration.getScaledTouchSlop() >> 1;
 

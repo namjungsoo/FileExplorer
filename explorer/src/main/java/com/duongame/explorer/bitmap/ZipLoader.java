@@ -67,7 +67,7 @@ public class ZipLoader {
             }
         }
     }
-    
+
     public ArrayList<ExplorerFileItem> load(Context context, String filename, ZipLoaderListener listener, boolean firstImageOnly) throws ZipException {
         // 일단 무조건 압축 풀자
         //TODO: 이미 전체 압축이 풀려있는지 검사해야함

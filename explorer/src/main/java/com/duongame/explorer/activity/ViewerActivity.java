@@ -29,9 +29,6 @@ public class ViewerActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         initActionBar();
-
-        // 전체 화면으로 들어감
-        setFullscreen(true);
     }
 
     private void initActionBar() {

@@ -32,6 +32,8 @@ public class PhotoActivity extends PagerActivity {
         final ArrayList<ExplorerFileItem> imageList = getImageList();
         pagerAdapter.setImageList(imageList);
         pager.setAdapter(pagerAdapter);
+
+        seekPage.setMax(imageList.size());
     }
 
     protected void processIntent() {
@@ -39,7 +41,10 @@ public class PhotoActivity extends PagerActivity {
         final Intent intent = getIntent();
         final Bundle extras = intent.getExtras();
         if (extras != null) {
-            final String name = extras.getString("name");
+            name = extras.getString("name");
+            path = extras.getString("path");
+            textName.setText(name);
+            textPath.setText(path);
 
             int item = 0;
             for (int i = 0; i < imageList.size(); i++) {

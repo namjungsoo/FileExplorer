@@ -17,7 +17,6 @@ import java.util.ArrayList;
 
 public class ZipActivity extends PagerActivity {
     private final static String TAG = "ZipActivity";
-    private String path;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +43,7 @@ public class ZipActivity extends PagerActivity {
         if (extras != null) {
             final int page = extras.getInt("page");
             path = extras.getString("path");
+            textPath.setText(path);
 
             // zip 파일을 로딩한다.
             ZipLoader zipLoader = new ZipLoader();
@@ -66,6 +66,10 @@ public class ZipActivity extends PagerActivity {
                 }, false);
                 pagerAdapter.setImageList(imageList);
                 pager.setAdapter(pagerAdapter);
+
+                seekPage.setMax(imageList.size());
+                seekPage.setProgress(1);
+
             } catch (ZipException e) {
                 e.printStackTrace();
             }

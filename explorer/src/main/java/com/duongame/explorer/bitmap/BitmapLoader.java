@@ -22,13 +22,13 @@ import java.io.IOException;
 public class BitmapLoader {
     public static Bitmap getThumbnail(Activity context, String path) {
 //        Log.d("BitmapLoader", "getThumbnail path="+path);
-        Cursor cursor = context.getContentResolver().query(
+        final Cursor cursor = context.getContentResolver().query(
                 MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
                 new String[]{MediaStore.MediaColumns._ID},
                 MediaStore.MediaColumns.DATA + "=?",
                 new String[]{path}, null);
         if (cursor != null && cursor.moveToFirst()) {
-            int id = cursor.getInt(cursor.getColumnIndex(MediaStore.MediaColumns._ID));
+            final int id = cursor.getInt(cursor.getColumnIndex(MediaStore.MediaColumns._ID));
 
             cursor.close();
 //            cursor = context.getContentResolver().query(
@@ -147,7 +147,7 @@ public class BitmapLoader {
         // 로드하기 위해서는 위에서 true 로 설정했던 inJustDecodeBounds 의 값을 false 로 설정합니다.
         options.inJustDecodeBounds = false;
         try {
-            BitmapRegionDecoder decoder = BitmapRegionDecoder.newInstance(path, false);
+            final BitmapRegionDecoder decoder = BitmapRegionDecoder.newInstance(path, false);
 //            Log.d("tag", "decoder path=" + path + " width="+width + " height="+height);
 
             Bitmap bitmap;
