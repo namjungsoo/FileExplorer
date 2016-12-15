@@ -57,7 +57,13 @@ public abstract class ExplorerAdapter extends BaseAdapter {
             if (bitmap == null) {
                 String image = null;
                 try {
-                    image = ZipLoader.getFirstImage(context, path);
+                    //image = ZipLoader.getFirstImage(context, path);
+                    ZipLoader loader = new ZipLoader();
+                    ArrayList<ExplorerFileItem> imageList = loader.load(context, path, null, true);
+                    if(imageList != null && imageList.size() > 0) {
+                        image = imageList.get(0).path;
+                    }
+
                 } catch (ZipException e) {
                     e.printStackTrace();
                 }

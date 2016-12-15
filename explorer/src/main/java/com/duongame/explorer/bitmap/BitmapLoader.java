@@ -11,6 +11,8 @@ import android.graphics.Rect;
 import android.media.ExifInterface;
 import android.provider.MediaStore;
 
+import com.duongame.explorer.helper.FileHelper;
+
 import java.io.IOException;
 
 /**
@@ -63,6 +65,9 @@ public class BitmapLoader {
     }
 
     public static Bitmap rotateBitmapOnExif(Bitmap bitmap, BitmapFactory.Options options, String path) {
+        if(FileHelper.isImage(path))
+            return bitmap;
+
         try {
             int degree = 0;
             ExifInterface exif = new ExifInterface(path);

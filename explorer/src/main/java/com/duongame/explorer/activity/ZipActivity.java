@@ -2,6 +2,7 @@ package com.duongame.explorer.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.duongame.explorer.adapter.ExplorerFileItem;
 import com.duongame.explorer.bitmap.ZipLoader;
@@ -15,6 +16,7 @@ import java.util.ArrayList;
  */
 
 public class ZipActivity extends PagerActivity {
+    private final static String TAG = "ZipActivity";
     private String path;
 
     @Override
@@ -44,25 +46,26 @@ public class ZipActivity extends PagerActivity {
             path = extras.getString("path");
 
             // zip 파일을 로딩한다.
+            ZipLoader zipLoader = new ZipLoader();
             try {
-                final ArrayList<ExplorerFileItem> imageList = ZipLoader.load(this, path, new ZipLoader.ZipLoaderListener() {
+
+                final ArrayList<ExplorerFileItem> imageList = zipLoader.load(this, path, new ZipLoader.ZipLoaderListener() {
                     @Override
-                    public void onSuccess(int i) {
-                        if(i == page) {
+                    public void onSuccess(int i, String name) {
+                        if (i == page) {
                             pager.setCurrentItem(page);
-//                            Log.d("ZipActivity", "setCurrentItem "+i);
+                            Log.d(TAG, "setCurrentItem="+i);
                         }
+                        pagerAdapter.setMaxIndex(i);
                     }
 
                     @Override
-                    public void onFail() {
-
+                    public void onFail(int i, String name) {
+                        Log.e(TAG, "onFail i="+i + " name="+name);
                     }
-                });
+                }, false);
                 pagerAdapter.setImageList(imageList);
                 pager.setAdapter(pagerAdapter);
-//                Log.d("ZipActivity", "pager init");
-
             } catch (ZipException e) {
                 e.printStackTrace();
             }

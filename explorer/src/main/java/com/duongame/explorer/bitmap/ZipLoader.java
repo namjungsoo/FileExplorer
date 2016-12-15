@@ -2,7 +2,6 @@ package com.duongame.explorer.bitmap;
 
 import android.content.Context;
 import android.os.AsyncTask;
-import android.util.Log;
 
 import com.duongame.explorer.adapter.ExplorerFileItem;
 import com.duongame.explorer.helper.FileHelper;
@@ -21,13 +20,15 @@ import java.util.List;
  */
 
 public class ZipLoader {
-    private static final String TAG="ZipLoader";
+    private static final String TAG = "ZipLoader";
+    private ZipExtractTask task;
+
     public interface ZipLoaderListener {
-        void onSuccess(int i);
-        void onFail();
+        void onSuccess(int i, String name);
+        void onFail(int i, String name);
     }
 
-    private static class ZipExtractTask extends AsyncTask<String, Integer, Void> {
+    private class ZipExtractTask extends AsyncTask<String, Integer, Void> {
         private ArrayList<ExplorerFileItem> imageList;
         private ZipFile zipFile;
         private ZipLoaderListener listener;
@@ -41,16 +42,17 @@ public class ZipLoader {
         @Override
         protected Void doInBackground(String... params) {
             String path = params[0];
+            int i = 0;
 
             try {
-                for (int i = 0; i < imageList.size(); i++) {
+                for (i = 0; i < imageList.size(); i++) {
                     zipFile.extractFile(imageList.get(i).name, path);
                     publishProgress(i);
                 }
             } catch (ZipException e) {
                 e.printStackTrace();
-                if(listener != null) {
-                    listener.onFail();
+                if (listener != null) {
+                    listener.onFail(i, imageList.get(i).name);
                 }
             }
 
@@ -59,74 +61,43 @@ public class ZipLoader {
 
         @Override
         protected void onProgressUpdate(Integer... progress) {
-            if(listener != null) {
-                listener.onSuccess(progress[0]);
+            if (listener != null) {
+                int i = progress[0];
+                listener.onSuccess(i, imageList.get(i).name);
             }
         }
     }
-
-    public static String getFirstImage(Context context, String filename) throws ZipException {
+    
+    public ArrayList<ExplorerFileItem> load(Context context, String filename, ZipLoaderListener listener, boolean firstImageOnly) throws ZipException {
+        // 일단 무조건 압축 풀자
+        //TODO: 이미 전체 압축이 풀려있는지 검사해야함
         checkCachedPath(context, filename);
 
         final ZipFile zipFile = new ZipFile(filename);
         zipFile.setFileNameCharset("EUC-KR");// 일단 무조건 한국 사용자를 위해서 이렇게 설정함
-        zipFile.setRunInThread(true);
 
         final ArrayList<ExplorerFileItem> imageList = new ArrayList<ExplorerFileItem>();
-        final List<FileHeader> headers = zipFile.getFileHeaders();
+        final List<FileHeader> zipHeaders = zipFile.getFileHeaders();
+        final String extractPath = FileHelper.getZipCachePath(context, filename);
 
-        final String path = FileHelper.getZipCachePath(context, filename);
-
-        for (FileHeader header : headers) {
-            String name = header.getFileName();
+        for (FileHeader header : zipHeaders) {
+            final String name = header.getFileName();
             if (FileHelper.isImage(name)) {
-                imageList.add(new ExplorerFileItem(path, name, "", 0, ExplorerFileItem.FileType.IMAGE));
+                imageList.add(new ExplorerFileItem(extractPath, name, "", 0, ExplorerFileItem.FileType.IMAGE));
             }
         }
 
         Collections.sort(imageList, new FileHelper.FileNameCompare());
 
-        if(imageList.size() > 0) {
-            // 파일을 풀어놓고 리턴한다
-            final File file = new File(imageList.get(0).path);
-            if(file != null) {
-                if(file.exists())
-                    return imageList.get(0).path;
-            }
-//            Log.d(TAG, "name=" +imageList.get(0).name + " path="+path);
-            zipFile.extractFile(imageList.get(0).name, path);
-            return imageList.get(0).path;
+        if(firstImageOnly) {
+            if(imageList.size() > 0)
+                zipFile.extractFile(imageList.get(0).name, extractPath);
+        } else {
+            // 이미 풀어놓은게 없으면 AsyncTask로 로딩함
+            // 첫번째 이미지 파일이 로딩이 끝나면 바로 띄운다
+            task = new ZipExtractTask(zipFile, imageList, listener);
+            task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, extractPath);
         }
-        return null;
-    }
-
-    public static ArrayList<ExplorerFileItem> load(Context context, String filename, ZipLoaderListener listener) throws ZipException {
-        // 일단 무조건 압축 풀자
-        checkCachedPath(context, filename);
-
-        ZipFile zipFile = new ZipFile(filename);
-        zipFile.setFileNameCharset("EUC-KR");// 일단 무조건 한국 사용자를 위해서 이렇게 설정함
-//        zipFile.setRunInThread(true);
-
-        ArrayList<ExplorerFileItem> imageList = new ArrayList<ExplorerFileItem>();
-        List<FileHeader> headers = zipFile.getFileHeaders();
-
-        String path = FileHelper.getZipCachePath(context, filename);
-
-        for (FileHeader header : headers) {
-            String name = header.getFileName();
-            if (FileHelper.isImage(name)) {
-                imageList.add(new ExplorerFileItem(path, name, "", 0, ExplorerFileItem.FileType.IMAGE));
-            }
-        }
-
-        Collections.sort(imageList, new FileHelper.FileNameCompare());
-
-        // 이미 풀어놓은게 없으면 AsyncTask로 로딩함
-        // 첫번째 이미지 파일이 로딩이 끝나면 바로 띄운다
-        ZipExtractTask task = new ZipExtractTask(zipFile, imageList, listener);
-        task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, path);
-
         return imageList;
     }
 
