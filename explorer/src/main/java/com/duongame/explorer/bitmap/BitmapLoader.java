@@ -1,7 +1,6 @@
 package com.duongame.explorer.bitmap;
 
 import android.app.Activity;
-import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -20,7 +19,7 @@ import java.io.IOException;
  */
 
 public class BitmapLoader {
-    public static Bitmap getThumbnail(Activity context, String path) {
+    public static Bitmap getThumbnail(Activity context, String path, boolean exifRotation) {
 //        Log.d("BitmapLoader", "getThumbnail path="+path);
         final Cursor cursor = context.getContentResolver().query(
                 MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
@@ -42,7 +41,9 @@ public class BitmapLoader {
 //                return BitmapFactory.decodeFile(fullPath);
 //            }
             Bitmap bitmap = MediaStore.Images.Thumbnails.getThumbnail(context.getContentResolver(), id, MediaStore.Images.Thumbnails.MICRO_KIND, null);
-            bitmap = rotateBitmapOnExif(bitmap, null, path);
+            if(exifRotation) {
+                bitmap = rotateBitmapOnExif(bitmap, null, path);
+            }
             return bitmap;
         }
         cursor.close();
@@ -65,7 +66,7 @@ public class BitmapLoader {
     }
 
     public static Bitmap rotateBitmapOnExif(Bitmap bitmap, BitmapFactory.Options options, String path) {
-        if(FileHelper.isImage(path))
+        if(!FileHelper.isJpegImage(path))
             return bitmap;
 
         try {
@@ -107,7 +108,7 @@ public class BitmapLoader {
         return options;
     }
 
-    public static Bitmap decodeSampleBitmapFromFile(String path, int reqWidth, int reqHeight) {
+    public static Bitmap decodeSampleBitmapFromFile(String path, int reqWidth, int reqHeight, boolean exifRotation) {
         final BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
         BitmapFactory.decodeFile(path, options);
@@ -120,11 +121,13 @@ public class BitmapLoader {
         //options.inPreferQualityOverSped = true;
 
         Bitmap bitmap = BitmapFactory.decodeFile(path, options);
-        bitmap = rotateBitmapOnExif(bitmap, options, path);
+        if(exifRotation) {
+            bitmap = rotateBitmapOnExif(bitmap, options, path);
+        }
         return bitmap;
     }
 
-    public static Bitmap decodeSquareThumbnailFromFile(String path, int size) {
+    public static Bitmap decodeSquareThumbnailFromFile(String path, int size, boolean exifRotation) {
         final BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
         BitmapFactory.decodeFile(path, options);
@@ -160,7 +163,10 @@ public class BitmapLoader {
                 bitmap = decoder.decodeRegion(new Rect(left, 0, left + decoder.getHeight(), decoder.getHeight()), options);
                 decoder.recycle();
             }
-            bitmap = rotateBitmapOnExif(bitmap, options, path);
+
+            if(exifRotation) {
+                bitmap = rotateBitmapOnExif(bitmap, options, path);
+            }
             return bitmap;
         } catch (IOException e) {
             e.printStackTrace();
@@ -168,15 +174,16 @@ public class BitmapLoader {
         }
     }
 
-    public static Bitmap decodeSampleBitmapFromResource(Resources res, int resId, int reqWidth, int reqHeight) {
-        final BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inJustDecodeBounds = true;
-        BitmapFactory.decodeResource(res, resId, options);
-
-        options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
-
-        // 로드하기 위해서는 위에서 true 로 설정했던 inJustDecodeBounds 의 값을 false 로 설정합니다.
-        options.inJustDecodeBounds = false;
-        return BitmapFactory.decodeResource(res, resId, options);
-    }
+    // 현재 사용안함
+//    public static Bitmap decodeSampleBitmapFromResource(Resources res, int resId, int reqWidth, int reqHeight) {
+//        final BitmapFactory.Options options = new BitmapFactory.Options();
+//        options.inJustDecodeBounds = true;
+//        BitmapFactory.decodeResource(res, resId, options);
+//
+//        options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
+//
+//        // 로드하기 위해서는 위에서 true 로 설정했던 inJustDecodeBounds 의 값을 false 로 설정합니다.
+//        options.inJustDecodeBounds = false;
+//        return BitmapFactory.decodeResource(res, resId, options);
+//    }
 }

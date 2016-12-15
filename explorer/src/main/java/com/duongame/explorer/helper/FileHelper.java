@@ -24,6 +24,16 @@ public class FileHelper {
         return false;
     }
 
+    public static boolean isJpegImage(String filename) {
+        final String lower = filename.toLowerCase();
+        if (lower.endsWith(".jpg")
+                || lower.endsWith(".jpeg")
+                ) {
+            return true;
+        }
+        return false;
+    }
+
     public static File getZipCacheFile(Context context, String filename) {
         final String filesDir = context.getFilesDir().getAbsolutePath();
         final String cachePath = filesDir + "/" + filename;

@@ -24,6 +24,7 @@ public class ZipActivity extends PagerActivity {
 
 //        initPagerAdapter();
 
+        pagerAdapter.setExifRotation(false);
         processIntent();
     }
 
@@ -46,9 +47,8 @@ public class ZipActivity extends PagerActivity {
             textPath.setText(path);
 
             // zip 파일을 로딩한다.
-            ZipLoader zipLoader = new ZipLoader();
+            final ZipLoader zipLoader = new ZipLoader();
             try {
-
                 final ArrayList<ExplorerFileItem> imageList = zipLoader.load(this, path, new ZipLoader.ZipLoaderListener() {
                     @Override
                     public void onSuccess(int i, String name) {
@@ -73,7 +73,6 @@ public class ZipActivity extends PagerActivity {
             } catch (ZipException e) {
                 e.printStackTrace();
             }
-
         }
     }
 }

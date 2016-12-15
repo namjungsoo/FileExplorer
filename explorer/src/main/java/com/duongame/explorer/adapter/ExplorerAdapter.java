@@ -76,7 +76,7 @@ public abstract class ExplorerAdapter extends BaseAdapter {
                         BitmapCacheManager.setThumbnail(path, bitmap, imageView);
                 }
                 else {
-                    bitmap = BitmapLoader.decodeSquareThumbnailFromFile(image, 96);
+                    bitmap = BitmapLoader.decodeSquareThumbnailFromFile(image, 96, false);
                     if(bitmap != null)
                         BitmapCacheManager.setThumbnail(path, bitmap, imageView);
                 }
@@ -115,12 +115,12 @@ public abstract class ExplorerAdapter extends BaseAdapter {
                 return bitmap;
 
             if (bitmap == null) {
-                bitmap = BitmapLoader.getThumbnail(context, path);
+                bitmap = BitmapLoader.getThumbnail(context, path, true);
                 if(isCancelled())
                     return bitmap;
 
                 if (bitmap == null) {
-                    bitmap = BitmapLoader.decodeSquareThumbnailFromFile(path, 96);
+                    bitmap = BitmapLoader.decodeSquareThumbnailFromFile(path, 96, true);
                 }
                 if (bitmap != null) {
                     BitmapCacheManager.setThumbnail(path, bitmap, imageView);

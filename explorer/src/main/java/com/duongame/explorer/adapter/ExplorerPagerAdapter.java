@@ -30,7 +30,16 @@ public class ExplorerPagerAdapter extends PagerAdapter {
     private ArrayList<ExplorerFileItem> imageList;
     private Activity context;
     private int maxIndex = 0;
+    private boolean exifRotation = true;
 
+    public void setExifRotation(boolean rotation) {
+        exifRotation = rotation;
+    }
+
+    public boolean getExifRotation() {
+        return exifRotation;
+    }
+    
     public void setMaxIndex(int index) {
         maxIndex = index;
     }
@@ -67,7 +76,7 @@ public class ExplorerPagerAdapter extends PagerAdapter {
 
                     int count = 0;
                     while (true) {
-                        bitmap = BitmapLoader.decodeSampleBitmapFromFile(path, width, height);
+                        bitmap = BitmapLoader.decodeSampleBitmapFromFile(path, width, height, true);
                         if (bitmap == null) {
                             try {
                                 count += RETRY_INTERVAL_MS;
@@ -130,7 +139,7 @@ public class ExplorerPagerAdapter extends PagerAdapter {
                 // 파일에서 읽어서 있으면 캐시에 넣는다
                 int count = 0;
                 while (true) {
-                    bitmap = BitmapLoader.decodeSampleBitmapFromFile(path, width, height);
+                    bitmap = BitmapLoader.decodeSampleBitmapFromFile(path, width, height, true);
                     if (bitmap == null) {
                         try {
                             count += RETRY_INTERVAL_MS;
