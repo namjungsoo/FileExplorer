@@ -1,1 +1,1 @@
-include ':file', ':explorer', ':comicz'
+include ':file', ':explorer', ':comicz', ':file.pro', ':comicz.pro'
