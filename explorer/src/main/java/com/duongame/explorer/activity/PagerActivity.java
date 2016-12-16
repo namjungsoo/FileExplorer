@@ -3,7 +3,6 @@ package com.duongame.explorer.activity;
 import android.graphics.PointF;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
 import android.view.View;
@@ -34,7 +33,7 @@ public class PagerActivity extends ViewerActivity {
     protected ExplorerPagerAdapter pagerAdapter;
 
     protected TextView textName;
-    protected TextView textPath;
+//    protected TextView textPath;
 
     protected LinearLayout toolBox;
     protected TextView textPage;
@@ -91,11 +90,11 @@ public class PagerActivity extends ViewerActivity {
         if (!fullscreen) {
             toolBox.setVisibility(View.VISIBLE);
             textName.setVisibility(View.VISIBLE);
-            textPath.setVisibility(View.VISIBLE);
+//            textPath.setVisibility(View.VISIBLE);
         } else {
             toolBox.setVisibility(View.INVISIBLE);
             textName.setVisibility(View.INVISIBLE);
-            textPath.setVisibility(View.INVISIBLE);
+//            textPath.setVisibility(View.INVISIBLE);
         }
     }
 
@@ -111,7 +110,7 @@ public class PagerActivity extends ViewerActivity {
     }
 
     protected void initToolBox() {
-        textPath = (TextView)findViewById(R.id.text_path);
+//        textPath = (TextView)findViewById(R.id.text_path);
         textName = (TextView)findViewById(R.id.text_name);
         textName.setY(getStatusBarHeight());
 
@@ -147,6 +146,10 @@ public class PagerActivity extends ViewerActivity {
         pagerAdapter = new ExplorerPagerAdapter(this);
     }
 
+    protected void setName(int i) {
+        textName.setText(pagerAdapter.getImageList().get(i).name);
+    }
+
     protected void initPagerListeners() {
         pager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -154,7 +157,9 @@ public class PagerActivity extends ViewerActivity {
 //                Log.d("PagerActivity", "onPageScrolled position=" + position);
                 textPage.setText((position + 1) + "/" + pagerAdapter.getCount());
                 seekPage.setProgress(position + 1);
-                textName.setText(pagerAdapter.getImageList().get(position).name);
+
+                setName(position);
+//                textName.setText(pagerAdapter.getImageList().get(position).name);
             }
 
             @Override

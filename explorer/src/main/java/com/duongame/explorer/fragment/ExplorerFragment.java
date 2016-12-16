@@ -246,6 +246,7 @@ public class ExplorerFragment extends Fragment {
 
                 Intent intent = new Intent(getActivity(), ZipActivity.class);
                 intent.putExtra("path", item.path);
+                intent.putExtra("name", item.name);
                 intent.putExtra("page", 0);
                 startActivity(intent);
             }

@@ -38,13 +38,19 @@ public class ZipActivity extends PagerActivity {
         return null;
     }
 
+    @Override
+    protected void setName(int i) {
+        textName.setText(name);
+    }
+
     protected void processIntent() {
         final Intent intent = getIntent();
         final Bundle extras = intent.getExtras();
         if (extras != null) {
             final int page = extras.getInt("page");
             path = extras.getString("path");
-            textPath.setText(path);
+            name = extras.getString("name");
+//            textPath.setText(path);
 
             // zip 파일을 로딩한다.
             final ZipLoader zipLoader = new ZipLoader();
