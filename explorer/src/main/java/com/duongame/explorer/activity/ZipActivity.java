@@ -69,7 +69,18 @@ public class ZipActivity extends PagerActivity {
                     public void onFail(int i, String name) {
                         Log.e(TAG, "onFail i="+i + " name="+name);
                     }
+
+                    @Override
+                    public void onFinish(ArrayList<ExplorerFileItem> zipImageList) {
+                        // zip 파일 압축풀이가 끝났으면 imageList를 갱신한다.
+                        Log.d(TAG, "zipImageList.size=" + zipImageList.size());
+//                        pagerAdapter.setImageList(zipImageList);
+//                        pagerAdapter.notifyDataSetChanged();
+                    }
                 }, false);
+
+                Log.d(TAG, "imageList.size=" + imageList.size());
+
                 pagerAdapter.setImageList(imageList);
                 pager.setAdapter(pagerAdapter);
 

@@ -2,10 +2,8 @@ package com.duongame.explorer.adapter;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.support.v4.view.PagerAdapter;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
@@ -14,7 +12,8 @@ import android.widget.TextView;
 
 import com.duongame.explorer.R;
 import com.duongame.explorer.bitmap.BitmapCacheManager;
-import com.duongame.explorer.bitmap.BitmapLoader;
+import com.duongame.explorer.task.LoadBitmapTask;
+import com.duongame.explorer.task.PreloadBitmapTask;
 
 import java.util.ArrayList;
 
@@ -24,8 +23,6 @@ import java.util.ArrayList;
 //TODO: Zip파일 양면 읽기용으로 상속받아야 함. Pdf 파일 버전으로 따로 만들어야 함.
 public class ExplorerPagerAdapter extends PagerAdapter {
     private static final String TAG = "ExplorerPagerAdapter";
-    private static final int RETRY_INTERVAL_MS = 500;
-    private static final int RETRY_COUNT = 5;
 
     private ArrayList<ExplorerFileItem> imageList;
     private Activity context;
@@ -48,55 +45,6 @@ public class ExplorerPagerAdapter extends PagerAdapter {
         return maxIndex;
     }
 
-    public static class PreloadBitmapTask extends AsyncTask<String, Void, Bitmap> {
-        private int width, height;
-
-        public PreloadBitmapTask(int width, int height) {
-            this.width = width;
-            this.height = height;
-        }
-
-        @Override
-        protected Bitmap doInBackground(String... params) {
-            for (int i = 0; i < params.length; i++) {
-                final String path = params[i];
-
-                // 캐시에 없으면
-                Bitmap bitmap = BitmapCacheManager.getBitmap(path);
-                if (bitmap == null) {
-                    BitmapFactory.Options options = BitmapLoader.decodeBounds(path);
-                    float bitmapRatio = (float) options.outHeight / (float) options.outWidth;
-                    float screenRatio = (float) height / (float) width;
-
-                    if (screenRatio > bitmapRatio) {
-                        height = (int) (width * bitmapRatio);
-                    } else {
-                        height = (int) (width * screenRatio);
-                    }
-
-                    int count = 0;
-                    while (true) {
-                        bitmap = BitmapLoader.decodeSampleBitmapFromFile(path, width, height, true);
-                        if (bitmap == null) {
-                            try {
-                                count += RETRY_INTERVAL_MS;
-                                if (count == RETRY_INTERVAL_MS * RETRY_COUNT)
-                                    break;
-                                Thread.sleep(RETRY_INTERVAL_MS);
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }
-                            Log.w("PreloadBitmapTask", "decode retry=" + count);
-                        } else {
-                            BitmapCacheManager.setBitmap(path, bitmap);
-                            break;
-                        }
-                    }
-                }
-            }
-            return null;
-        }
-    }
 
     public static class RemoveBitmapTask extends AsyncTask<String, Void, Bitmap> {
         @Override
@@ -106,67 +54,6 @@ public class ExplorerPagerAdapter extends PagerAdapter {
                 BitmapCacheManager.removeBitmap(path);
             }
             return null;
-        }
-    }
-
-    public static class LoadBitmapTask extends AsyncTask<String, Void, Bitmap> {
-        private final ImageView imageView;
-        private int width, height;
-
-        public LoadBitmapTask(ImageView imageView, int width, int height) {
-            this.imageView = imageView;
-            this.width = width;
-            this.height = height;
-        }
-
-        @Override
-        protected Bitmap doInBackground(String... params) {
-            final String path = params[0];
-
-            // 캐시에 있는지 확인해 보고
-            Bitmap bitmap = BitmapCacheManager.getBitmap(path);
-            if (bitmap == null) {
-                BitmapFactory.Options options = BitmapLoader.decodeBounds(path);
-                float bitmapRatio = (float) options.outHeight / (float) options.outWidth;
-                float screenRatio = (float) height / (float) width;
-
-                if (screenRatio > bitmapRatio) {
-                    height = (int) (width * bitmapRatio);
-                } else {
-                    height = (int) (width * screenRatio);
-                }
-
-                // 파일에서 읽어서 있으면 캐시에 넣는다
-                int count = 0;
-                while (true) {
-                    bitmap = BitmapLoader.decodeSampleBitmapFromFile(path, width, height, true);
-                    if (bitmap == null) {
-                        try {
-                            count += RETRY_INTERVAL_MS;
-                            if (count == RETRY_INTERVAL_MS * RETRY_COUNT)
-                                break;
-                            Thread.sleep(RETRY_INTERVAL_MS);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-                        Log.w("LoadBitmapTask", "decode retry=" + count);
-                    } else {
-                        BitmapCacheManager.setBitmap(path, bitmap);
-                        break;
-                    }
-                }
-            }
-            return bitmap;
-        }
-
-        @Override
-        protected void onPostExecute(Bitmap bitmap) {
-            super.onPostExecute(bitmap);
-            if (imageView != null && bitmap != null) {
-                if (imageView != null) {
-                    imageView.setImageBitmap(bitmap);
-                }
-            }
         }
     }
 

@@ -1,7 +1,6 @@
 package com.duongame.explorer.adapter;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -15,11 +14,9 @@ import android.widget.TextView;
 
 import com.duongame.explorer.R;
 import com.duongame.explorer.bitmap.BitmapCacheManager;
-import com.duongame.explorer.bitmap.BitmapLoader;
-import com.duongame.explorer.bitmap.ZipLoader;
+import com.duongame.explorer.task.LoadThumbnailTask;
+import com.duongame.explorer.task.LoadZipThumbnailTask;
 import com.duongame.explorer.view.RoundedImageView;
-
-import net.lingala.zip4j.exception.ZipException;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -35,111 +32,6 @@ public abstract class ExplorerAdapter extends BaseAdapter {
     protected ArrayList<ExplorerFileItem> fileList;
     protected Activity context;
     protected HashMap<ImageView, AsyncTask> taskMap = new HashMap<ImageView, AsyncTask>();
-
-    public class LoadZipThumbnailTask extends AsyncTask<String, Void, Bitmap> {
-        private final ImageView imageView;
-        private final Context context;
-
-        public LoadZipThumbnailTask(Context context, ImageView imageView) {
-            this.imageView = imageView;
-            this.context = context;
-        }
-
-        @Override
-        protected Bitmap doInBackground(String... params) {
-            final String path = params[0];
-
-            if(isCancelled())
-                return null;
-            Bitmap bitmap = getThumbnail(path);
-            if(isCancelled())
-                return bitmap;
-            if (bitmap == null) {
-                String image = null;
-                try {
-                    //image = ZipLoader.getFirstImage(context, path);
-                    ZipLoader loader = new ZipLoader();
-                    ArrayList<ExplorerFileItem> imageList = loader.load(context, path, null, true);
-                    if(imageList != null && imageList.size() > 0) {
-                        image = imageList.get(0).path;
-                    }
-
-                } catch (ZipException e) {
-                    e.printStackTrace();
-                }
-                if(isCancelled())
-                    return bitmap;
-
-                if (image == null) {
-                    bitmap = BitmapCacheManager.getResourceBitmap(context.getResources(), R.drawable.zip);
-                    if(bitmap != null)
-                        BitmapCacheManager.setThumbnail(path, bitmap, imageView);
-                }
-                else {
-                    bitmap = BitmapLoader.decodeSquareThumbnailFromFile(image, 96, false);
-                    if(bitmap != null)
-                        BitmapCacheManager.setThumbnail(path, bitmap, imageView);
-                }
-            }
-            return bitmap;
-        }
-
-        @Override
-        protected void onPostExecute(Bitmap bitmap) {
-            super.onPostExecute(bitmap);
-            if (imageView != null && bitmap != null) {
-                if (imageView != null) {
-                    imageView.setImageBitmap(bitmap);
-                }
-            }
-        }
-    }
-
-    public class LoadThumbnailTask extends AsyncTask<String, Void, Bitmap> {
-        private final ImageView imageView;
-        private String path;
-
-        public LoadThumbnailTask(ImageView imageView) {
-            this.imageView = imageView;
-        }
-
-        @Override
-        protected Bitmap doInBackground(String... params) {
-            path = params[0];
-
-            if(isCancelled())
-                return null;
-
-            Bitmap bitmap = getThumbnail(path);
-            if(isCancelled())
-                return bitmap;
-
-            if (bitmap == null) {
-                bitmap = BitmapLoader.getThumbnail(context, path, true);
-                if(isCancelled())
-                    return bitmap;
-
-                if (bitmap == null) {
-                    bitmap = BitmapLoader.decodeSquareThumbnailFromFile(path, 96, true);
-                }
-                if (bitmap != null) {
-                    BitmapCacheManager.setThumbnail(path, bitmap, imageView);
-                }
-            }
-            return bitmap;
-        }
-
-        @Override
-        protected void onPostExecute(Bitmap bitmap) {
-            super.onPostExecute(bitmap);
-            if (imageView != null && bitmap != null) {
-                if (imageView != null) {
-                    imageView.setImageBitmap(bitmap);
-                    imageView.setTag(path);
-                }
-            }
-        }
-    }
 
     public ExplorerAdapter(Activity context, ArrayList<ExplorerFileItem> fileList) {
         this.context = context;
@@ -209,7 +101,7 @@ public abstract class ExplorerAdapter extends BaseAdapter {
             if (bitmap == null) {
                 viewHolder.icon.setImageResource(android.R.color.transparent);
 
-                LoadThumbnailTask task = new LoadThumbnailTask(viewHolder.icon);
+                LoadThumbnailTask task = new LoadThumbnailTask(context, viewHolder.icon);
                 task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, item.path);
                 taskMap.put(viewHolder.icon, task);
             }

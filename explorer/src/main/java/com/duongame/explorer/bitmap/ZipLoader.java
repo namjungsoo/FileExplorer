@@ -5,6 +5,7 @@ import android.os.AsyncTask;
 
 import com.duongame.explorer.adapter.ExplorerFileItem;
 import com.duongame.explorer.helper.FileHelper;
+import com.duongame.explorer.task.ZipExtractTask;
 
 import net.lingala.zip4j.core.ZipFile;
 import net.lingala.zip4j.exception.ZipException;
@@ -25,49 +26,14 @@ public class ZipLoader {
 
     public interface ZipLoaderListener {
         void onSuccess(int i, String name);
+
         void onFail(int i, String name);
+
+        void onFinish(ArrayList<ExplorerFileItem> zipImageList);
     }
 
-    private class ZipExtractTask extends AsyncTask<String, Integer, Void> {
-        private ArrayList<ExplorerFileItem> imageList;
-        private ZipFile zipFile;
-        private ZipLoaderListener listener;
-
-        public ZipExtractTask(ZipFile zipFile, ArrayList<ExplorerFileItem> imageList, ZipLoaderListener listener) {
-            this.zipFile = zipFile;
-            this.imageList = imageList;
-            this.listener = listener;
-        }
-
-        @Override
-        protected Void doInBackground(String... params) {
-            String path = params[0];
-            int i = 0;
-
-            try {
-                for (i = 0; i < imageList.size(); i++) {
-                    zipFile.extractFile(imageList.get(i).name, path);
-                    publishProgress(i);
-                }
-            } catch (ZipException e) {
-                e.printStackTrace();
-                if (listener != null) {
-                    listener.onFail(i, imageList.get(i).name);
-                }
-            }
-
-            return null;
-        }
-
-        @Override
-        protected void onProgressUpdate(Integer... progress) {
-            if (listener != null) {
-                int i = progress[0];
-                listener.onSuccess(i, imageList.get(i).name);
-            }
-        }
-    }
-
+    // 리턴값은 이미지 리스트이다.
+    // 압축을 풀지 않으면 정보를 알수가 없다. 좌우 잘라야 되는지 마는지를
     public ArrayList<ExplorerFileItem> load(Context context, String filename, ZipLoaderListener listener, boolean firstImageOnly) throws ZipException {
         // 일단 무조건 압축 풀자
         //TODO: 이미 전체 압축이 풀려있는지 검사해야함
@@ -78,6 +44,8 @@ public class ZipLoader {
 
         final ArrayList<ExplorerFileItem> imageList = new ArrayList<ExplorerFileItem>();
         final List<FileHeader> zipHeaders = zipFile.getFileHeaders();
+
+        // 파일이 풀릴 예상 경로
         final String extractPath = FileHelper.getZipCachePath(context, filename);
 
         for (FileHeader header : zipHeaders) {
@@ -89,8 +57,8 @@ public class ZipLoader {
 
         Collections.sort(imageList, new FileHelper.FileNameCompare());
 
-        if(firstImageOnly) {
-            if(imageList.size() > 0)
+        if (firstImageOnly) {
+            if (imageList.size() > 0)
                 zipFile.extractFile(imageList.get(0).name, extractPath);
         } else {
             // 이미 풀어놓은게 없으면 AsyncTask로 로딩함
