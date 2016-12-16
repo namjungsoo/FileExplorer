@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.support.v4.view.PagerAdapter;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
@@ -189,6 +190,7 @@ public class ExplorerPagerAdapter extends PagerAdapter {
 
     @Override
     public int getCount() {
+        Log.d(TAG, "getCount="+imageList.size());
         return imageList.size();
     }
 

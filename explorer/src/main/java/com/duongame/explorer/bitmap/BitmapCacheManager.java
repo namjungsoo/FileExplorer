@@ -6,6 +6,8 @@ import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.widget.ImageView;
 
+import com.duongame.explorer.adapter.ExplorerFileItem;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -23,6 +25,27 @@ public class BitmapCacheManager {
     static HashMap<Integer, Bitmap> resourceCache = new HashMap<>();
 
     static HashMap<String, Drawable> drawableCache = new HashMap<>();
+
+    static HashMap<PageKey, Bitmap> pageCache = new HashMap<>();
+
+    public static void setPage(PageKey key, Bitmap bitmap) {
+        pageCache.put(key, bitmap);
+    }
+
+    public static Bitmap getPage(PageKey key) {
+        return pageCache.get(key);
+    }
+
+    public static void recyclePage() {
+        for(PageKey key : pageCache.keySet()) {
+            if(key.side != ExplorerFileItem.Side.ALL) {// ALL일 경우는 일반 bitmapCache와 공유한다.
+                final Bitmap bitmap = pageCache.get(key);
+                if(bitmap != null) {
+                    bitmap.recycle();
+                }
+            }
+        }
+    }
 
     // resource bitmap
     public static Bitmap getResourceBitmap(Resources res, int resId) {

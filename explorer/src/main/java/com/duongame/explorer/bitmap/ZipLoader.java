@@ -58,8 +58,10 @@ public class ZipLoader {
         Collections.sort(imageList, new FileHelper.FileNameCompare());
 
         if (firstImageOnly) {
-            if (imageList.size() > 0)
+            if (imageList.size() > 0) {
+                // 이미지 로딩후 확인해보고 좌우를 나눠야 되면 나누어 주자
                 zipFile.extractFile(imageList.get(0).name, extractPath);
+            }
         } else {
             // 이미 풀어놓은게 없으면 AsyncTask로 로딩함
             // 첫번째 이미지 파일이 로딩이 끝나면 바로 띄운다
