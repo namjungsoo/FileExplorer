@@ -9,8 +9,8 @@ import com.duongame.explorer.adapter.ExplorerFileItem;
  */
 
 public class PreloadBitmapTask extends BitmapTask {
-    public PreloadBitmapTask(int width, int height, boolean exif, boolean split) {
-        super(width, height, exif, split);
+    public PreloadBitmapTask(int width, int height, boolean exif) {
+        super(width, height, exif);
     }
 
     @Override

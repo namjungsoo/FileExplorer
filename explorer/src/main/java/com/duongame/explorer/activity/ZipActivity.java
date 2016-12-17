@@ -24,8 +24,8 @@ public class ZipActivity extends PagerActivity {
 //            Log.d(TAG, "onSuccess="+i);
             ArrayList<ExplorerFileItem> imageList = (ArrayList<ExplorerFileItem> )zipImageList.clone();
 
-//            pagerAdapter.setImageList(imageList);
-//            pagerAdapter.notifyDataSetChanged();
+            pagerAdapter.setImageList(imageList);
+            pagerAdapter.notifyDataSetChanged();
         }
 
         @Override
@@ -45,7 +45,7 @@ public class ZipActivity extends PagerActivity {
         super.onCreate(savedInstanceState);
 
         pagerAdapter.setExifRotation(false);
-        pagerAdapter.setSplitBitmap(true);
+
         try {
             processIntent();
         } catch (ZipException e) {
@@ -81,59 +81,6 @@ public class ZipActivity extends PagerActivity {
 
             seekPage.setMax(imageList.size());
             seekPage.setProgress(1);
-
-
-//            try {
-//                final ArrayList<ExplorerFileItem> imageList = zipLoader.load(this, path, new ZipLoader.ZipLoaderListener() {
-//                    @Override
-//                    public void onSuccess(int i, ArrayList<ExplorerFileItem> zipImageList) {
-//                        Log.d(TAG, "onSuccess="+i);
-////                        if (i == page) {
-////                            pager.setCurrentItem(page);
-////                            Log.d(TAG, "setCurrentItem=" + i);
-////                        }
-////                        pagerAdapter.setMaxIndex(i);
-//
-//                        pager.setCurrentItem(0);
-//
-////                        // 파일리스트가 변경되는대로 업데이트 해준다.
-////                        pagerAdapter.setImageList(zipImageList);
-////                        pagerAdapter.notifyDataSetChanged();
-////
-////                        // 리스트 갯수가 최대값이다.
-////                        seekPage.setMax(zipImageList.size());
-//                    }
-//
-//                    @Override
-//                    public void onFail(int i, String name) {
-//                        Log.e(TAG, "onFail i=" + i + " name=" + name);
-//                    }
-//
-//                    @Override
-//                    public void onFinish(ArrayList<ExplorerFileItem> zipImageList) {
-//                        // zip 파일 압축풀이가 끝났으면 imageList를 갱신한다.
-////                        Log.d(TAG, "zipImageList.size=" + zipImageList.size());
-////
-////                        pagerAdapter.setImageList(zipImageList);
-////                        pagerAdapter.notifyDataSetChanged();
-////
-////                        seekPage.setMax(zipImageList.size());
-////                        seekPage.setProgress(1);
-//
-//                        // 체크해놓고 나중에 파일을 지우지 말자
-//                        zipExtractCompleted = true;
-//                    }
-//                }, false);
-//
-////                Log.d(TAG, "imageList.size=" + imageList.size());
-////
-//                pagerAdapter.setImageList(imageList);
-//
-//                seekPage.setMax(imageList.size());
-//                seekPage.setProgress(1);
-//            } catch (ZipException e) {
-//                e.printStackTrace();
-//            }
         }
     }
 }

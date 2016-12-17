@@ -12,8 +12,8 @@ import com.duongame.explorer.adapter.ExplorerFileItem;
 public class LoadBitmapTask extends BitmapTask {
     private final ImageView imageView;
 
-    public LoadBitmapTask(ImageView imageView, int width, int height, boolean exif, boolean split) {
-        super(width, height, exif, split);
+    public LoadBitmapTask(ImageView imageView, int width, int height, boolean exif) {
+        super(width, height, exif);
         this.imageView = imageView;
     }
 
