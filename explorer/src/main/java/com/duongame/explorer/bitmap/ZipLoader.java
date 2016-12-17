@@ -1,6 +1,7 @@
 package com.duongame.explorer.bitmap;
 
 import android.content.Context;
+import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 
 import com.duongame.explorer.adapter.ExplorerFileItem;
@@ -61,6 +62,13 @@ public class ZipLoader {
             if (imageList.size() > 0) {
                 // 이미지 로딩후 확인해보고 좌우를 나눠야 되면 나누어 주자
                 zipFile.extractFile(imageList.get(0).name, extractPath);
+
+                BitmapFactory.Options options = BitmapLoader.decodeBounds(imageList.get(0).path);
+
+                // 일본식(RIGHT)를 기준으로 잡자
+                if(options.outWidth > options.outHeight) {
+                    imageList.get(0).side = ExplorerFileItem.Side.RIGHT;
+                }
             }
         } else {
             // 이미 풀어놓은게 없으면 AsyncTask로 로딩함

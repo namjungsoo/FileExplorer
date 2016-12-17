@@ -10,6 +10,7 @@ import android.graphics.Rect;
 import android.media.ExifInterface;
 import android.provider.MediaStore;
 
+import com.duongame.explorer.adapter.ExplorerFileItem;
 import com.duongame.explorer.helper.FileHelper;
 
 import java.io.IOException;
@@ -72,7 +73,7 @@ public class BitmapLoader {
         try {
             int degree = 0;
             ExifInterface exif = new ExifInterface(path);
-            int orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, -1);
+            int orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, 0);
             switch(orientation) {
                 case ExifInterface.ORIENTATION_ROTATE_90:
                     degree = 90;
@@ -186,4 +187,31 @@ public class BitmapLoader {
 //        options.inJustDecodeBounds = false;
 //        return BitmapFactory.decodeResource(res, resId, options);
 //    }
+
+    // 왼쪽 오른쪽을 자른 비트맵을 리턴한다
+    public static Bitmap splitBitmapSide(Bitmap bitmap, ExplorerFileItem item) {
+        // 전체면 자르지 않음
+        if(item.side == ExplorerFileItem.Side.ALL)
+            return bitmap;
+
+        // 이미 캐시된 페이지가 있으면
+        PageKey key = new PageKey(item.path, item.side);
+        Bitmap page = BitmapCacheManager.getPage(key);
+        if(page != null)
+            return page;
+
+        // 잘라서 페이지를 만든후에 캐시에 넣음
+//        page = BitmapLoader.splitBitmapSide(bitmap, item);
+        switch(item.side) {
+            case LEFT:
+                page = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth() >> 1, bitmap.getHeight());
+                break;
+            case RIGHT:
+                page = Bitmap.createBitmap(bitmap, bitmap.getWidth() >> 1, 0, bitmap.getWidth() >> 1, bitmap.getHeight());
+                break;
+        }
+        if(page != null)
+            BitmapCacheManager.setPage(key, page);
+        return page;
+    }
 }

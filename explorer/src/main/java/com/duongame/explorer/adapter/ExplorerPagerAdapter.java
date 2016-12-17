@@ -28,7 +28,9 @@ public class ExplorerPagerAdapter extends PagerAdapter {
     private ArrayList<ExplorerFileItem> imageList;
     private Activity context;
     private int maxIndex = 0;
+
     private boolean exifRotation = true;
+    private boolean splitBitmap = false;
 
     public void setExifRotation(boolean rotation) {
         exifRotation = rotation;
@@ -46,6 +48,13 @@ public class ExplorerPagerAdapter extends PagerAdapter {
         return maxIndex;
     }
 
+    public void setSplitBitmap(boolean splitBitmap) {
+        this.splitBitmap = splitBitmap;
+    }
+
+    public boolean getSplitBitmap() {
+        return splitBitmap;
+    }
 
     public static class RemoveBitmapTask extends AsyncTask<String, Void, Bitmap> {
         @Override
@@ -72,15 +81,15 @@ public class ExplorerPagerAdapter extends PagerAdapter {
 
     @Override
     public Object instantiateItem(final ViewGroup container, int position) {
-//        Log.d(TAG, "instantiateItem position=" + position);
+        Log.d(TAG, "instantiateItem position=" + position);
 
         final ViewGroup rootView = (ViewGroup) context.getLayoutInflater().inflate(R.layout.viewer_page, container, false);
         final ImageView imageView = (ImageView) rootView.findViewById(R.id.image_viewer);
 
-        final String path = imageList.get(position).path;
+        final ExplorerFileItem item = imageList.get(position);
 
         final TextView textPath = (TextView) rootView.findViewById(R.id.text_path);
-        textPath.setText(path);
+        textPath.setText(item.path);
 
         container.addView(rootView);
 
@@ -96,8 +105,8 @@ public class ExplorerPagerAdapter extends PagerAdapter {
                     final int height = container.getHeight();
 //                    Log.d(TAG, "onGlobalLayout width=" + width + " height=" + height);
 
-                    final LoadBitmapTask task = new LoadBitmapTask(imageView, width, height);
-                    task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, path);
+                    final LoadBitmapTask task = new LoadBitmapTask(imageView, width, height, exifRotation, splitBitmap);
+                    task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, item);
 //                    Log.d(TAG, "LoadBitmapTask execute");
 
                     container.getViewTreeObserver().removeGlobalOnLayoutListener(this);
@@ -105,8 +114,8 @@ public class ExplorerPagerAdapter extends PagerAdapter {
             });
 
         } else {
-            final LoadBitmapTask task = new LoadBitmapTask(imageView, width, height);
-            task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, path);
+            final LoadBitmapTask task = new LoadBitmapTask(imageView, width, height, exifRotation, splitBitmap);
+            task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, item);
         }
 
         return rootView;
@@ -123,22 +132,22 @@ public class ExplorerPagerAdapter extends PagerAdapter {
     }
 
     private void runPreloadTask(int position, int width, int height) {
-        final ArrayList<String> preloadList = new ArrayList<String>();
+        final ArrayList<ExplorerFileItem> preloadList = new ArrayList<ExplorerFileItem>();
 
         if (position + 2 < imageList.size()) {
-            preloadList.add(imageList.get(position + 2).path);
+            preloadList.add(imageList.get(position + 2));
         }
         if (position + 3 < imageList.size()) {
-            preloadList.add(imageList.get(position + 3).path);
+            preloadList.add(imageList.get(position + 3));
         }
         if (position - 2 >= 0) {
-            preloadList.add(imageList.get(position - 2).path);
+            preloadList.add(imageList.get(position - 2));
         }
 
-        final String[] preloadArray = new String[preloadList.size()];
+        final ExplorerFileItem[] preloadArray = new ExplorerFileItem[preloadList.size()];
         preloadList.toArray(preloadArray);
 
-        final PreloadBitmapTask task = new PreloadBitmapTask(width, height);
+        final PreloadBitmapTask task = new PreloadBitmapTask(width, height, exifRotation, splitBitmap);
         task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, preloadArray);
     }
 
@@ -161,7 +170,7 @@ public class ExplorerPagerAdapter extends PagerAdapter {
 
     @Override
     public void setPrimaryItem(final ViewGroup container, final int position, Object object) {
-//        Log.d(TAG, "setPrimaryItem position=" + position);
+        Log.d(TAG, "setPrimaryItem position=" + position);
         final int width = container.getWidth();
         final int height = container.getHeight();
 //        Log.d(TAG, "setPrimaryItem width=" + width + " height=" + height);

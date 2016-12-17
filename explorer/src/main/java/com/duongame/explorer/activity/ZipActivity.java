@@ -18,6 +18,8 @@ import java.util.ArrayList;
 public class ZipActivity extends PagerActivity {
     private final static String TAG = "ZipActivity";
 
+    private boolean zipExtractCompleted = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -25,6 +27,7 @@ public class ZipActivity extends PagerActivity {
 //        initPagerAdapter();
 
         pagerAdapter.setExifRotation(false);
+        pagerAdapter.setSplitBitmap(true);
         processIntent();
     }
 
@@ -74,8 +77,15 @@ public class ZipActivity extends PagerActivity {
                     public void onFinish(ArrayList<ExplorerFileItem> zipImageList) {
                         // zip 파일 압축풀이가 끝났으면 imageList를 갱신한다.
                         Log.d(TAG, "zipImageList.size=" + zipImageList.size());
-//                        pagerAdapter.setImageList(zipImageList);
-//                        pagerAdapter.notifyDataSetChanged();
+
+                        pagerAdapter.setImageList(zipImageList);
+                        pagerAdapter.notifyDataSetChanged();
+
+                        seekPage.setMax(zipImageList.size());
+                        seekPage.setProgress(1);
+
+                        // 체크해놓고 나중에 파일을 지우지 말자
+                        zipExtractCompleted = true;
                     }
                 }, false);
 
@@ -86,7 +96,6 @@ public class ZipActivity extends PagerActivity {
 
                 seekPage.setMax(imageList.size());
                 seekPage.setProgress(1);
-
             } catch (ZipException e) {
                 e.printStackTrace();
             }

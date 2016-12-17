@@ -47,12 +47,14 @@ public class ZipExtractTask extends AsyncTask<String, Integer, Void> {
 
                 BitmapFactory.Options options = BitmapLoader.decodeBounds(item.path);
                 if (options.outWidth > options.outHeight) {// 잘라야 한다. 가로 파일이다.
-                    ExplorerFileItem left = (ExplorerFileItem) item.clone();
-                    left.side = LEFT;
+                    // 일본식은 right를 먼저 넣는다.
                     ExplorerFileItem right = (ExplorerFileItem) item.clone();
                     right.side = RIGHT;
-                    zipImageList.add(left);
                     zipImageList.add(right);
+
+                    ExplorerFileItem left = (ExplorerFileItem) item.clone();
+                    left.side = LEFT;
+                    zipImageList.add(left);
                 } else {
                     zipImageList.add(item);
                 }
