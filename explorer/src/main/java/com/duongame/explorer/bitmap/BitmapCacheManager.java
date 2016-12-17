@@ -36,6 +36,13 @@ public class BitmapCacheManager {
         return pageCache.get(key);
     }
 
+    public static void removePage(PageKey key) {
+        if (pageCache.get(key) != null) {
+            pageCache.get(key).recycle();
+            pageCache.remove(key);
+        }
+    }
+
     public static void recyclePage() {
         for(PageKey key : pageCache.keySet()) {
             if(key.side != ExplorerFileItem.Side.ALL) {// ALL일 경우는 일반 bitmapCache와 공유한다.

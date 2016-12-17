@@ -149,24 +149,24 @@ public class ExplorerPagerAdapter extends PagerAdapter {
             return;
 
         // split일 경우에는 현재 reload된 것에 bitmap이 사용되는지 안되는지 확인해라
-        final ArrayList<String> removeList = new ArrayList<String>();
+        final ArrayList<ExplorerFileItem> removeList = new ArrayList<ExplorerFileItem>();
 
         if (position - 3 >= 0) {// -2번이 같은 비트맵인지 확인해라
             ExplorerFileItem item = imageList.get(position - 3);
             ExplorerFileItem item2 = imageList.get(position - 2);
             if(!item.path.equals(item2.path)) {
-                removeList.add(item.path);
+                removeList.add(item);
             }
         }
         if (position + 4 < imageList.size()) {// 3번이 같은 비트맵인지 확인해라
             ExplorerFileItem item = imageList.get(position + 4);
             ExplorerFileItem item3 = imageList.get(position + 3);
             if(!item.path.equals(item3.path)) {
-                removeList.add(item.path);
+                removeList.add(item);
             }
         }
 
-        final String[] removeArray = new String[removeList.size()];
+        final ExplorerFileItem[] removeArray = new ExplorerFileItem[removeList.size()];
         removeList.toArray(removeArray);
 
         final RemoveBitmapTask task = new RemoveBitmapTask();
