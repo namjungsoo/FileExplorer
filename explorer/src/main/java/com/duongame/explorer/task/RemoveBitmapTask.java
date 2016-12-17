@@ -17,7 +17,7 @@ public class RemoveBitmapTask extends AsyncTask<ExplorerFileItem, Void, Bitmap> 
         for (int i = 0; i < params.length; i++) {
             final ExplorerFileItem item = params[i];
 
-            if(item.side == ExplorerFileItem.Side.ALL)
+            if(item.side == ExplorerFileItem.Side.SIDE_ALL)
                 BitmapCacheManager.removeBitmap(item.path);
             else
                 BitmapCacheManager.removePage(new PageKey(item.path, item.side));

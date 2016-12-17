@@ -37,7 +37,7 @@ public class BitmapTask extends AsyncTask<ExplorerFileItem, Void, Bitmap> {
         // 캐시에 있는지 확인해 보고
         // split일 경우에는 무조건 없다
         Bitmap bitmap = null;
-        if(item.side != ExplorerFileItem.Side.ALL) {
+        if(item.side != ExplorerFileItem.Side.SIDE_ALL) {
             bitmap = BitmapCacheManager.getPage(new PageKey(item.path, item.side));
             if(bitmap != null)
                 return bitmap;
@@ -48,7 +48,7 @@ public class BitmapTask extends AsyncTask<ExplorerFileItem, Void, Bitmap> {
             BitmapFactory.Options options = BitmapLoader.decodeBounds(item.path);
 
             // 자르는 경우에는 실제 예상보다 width/2를 하자
-            if(item.side != ExplorerFileItem.Side.ALL) {
+            if(item.side != ExplorerFileItem.Side.SIDE_ALL) {
                 options.outWidth >>= 1;
             }
             float bitmapRatio = (float) options.outHeight / (float) options.outWidth;

@@ -16,7 +16,6 @@ import com.duongame.explorer.helper.FileHelper;
 
 import java.io.IOException;
 
-import static android.content.ContentValues.TAG;
 import static com.duongame.explorer.adapter.ExplorerFileItem.Side.LEFT;
 import static com.duongame.explorer.adapter.ExplorerFileItem.Side.RIGHT;
 
@@ -25,6 +24,8 @@ import static com.duongame.explorer.adapter.ExplorerFileItem.Side.RIGHT;
  */
 
 public class BitmapLoader {
+    public static final String TAG = "BitmapLoader";
+
     public static Bitmap getThumbnail(Activity context, String path, boolean exifRotation) {
 //        Log.d("BitmapLoader", "getThumbnail path="+path);
         final Cursor cursor = context.getContentResolver().query(
@@ -196,10 +197,10 @@ public class BitmapLoader {
 
     // 왼쪽 오른쪽을 자른 비트맵을 리턴한다
     public static Bitmap splitBitmapSide(Bitmap bitmap, ExplorerFileItem item) {
-        Log.d(TAG,"splitBitmapSide "+item.name);
+        Log.d(TAG, "splitBitmapSide " + item.name);
 
         // 전체면 자르지 않음
-        if (item.side == ExplorerFileItem.Side.ALL)
+        if (item.side == ExplorerFileItem.Side.SIDE_ALL)
             return bitmap;
 
         // 이미 캐시된 페이지가 있으면
@@ -215,15 +216,15 @@ public class BitmapLoader {
         switch (item.side) {
             case LEFT:
                 page = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth() >> 1, bitmap.getHeight());
-                Log.d(TAG, item.name+ " LEFT page");
+                Log.d(TAG, item.name + " LEFT page");
                 pageOther = Bitmap.createBitmap(bitmap, bitmap.getWidth() >> 1, 0, bitmap.getWidth() >> 1, bitmap.getHeight());
-                Log.d(TAG, item.name+ " LEFT pageOther");
+                Log.d(TAG, item.name + " LEFT pageOther");
                 break;
             case RIGHT:
                 page = Bitmap.createBitmap(bitmap, bitmap.getWidth() >> 1, 0, bitmap.getWidth() >> 1, bitmap.getHeight());
-                Log.d(TAG, item.name+ " RIGHT page");
+                Log.d(TAG, item.name + " RIGHT page");
                 pageOther = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth() >> 1, bitmap.getHeight());
-                Log.d(TAG, item.name+ " RIGHT pageOther");
+                Log.d(TAG, item.name + " RIGHT pageOther");
                 break;
         }
 
@@ -238,7 +239,7 @@ public class BitmapLoader {
         // 이거 때문에 recycled 에러가 발생한다.
         // remove를 하지 않으면 oom이 발생한다.
         BitmapCacheManager.removeBitmap(item.path);
-        Log.d(TAG, "removeBitmap "+item.name);
+        Log.d(TAG, "removeBitmap " + item.name);
 
         return page;
     }

@@ -45,7 +45,7 @@ public class BitmapCacheManager {
 
     public static void recyclePage() {
         for(PageKey key : pageCache.keySet()) {
-            if(key.side != ExplorerFileItem.Side.ALL) {// ALL일 경우는 일반 bitmapCache와 공유한다.
+            if(key.side != ExplorerFileItem.Side.SIDE_ALL) {// ALL일 경우는 일반 bitmapCache와 공유한다.
                 final Bitmap bitmap = pageCache.get(key);
                 if(bitmap != null) {
                     bitmap.recycle();

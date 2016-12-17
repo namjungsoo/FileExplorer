@@ -127,13 +127,41 @@ public class ExplorerPagerAdapter extends PagerAdapter {
         final ArrayList<ExplorerFileItem> preloadList = new ArrayList<ExplorerFileItem>();
 
         if (position + 2 < imageList.size()) {
-            preloadList.add(imageList.get(position + 2));
+            ExplorerFileItem item = imageList.get(position + 2);
+            if(item.side == ExplorerFileItem.Side.SIDE_ALL) {
+                preloadList.add(item);
+            } else {
+                ExplorerFileItem item1 = imageList.get(position + 1);
+                if(!item.path.equals(item1.path)) {
+                    preloadList.add(item);
+                }
+            }
         }
         if (position + 3 < imageList.size()) {
-            preloadList.add(imageList.get(position + 3));
+            ExplorerFileItem item = imageList.get(position + 3);
+            if(item.side == ExplorerFileItem.Side.SIDE_ALL) {
+                preloadList.add(item);
+            } else {
+                ExplorerFileItem item1 = imageList.get(position + 2);
+                if (!item.path.equals(item1.path)) {
+                    preloadList.add(item);
+                }
+            }
         }
         if (position - 2 >= 0) {
-            preloadList.add(imageList.get(position - 2));
+            ExplorerFileItem item = imageList.get(position - 2);
+            if(item.side == ExplorerFileItem.Side.SIDE_ALL) {
+                preloadList.add(item);
+            } else {
+                if (position - 3 >= 0) {
+                    ExplorerFileItem item1 = imageList.get(position - 3);
+                    if (!item.path.equals(item1.path)) {
+                        preloadList.add(item);
+                    }
+                } else {
+                    preloadList.add(item);
+                }
+            }
         }
 
         final ExplorerFileItem[] preloadArray = new ExplorerFileItem[preloadList.size()];
@@ -151,19 +179,13 @@ public class ExplorerPagerAdapter extends PagerAdapter {
         // split일 경우에는 현재 reload된 것에 bitmap이 사용되는지 안되는지 확인해라
         final ArrayList<ExplorerFileItem> removeList = new ArrayList<ExplorerFileItem>();
 
-        if (position - 3 >= 0) {// -2번이 같은 비트맵인지 확인해라
+        if (position - 3 >= 0) {
             ExplorerFileItem item = imageList.get(position - 3);
-            ExplorerFileItem item2 = imageList.get(position - 2);
-            if(!item.path.equals(item2.path)) {
-                removeList.add(item);
-            }
+            removeList.add(item);
         }
-        if (position + 4 < imageList.size()) {// 3번이 같은 비트맵인지 확인해라
+        if (position + 4 < imageList.size()) {
             ExplorerFileItem item = imageList.get(position + 4);
-            ExplorerFileItem item3 = imageList.get(position + 3);
-            if(!item.path.equals(item3.path)) {
-                removeList.add(item);
-            }
+            removeList.add(item);
         }
 
         final ExplorerFileItem[] removeArray = new ExplorerFileItem[removeList.size()];

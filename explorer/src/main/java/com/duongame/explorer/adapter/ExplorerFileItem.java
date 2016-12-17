@@ -1,6 +1,6 @@
 package com.duongame.explorer.adapter;
 
-import static com.duongame.explorer.adapter.ExplorerFileItem.Side.ALL;
+import static com.duongame.explorer.adapter.ExplorerFileItem.Side.SIDE_ALL;
 
 /**
  * Created by namjungsoo on 2016-11-06.
@@ -18,11 +18,11 @@ public class ExplorerFileItem implements Cloneable {
         TEXT,
         FILE,
         APK,
-        ALL
+        FILETYPE_ALL
     }
 
     public enum Side {
-        ALL,
+        SIDE_ALL,
         LEFT,
         RIGHT,
         OTHER
@@ -33,7 +33,7 @@ public class ExplorerFileItem implements Cloneable {
     public long size;
     public String path;
     public FileType type;
-    public Side side = ALL;
+    public Side side = SIDE_ALL;
 
     public ExplorerFileItem(String path, String name, String date, long size, FileType type) {
         this.path = path + "/" + name;
