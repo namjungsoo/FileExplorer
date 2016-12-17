@@ -4,6 +4,7 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
+import android.util.Log;
 import android.widget.ImageView;
 
 import com.duongame.explorer.adapter.ExplorerFileItem;
@@ -75,6 +76,7 @@ public class BitmapCacheManager {
     public static void setBitmap(String path, Bitmap bitmap) {
         if (bitmapCache.get(path) == null) {
             bitmapCache.put(path, bitmap);
+            Log.w(TAG, "setBitmap bitmapCache.size="+bitmapCache.size());
         }
     }
 
@@ -86,6 +88,7 @@ public class BitmapCacheManager {
         if (bitmapCache.get(path) != null) {
             bitmapCache.get(path).recycle();
             bitmapCache.remove(path);
+            Log.w(TAG, "removeBitmap bitmapCache.size="+bitmapCache.size());
         }
     }
 

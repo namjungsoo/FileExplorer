@@ -2,6 +2,7 @@ package com.duongame.explorer.activity;
 
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
 import android.view.View;
@@ -10,6 +11,7 @@ import android.widget.SeekBar;
 
 import com.duongame.explorer.R;
 import com.duongame.explorer.adapter.ExplorerPagerAdapter;
+import com.duongame.explorer.bitmap.BitmapCacheManager;
 
 /**
  * Created by namjungsoo on 2016-11-19.
@@ -54,12 +56,16 @@ public class PagerActivity extends ViewerActivity {
 
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
-
+                Log.d(TAG,"onStartTrackingTouch");
             }
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
+                Log.d(TAG,"onStopTrackingTouch");
                 final int page = seekBar.getProgress() - 1;
+                pagerAdapter.stopAllTasks();
+                BitmapCacheManager.recyclePage();
+                BitmapCacheManager.recycleBitmap();
                 pager.setCurrentItem(page, false);
             }
         });

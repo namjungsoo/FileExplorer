@@ -6,7 +6,7 @@ import com.duongame.explorer.adapter.ExplorerFileItem;
  * Created by namjungsoo on 2016-12-16.
  */
 
-public class PageKey {
+public class PageKey implements Cloneable {
     public String path;
     public ExplorerFileItem.Side side;
 
@@ -22,5 +22,17 @@ public class PageKey {
                 && key.side == this.side)
             return true;
         return false;
+    }
+
+    @Override
+    public Object clone() {
+        Object item;
+        try {
+            item = super.clone();
+            return item;
+        } catch (CloneNotSupportedException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 }

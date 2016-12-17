@@ -15,6 +15,9 @@ import com.duongame.explorer.helper.FileHelper;
 
 import java.io.IOException;
 
+import static com.duongame.explorer.adapter.ExplorerFileItem.Side.LEFT;
+import static com.duongame.explorer.adapter.ExplorerFileItem.Side.RIGHT;
+
 /**
  * Created by namjungsoo on 2016. 11. 17..
  */
@@ -42,7 +45,7 @@ public class BitmapLoader {
 //                return BitmapFactory.decodeFile(fullPath);
 //            }
             Bitmap bitmap = MediaStore.Images.Thumbnails.getThumbnail(context.getContentResolver(), id, MediaStore.Images.Thumbnails.MICRO_KIND, null);
-            if(exifRotation) {
+            if (exifRotation) {
                 bitmap = rotateBitmapOnExif(bitmap, null, path);
             }
             return bitmap;
@@ -67,14 +70,14 @@ public class BitmapLoader {
     }
 
     public static Bitmap rotateBitmapOnExif(Bitmap bitmap, BitmapFactory.Options options, String path) {
-        if(!FileHelper.isJpegImage(path))
+        if (!FileHelper.isJpegImage(path))
             return bitmap;
 
         try {
             int degree = 0;
             ExifInterface exif = new ExifInterface(path);
             int orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, 0);
-            switch(orientation) {
+            switch (orientation) {
                 case ExifInterface.ORIENTATION_ROTATE_90:
                     degree = 90;
                     break;
@@ -86,11 +89,11 @@ public class BitmapLoader {
                     break;
             }
 
-            if(bitmap != null && degree != 0) {
+            if (bitmap != null && degree != 0) {
                 Matrix m = new Matrix();
-                m.setRotate(degree, (float)bitmap.getWidth()*0.5f, (float)bitmap.getHeight()*0.5f);
+                m.setRotate(degree, (float) bitmap.getWidth() * 0.5f, (float) bitmap.getHeight() * 0.5f);
                 Bitmap rotated = bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), m, false);
-                if(rotated != null) {
+                if (rotated != null) {
                     bitmap.recycle();
                     bitmap = rotated;
                 }
@@ -122,7 +125,7 @@ public class BitmapLoader {
         //options.inPreferQualityOverSped = true;
 
         Bitmap bitmap = BitmapFactory.decodeFile(path, options);
-        if(exifRotation) {
+        if (exifRotation) {
             bitmap = rotateBitmapOnExif(bitmap, options, path);
         }
         return bitmap;
@@ -137,11 +140,11 @@ public class BitmapLoader {
         int height = size;
 
         // 종횡비 계산해야 함
-        float ratio = (float)options.outHeight / (float)options.outWidth;
+        float ratio = (float) options.outHeight / (float) options.outWidth;
         if (ratio > 1) {
-            height = (int)(size * ratio);
+            height = (int) (size * ratio);
         } else {
-            width = (int)(size / ratio);
+            width = (int) (size / ratio);
         }
 
         options.inSampleSize = calculateInSampleSize(options, width, height);
@@ -155,7 +158,7 @@ public class BitmapLoader {
 //            Log.d("tag", "decoder path=" + path + " width="+width + " height="+height);
 
             Bitmap bitmap;
-            if(ratio > 1) {
+            if (ratio > 1) {
                 int top = (decoder.getHeight() - decoder.getWidth()) >> 1;
                 bitmap = decoder.decodeRegion(new Rect(0, top, decoder.getWidth(), top + decoder.getWidth()), options);
                 decoder.recycle();
@@ -165,7 +168,7 @@ public class BitmapLoader {
                 decoder.recycle();
             }
 
-            if(exifRotation) {
+            if (exifRotation) {
                 bitmap = rotateBitmapOnExif(bitmap, options, path);
             }
             return bitmap;
@@ -191,27 +194,38 @@ public class BitmapLoader {
     // 왼쪽 오른쪽을 자른 비트맵을 리턴한다
     public static Bitmap splitBitmapSide(Bitmap bitmap, ExplorerFileItem item) {
         // 전체면 자르지 않음
-        if(item.side == ExplorerFileItem.Side.ALL)
+        if (item.side == ExplorerFileItem.Side.ALL)
             return bitmap;
 
         // 이미 캐시된 페이지가 있으면
         PageKey key = new PageKey(item.path, item.side);
         Bitmap page = BitmapCacheManager.getPage(key);
-        if(page != null)
+        if (page != null)
             return page;
 
-        // 잘라서 페이지를 만든후에 캐시에 넣음
-//        page = BitmapLoader.splitBitmapSide(bitmap, item);
-        switch(item.side) {
+        PageKey keyOther = (PageKey) key.clone();
+        keyOther.side = key.side == LEFT ? RIGHT : LEFT;
+
+        Bitmap pageOther = null;
+        switch (item.side) {
             case LEFT:
                 page = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth() >> 1, bitmap.getHeight());
+                pageOther = Bitmap.createBitmap(bitmap, bitmap.getWidth() >> 1, 0, bitmap.getWidth() >> 1, bitmap.getHeight());
                 break;
             case RIGHT:
                 page = Bitmap.createBitmap(bitmap, bitmap.getWidth() >> 1, 0, bitmap.getWidth() >> 1, bitmap.getHeight());
+                pageOther = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth() >> 1, bitmap.getHeight());
                 break;
         }
-        if(page != null)
+
+        if (page != null && pageOther != null) {
             BitmapCacheManager.setPage(key, page);
+            BitmapCacheManager.setPage(keyOther, pageOther);
+        }
+
+        // 잘리는 비트맵은 더이상 사용하지 않으므로 삭제한다.
+        BitmapCacheManager.removeBitmap(item.path);
+
         return page;
     }
 }

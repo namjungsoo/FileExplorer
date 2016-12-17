@@ -25,6 +25,7 @@ public class ExplorerFileItem implements Cloneable {
         ALL,
         LEFT,
         RIGHT,
+        OTHER
     }
 
     public String name;

@@ -18,7 +18,8 @@ public class PreloadBitmapTask extends BitmapTask {
         for (int i = 0; i < params.length; i++) {
             ExplorerFileItem item = params[i];
 
-            loadBitmap(item);
+            if(!isCancelled())
+                loadBitmap(item);
         }
         return null;
     }

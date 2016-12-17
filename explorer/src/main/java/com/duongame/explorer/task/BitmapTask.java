@@ -35,6 +35,7 @@ public class BitmapTask extends AsyncTask<ExplorerFileItem, Void, Bitmap> {
 
     protected Bitmap loadBitmap(ExplorerFileItem item) {
         // 캐시에 있는지 확인해 보고
+        // split일 경우에는 무조건 없다
         Bitmap bitmap = BitmapCacheManager.getBitmap(item.path);
         if (bitmap == null) {
             BitmapFactory.Options options = BitmapLoader.decodeBounds(item.path);

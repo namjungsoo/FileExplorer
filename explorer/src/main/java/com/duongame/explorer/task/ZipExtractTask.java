@@ -43,7 +43,6 @@ public class ZipExtractTask extends AsyncTask<String, Integer, Void> {
             for (i = 0; i < imageList.size(); i++) {
                 final ExplorerFileItem item = imageList.get(i);
                 zipFile.extractFile(item.name, path);
-                publishProgress(i);
 
                 BitmapFactory.Options options = BitmapLoader.decodeBounds(item.path);
                 if (options.outWidth > options.outHeight) {// 잘라야 한다. 가로 파일이다.
@@ -58,6 +57,8 @@ public class ZipExtractTask extends AsyncTask<String, Integer, Void> {
                 } else {
                     zipImageList.add(item);
                 }
+
+                publishProgress(i);
             }
         } catch (ZipException e) {
             e.printStackTrace();
@@ -73,7 +74,7 @@ public class ZipExtractTask extends AsyncTask<String, Integer, Void> {
     protected void onProgressUpdate(Integer... progress) {
         if (listener != null) {
             int i = progress[0];
-            listener.onSuccess(i, imageList.get(i).name);
+            listener.onSuccess(i, zipImageList);
         }
     }
 

@@ -1,7 +1,6 @@
 package com.duongame.explorer.adapter;
 
 import android.app.Activity;
-import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.support.v4.view.PagerAdapter;
 import android.util.Log;
@@ -12,9 +11,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.duongame.explorer.R;
-import com.duongame.explorer.bitmap.BitmapCacheManager;
 import com.duongame.explorer.task.LoadBitmapTask;
 import com.duongame.explorer.task.PreloadBitmapTask;
+import com.duongame.explorer.task.RemoveBitmapTask;
 
 import java.util.ArrayList;
 
@@ -25,6 +24,7 @@ import java.util.ArrayList;
 public class ExplorerPagerAdapter extends PagerAdapter {
     private static final String TAG = "ExplorerPagerAdapter";
 
+    private ArrayList<AsyncTask> taskList = new ArrayList<>();
     private ArrayList<ExplorerFileItem> imageList;
     private Activity context;
     private int maxIndex = 0;
@@ -56,17 +56,6 @@ public class ExplorerPagerAdapter extends PagerAdapter {
         return splitBitmap;
     }
 
-    public static class RemoveBitmapTask extends AsyncTask<String, Void, Bitmap> {
-        @Override
-        protected Bitmap doInBackground(String... params) {
-            for (int i = 0; i < params.length; i++) {
-                final String path = params[i];
-                BitmapCacheManager.removeBitmap(path);
-            }
-            return null;
-        }
-    }
-
     public ExplorerPagerAdapter(Activity context) {
         this.context = context;
     }
@@ -77,6 +66,13 @@ public class ExplorerPagerAdapter extends PagerAdapter {
 
     public ArrayList<ExplorerFileItem> getImageList() {
         return imageList;
+    }
+
+    public void stopAllTasks() {
+        for (AsyncTask task : taskList) {
+            task.cancel(true);
+        }
+        taskList.clear();
     }
 
     @Override
@@ -108,6 +104,7 @@ public class ExplorerPagerAdapter extends PagerAdapter {
                     final LoadBitmapTask task = new LoadBitmapTask(imageView, width, height, exifRotation, splitBitmap);
                     task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, item);
 //                    Log.d(TAG, "LoadBitmapTask execute");
+                    taskList.add(task);
 
                     container.getViewTreeObserver().removeGlobalOnLayoutListener(this);
                 }
@@ -116,6 +113,7 @@ public class ExplorerPagerAdapter extends PagerAdapter {
         } else {
             final LoadBitmapTask task = new LoadBitmapTask(imageView, width, height, exifRotation, splitBitmap);
             task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, item);
+            taskList.add(task);
         }
 
         return rootView;
@@ -132,6 +130,9 @@ public class ExplorerPagerAdapter extends PagerAdapter {
     }
 
     private void runPreloadTask(int position, int width, int height) {
+        if(imageList == null)
+            return;
+
         final ArrayList<ExplorerFileItem> preloadList = new ArrayList<ExplorerFileItem>();
 
         if (position + 2 < imageList.size()) {
@@ -149,16 +150,29 @@ public class ExplorerPagerAdapter extends PagerAdapter {
 
         final PreloadBitmapTask task = new PreloadBitmapTask(width, height, exifRotation, splitBitmap);
         task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, preloadArray);
+        taskList.add(task);
     }
 
     private void runRemoveTask(int position) {
+        if(imageList == null)
+            return;
+
+        // split일 경우에는 현재 reload된 것에 bitmap이 사용되는지 안되는지 확인해라
         final ArrayList<String> removeList = new ArrayList<String>();
 
-        if (position - 3 >= 0) {
-            removeList.add(imageList.get(position - 3).path);
+        if (position - 3 >= 0) {// -2번이 같은 비트맵인지 확인해라
+            ExplorerFileItem item = imageList.get(position - 3);
+            ExplorerFileItem item2 = imageList.get(position - 2);
+            if(!item.path.equals(item2.path)) {
+                removeList.add(item.path);
+            }
         }
-        if (position + 4 < imageList.size()) {
-            removeList.add(imageList.get(position + 4).path);
+        if (position + 4 < imageList.size()) {// 3번이 같은 비트맵인지 확인해라
+            ExplorerFileItem item = imageList.get(position + 4);
+            ExplorerFileItem item3 = imageList.get(position + 3);
+            if(!item.path.equals(item3.path)) {
+                removeList.add(item.path);
+            }
         }
 
         final String[] removeArray = new String[removeList.size()];
@@ -166,6 +180,7 @@ public class ExplorerPagerAdapter extends PagerAdapter {
 
         final RemoveBitmapTask task = new RemoveBitmapTask();
         task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, removeArray);
+        taskList.add(task);
     }
 
     @Override
@@ -199,7 +214,10 @@ public class ExplorerPagerAdapter extends PagerAdapter {
 
     @Override
     public int getCount() {
-        Log.d(TAG, "getCount="+imageList.size());
+        if(imageList == null)
+            return 0;
+
+//        Log.d(TAG, "getCount="+imageList.size());
         return imageList.size();
     }
 

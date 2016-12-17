@@ -22,7 +22,9 @@ public class LoadBitmapTask extends BitmapTask {
         Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
         final ExplorerFileItem item = params[0];
 
-        Bitmap bitmap = loadBitmap(item);
+        Bitmap bitmap = null;
+        if(!isCancelled())
+            bitmap = loadBitmap(item);
         return bitmap;
     }
 
