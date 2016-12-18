@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/activity_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context="com.duongame.fileexplorer.activity.MainActivity">
+    android:orientation="vertical">
 
     <LinearLayout
+        android:id="@+id/top_panel"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:layout_alignParentTop="true">
 
         <Button
             android:id="@+id/btn_up"
@@ -45,9 +45,11 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/bottom_panel"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:layout_alignParentBottom="true">
 
         <Button
             android:id="@+id/btn_view"
@@ -80,10 +82,13 @@
             android:textAllCaps="false" />
     </LinearLayout>
 
+
     <ViewSwitcher
         android:id="@+id/switcher"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_below="@id/top_panel"
+        android:layout_above="@id/bottom_panel">
 
         <ListView
             android:id="@+id/list_explorer"
@@ -100,4 +105,5 @@
             android:stretchMode="columnWidth" />
 
     </ViewSwitcher>
-</LinearLayout>
+
+</RelativeLayout>

@@ -31,10 +31,10 @@ public class ViewerActivity extends AppCompatActivity {
     protected boolean isFullscreen = true;
     protected ActionBar actionBar;
 
-    // toolbox
+    // bottom panel
     protected TextView textName;
     //    protected TextView textPath;
-    protected LinearLayout toolBox;
+    protected LinearLayout bottomPanel;
     protected TextView textPage;
     protected SeekBar seekPage;
 
@@ -89,12 +89,12 @@ public class ViewerActivity extends AppCompatActivity {
         textName = (TextView)findViewById(R.id.text_name);
         textName.setY(getStatusBarHeight());
 
-        toolBox = (LinearLayout) findViewById(R.id.tool_box);
+        bottomPanel = (LinearLayout) findViewById(R.id.bottom_panel);
         textPage = (TextView) findViewById(R.id.text_page);
         seekPage = (SeekBar) findViewById(R.id.seek_page);
 
         int height = getNavigationBarHeight();
-        toolBox.setY(toolBox.getY() - height);
+        bottomPanel.setY(bottomPanel.getY() - height);
     }
 
     /**
@@ -122,11 +122,11 @@ public class ViewerActivity extends AppCompatActivity {
         // 툴박스 보이기
         //TODO: 알파 애니메이션은 나중에 하자
         if (!fullscreen) {
-            toolBox.setVisibility(View.VISIBLE);
+            bottomPanel.setVisibility(View.VISIBLE);
             textName.setVisibility(View.VISIBLE);
 //            textPath.setVisibility(View.VISIBLE);
         } else {
-            toolBox.setVisibility(View.INVISIBLE);
+            bottomPanel.setVisibility(View.INVISIBLE);
             textName.setVisibility(View.INVISIBLE);
 //            textPath.setVisibility(View.INVISIBLE);
         }

@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
+    <!-- Deep Orange 500 / 700 -->
+    <color name="colorPrimary">#FF5722</color>
+    <color name="colorPrimaryDark">#E64A19</color>
+
+    <!-- Deep Purple A200 -->
+    <color name="colorAccent">#7C4DFF</color>
+
+    <color name="colorPrimaryTransparent">#C0FF5722</color>
 </resources>

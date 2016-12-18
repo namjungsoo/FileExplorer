@@ -33,7 +33,7 @@
         android:visibility="invisible"/>
 
     <LinearLayout
-        android:id="@+id/tool_box"
+        android:id="@+id/bottom_panel"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|center_horizontal"

@@ -12,6 +12,6 @@
         android:layout_height="match_parent"
         android:id="@+id/fragment_explorer"
         android:name="com.duongame.explorer.fragment.ExplorerFragment">
-
     </fragment>
+
 </LinearLayout>
