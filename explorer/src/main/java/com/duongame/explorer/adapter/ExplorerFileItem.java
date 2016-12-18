@@ -33,7 +33,9 @@ public class ExplorerFileItem implements Cloneable {
     public long size;
     public String path;
     public FileType type;
+
     public Side side = SIDE_ALL;
+    public int index;
 
     public ExplorerFileItem(String path, String name, String date, long size, FileType type) {
         this.path = path + "/" + name;
@@ -44,7 +46,7 @@ public class ExplorerFileItem implements Cloneable {
     }
 
     public String toString() {
-        return "path=" + path + " name=" + name + " date=" + date + " size=" + size + " type=" + type;
+        return "path=" + path + " name=" + name + " date=" + date + " size=" + size + " type=" + type + " side=" + side + " index=" + index;
     }
 
     @Override

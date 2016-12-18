@@ -108,7 +108,7 @@ public class ExplorerSearcher {
             type = ExplorerFileItem.FileType.PDF;
         else if (lower.endsWith(".mp3"))
             type = ExplorerFileItem.FileType.AUDIO;
-        else if (lower.endsWith(".txt"))
+        else if (lower.endsWith(".txt") || lower.endsWith(".cap") || lower.endsWith(".log"))
             type = ExplorerFileItem.FileType.TEXT;
         else if (lower.endsWith(".apk"))
             type = ExplorerFileItem.FileType.APK;

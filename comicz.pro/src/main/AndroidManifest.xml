@@ -17,6 +17,9 @@
         <activity android:name="com.duongame.explorer.activity.ZipActivity"
             android:theme="@style/ComicViewerTheme"
             />
+        <activity android:name="com.duongame.explorer.activity.TextActivity"
+            android:theme="@style/ComicViewerTheme"
+            />
 
     </application>
 

@@ -22,6 +22,7 @@ import android.widget.ViewSwitcher;
 
 import com.duongame.explorer.R;
 import com.duongame.explorer.activity.PhotoActivity;
+import com.duongame.explorer.activity.TextActivity;
 import com.duongame.explorer.activity.ZipActivity;
 import com.duongame.explorer.adapter.ExplorerAdapter;
 import com.duongame.explorer.adapter.ExplorerFileItem;
@@ -208,9 +209,8 @@ public class ExplorerFragment extends Fragment {
         if (path.length() == 0) {
             path = "/";
         }
-        PositionManager.setPosition(ExplorerSearcher.getLastPath(), currentView.getFirstVisiblePosition());
-        PositionManager.setTop(ExplorerSearcher.getLastPath(), getCurrentViewScrollTop());
 
+        backupPosition();
         updateFileList(path);
     }
 
@@ -218,6 +218,8 @@ public class ExplorerFragment extends Fragment {
         ExplorerFileItem item = fileList.get(position);
         switch (item.type) {
             case DIRECTORY:
+                backupPosition();
+
                 String newPath;
                 if (ExplorerSearcher.getLastPath().equals("/")) {
                     newPath = ExplorerSearcher.getLastPath() + item.name;
@@ -225,14 +227,10 @@ public class ExplorerFragment extends Fragment {
                     newPath = ExplorerSearcher.getLastPath() + "/" + item.name;
                 }
 
-                PositionManager.setPosition(ExplorerSearcher.getLastPath(), currentView.getFirstVisiblePosition());
-                PositionManager.setTop(ExplorerSearcher.getLastPath(), getCurrentViewScrollTop());
-
                 updateFileList(newPath);
                 break;
             case IMAGE: {
-                PositionManager.setPosition(ExplorerSearcher.getLastPath(), currentView.getFirstVisiblePosition());
-                PositionManager.setTop(ExplorerSearcher.getLastPath(), getCurrentViewScrollTop());
+                backupPosition();
 
                 Intent intent = new Intent(getActivity(), PhotoActivity.class);
                 intent.putExtra("path", item.path.substring(0, item.path.lastIndexOf('/')));
@@ -241,8 +239,7 @@ public class ExplorerFragment extends Fragment {
             }
             break;
             case ZIP: {
-                PositionManager.setPosition(ExplorerSearcher.getLastPath(), currentView.getFirstVisiblePosition());
-                PositionManager.setTop(ExplorerSearcher.getLastPath(), getCurrentViewScrollTop());
+                backupPosition();
 
                 Intent intent = new Intent(getActivity(), ZipActivity.class);
                 intent.putExtra("path", item.path);
@@ -251,7 +248,21 @@ public class ExplorerFragment extends Fragment {
                 startActivity(intent);
             }
             break;
+            case TEXT: {
+                backupPosition();
+
+                Intent intent = new Intent(getActivity(), TextActivity.class);
+                intent.putExtra("path", item.path);
+                intent.putExtra("name", item.name);
+                startActivity(intent);
+            }
+            break;
         }
+    }
+
+    void backupPosition() {
+        PositionManager.setPosition(ExplorerSearcher.getLastPath(), currentView.getFirstVisiblePosition());
+        PositionManager.setTop(ExplorerSearcher.getLastPath(), getCurrentViewScrollTop());
     }
 
     int getCurrentViewScrollTop() {

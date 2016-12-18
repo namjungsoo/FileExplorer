@@ -152,7 +152,7 @@ public abstract class ExplorerAdapter extends BaseAdapter {
             case IMAGE:
                 return;
             case PDF:
-            case TEXT:
+//            case TEXT:
             case FILE:
                 icon.setImageBitmap(BitmapCacheManager.getResourceBitmap(context.getResources(), R.drawable.file));
                 break;
@@ -171,9 +171,9 @@ public abstract class ExplorerAdapter extends BaseAdapter {
 //            case AUDIO:
 //                icon.setImageBitmap(getResourceBitmap(context.getResources(), R.drawable.mp3));
 //                break;
-//            case TEXT:
-//                icon.setImageBitmap(getResourceBitmap(context.getResources(), R.drawable.text));
-//                break;
+            case TEXT:
+                icon.setImageBitmap(BitmapCacheManager.getResourceBitmap(context.getResources(), R.drawable.text));
+                break;
             case VIDEO:
                 break;
             default:
