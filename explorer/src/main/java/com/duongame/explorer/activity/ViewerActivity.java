@@ -58,6 +58,7 @@ public class ViewerActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+
         BitmapCacheManager.recycleBitmap();
         BitmapCacheManager.recyclePage();
     }

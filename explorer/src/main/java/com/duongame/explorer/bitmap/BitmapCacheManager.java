@@ -4,6 +4,7 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
+import android.util.Log;
 import android.widget.ImageView;
 
 import com.duongame.explorer.adapter.ExplorerFileItem;
@@ -62,6 +63,8 @@ public class BitmapCacheManager {
                 bitmap.recycle();
             }
         }
+        pageCache.clear();
+        Log.d(TAG, "recyclePage");
     }
 
     // resource bitmap
@@ -114,6 +117,7 @@ public class BitmapCacheManager {
                 bitmapCache.get(key).recycle();
         }
         bitmapCache.clear();
+        Log.d(TAG, "recycleBitmap");
     }
 
     // thumbnail
@@ -156,5 +160,7 @@ public class BitmapCacheManager {
         for (String key : recycleList) {
             thumbnailCache.remove(key);
         }
+        thumbnailCache.clear();
+        Log.d(TAG, "recycleThumbnail");
     }
 }

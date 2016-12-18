@@ -59,9 +59,9 @@ public class ZipActivity extends PagerActivity {
 
     @Override
     protected void onDestroy() {
-        super.onDestroy();
-
         zipLoader.cancelTask();
+
+        super.onDestroy();
     }
 
     protected ArrayList<ExplorerFileItem> getImageList() {

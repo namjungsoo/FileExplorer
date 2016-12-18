@@ -3,6 +3,7 @@ package com.duongame.explorer.bitmap;
 import android.content.Context;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
+import android.util.Log;
 
 import com.duongame.explorer.adapter.ExplorerFileItem;
 import com.duongame.explorer.helper.FileHelper;
@@ -35,6 +36,7 @@ public class ZipLoader {
 
     public void cancelTask() {
         if(task != null) {
+            Log.d(TAG, "cancelTask");
             task.cancel(true);
         }
     }
