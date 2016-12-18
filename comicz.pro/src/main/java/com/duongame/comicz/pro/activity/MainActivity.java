@@ -1,4 +1,4 @@
-package com.duongame.fileexplorer.activity;
+package com.duongame.comicz.pro.activity;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
@@ -8,11 +8,11 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
+import com.duongame.comicz.pro.R;
 import com.duongame.explorer.fragment.ExplorerFragment;
 import com.duongame.explorer.helper.ExplorerSearcher;
 import com.duongame.explorer.helper.PositionManager;
 import com.duongame.explorer.helper.PreferenceHelper;
-import com.duongame.fileexplorer.R;
 
 public class MainActivity extends AppCompatActivity {
     private final static String TAG = "MainActivity";
@@ -86,4 +86,5 @@ public class MainActivity extends AppCompatActivity {
         }
         return true;
     }
+
 }
