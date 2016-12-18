@@ -3,6 +3,8 @@ package com.duongame.explorer.activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.view.MotionEvent;
+import android.view.View;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
@@ -33,6 +35,12 @@ public class TextActivity extends ViewerActivity {
         scrollText = (ScrollView) findViewById(R.id.scroll_text);
         textContent = (TextView) findViewById(R.id.text_content);
 
+        scrollText.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                return false;
+            }
+        });
         processIntent();
     }
 
@@ -47,11 +55,14 @@ public class TextActivity extends ViewerActivity {
                 FileInputStream is = new FileInputStream(file);
 
                 UniversalDetector detector = new UniversalDetector(null);
-
                 byte[] buffer = new byte[is.available()];
                 is.read(buffer);
                 is.close();
+                detector.handleData(buffer, 0, buffer.length);
+                detector.dataEnd();
 
+                String text = new String(buffer, detector.getDetectedCharset());
+                textContent.setText(text);
                 textContent.setTextSize(20);
                 textContent.setLineSpacing(0, 1.5f);
                 textContent.setTextColor(Color.BLACK);
