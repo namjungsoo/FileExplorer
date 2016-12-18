@@ -59,6 +59,7 @@ public class ViewerActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         BitmapCacheManager.recycleBitmap();
+        BitmapCacheManager.recyclePage();
     }
 
     private void initActionBar() {
@@ -131,7 +132,7 @@ public class ViewerActivity extends AppCompatActivity {
         }
     }
 
-    protected void setName(int i) {
+    protected void updateName(int i) {
     }
 
     protected int getNavigationBarHeight() {

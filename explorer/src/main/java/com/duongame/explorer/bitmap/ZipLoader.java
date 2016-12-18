@@ -33,6 +33,12 @@ public class ZipLoader {
         void onFinish(ArrayList<ExplorerFileItem> zipImageList);
     }
 
+    public void cancelTask() {
+        if(task != null) {
+            task.cancel(true);
+        }
+    }
+
     // 리턴값은 이미지 리스트이다.
     // 압축을 풀지 않으면 정보를 알수가 없다. 좌우 잘라야 되는지 마는지를
     public ArrayList<ExplorerFileItem> load(Context context, String filename, ZipLoaderListener listener, boolean firstImageOnly) throws ZipException {

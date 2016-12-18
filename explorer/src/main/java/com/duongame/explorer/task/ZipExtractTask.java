@@ -42,6 +42,10 @@ public class ZipExtractTask extends AsyncTask<String, Integer, Void> {
         try {
             for (i = 0; i < imageList.size(); i++) {
                 final ExplorerFileItem item = imageList.get(i);
+
+                if(isCancelled())
+                    break;
+
                 zipFile.extractFile(item.name, path);
 
                 BitmapFactory.Options options = BitmapLoader.decodeBounds(item.path);

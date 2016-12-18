@@ -121,7 +121,7 @@ public class BitmapLoader {
         BitmapFactory.decodeFile(path, options);
 
         options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
-        Log.d(TAG, "inSampleSize=" + options.inSampleSize);
+//        Log.d(TAG, "inSampleSize=" + options.inSampleSize);
 
         // 로드하기 위해서는 위에서 true 로 설정했던 inJustDecodeBounds 의 값을 false 로 설정합니다.
         options.inJustDecodeBounds = false;
@@ -197,7 +197,7 @@ public class BitmapLoader {
 
     // 왼쪽 오른쪽을 자른 비트맵을 리턴한다
     public static Bitmap splitBitmapSide(Bitmap bitmap, ExplorerFileItem item) {
-        Log.d(TAG, "splitBitmapSide=" + item.name);
+//        Log.d(TAG, "splitBitmapSide=" + item.name);
 
         // 이미 캐시된 페이지가 있으면
         final String key;
@@ -209,7 +209,7 @@ public class BitmapLoader {
 
         Bitmap page = BitmapCacheManager.getPage(key);
         if (page != null) {
-            Log.d(TAG, "splitBitmapSide getPage=" + item.name);
+//            Log.d(TAG, "splitBitmapSide getPage=" + item.name);
             return page;
         }
 
@@ -217,15 +217,15 @@ public class BitmapLoader {
         switch (item.side) {
             case LEFT:
                 page = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth() >> 1, bitmap.getHeight());
-                Log.d(TAG, "splitBitmapSide LEFT page=" + item.name);
+//                Log.d(TAG, "splitBitmapSide LEFT page=" + item.name);
                 pageOther = Bitmap.createBitmap(bitmap, bitmap.getWidth() >> 1, 0, bitmap.getWidth() >> 1, bitmap.getHeight());
-                Log.d(TAG, "splitBitmapSide LEFT pageOther=" + itemOther.name);
+//                Log.d(TAG, "splitBitmapSide LEFT pageOther=" + itemOther.name);
                 break;
             case RIGHT:
                 page = Bitmap.createBitmap(bitmap, bitmap.getWidth() >> 1, 0, bitmap.getWidth() >> 1, bitmap.getHeight());
-                Log.d(TAG, "splitBitmapSide RIGHT page=" + item.name);
+//                Log.d(TAG, "splitBitmapSide RIGHT page=" + item.name);
                 pageOther = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth() >> 1, bitmap.getHeight());
-                Log.d(TAG, "splitBitmapSide RIGHT pageOther=" + itemOther.name);
+//                Log.d(TAG, "splitBitmapSide RIGHT pageOther=" + itemOther.name);
                 break;
         }
 
@@ -240,7 +240,7 @@ public class BitmapLoader {
         // 이거 때문에 recycled 에러가 발생한다.
         // remove를 하지 않으면 oom이 발생한다.
         BitmapCacheManager.removeBitmap(item.path);
-        Log.d(TAG, "splitBitmapSide removeBitmap=" + item.name);
+//        Log.d(TAG, "splitBitmapSide removeBitmap=" + item.name);
 
         return page;
     }

@@ -9,8 +9,6 @@ import com.duongame.explorer.adapter.ExplorerFileItem;
 import com.duongame.explorer.bitmap.BitmapCacheManager;
 import com.duongame.explorer.bitmap.BitmapLoader;
 
-import static com.duongame.explorer.bitmap.BitmapLoader.TAG;
-
 /**
  * Created by namjungsoo on 2016-12-17.
  */
@@ -43,7 +41,7 @@ public class BitmapTask extends AsyncTask<ExplorerFileItem, Void, Bitmap> {
             bitmap = BitmapCacheManager.getPage(path);
 
             if (bitmap != null) {
-                Log.d(TAG, "loadBitmap found cached page");
+//                Log.d(TAG, "loadBitmap found cached page");
                 return bitmap;
             }
         }

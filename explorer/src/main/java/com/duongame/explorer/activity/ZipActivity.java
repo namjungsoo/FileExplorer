@@ -18,6 +18,8 @@ public class ZipActivity extends PagerActivity {
     private final static String TAG = "ZipActivity";
 
     private boolean zipExtractCompleted = false;
+    private final ZipLoader zipLoader = new ZipLoader();
+
     private ZipLoader.ZipLoaderListener listener = new ZipLoader.ZipLoaderListener() {
         @Override
         public void onSuccess(int i, ArrayList<ExplorerFileItem> zipImageList) {
@@ -26,6 +28,8 @@ public class ZipActivity extends PagerActivity {
 
             pagerAdapter.setImageList(imageList);
             pagerAdapter.notifyDataSetChanged();
+
+            updateScrollInfo(pager.getCurrentItem());
         }
 
         @Override
@@ -53,12 +57,19 @@ public class ZipActivity extends PagerActivity {
         }
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        zipLoader.cancelTask();
+    }
+
     protected ArrayList<ExplorerFileItem> getImageList() {
         return null;
     }
 
     @Override
-    protected void setName(int i) {
+    protected void updateName(int i) {
         textName.setText(name);
     }
 
@@ -74,7 +85,6 @@ public class ZipActivity extends PagerActivity {
             pager.setAdapter(pagerAdapter);// setAdapter이후에 imageList를 변경하면 항상 notify해주어야 한다.
 
             // zip 파일을 로딩한다.
-            final ZipLoader zipLoader = new ZipLoader();
             final ArrayList<ExplorerFileItem> imageList = zipLoader.load(this, path, listener, false);
             pagerAdapter.setImageList(imageList);
             pagerAdapter.notifyDataSetChanged();

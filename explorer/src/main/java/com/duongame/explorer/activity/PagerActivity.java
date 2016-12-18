@@ -76,15 +76,22 @@ public class PagerActivity extends ViewerActivity {
         pagerAdapter = new ExplorerPagerAdapter(this);
     }
 
+    protected void updateScrollInfo(int position) {
+//        Log.d(TAG, "updateScrollInfo="+position);
+        textPage.setText((position + 1) + "/" + pagerAdapter.getCount());
+
+        seekPage.setMax(pagerAdapter.getCount());
+        seekPage.setProgress(position + 1);
+    }
+
     protected void initPagerListeners() {
         pager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 //                Log.d("PagerActivity", "onPageScrolled position=" + position);
-                textPage.setText((position + 1) + "/" + pagerAdapter.getCount());
-                seekPage.setProgress(position + 1);
+                updateScrollInfo(position);
 
-                setName(position);
+                updateName(position);
 //                textName.setText(pagerAdapter.getImageList().get(position).name);
             }
 
@@ -197,7 +204,7 @@ public class PagerActivity extends ViewerActivity {
     }
 
     @Override
-    protected void setName(int i) {
+    protected void updateName(int i) {
         textName.setText(pagerAdapter.getImageList().get(i).name);
     }
 
