@@ -67,7 +67,7 @@ public class ZipLoader {
 
                 // 일본식(RIGHT)를 기준으로 잡자
                 if (options.outWidth > options.outHeight) {
-                    imageList.get(0).side = ExplorerFileItem.Side.RIGHT;
+                    imageList.get(0).side = ExplorerFileItem.Side.LEFT;
                 }
 
                 return imageList;
@@ -89,7 +89,7 @@ public class ZipLoader {
 
                 // 일본식(RIGHT)를 기준으로 잡자
                 if (options.outWidth > options.outHeight) {
-                    item.side = ExplorerFileItem.Side.RIGHT;
+                    item.side = ExplorerFileItem.Side.LEFT;
                 }
 
                 firstList.add(item);
