@@ -9,9 +9,6 @@ android {
         targetSdkVersion 24
         versionCode 1
         versionName "1.0"
-
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-
     }
     buildTypes {
         release {
@@ -27,7 +24,12 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
     compile 'com.android.support:appcompat-v7:24.2.1'
+    //fresco
+    compile 'com.facebook.fresco:fresco:0.14.1'
+
     //zip
     compile 'net.lingala.zip4j:zip4j:1.2.4'
-    testCompile 'junit:junit:4.12'
+
+    //encoding
+    compile 'com.googlecode.juniversalchardet:juniversalchardet:1.0.3'
 }

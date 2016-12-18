@@ -8,11 +8,12 @@ import android.widget.TextView;
 
 import com.duongame.explorer.R;
 
-import java.io.BufferedInputStream;
+import org.mozilla.universalchardet.UniversalDetector;
+
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-
 /**
  * Created by namjungsoo on 2016-11-18.
  */
@@ -29,8 +30,8 @@ public class TextActivity extends ViewerActivity {
 
         setContentView(R.layout.activity_text);
 
-        scrollText = (ScrollView)findViewById(R.id.scroll_text);
-        textContent = (TextView)findViewById(R.id.text_content);
+        scrollText = (ScrollView) findViewById(R.id.scroll_text);
+        textContent = (TextView) findViewById(R.id.text_content);
 
         processIntent();
     }
@@ -41,24 +42,24 @@ public class TextActivity extends ViewerActivity {
         if (extras != null) {
             path = extras.getString("path");
 
-            FileInputStream is = null;
             try {
-                is = new FileInputStream(path);
-                BufferedInputStream bis = new BufferedInputStream(is);
-                byte[] data = new byte[bis.available()];
-                bis.read(data);
+                File file = new File(path);
+                FileInputStream is = new FileInputStream(file);
 
-                String text = new String(data);
-                textContent.setText(text);
+                UniversalDetector detector = new UniversalDetector(null);
+
+                byte[] buffer = new byte[is.available()];
+                is.read(buffer);
+                is.close();
+
                 textContent.setTextSize(20);
-                textContent.setLineSpacing(0,1.5f);
+                textContent.setLineSpacing(0, 1.5f);
                 textContent.setTextColor(Color.BLACK);
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
         }
     }
 }
