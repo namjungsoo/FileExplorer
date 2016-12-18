@@ -66,15 +66,35 @@ public class ZipLoader {
                 BitmapFactory.Options options = BitmapLoader.decodeBounds(imageList.get(0).path);
 
                 // 일본식(RIGHT)를 기준으로 잡자
-                if(options.outWidth > options.outHeight) {
+                if (options.outWidth > options.outHeight) {
                     imageList.get(0).side = ExplorerFileItem.Side.RIGHT;
                 }
+
+                return imageList;
             }
         } else {
             // 이미 풀어놓은게 없으면 AsyncTask로 로딩함
             // 첫번째 이미지 파일이 로딩이 끝나면 바로 띄운다
             task = new ZipExtractTask(zipFile, imageList, listener);
             task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, extractPath);
+
+            ArrayList<ExplorerFileItem> firstList = (ArrayList<ExplorerFileItem>) imageList.clone();
+
+            // 리턴할때는 첫번째 인자만 리턴한다.
+            if (firstList.size() > 0) {
+                ExplorerFileItem item = firstList.get(0);
+                firstList.clear();
+
+                BitmapFactory.Options options = BitmapLoader.decodeBounds(item.path);
+
+                // 일본식(RIGHT)를 기준으로 잡자
+                if (options.outWidth > options.outHeight) {
+                    item.side = ExplorerFileItem.Side.RIGHT;
+                }
+
+                firstList.add(item);
+                return firstList;
+            }
         }
         return imageList;
     }

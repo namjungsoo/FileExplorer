@@ -8,7 +8,8 @@ import android.util.Log;
 import com.duongame.explorer.adapter.ExplorerFileItem;
 import com.duongame.explorer.bitmap.BitmapCacheManager;
 import com.duongame.explorer.bitmap.BitmapLoader;
-import com.duongame.explorer.bitmap.PageKey;
+
+import static com.duongame.explorer.bitmap.BitmapLoader.TAG;
 
 /**
  * Created by namjungsoo on 2016-12-17.
@@ -37,10 +38,14 @@ public class BitmapTask extends AsyncTask<ExplorerFileItem, Void, Bitmap> {
         // 캐시에 있는지 확인해 보고
         // split일 경우에는 무조건 없다
         Bitmap bitmap = null;
-        if(item.side != ExplorerFileItem.Side.SIDE_ALL) {
-            bitmap = BitmapCacheManager.getPage(new PageKey(item.path, item.side));
-            if(bitmap != null)
+        if (item.side != ExplorerFileItem.Side.SIDE_ALL) {
+            String path = BitmapCacheManager.changePath(item);
+            bitmap = BitmapCacheManager.getPage(path);
+
+            if (bitmap != null) {
+                Log.d(TAG, "loadBitmap found cached page");
                 return bitmap;
+            }
         }
 
         bitmap = BitmapCacheManager.getBitmap(item.path);
@@ -48,7 +53,7 @@ public class BitmapTask extends AsyncTask<ExplorerFileItem, Void, Bitmap> {
             BitmapFactory.Options options = BitmapLoader.decodeBounds(item.path);
 
             // 자르는 경우에는 실제 예상보다 width/2를 하자
-            if(item.side != ExplorerFileItem.Side.SIDE_ALL) {
+            if (item.side != ExplorerFileItem.Side.SIDE_ALL) {
                 options.outWidth >>= 1;
             }
             float bitmapRatio = (float) options.outHeight / (float) options.outWidth;
@@ -75,14 +80,15 @@ public class BitmapTask extends AsyncTask<ExplorerFileItem, Void, Bitmap> {
                     }
                     Log.w("BitmapTask", "decode retry=" + count);
                 } else {
-                    BitmapCacheManager.setBitmap(item.path, bitmap);
+                    if (item.side == ExplorerFileItem.Side.SIDE_ALL)
+                        BitmapCacheManager.setBitmap(item.path, bitmap);
+                    else
+                        // 비트맵을 로딩했으면 이제 자르자
+                        bitmap = BitmapLoader.splitBitmapSide(bitmap, item);
                     break;
                 }
             }
         }
-
-        // 비트맵을 로딩했으면 이제 자르자
-        bitmap = BitmapLoader.splitBitmapSide(bitmap, item);
         return bitmap;
     }
 }

@@ -26,17 +26,29 @@ public class BitmapCacheManager {
 
     static HashMap<String, Drawable> drawableCache = new HashMap<>();
 
-    static HashMap<PageKey, Bitmap> pageCache = new HashMap<>();
+    static HashMap<String, Bitmap> pageCache = new HashMap<>();
 
-    public static void setPage(PageKey key, Bitmap bitmap) {
+    public static String changePath(ExplorerFileItem item) {
+        String path;
+        if (item.side == ExplorerFileItem.Side.LEFT) {
+            path = item.path + ".left";
+        } else if (item.side == ExplorerFileItem.Side.RIGHT) {
+            path = item.path + ".right";
+        } else {
+            path = item.path;
+        }
+        return path;
+    }
+
+    public static void setPage(String key, Bitmap bitmap) {
         pageCache.put(key, bitmap);
     }
 
-    public static Bitmap getPage(PageKey key) {
+    public static Bitmap getPage(String key) {
         return pageCache.get(key);
     }
 
-    public static void removePage(PageKey key) {
+    public static void removePage(String key) {
         if (pageCache.get(key) != null) {
             pageCache.get(key).recycle();
             pageCache.remove(key);
@@ -44,12 +56,10 @@ public class BitmapCacheManager {
     }
 
     public static void recyclePage() {
-        for(PageKey key : pageCache.keySet()) {
-            if(key.side != ExplorerFileItem.Side.SIDE_ALL) {// ALL일 경우는 일반 bitmapCache와 공유한다.
-                final Bitmap bitmap = pageCache.get(key);
-                if(bitmap != null) {
-                    bitmap.recycle();
-                }
+        for (String key : pageCache.keySet()) {
+            final Bitmap bitmap = pageCache.get(key);
+            if (bitmap != null) {
+                bitmap.recycle();
             }
         }
     }

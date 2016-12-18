@@ -197,34 +197,35 @@ public class BitmapLoader {
 
     // 왼쪽 오른쪽을 자른 비트맵을 리턴한다
     public static Bitmap splitBitmapSide(Bitmap bitmap, ExplorerFileItem item) {
-        Log.d(TAG, "splitBitmapSide " + item.name);
-
-        // 전체면 자르지 않음
-        if (item.side == ExplorerFileItem.Side.SIDE_ALL)
-            return bitmap;
+        Log.d(TAG, "splitBitmapSide=" + item.name);
 
         // 이미 캐시된 페이지가 있으면
-        final PageKey key = new PageKey(item.path, item.side);
-        Bitmap page = BitmapCacheManager.getPage(key);
-        if (page != null)
-            return page;
+        final String key;
+        final String keyOther;
+        final ExplorerFileItem itemOther = (ExplorerFileItem) item.clone();
+        itemOther.side = item.side == LEFT ? RIGHT : LEFT;
+        key = BitmapCacheManager.changePath(item);
+        keyOther = BitmapCacheManager.changePath(itemOther);
 
-        final PageKey keyOther = (PageKey) key.clone();
-        keyOther.side = key.side == LEFT ? RIGHT : LEFT;
+        Bitmap page = BitmapCacheManager.getPage(key);
+        if (page != null) {
+            Log.d(TAG, "splitBitmapSide getPage=" + item.name);
+            return page;
+        }
 
         Bitmap pageOther = null;
         switch (item.side) {
             case LEFT:
                 page = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth() >> 1, bitmap.getHeight());
-                Log.d(TAG, item.name + " LEFT page");
+                Log.d(TAG, "splitBitmapSide LEFT page=" + item.name);
                 pageOther = Bitmap.createBitmap(bitmap, bitmap.getWidth() >> 1, 0, bitmap.getWidth() >> 1, bitmap.getHeight());
-                Log.d(TAG, item.name + " LEFT pageOther");
+                Log.d(TAG, "splitBitmapSide LEFT pageOther=" + itemOther.name);
                 break;
             case RIGHT:
                 page = Bitmap.createBitmap(bitmap, bitmap.getWidth() >> 1, 0, bitmap.getWidth() >> 1, bitmap.getHeight());
-                Log.d(TAG, item.name + " RIGHT page");
+                Log.d(TAG, "splitBitmapSide RIGHT page=" + item.name);
                 pageOther = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth() >> 1, bitmap.getHeight());
-                Log.d(TAG, item.name + " RIGHT pageOther");
+                Log.d(TAG, "splitBitmapSide RIGHT pageOther=" + itemOther.name);
                 break;
         }
 
@@ -232,14 +233,14 @@ public class BitmapLoader {
             BitmapCacheManager.setPage(key, page);
             BitmapCacheManager.setPage(keyOther, pageOther);
         } else {
-            Log.d(TAG, "page or pageOther is null");
+            Log.e(TAG, "splitBitmapSide page or pageOther is null");
         }
 
         // 잘리는 비트맵은 더이상 사용하지 않으므로 삭제한다.
         // 이거 때문에 recycled 에러가 발생한다.
         // remove를 하지 않으면 oom이 발생한다.
         BitmapCacheManager.removeBitmap(item.path);
-        Log.d(TAG, "removeBitmap " + item.name);
+        Log.d(TAG, "splitBitmapSide removeBitmap=" + item.name);
 
         return page;
     }
