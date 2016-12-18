@@ -1,10 +1,12 @@
 package com.duongame.explorer.activity;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 
 import com.duongame.explorer.adapter.ExplorerFileItem;
 import com.duongame.explorer.bitmap.ZipLoader;
+import com.duongame.explorer.helper.AlertManager;
 
 import net.lingala.zip4j.exception.ZipException;
 
@@ -86,6 +88,16 @@ public class ZipActivity extends PagerActivity {
 
             // zip 파일을 로딩한다.
             final ArrayList<ExplorerFileItem> imageList = zipLoader.load(this, path, listener, false);
+            if(imageList.size() <= 0) {
+                AlertManager.showAlert(this, "알림", "압축(ZIP) 파일에 이미지가 없습니다.", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        finish();
+                    }
+                }, null, true);
+                return;
+            }
+
             pagerAdapter.setImageList(imageList);
             pagerAdapter.notifyDataSetChanged();
 

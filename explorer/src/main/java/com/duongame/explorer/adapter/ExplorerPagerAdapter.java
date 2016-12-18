@@ -27,7 +27,7 @@ public class ExplorerPagerAdapter extends PagerAdapter {
     private ArrayList<AsyncTask> taskList = new ArrayList<>();
     private ArrayList<ExplorerFileItem> imageList;
     private Activity context;
-    private int maxIndex = 0;
+//    private int maxIndex = 0;
 
     private boolean exifRotation = true;
 
@@ -35,17 +35,17 @@ public class ExplorerPagerAdapter extends PagerAdapter {
         exifRotation = rotation;
     }
 
-    public boolean getExifRotation() {
-        return exifRotation;
-    }
-
-    public void setMaxIndex(int index) {
-        maxIndex = index;
-    }
-
-    public int getMaxIndex() {
-        return maxIndex;
-    }
+//    public boolean getExifRotation() {
+//        return exifRotation;
+//    }
+//
+//    public void setMaxIndex(int index) {
+//        maxIndex = index;
+//    }
+//
+//    public int getMaxIndex() {
+//        return maxIndex;
+//    }
 
     public ExplorerPagerAdapter(Activity context) {
         this.context = context;

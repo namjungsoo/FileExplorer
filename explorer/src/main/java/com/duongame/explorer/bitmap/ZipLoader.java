@@ -77,19 +77,17 @@ public class ZipLoader {
                 if (options.outWidth > options.outHeight) {
                     imageList.get(0).side = ExplorerFileItem.Side.LEFT;
                 }
-
                 return imageList;
             }
         } else {
             // 이미 풀어놓은게 없으면 AsyncTask로 로딩함
             // 첫번째 이미지 파일이 로딩이 끝나면 바로 띄운다
-            task = new ZipExtractTask(zipFile, imageList, listener);
-            task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, extractPath);
-
-            ArrayList<ExplorerFileItem> firstList = (ArrayList<ExplorerFileItem>) imageList.clone();
-
             // 리턴할때는 첫번째 인자만 리턴한다.
-            if (firstList.size() > 0) {
+            if(imageList.size() > 0) {
+                task = new ZipExtractTask(zipFile, imageList, listener);
+                task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, extractPath);
+
+                ArrayList<ExplorerFileItem> firstList = (ArrayList<ExplorerFileItem>) imageList.clone();
                 ExplorerFileItem item = firstList.get(0);
                 firstList.clear();
 

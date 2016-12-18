@@ -19,14 +19,18 @@ import java.util.HashMap;
 public class BitmapCacheManager {
     private final static String TAG = "BitmapCacheManager";
 
+    // 썸네일 관련
     static HashMap<String, Bitmap> thumbnailCache = new HashMap<String, Bitmap>();
     static HashMap<String, ImageView> thumbnailImageCache = new HashMap<>();
 
+    // 일반 이미지 관련
     static HashMap<String, Bitmap> bitmapCache = new HashMap<>();
-    static HashMap<Integer, Bitmap> resourceCache = new HashMap<>();
 
+    // 리소스나 아이콘 관련
+    static HashMap<Integer, Bitmap> resourceCache = new HashMap<>();
     static HashMap<String, Drawable> drawableCache = new HashMap<>();
 
+    // zip파일 잘린 이미지 관련
     static HashMap<String, Bitmap> pageCache = new HashMap<>();
 
     public static String changePath(ExplorerFileItem item) {
