@@ -32,20 +32,24 @@ public class LoadZipThumbnailTask extends AsyncTask<String, Void, Bitmap> {
 
     @Override
     protected Bitmap doInBackground(String... params) {
-        Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
+//        Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
+
         final String path = params[0];
 
         if(isCancelled())
             return null;
+
         Bitmap bitmap = getThumbnail(path);
         if(isCancelled())
             return bitmap;
+
         if (bitmap == null) {
             String image = null;
             try {
                 //image = ZipLoader.getFirstImage(context, path);
-                ZipLoader loader = new ZipLoader();
-                ArrayList<ExplorerFileItem> imageList = loader.load(context, path, null, true);
+                final ZipLoader loader = new ZipLoader();
+                final ArrayList<ExplorerFileItem> imageList = loader.load(context, path, null, true);
+
                 if(imageList != null && imageList.size() > 0) {
                     image = imageList.get(0).path;
                 }
@@ -53,6 +57,7 @@ public class LoadZipThumbnailTask extends AsyncTask<String, Void, Bitmap> {
             } catch (ZipException e) {
                 e.printStackTrace();
             }
+
             if(isCancelled())
                 return bitmap;
 
@@ -67,6 +72,7 @@ public class LoadZipThumbnailTask extends AsyncTask<String, Void, Bitmap> {
                     BitmapCacheManager.setThumbnail(path, bitmap, imageView);
             }
         }
+
         return bitmap;
     }
 

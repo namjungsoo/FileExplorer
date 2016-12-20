@@ -19,7 +19,8 @@ public class LoadBitmapTask extends BitmapTask {
 
     @Override
     protected Bitmap doInBackground(ExplorerFileItem... params) {
-        Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
+//        Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
+
         final ExplorerFileItem item = params[0];
 
         Bitmap bitmap = null;

@@ -34,7 +34,7 @@ public class ZipExtractTask extends AsyncTask<String, Integer, Void> {
 
     @Override
     protected Void doInBackground(String... params) {
-        Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
+//        Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
 
         final String path = params[0];
         int i = 0;

@@ -13,23 +13,25 @@
         android:layout_alignParentTop="true">
 
         <Button
+            style="@style/ExplorerButton"
             android:id="@+id/btn_up"
             android:layout_width="40dp"
-            android:layout_height="wrap_content"
+            android:layout_height="40dp"
             android:text="U"
-            android:textAllCaps="false" />
+             />
 
         <Button
+            style="@style/ExplorerButton"
             android:id="@+id/btn_home"
             android:layout_width="40dp"
-            android:layout_height="wrap_content"
+            android:layout_height="40dp"
             android:text="H"
-            android:textAllCaps="false" />
+            />
 
         <HorizontalScrollView
             android:id="@+id/scroll_path"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_height="40dp"
             android:scrollbars="none">
 
             <TextView
@@ -52,34 +54,38 @@
         android:layout_alignParentBottom="true">
 
         <Button
+            style="@style/ExplorerButton"
             android:id="@+id/btn_view"
             android:layout_width="60dp"
-            android:layout_height="wrap_content"
+            android:layout_height="40dp"
             android:text="List"
-            android:textAllCaps="false" />
+            />
 
         <Button
+            style="@style/ExplorerButton"
             android:id="@+id/btn_all"
             android:layout_width="60dp"
-            android:layout_height="wrap_content"
+            android:layout_height="40dp"
             android:enabled="false"
             android:text="All"
-            android:textAllCaps="false" />
+            />
 
         <Button
+            style="@style/ExplorerButton"
             android:id="@+id/btn_del"
             android:layout_width="60dp"
-            android:layout_height="wrap_content"
+            android:layout_height="40dp"
             android:enabled="false"
             android:text="Del"
-            android:textAllCaps="false" />
+            />
 
         <Button
+            style="@style/ExplorerButton"
             android:id="@+id/btn_create"
             android:layout_width="40dp"
-            android:layout_height="wrap_content"
+            android:layout_height="40dp"
             android:text=" + "
-            android:textAllCaps="false" />
+            />
     </LinearLayout>
 
 
