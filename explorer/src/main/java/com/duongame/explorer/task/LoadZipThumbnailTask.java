@@ -67,6 +67,7 @@ public class LoadZipThumbnailTask extends AsyncTask<String, Void, Bitmap> {
                     BitmapCacheManager.setThumbnail(path, bitmap, imageView);
             }
             else {
+                //bitmap = BitmapLoader.decodeSampleBitmapFromFile(image, 96, 96, false);
                 bitmap = BitmapLoader.decodeSquareThumbnailFromFile(image, 96, false);
                 if(bitmap != null)
                     BitmapCacheManager.setThumbnail(path, bitmap, imageView);
