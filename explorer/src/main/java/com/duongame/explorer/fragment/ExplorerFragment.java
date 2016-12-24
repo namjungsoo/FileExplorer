@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.res.ResourcesCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +17,9 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.GridView;
 import android.widget.HorizontalScrollView;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.ViewSwitcher;
@@ -105,11 +109,11 @@ public class ExplorerFragment extends Fragment {
         scrollPath = (HorizontalScrollView) rootView.findViewById(R.id.scroll_path);
         fileList = new ArrayList<>();
 
-        final Button view = (Button) rootView.findViewById(R.id.btn_view);
+        final LinearLayout view = (LinearLayout) rootView.findViewById(R.id.layout_view);
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Button btn = (Button) view;
+//                LinearLayout btn = (LinearLayout) view;
                 if (viewType == SWITCH_LIST) {
                     switchToGrid();
                     PreferenceHelper.setViewType(getActivity(), SWITCH_GRID);
@@ -120,7 +124,7 @@ public class ExplorerFragment extends Fragment {
             }
         });
 
-        final Button home = (Button) rootView.findViewById(R.id.btn_home);
+        final ImageButton home = (ImageButton) rootView.findViewById(R.id.btn_home);
         home.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -128,7 +132,7 @@ public class ExplorerFragment extends Fragment {
             }
         });
 
-        final Button up = (Button) rootView.findViewById(R.id.btn_up);
+        final ImageButton up = (ImageButton) rootView.findViewById(R.id.btn_up);
         up.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -166,6 +170,8 @@ public class ExplorerFragment extends Fragment {
 
         final Button view = (Button) rootView.findViewById(R.id.btn_view);
         view.setText("Grid");
+        final ImageView image = (ImageView)  rootView.findViewById(R.id.image_view);
+        image.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.grid, null));
 
         viewType = SWITCH_LIST;
         currentView = listView;
@@ -189,6 +195,8 @@ public class ExplorerFragment extends Fragment {
 
         final Button view = (Button) rootView.findViewById(R.id.btn_view);
         view.setText("List");
+        final ImageView image = (ImageView)  rootView.findViewById(R.id.image_view);
+        image.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.list, null));
 
         viewType = SWITCH_GRID;
         currentView = gridView;

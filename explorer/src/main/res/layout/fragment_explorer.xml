@@ -12,20 +12,34 @@
         android:orientation="horizontal"
         android:layout_alignParentTop="true">
 
-        <Button
+        <ImageButton
             style="@style/ExplorerButton"
             android:id="@+id/btn_up"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:text="Up"
+            android:layout_marginLeft="4dp"
+            android:src="@drawable/back"
+            android:scaleType="fitXY"
+            android:paddingLeft="8dp"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:paddingRight="8dp"
+            android:tint="@color/colorPrimary"
              />
 
-        <Button
+        <ImageButton
             style="@style/ExplorerButton"
             android:id="@+id/btn_home"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:text="Home"
+            android:layout_marginLeft="-4dp"
+            android:src="@drawable/home"
+            android:scaleType="fitXY"
+            android:paddingLeft="8dp"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:paddingRight="8dp"
+            android:tint="@color/colorPrimary"
             />
 
         <HorizontalScrollView
@@ -40,7 +54,7 @@
                 android:layout_height="match_parent"
                 android:layout_margin="5dp"
                 android:gravity="center_vertical"
-                android:textSize="16sp"
+                android:textSize="14sp"
                 android:textStyle="bold" />
         </HorizontalScrollView>
 
@@ -53,13 +67,28 @@
         android:orientation="horizontal"
         android:layout_alignParentBottom="true">
 
-        <Button
-            style="@style/ExplorerButton"
-            android:id="@+id/btn_view"
+        <LinearLayout
             android:layout_width="60dp"
             android:layout_height="40dp"
-            android:text="List"
-            />
+            android:orientation="vertical"
+            android:id="@+id/layout_view"
+            >
+            <ImageView
+                android:id="@+id/image_view"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:src="@drawable/list"
+                android:scaleType="fitCenter"
+                android:tint="@color/colorPrimary"/>
+            <Button
+                style="@style/ExplorerButton"
+                android:layout_width="60dp"
+                android:layout_height="10dp"
+                android:layout_marginTop="-3dp"
+                android:id="@+id/btn_view"
+                android:text="List"
+                />
+        </LinearLayout>
 
         <Button
             style="@style/ExplorerButton"
