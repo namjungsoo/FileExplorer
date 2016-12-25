@@ -2,6 +2,7 @@ package com.duongame.explorer.adapter;
 
 import android.app.Activity;
 import android.os.AsyncTask;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
@@ -21,6 +22,7 @@ import java.util.ArrayList;
  */
 
 public class PhotoPagerAdapter extends ExplorerPagerAdapter {
+    private static final String TAG = "PhotoPagerAdapter";
     private ArrayList<AsyncTask> taskList = new ArrayList<>();
 
 //    public boolean getExifRotation() {
@@ -41,7 +43,7 @@ public class PhotoPagerAdapter extends ExplorerPagerAdapter {
 
     @Override
     public Object instantiateItem(final ViewGroup container, int position) {
-//        Log.d(TAG, "instantiateItem position=" + position);
+        Log.w(TAG, "instantiateItem position=" + position);
 
         final ViewGroup rootView = (ViewGroup) context.getLayoutInflater().inflate(R.layout.viewer_page, container, false);
         final ImageView imageView = (ImageView) rootView.findViewById(R.id.image_viewer);
@@ -85,7 +87,7 @@ public class PhotoPagerAdapter extends ExplorerPagerAdapter {
 
     @Override
     public void destroyItem(ViewGroup container, int position, Object object) {
-//        Log.d(TAG, "destroyItem position=" + position);
+        Log.w(TAG, "destroyItem position=" + position);
         container.removeView((View) object);
 
         final ViewGroup rootView = (ViewGroup) object;
@@ -150,13 +152,17 @@ public class PhotoPagerAdapter extends ExplorerPagerAdapter {
         if (position + 2 < imageList.size()) {
             ExplorerFileItem item = imageList.get(position + 2);
             if (item.side == ExplorerFileItem.Side.SIDE_ALL) {
-                if(!checkBitmapOrPage(item))
+                if (!checkBitmapOrPage(item)) {
                     preloadList.add(item);
+                    Log.w(TAG, "getPreloadArray position=" + (position + 2));
+                }
             } else {
                 ExplorerFileItem item1 = imageList.get(position + 1);
                 if (!item.path.equals(item1.path)) {
-                    if(!checkBitmapOrPage(item))
+                    if (!checkBitmapOrPage(item)) {
                         preloadList.add(item);
+                        Log.w(TAG, "getPreloadArray position=" + (position + 1));
+                    }
                 }
             }
         }
@@ -176,18 +182,24 @@ public class PhotoPagerAdapter extends ExplorerPagerAdapter {
         if (position - 2 >= 0) {
             ExplorerFileItem item = imageList.get(position - 2);
             if (item.side == ExplorerFileItem.Side.SIDE_ALL) {
-                if(!checkBitmapOrPage(item))
+                if (!checkBitmapOrPage(item)) {
                     preloadList.add(item);
+                    Log.w(TAG, "getPreloadArray position=" + (position - 2));
+                }
             } else {
                 if (position - 3 >= 0) {
                     ExplorerFileItem item1 = imageList.get(position - 3);
                     if (!item.path.equals(item1.path)) {
-                        if(!checkBitmapOrPage(item))
+                        if (!checkBitmapOrPage(item)) {
                             preloadList.add(item);
+                            Log.w(TAG, "getPreloadArray position=" + (position - 3));
+                        }
                     }
                 } else {
-                    if(!checkBitmapOrPage(item))
+                    if (!checkBitmapOrPage(item)) {
                         preloadList.add(item);
+                        Log.w(TAG, "getPreloadArray position=" + (position - 2));
+                    }
                 }
             }
         }
@@ -203,7 +215,7 @@ public class PhotoPagerAdapter extends ExplorerPagerAdapter {
 
     private void runPreloadTask(int position, int width, int height) {
         final ExplorerFileItem[] preloadArray = getPreloadArray(position, width, height);
-        if(preloadArray == null)
+        if (preloadArray == null)
             return;
 
         final PreloadBitmapTask task = new PreloadBitmapTask(width, height, exifRotation);
@@ -221,11 +233,13 @@ public class PhotoPagerAdapter extends ExplorerPagerAdapter {
         if (position - 3 >= 0) {
             ExplorerFileItem item = imageList.get(position - 3);
             removeList.add(item);
+            Log.w(TAG, "getRemoveArray position=" + (position - 3));
         }
 
         if (position + 3 < imageList.size()) {
             ExplorerFileItem item = imageList.get(position + 3);
             removeList.add(item);
+            Log.w(TAG, "getRemoveArray position=" + (position + 3));
         }
 //        if (position + 4 < imageList.size()) {
 //            ExplorerFileItem item = imageList.get(position + 4);
@@ -243,7 +257,7 @@ public class PhotoPagerAdapter extends ExplorerPagerAdapter {
 
     private void runRemoveTask(int position) {
         final ExplorerFileItem[] removeArray = getRemoveArray(position);
-        if(removeArray == null)
+        if (removeArray == null)
             return;
 
         final RemoveBitmapTask task = new RemoveBitmapTask();

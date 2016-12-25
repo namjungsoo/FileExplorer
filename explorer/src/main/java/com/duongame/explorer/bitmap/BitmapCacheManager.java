@@ -126,7 +126,7 @@ public class BitmapCacheManager {
         {
             if (bitmapCache.get(path) == null) {
                 bitmapCache.put(path, bitmap);
-                Log.d(TAG, "bitmapCache size=" + bitmapCache.size());
+                Log.d(TAG, "setBitmap bitmapCache size=" + bitmapCache.size());
             }
         }
     }
@@ -146,7 +146,7 @@ public class BitmapCacheManager {
             if (bitmap != null) {
                 bitmap.recycle();
                 bitmapCache.remove(path);
-                Log.d(TAG, "removeBitmap=" + path + " size=" + bitmapCache.size());
+                Log.d(TAG, "removeBitmap removeBitmap=" + path + " size=" + bitmapCache.size());
             }
         }
     }
