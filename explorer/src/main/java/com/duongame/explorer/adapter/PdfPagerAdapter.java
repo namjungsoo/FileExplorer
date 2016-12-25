@@ -3,6 +3,8 @@ package com.duongame.explorer.adapter;
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.graphics.pdf.PdfRenderer;
 import android.os.Build;
 import android.util.Log;
@@ -12,7 +14,6 @@ import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 
 import com.duongame.explorer.R;
-import com.duongame.explorer.bitmap.BitmapCacheManager;
 
 /**
  * Created by namjungsoo on 2016-12-25.
@@ -38,7 +39,6 @@ public class PdfPagerAdapter extends ExplorerPagerAdapter {
         final ViewGroup rootView = (ViewGroup) context.getLayoutInflater().inflate(R.layout.viewer_page, container, false);
         final ImageView imageView = (ImageView) rootView.findViewById(R.id.image_viewer);
 
-        final ExplorerFileItem item = imageList.get(position);
         container.addView(rootView);
 
         final int width = container.getWidth();
@@ -67,19 +67,20 @@ public class PdfPagerAdapter extends ExplorerPagerAdapter {
     private void loadPage(int position, ImageView imageView, int width, int height) {
         Log.d(TAG, "loadPage position=" + position);
 
-
         if (imageView != null) {
             final ExplorerFileItem item = imageList.get(position);
             if (item == null)
                 return;
 
-            Bitmap bitmap = BitmapCacheManager.getBitmap(item.path);
-            if (bitmap != null) {
-                imageView.setImageBitmap(bitmap);
-                imageView.setBackgroundColor(Color.WHITE);
-                return;
-            }
+//            Bitmap bitmap = BitmapCacheManager.getBitmap(item.path);
+//            if (bitmap != null) {
+//                imageView.setImageBitmap(bitmap);
+//                imageView.setBackgroundColor(Color.WHITE);
+//                Log.w(TAG, "loadPage getBitmap ok");
+//                return;
+//            }
 
+            Bitmap bitmap;
             if (renderer != null) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                     PdfRenderer.Page page = renderer.openPage(position);
@@ -105,7 +106,7 @@ public class PdfPagerAdapter extends ExplorerPagerAdapter {
                     imageView.setImageBitmap(bitmap);
                     imageView.setBackgroundColor(Color.WHITE);
 
-                    BitmapCacheManager.setBitmap(item.path, bitmap);
+//                    BitmapCacheManager.setBitmap(item.path, bitmap);
                 }
             }
         } else {
@@ -115,17 +116,24 @@ public class PdfPagerAdapter extends ExplorerPagerAdapter {
 
     @Override
     public void destroyItem(ViewGroup container, int position, Object object) {
+        container.removeView((View) object);
+
         final ExplorerFileItem item = imageList.get(position);
         if (item == null)
             return;
 
         Log.w(TAG, "destroyItem position="+position + " path=" + item.path);
-        container.removeView((View) object);
-
         final ViewGroup rootView = (ViewGroup) object;
         final ImageView imageView = (ImageView) rootView.findViewById(R.id.image_viewer);
 
         //TODO: 이부분 살펴봐야함
+        final Drawable d = imageView.getDrawable();
+        if(d instanceof BitmapDrawable) {
+            Bitmap b = ((BitmapDrawable)d).getBitmap();
+            b.recycle();
+            Log.w(TAG, "recycle");
+        }
+
         imageView.setImageBitmap(null);
 //        BitmapCacheManager.removeBitmap(item.path);
     }
