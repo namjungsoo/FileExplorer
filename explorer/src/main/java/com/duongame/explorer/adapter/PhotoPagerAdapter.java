@@ -6,7 +6,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.duongame.explorer.R;
 import com.duongame.explorer.bitmap.BitmapCacheManager;
@@ -48,8 +47,8 @@ public class PhotoPagerAdapter extends ExplorerPagerAdapter {
 
         final ExplorerFileItem item = imageList.get(position);
 
-        final TextView textPath = (TextView) rootView.findViewById(R.id.text_path);
-        textPath.setText(item.path);
+//        final TextView textPath = (TextView) rootView.findViewById(R.id.text_path);
+//        textPath.setText(item.path);
 
         container.addView(rootView);
 

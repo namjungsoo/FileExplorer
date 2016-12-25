@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.res.ResourcesCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +24,7 @@ import android.widget.TextView;
 import android.widget.ViewSwitcher;
 
 import com.duongame.explorer.R;
+import com.duongame.explorer.activity.PdfActivity;
 import com.duongame.explorer.activity.PhotoActivity;
 import com.duongame.explorer.activity.TextActivity;
 import com.duongame.explorer.activity.ZipActivity;
@@ -244,18 +246,18 @@ public class ExplorerFragment extends Fragment {
                 startActivity(intent);
             }
             break;
-//            case PDF: {
-//                backupPosition();
-//
-//                Intent intent = new Intent(getActivity(), PdfActivity.class);
-//                intent.putExtra("path", item.path);
-//                intent.putExtra("name", item.name);
-//                intent.putExtra("page", 0);
-//                startActivity(intent);
-//
-//                Log.d(TAG, "onAdapterItemClick pdf");
-//            }
-//            break;
+            case PDF: {
+                backupPosition();
+
+                Intent intent = new Intent(getActivity(), PdfActivity.class);
+                intent.putExtra("path", item.path);
+                intent.putExtra("name", item.name);
+                intent.putExtra("page", 0);
+                startActivity(intent);
+
+                Log.d(TAG, "onAdapterItemClick pdf");
+            }
+            break;
             case ZIP: {
                 backupPosition();
 

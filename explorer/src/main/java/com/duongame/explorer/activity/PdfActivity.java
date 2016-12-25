@@ -2,6 +2,7 @@ package com.duongame.explorer.activity;
 
 import android.content.Intent;
 import android.graphics.pdf.PdfRenderer;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.ParcelFileDescriptor;
 import android.util.Log;
@@ -9,7 +10,6 @@ import android.util.Log;
 import com.duongame.explorer.adapter.ExplorerFileItem;
 import com.duongame.explorer.adapter.ExplorerPagerAdapter;
 import com.duongame.explorer.adapter.PdfPagerAdapter;
-import com.duongame.explorer.adapter.PhotoPagerAdapter;
 import com.duongame.explorer.helper.FileHelper;
 
 import java.io.File;
@@ -37,7 +37,17 @@ public class PdfActivity extends PagerActivity {
 
     @Override
     protected ExplorerPagerAdapter createPagerAdapter() {
-        return new PhotoPagerAdapter(this);
+        return new PdfPagerAdapter(this);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if(renderer != null) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                renderer.close();
+            }
+        }
     }
 
     protected void processIntent() {
@@ -56,7 +66,7 @@ public class PdfActivity extends PagerActivity {
             // pdf 파일의 페이지를 체크함
             try {
                 final ParcelFileDescriptor parcel = ParcelFileDescriptor.open(new File(path), ParcelFileDescriptor.MODE_READ_ONLY);
-                if (android.os.Build.VERSION.SDK_INT >= 21) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                     renderer = new PdfRenderer(parcel);
 
                     imageList = new ArrayList<>();
