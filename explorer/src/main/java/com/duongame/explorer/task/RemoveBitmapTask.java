@@ -22,7 +22,6 @@ public class RemoveBitmapTask extends AsyncTask<ExplorerFileItem, Void, Bitmap> 
                 String path = BitmapCacheManager.changePath(item);
                 BitmapCacheManager.removePage(path);
             }
-
         }
         return null;
     }

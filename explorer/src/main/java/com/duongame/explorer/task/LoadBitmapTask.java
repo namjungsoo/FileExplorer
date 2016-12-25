@@ -65,7 +65,7 @@ public class LoadBitmapTask extends BitmapTask {
 
                 Log.d(TAG, "width=" + width + " height=" + height);
 
-                final FrameLayout.LayoutParams params = (FrameLayout.LayoutParams )imageView.getLayoutParams();
+                final FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) imageView.getLayoutParams();
                 params.width = newWidth;
                 params.height = newHeight;
                 params.gravity = Gravity.CENTER;

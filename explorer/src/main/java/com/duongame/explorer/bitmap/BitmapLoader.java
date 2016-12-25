@@ -121,7 +121,7 @@ public class BitmapLoader {
         BitmapFactory.decodeFile(path, options);
 
         options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
-//        Log.d(TAG, "inSampleSize=" + options.inSampleSize);
+        Log.d(TAG, "inSampleSize=" + options.inSampleSize);
 
         // 로드하기 위해서는 위에서 true 로 설정했던 inJustDecodeBounds 의 값을 false 로 설정합니다.
         options.inJustDecodeBounds = false;
