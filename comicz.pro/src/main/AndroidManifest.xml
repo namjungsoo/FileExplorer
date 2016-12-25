@@ -20,6 +20,9 @@
         <activity android:name="com.duongame.explorer.activity.TextActivity"
             android:theme="@style/ComicViewerTheme"
             />
+        <activity android:name="com.duongame.explorer.activity.PdfActivity"
+            android:theme="@style/ComicViewerTheme"
+            />
 
     </application>
 

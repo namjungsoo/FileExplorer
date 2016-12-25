@@ -63,7 +63,7 @@ public class ExplorerSearcher {
 
             ExplorerFileItem.FileType type = getFileType(eachFile);
 
-            ExplorerFileItem item = new ExplorerFileItem(path, name, date, size, type);
+            ExplorerFileItem item = new ExplorerFileItem(FileHelper.getFullPath(path, name), name, date, size, type);
             if (type == ExplorerFileItem.FileType.DIRECTORY) {
                 item.size = -1;
                 directoryList.add(item);
@@ -74,8 +74,8 @@ public class ExplorerSearcher {
         }
 
         // 디렉토리 우선 정렬 및 가나다 정렬
-        Collections.sort(directoryList, new FileHelper.FileNameCompare());
-        Collections.sort(normalList, new FileHelper.FileNameCompare());
+        Collections.sort(directoryList, new FileHelper.FileNameAscendingCompare());
+        Collections.sort(normalList, new FileHelper.FileNameAscendingCompare());
 
         fileList.addAll(directoryList);
         fileList.addAll(normalList);

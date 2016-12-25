@@ -60,11 +60,11 @@ public class ZipLoader {
         for (FileHeader header : zipHeaders) {
             final String name = header.getFileName();
             if (FileHelper.isImage(name)) {
-                imageList.add(new ExplorerFileItem(extractPath, name, "", 0, ExplorerFileItem.FileType.IMAGE));
+                imageList.add(new ExplorerFileItem(FileHelper.getFullPath(extractPath, name), name, "", 0, ExplorerFileItem.FileType.IMAGE));
             }
         }
 
-        Collections.sort(imageList, new FileHelper.FileNameCompare());
+        Collections.sort(imageList, new FileHelper.FileNameAscendingCompare());
 
         if (firstImageOnly) {
             if (imageList.size() > 0) {

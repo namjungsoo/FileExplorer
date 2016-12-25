@@ -1,5 +1,8 @@
 <resources>
     <string name="app_name">Explorer</string>
-    <string name="ok">확인</string>
-    <string name="cancel">취소</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
+    <string name="grid">Grid</string>
+    <string name="list">List</string>
+    <string name="sort">Sort</string>
 </resources>

@@ -38,7 +38,7 @@ public class ExplorerFileItem implements Cloneable {
     public int index;
 
     public ExplorerFileItem(String path, String name, String date, long size, FileType type) {
-        this.path = path + "/" + name;
+        this.path = path;
         this.name = name;
         this.date = date;
         this.size = size;

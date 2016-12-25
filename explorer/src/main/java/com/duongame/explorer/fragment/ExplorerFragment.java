@@ -4,11 +4,9 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.res.ResourcesCompat;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -62,15 +60,15 @@ public class ExplorerFragment extends Fragment {
     private ViewSwitcher switcher;
     private View rootView;
 
-    private Handler handler;
-    private Thread thread;
+//    private Handler handler;
+//    private Thread thread;
 
     @Nullable
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
                              Bundle savedInstanceState) {
         //setContentView(R.layout.fragment_explorer);
         rootView = inflater.inflate(R.layout.fragment_explorer, container, false);
-        handler = new Handler();
+//        handler = new Handler();
 
         initUI();
         initViewType();
@@ -169,7 +167,7 @@ public class ExplorerFragment extends Fragment {
         });
 
         final Button view = (Button) rootView.findViewById(R.id.btn_view);
-        view.setText("Grid");
+        view.setText(getResources().getString(R.string.grid));
         final ImageView image = (ImageView)  rootView.findViewById(R.id.image_view);
         image.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.grid, null));
 
@@ -194,7 +192,7 @@ public class ExplorerFragment extends Fragment {
         });
 
         final Button view = (Button) rootView.findViewById(R.id.btn_view);
-        view.setText("List");
+        view.setText(getResources().getString(R.string.list));
         final ImageView image = (ImageView)  rootView.findViewById(R.id.image_view);
         image.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.list, null));
 
@@ -246,6 +244,18 @@ public class ExplorerFragment extends Fragment {
                 startActivity(intent);
             }
             break;
+//            case PDF: {
+//                backupPosition();
+//
+//                Intent intent = new Intent(getActivity(), PdfActivity.class);
+//                intent.putExtra("path", item.path);
+//                intent.putExtra("name", item.name);
+//                intent.putExtra("page", 0);
+//                startActivity(intent);
+//
+//                Log.d(TAG, "onAdapterItemClick pdf");
+//            }
+//            break;
             case ZIP: {
                 backupPosition();
 
@@ -358,12 +368,12 @@ public class ExplorerFragment extends Fragment {
 //        thread.start();
 //        Log.d(TAG, "threadStart");
 //    }
-
-    private void threadStop() {
-        if (thread != null && thread.isAlive())
-            thread.interrupt();
-        Log.d(TAG, "threadStop");
-    }
+//
+//    private void threadStop() {
+//        if (thread != null && thread.isAlive())
+//            thread.interrupt();
+//        Log.d(TAG, "threadStop");
+//    }
 
     public void updateFileList(String path) {
         adapter.stopAllTasks();

@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import com.duongame.explorer.adapter.ExplorerFileItem;
+import com.duongame.explorer.adapter.ExplorerPagerAdapter;
+import com.duongame.explorer.adapter.PhotoPagerAdapter;
 import com.duongame.explorer.bitmap.ZipLoader;
 import com.duongame.explorer.helper.AlertManager;
 
@@ -26,7 +28,7 @@ public class ZipActivity extends PagerActivity {
         @Override
         public void onSuccess(int i, ArrayList<ExplorerFileItem> zipImageList) {
 //            Log.d(TAG, "onSuccess="+i);
-            ArrayList<ExplorerFileItem> imageList = (ArrayList<ExplorerFileItem> )zipImageList.clone();
+            final ArrayList<ExplorerFileItem> imageList = (ArrayList<ExplorerFileItem> )zipImageList.clone();
 
             pagerAdapter.setImageList(imageList);
             pagerAdapter.notifyDataSetChanged();
@@ -68,6 +70,11 @@ public class ZipActivity extends PagerActivity {
 
     protected ArrayList<ExplorerFileItem> getImageList() {
         return null;
+    }
+
+    @Override
+    protected ExplorerPagerAdapter createPagerAdapter() {
+        return new PhotoPagerAdapter(this);
     }
 
     @Override

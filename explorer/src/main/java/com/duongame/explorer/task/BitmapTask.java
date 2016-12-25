@@ -48,6 +48,25 @@ public class BitmapTask extends AsyncTask<ExplorerFileItem, Void, Bitmap> {
 
         bitmap = BitmapCacheManager.getBitmap(item.path);
         if (bitmap == null) {
+
+            // 렌더러를 어떻게 전달하지..
+//            if(item.type == ExplorerFileItem.FileType.PDF) {
+//                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+//                    final int pageNum = FileHelper.getPdfPageFromFileName(item.path);
+//                    final PdfRenderer.Page page = PdfActivity.renderer.openPage(pageNum);
+//                    Log.d(TAG,"pdf pageNum="+pageNum);
+//
+//                    //TODO: 화면크기와 PDF 이미지 크기를 체크할것
+//                    int width = page.getWidth();
+//                    int height = page.getHeight();
+//                    bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+//
+//                    page.render(bitmap, null, null, PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY);
+//                    BitmapCacheManager.setBitmap(item.path, bitmap);
+//                    return bitmap;
+//                }
+//            }
+
             BitmapFactory.Options options = BitmapLoader.decodeBounds(item.path);
 
             // 자르는 경우에는 실제 예상보다 width/2를 하자

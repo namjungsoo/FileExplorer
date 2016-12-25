@@ -46,10 +46,25 @@ public class FileHelper {
         return cachePath;
     }
 
-    public static class FileNameCompare implements Comparator<ExplorerFileItem> {
+    public static class FileNameAscendingCompare implements Comparator<ExplorerFileItem> {
         @Override
         public int compare(ExplorerFileItem lhs, ExplorerFileItem rhs) {
             return lhs.name.compareToIgnoreCase(rhs.name);
         }
+    }
+
+    public static String setPdfFileNameFromPage(String pdf, int page) {
+        final String ret = pdf + "." + String.valueOf(page);
+
+        return ret;
+    }
+
+    public static int getPdfPageFromFileName(String pdfWithPage) {
+        String page = pdfWithPage.substring(pdfWithPage.lastIndexOf(".") + 1);
+        return Integer.parseInt(page);
+    }
+
+    public static String getFullPath(String path, String name) {
+        return path + "/" + name;
     }
 }

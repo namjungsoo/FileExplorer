@@ -71,9 +71,13 @@ public class PagerActivity extends ViewerActivity {
         });
     }
 
+    protected ExplorerPagerAdapter createPagerAdapter() {
+        return null;
+    }
+
     protected void initPager() {
         pager = (ViewPager) findViewById(R.id.pager);
-        pagerAdapter = new ExplorerPagerAdapter(this);
+        pagerAdapter = createPagerAdapter();
     }
 
     protected void updateScrollInfo(int position) {

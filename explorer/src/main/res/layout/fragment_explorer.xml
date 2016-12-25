@@ -86,7 +86,7 @@
                 android:layout_height="10dp"
                 android:layout_marginTop="-3dp"
                 android:id="@+id/btn_view"
-                android:text="List"
+                android:text="@string/list"
                 />
         </LinearLayout>
 

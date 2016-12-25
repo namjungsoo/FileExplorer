@@ -54,6 +54,7 @@ public class TextActivity extends ViewerActivity {
                 File file = new File(path);
                 FileInputStream is = new FileInputStream(file);
 
+                //TODO: 인코딩 검사하는데 모든 파일을 다 읽을 필요는 없다.
                 UniversalDetector detector = new UniversalDetector(null);
                 byte[] buffer = new byte[is.available()];
                 is.read(buffer);
