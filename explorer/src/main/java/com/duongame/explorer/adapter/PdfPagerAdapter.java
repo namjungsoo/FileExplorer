@@ -37,7 +37,7 @@ public class PdfPagerAdapter extends ExplorerPagerAdapter {
 
     @Override
     public Object instantiateItem(final ViewGroup container, final int position) {
-        Log.d(TAG, "instantiateItem position=" + position);
+//        Log.d(TAG, "instantiateItem position=" + position);
         final ViewGroup rootView = (ViewGroup) context.getLayoutInflater().inflate(R.layout.viewer_page, container, false);
         final ImageView imageView = (ImageView) rootView.findViewById(R.id.image_viewer);
 
@@ -67,7 +67,7 @@ public class PdfPagerAdapter extends ExplorerPagerAdapter {
     }
 
     private void loadPage(int position, ImageView imageView, int width, int height) {
-        Log.d(TAG, "loadPage position=" + position);
+//        Log.d(TAG, "loadPage position=" + position);
 
         if (imageView != null) {
             final ExplorerFileItem item = imageList.get(position);
@@ -132,7 +132,7 @@ public class PdfPagerAdapter extends ExplorerPagerAdapter {
         if (item == null)
             return;
 
-        Log.w(TAG, "destroyItem position="+position + " path=" + item.path);
+//        Log.w(TAG, "destroyItem position="+position + " path=" + item.path);
         final ViewGroup rootView = (ViewGroup) object;
         final ImageView imageView = (ImageView) rootView.findViewById(R.id.image_viewer);
 
@@ -141,7 +141,7 @@ public class PdfPagerAdapter extends ExplorerPagerAdapter {
         if(d instanceof BitmapDrawable) {
             Bitmap b = ((BitmapDrawable)d).getBitmap();
             b.recycle();
-            Log.w(TAG, "recycle");
+//            Log.w(TAG, "recycle");
         }
 
         imageView.setImageBitmap(null);
@@ -150,7 +150,7 @@ public class PdfPagerAdapter extends ExplorerPagerAdapter {
 
     @Override
     public void setPrimaryItem(final ViewGroup container, final int position, Object object) {
-        Log.d(TAG, "setPrimaryItem position=" + position);
+//        Log.d(TAG, "setPrimaryItem position=" + position);
     }
 
     @Override

@@ -2,7 +2,6 @@ package com.duongame.explorer.adapter;
 
 import android.app.Activity;
 import android.os.AsyncTask;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
@@ -43,7 +42,7 @@ public class PhotoPagerAdapter extends ExplorerPagerAdapter {
 
     @Override
     public Object instantiateItem(final ViewGroup container, int position) {
-        Log.w(TAG, "instantiateItem position=" + position);
+//        Log.w(TAG, "instantiateItem position=" + position);
 
         final ViewGroup rootView = (ViewGroup) context.getLayoutInflater().inflate(R.layout.viewer_page, container, false);
         final ImageView imageView = (ImageView) rootView.findViewById(R.id.image_viewer);
@@ -87,7 +86,7 @@ public class PhotoPagerAdapter extends ExplorerPagerAdapter {
 
     @Override
     public void destroyItem(ViewGroup container, int position, Object object) {
-        Log.w(TAG, "destroyItem position=" + position);
+//        Log.w(TAG, "destroyItem position=" + position);
         container.removeView((View) object);
 
         final ViewGroup rootView = (ViewGroup) object;
@@ -151,54 +150,64 @@ public class PhotoPagerAdapter extends ExplorerPagerAdapter {
 
         if (position + 2 < imageList.size()) {
             ExplorerFileItem item = imageList.get(position + 2);
+
+            // 전체 모드가 아니면 바로 전 이미지를 체크 한다.
             if (item.side == ExplorerFileItem.Side.SIDE_ALL) {
                 if (!checkBitmapOrPage(item)) {
                     preloadList.add(item);
-                    Log.w(TAG, "getPreloadArray position=" + (position + 2));
+//                    Log.w(TAG, "getPreloadArray position=" + (position + 2));
                 }
             } else {
                 ExplorerFileItem item1 = imageList.get(position + 1);
                 if (!item.path.equals(item1.path)) {
                     if (!checkBitmapOrPage(item)) {
                         preloadList.add(item);
-                        Log.w(TAG, "getPreloadArray position=" + (position + 1));
+//                        Log.w(TAG, "getPreloadArray position=" + (position + 1));
                     }
                 }
             }
         }
-//        if (position + 3 < imageList.size()) {
-//            ExplorerFileItem item = imageList.get(position + 3);
-//            if (item.side == ExplorerFileItem.Side.SIDE_ALL) {
-//                if(!checkBitmapOrPage(item))
-//                    preloadList.add(item);
-//            } else {
-//                ExplorerFileItem item1 = imageList.get(position + 2);
-//                if (!item.path.equals(item1.path)) {
-//                    if(!checkBitmapOrPage(item))
-//                        preloadList.add(item);
-//                }
-//            }
-//        }
+        if (position + 3 < imageList.size()) {
+            ExplorerFileItem item = imageList.get(position + 3);
+
+            // 전체 모드가 아니면 바로 전 이미지를 체크 한다.
+            if (item.side == ExplorerFileItem.Side.SIDE_ALL) {
+                if(!checkBitmapOrPage(item)) {
+                    preloadList.add(item);
+//                    Log.w(TAG, "getPreloadArray position=" + (position + 3));
+                }
+            } else {
+                ExplorerFileItem item1 = imageList.get(position + 2);
+                if (!item.path.equals(item1.path)) {
+                    if(!checkBitmapOrPage(item)) {
+                        preloadList.add(item);
+//                        Log.w(TAG, "getPreloadArray position=" + (position + 2));
+                    }
+                }
+            }
+        }
         if (position - 2 >= 0) {
             ExplorerFileItem item = imageList.get(position - 2);
+
+            // 전체 모드가 아니면 바로 전 이미지를 체크 한다.
             if (item.side == ExplorerFileItem.Side.SIDE_ALL) {
                 if (!checkBitmapOrPage(item)) {
                     preloadList.add(item);
-                    Log.w(TAG, "getPreloadArray position=" + (position - 2));
+//                    Log.w(TAG, "getPreloadArray position=" + (position - 2));
                 }
             } else {
-                if (position - 3 >= 0) {
+                if (position - 3 >= 0) {// 바로 전 파일이 있으면
                     ExplorerFileItem item1 = imageList.get(position - 3);
                     if (!item.path.equals(item1.path)) {
                         if (!checkBitmapOrPage(item)) {
                             preloadList.add(item);
-                            Log.w(TAG, "getPreloadArray position=" + (position - 3));
+//                            Log.w(TAG, "getPreloadArray position=" + (position - 3));
                         }
                     }
-                } else {
+                } else {// 없으면 내 파일을 읽는다
                     if (!checkBitmapOrPage(item)) {
                         preloadList.add(item);
-                        Log.w(TAG, "getPreloadArray position=" + (position - 2));
+//                        Log.w(TAG, "getPreloadArray position=" + (position - 2));
                     }
                 }
             }
@@ -233,18 +242,18 @@ public class PhotoPagerAdapter extends ExplorerPagerAdapter {
         if (position - 3 >= 0) {
             ExplorerFileItem item = imageList.get(position - 3);
             removeList.add(item);
-            Log.w(TAG, "getRemoveArray position=" + (position - 3));
+//            Log.w(TAG, "getRemoveArray position=" + (position - 3));
         }
-
         if (position + 3 < imageList.size()) {
             ExplorerFileItem item = imageList.get(position + 3);
             removeList.add(item);
-            Log.w(TAG, "getRemoveArray position=" + (position + 3));
+//            Log.w(TAG, "getRemoveArray position=" + (position + 3));
         }
-//        if (position + 4 < imageList.size()) {
-//            ExplorerFileItem item = imageList.get(position + 4);
-//            removeList.add(item);
-//        }
+        if (position + 4 < imageList.size()) {
+            ExplorerFileItem item = imageList.get(position + 4);
+            removeList.add(item);
+//            Log.w(TAG, "getRemoveArray position=" + (position + 4));
+        }
 
         if (removeList.size() <= 0)
             return null;
