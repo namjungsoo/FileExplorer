@@ -8,9 +8,11 @@ import android.graphics.drawable.Drawable;
 import android.graphics.pdf.PdfRenderer;
 import android.os.Build;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 
 import com.duongame.explorer.R;
@@ -80,10 +82,10 @@ public class PdfPagerAdapter extends ExplorerPagerAdapter {
 //                return;
 //            }
 
-            Bitmap bitmap;
+            final Bitmap bitmap;
             if (renderer != null) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    PdfRenderer.Page page = renderer.openPage(position);
+                    final PdfRenderer.Page page = renderer.openPage(position);
 
                     // 종횡비를 계산하자.
                     float pdfRatio = (float) page.getHeight() / (float) page.getWidth();
@@ -105,6 +107,14 @@ public class PdfPagerAdapter extends ExplorerPagerAdapter {
 
                     imageView.setImageBitmap(bitmap);
                     imageView.setBackgroundColor(Color.WHITE);
+
+                    final FrameLayout.LayoutParams params = (FrameLayout.LayoutParams )imageView.getLayoutParams();
+                    params.width = newWidth;
+                    params.height = newHeight;
+                    params.gravity = Gravity.CENTER;
+
+                    imageView.setLayoutParams(params);
+                    imageView.requestLayout();
 
 //                    BitmapCacheManager.setBitmap(item.path, bitmap);
                 }

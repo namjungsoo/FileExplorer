@@ -1,9 +1,14 @@
 package com.duongame.explorer.task;
 
 import android.graphics.Bitmap;
+import android.util.Log;
+import android.view.Gravity;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 
 import com.duongame.explorer.adapter.ExplorerFileItem;
+
+import static android.content.ContentValues.TAG;
 
 /**
  * Created by namjungsoo on 2016-12-16.
@@ -24,7 +29,7 @@ public class LoadBitmapTask extends BitmapTask {
         final ExplorerFileItem item = params[0];
 
         Bitmap bitmap = null;
-        if(!isCancelled())
+        if (!isCancelled())
             bitmap = loadBitmap(item);
         return bitmap;
     }
@@ -37,6 +42,36 @@ public class LoadBitmapTask extends BitmapTask {
         if (imageView != null && bitmap != null) {
             if (imageView != null) {
                 imageView.setImageBitmap(bitmap);
+
+                // 종횡비 체크
+                final int bmWidth = bitmap.getWidth();
+                final int bmHeight = bitmap.getHeight();
+                final float bmRatio = (float) bmHeight / (float) bmWidth;
+
+                // 화면비 체크
+                final int width = imageView.getWidth();
+                final int height = imageView.getHeight();
+                final float imageRatio = (float) height / (float) width;
+
+                int newWidth;
+                int newHeight;
+                if (bmRatio > imageRatio) {
+                    newWidth = (int) (height / bmRatio);
+                    newHeight = height;
+                } else {
+                    newWidth = width;
+                    newHeight = (int) (width * bmRatio);
+                }
+
+                Log.d(TAG, "width=" + width + " height=" + height);
+
+                final FrameLayout.LayoutParams params = (FrameLayout.LayoutParams )imageView.getLayoutParams();
+                params.width = newWidth;
+                params.height = newHeight;
+                params.gravity = Gravity.CENTER;
+
+                imageView.setLayoutParams(params);
+                imageView.requestLayout();
             }
         }
     }

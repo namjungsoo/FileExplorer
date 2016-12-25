@@ -45,126 +45,165 @@ public class BitmapCacheManager {
         return path;
     }
 
+    // page
     public static void setPage(String key, Bitmap bitmap) {
-        pageCache.put(key, bitmap);
+        synchronized (pageCache) {
+            pageCache.put(key, bitmap);
+        }
     }
 
     public static Bitmap getPage(String key) {
-        return pageCache.get(key);
+        synchronized (pageCache) {
+            return pageCache.get(key);
+        }
     }
 
     public static void removePage(String key) {
-        if (pageCache.get(key) != null) {
-            pageCache.get(key).recycle();
-            pageCache.remove(key);
+        synchronized (pageCache) {
+            final Bitmap bitmap = pageCache.get(key);
+            if (bitmap != null && !bitmap.isRecycled()) {
+                bitmap.recycle();
+                pageCache.remove(key);
+            }
         }
     }
 
     public static void recyclePage() {
-        for (String key : pageCache.keySet()) {
-            final Bitmap bitmap = pageCache.get(key);
-            if (bitmap != null) {
-                bitmap.recycle();
+        synchronized (pageCache) {
+            for (String key : pageCache.keySet()) {
+                final Bitmap bitmap = pageCache.get(key);
+                if (bitmap != null && !bitmap.isRecycled()) {
+                    bitmap.recycle();
+                }
             }
+            pageCache.clear();
         }
-        pageCache.clear();
         Log.d(TAG, "recyclePage");
     }
 
     // resource bitmap
     public static Bitmap getResourceBitmap(Resources res, int resId) {
-        Bitmap bitmap = resourceCache.get(resId);
-        if (bitmap == null) {
-            BitmapFactory.Options options = new BitmapFactory.Options();
-            bitmap = BitmapFactory.decodeResource(res, resId, options);
-            if (bitmap != null) {
-                resourceCache.put(resId, bitmap);
+        synchronized (resourceCache) {
+            Bitmap bitmap = resourceCache.get(resId);
+            if (bitmap == null) {
+                final BitmapFactory.Options options = new BitmapFactory.Options();
+                bitmap = BitmapFactory.decodeResource(res, resId, options);
+                if (bitmap != null) {
+                    resourceCache.put(resId, bitmap);
+                }
             }
+            return bitmap;
         }
-        return bitmap;
     }
 
     // drawable
     public static void setDrawable(String path, Drawable drawable) {
-        if (drawableCache.get(path) == null) {
-            drawableCache.put(path, drawable);
+        synchronized (drawableCache) {
+            if (drawableCache.get(path) == null) {
+                drawableCache.put(path, drawable);
+            }
         }
     }
 
     public static Drawable getDrawable(String path) {
-        return drawableCache.get(path);
+        synchronized (drawableCache) {
+            return drawableCache.get(path);
+        }
     }
 
     // image bitmap
     public static void setBitmap(String path, Bitmap bitmap) {
-        if (bitmapCache.get(path) == null) {
-            bitmapCache.put(path, bitmap);
-//            Log.w(TAG, "setBitmap bitmapCache.size="+bitmapCache.size());
+        synchronized (bitmapCache) {
+            if (bitmapCache.get(path) == null) {
+                bitmapCache.put(path, bitmap);
+            }
         }
     }
 
     public static Bitmap getBitmap(String path) {
-        return bitmapCache.get(path);
+        synchronized (bitmapCache) {
+            return bitmapCache.get(path);
+        }
     }
 
     public static void removeBitmap(String path) {
-        if (bitmapCache.get(path) != null) {
-            bitmapCache.get(path).recycle();
-            bitmapCache.remove(path);
-//            Log.w(TAG, "removeBitmap bitmapCache.size="+bitmapCache.size());
+        synchronized (bitmapCache) {
+            final Bitmap bitmap = bitmapCache.get(path);
+            if (bitmap != null && !bitmap.isRecycled()) {
+                bitmap.recycle();
+                bitmapCache.remove(path);
+            }
         }
     }
 
     public static void recycleBitmap() {
-        for (String key : bitmapCache.keySet()) {
-            if (bitmapCache.get(key) != null)
-                bitmapCache.get(key).recycle();
+        synchronized (bitmapCache) {
+            for (String key : bitmapCache.keySet()) {
+                final Bitmap bitmap = bitmapCache.get(key);
+                if (bitmap != null && !bitmap.isRecycled())
+                    bitmap.recycle();
+            }
+            bitmapCache.clear();
         }
-        bitmapCache.clear();
         Log.d(TAG, "recycleBitmap");
     }
 
     // thumbnail
     public static void setThumbnail(String path, Bitmap bitmap, ImageView imageView) {
-        if (thumbnailCache.get(path) == null) {
-            thumbnailCache.put(path, bitmap);
-            thumbnailImageCache.put(path, imageView);
+        synchronized (thumbnailCache) {
+            if (thumbnailCache.get(path) == null) {
+                thumbnailCache.put(path, bitmap);
+                synchronized (thumbnailImageCache) {
+                    thumbnailImageCache.put(path, imageView);
+                }
+            }
         }
     }
 
     public static Bitmap getThumbnail(String path) {
-        return thumbnailCache.get(path);
+        synchronized (thumbnailCache) {
+            return thumbnailCache.get(path);
+        }
     }
 
     public static int getThumbnailCount() {
-        return thumbnailCache.size();
+        synchronized (thumbnailCache) {
+            return thumbnailCache.size();
+        }
     }
 
     public static void recycleThumbnail() {
-        // 이미지를 먼저 null로 하고 => try/catch로 처리함
-        for (String key : thumbnailImageCache.keySet()) {
-            ImageView imageView = thumbnailImageCache.get(key);
-            if (imageView != null) {
-                imageView.setImageResource(android.R.color.transparent);
-            }
-        }
-        thumbnailImageCache.clear();
-
-        ArrayList<String> recycleList = new ArrayList<>();
-        for (String key : thumbnailCache.keySet()) {
-            if (thumbnailCache.get(key) != null) {
-                // 리소스(아이콘)용 썸네일이 아니면 삭제
-                if (!resourceCache.containsValue(thumbnailCache.get(key))) {
-                    thumbnailCache.get(key).recycle();
-                    recycleList.add(key);
+        synchronized (thumbnailImageCache) {
+            // 이미지를 먼저 null로 하고 => try/catch로 처리함
+            for (String key : thumbnailImageCache.keySet()) {
+                final ImageView imageView = thumbnailImageCache.get(key);
+                if (imageView != null) {
+                    imageView.setImageResource(android.R.color.transparent);
                 }
             }
+            thumbnailImageCache.clear();
         }
 
-        for (String key : recycleList) {
-            thumbnailCache.remove(key);
+        synchronized (thumbnailCache) {
+            final ArrayList<String> recycleList = new ArrayList<>();
+            for (String key : thumbnailCache.keySet()) {
+                final Bitmap bitmap = thumbnailCache.get(key);
+                if (bitmap != null && !bitmap.isRecycled()) {
+                    // 리소스(아이콘)용 썸네일이 아니면 삭제
+                    synchronized (resourceCache) {
+                        if (!resourceCache.containsValue(bitmap)) {
+                            bitmap.recycle();
+                            recycleList.add(key);
+                        }
+                    }
+                }
+            }
+
+            for (String key : recycleList) {
+                thumbnailCache.remove(key);
+            }
+            thumbnailCache.clear();
         }
-        thumbnailCache.clear();
         Log.d(TAG, "recycleThumbnail");
     }
 }
