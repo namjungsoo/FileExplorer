@@ -21,7 +21,7 @@ import com.duongame.explorer.R;
  * Created by namjungsoo on 2016-12-25.
  */
 
-public class PdfPagerAdapter extends ExplorerPagerAdapter {
+public class PdfPagerAdapter extends ViewerPagerAdapter {
     private final static String TAG = "PdfPagerAdapter";
 
     private PdfRenderer renderer;

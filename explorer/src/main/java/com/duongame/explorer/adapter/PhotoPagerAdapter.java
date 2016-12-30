@@ -20,7 +20,7 @@ import java.util.ArrayList;
  * Created by namjungsoo on 2016-12-25.
  */
 
-public class PhotoPagerAdapter extends ExplorerPagerAdapter {
+public class PhotoPagerAdapter extends ViewerPagerAdapter {
     private static final String TAG = "PhotoPagerAdapter";
     private ArrayList<AsyncTask> taskList = new ArrayList<>();
 

@@ -68,9 +68,21 @@ public class ExplorerFragment extends Fragment {
     @Nullable
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
                              Bundle savedInstanceState) {
-        //setContentView(R.layout.fragment_explorer);
+        Log.d(TAG, "onCreateView");
         rootView = inflater.inflate(R.layout.fragment_explorer, container, false);
-//        handler = new Handler();
+//        rootView = inflater.inflate(R.layout.fragment_explorer, null);
+
+//        rootView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+//            @Override
+//            public void onGlobalLayout() {
+//                rootView.post(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        Log.d(TAG, "onGlobalLayout "+rootView.getWidth() + " " + rootView.getHeight());
+//                    }
+//                });
+//            }
+//        });
 
         initUI();
         initViewType();
@@ -81,7 +93,7 @@ public class ExplorerFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-//        Log.d(TAG, "onPause");
+//        Log.d(TAG, "onResume "+rootView.getWidth() + " " + rootView.getHeight());
 
         // 밖에 나갔다 들어오면 리프레시함
         updateFileList(ExplorerSearcher.getLastPath());
@@ -378,6 +390,9 @@ public class ExplorerFragment extends Fragment {
 //    }
 
     public void updateFileList(String path) {
+        if(adapter == null)
+            return;
+//        Log.d(TAG, "updateFileList start "+rootView.getWidth() + " " + rootView.getHeight());
         adapter.stopAllTasks();
 
         if (BitmapCacheManager.getThumbnailCount() > MAX_THUMBNAILS) {

@@ -5,7 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import com.duongame.explorer.adapter.ExplorerFileItem;
-import com.duongame.explorer.adapter.ExplorerPagerAdapter;
+import com.duongame.explorer.adapter.ViewerPagerAdapter;
 import com.duongame.explorer.adapter.PhotoPagerAdapter;
 import com.duongame.explorer.bitmap.ZipLoader;
 import com.duongame.explorer.helper.AlertManager;
@@ -73,7 +73,7 @@ public class ZipActivity extends PagerActivity {
     }
 
     @Override
-    protected ExplorerPagerAdapter createPagerAdapter() {
+    protected ViewerPagerAdapter createPagerAdapter() {
         return new PhotoPagerAdapter(this);
     }
 

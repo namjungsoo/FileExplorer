@@ -10,7 +10,7 @@ import android.view.ViewConfiguration;
 import android.widget.SeekBar;
 
 import com.duongame.explorer.R;
-import com.duongame.explorer.adapter.ExplorerPagerAdapter;
+import com.duongame.explorer.adapter.ViewerPagerAdapter;
 import com.duongame.explorer.bitmap.BitmapCacheManager;
 
 /**
@@ -28,7 +28,7 @@ public class PagerActivity extends ViewerActivity {
     protected String path;
     protected String name;
     protected ViewPager pager;
-    protected ExplorerPagerAdapter pagerAdapter;
+    protected ViewerPagerAdapter pagerAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,7 +71,7 @@ public class PagerActivity extends ViewerActivity {
         });
     }
 
-    protected ExplorerPagerAdapter createPagerAdapter() {
+    protected ViewerPagerAdapter createPagerAdapter() {
         return null;
     }
 

@@ -5,4 +5,7 @@
     <string name="grid">Grid</string>
     <string name="list">List</string>
     <string name="sort">Sort</string>
+    <string name="explorer">Directory</string>
+    <string name="history">History</string>
+    <string name="search">Search</string>
 </resources>

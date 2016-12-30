@@ -8,7 +8,7 @@ import android.os.ParcelFileDescriptor;
 import android.util.Log;
 
 import com.duongame.explorer.adapter.ExplorerFileItem;
-import com.duongame.explorer.adapter.ExplorerPagerAdapter;
+import com.duongame.explorer.adapter.ViewerPagerAdapter;
 import com.duongame.explorer.adapter.PdfPagerAdapter;
 import com.duongame.explorer.helper.FileHelper;
 
@@ -36,7 +36,7 @@ public class PdfActivity extends PagerActivity {
     }
 
     @Override
-    protected ExplorerPagerAdapter createPagerAdapter() {
+    protected ViewerPagerAdapter createPagerAdapter() {
         return new PdfPagerAdapter(this);
     }
 
