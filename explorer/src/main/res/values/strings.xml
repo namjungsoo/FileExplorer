@@ -8,4 +8,7 @@
     <string name="explorer">Directory</string>
     <string name="history">History</string>
     <string name="search">Search</string>
+    <string name="left">Left</string>
+    <string name="right">Right</string>
+    <string name="both">Both</string>
 </resources>

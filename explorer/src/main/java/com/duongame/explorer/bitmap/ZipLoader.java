@@ -71,7 +71,7 @@ public class ZipLoader {
                 // 이미지 로딩후 확인해보고 좌우를 나눠야 되면 나누어 주자
                 zipFile.extractFile(imageList.get(0).name, extractPath);
 
-                BitmapFactory.Options options = BitmapLoader.decodeBounds(imageList.get(0).path);
+                final BitmapFactory.Options options = BitmapLoader.decodeBounds(imageList.get(0).path);
 
                 // 일본식(RIGHT)를 기준으로 잡자
                 if (options.outWidth > options.outHeight) {
@@ -87,7 +87,7 @@ public class ZipLoader {
                 task = new ZipExtractTask(zipFile, imageList, listener);
                 task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, extractPath);
 
-                ArrayList<ExplorerFileItem> firstList = (ArrayList<ExplorerFileItem>) imageList.clone();
+                final ArrayList<ExplorerFileItem> firstList = (ArrayList<ExplorerFileItem>) imageList.clone();
                 ExplorerFileItem item = firstList.get(0);
                 firstList.clear();
 

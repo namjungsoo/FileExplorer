@@ -35,6 +35,7 @@ public class ViewerActivity extends AppCompatActivity {
     protected TextView textName;
     //    protected TextView textPath;
     protected LinearLayout bottomPanel;
+    protected LinearLayout topPanel;
     protected TextView textPage;
     protected SeekBar seekPage;
 
@@ -88,7 +89,10 @@ public class ViewerActivity extends AppCompatActivity {
     protected void initToolBox() {
 //        textPath = (TextView)findViewById(R.id.text_path);
         textName = (TextView)findViewById(R.id.text_name);
-        textName.setY(getStatusBarHeight());
+//        textName.setY(getStatusBarHeight());
+
+        topPanel = (LinearLayout) findViewById(R.id.top_panel);
+        topPanel.setY(getStatusBarHeight());
 
         bottomPanel = (LinearLayout) findViewById(R.id.bottom_panel);
         textPage = (TextView) findViewById(R.id.text_page);
@@ -124,11 +128,11 @@ public class ViewerActivity extends AppCompatActivity {
         //TODO: 알파 애니메이션은 나중에 하자
         if (!fullscreen) {
             bottomPanel.setVisibility(View.VISIBLE);
-            textName.setVisibility(View.VISIBLE);
+            topPanel.setVisibility(View.VISIBLE);
 //            textPath.setVisibility(View.VISIBLE);
         } else {
             bottomPanel.setVisibility(View.INVISIBLE);
-            textName.setVisibility(View.INVISIBLE);
+            topPanel.setVisibility(View.INVISIBLE);
 //            textPath.setVisibility(View.INVISIBLE);
         }
     }

@@ -3,10 +3,16 @@ package com.duongame.explorer.activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
+import com.duongame.explorer.R;
 import com.duongame.explorer.adapter.ExplorerFileItem;
-import com.duongame.explorer.adapter.ViewerPagerAdapter;
 import com.duongame.explorer.adapter.PhotoPagerAdapter;
+import com.duongame.explorer.adapter.ViewerPagerAdapter;
 import com.duongame.explorer.bitmap.ZipLoader;
 import com.duongame.explorer.helper.AlertManager;
 
@@ -23,6 +29,7 @@ public class ZipActivity extends PagerActivity {
 
     private boolean zipExtractCompleted = false;
     private final ZipLoader zipLoader = new ZipLoader();
+    private ExplorerFileItem.Side side = ExplorerFileItem.Side.LEFT;
 
     private ZipLoader.ZipLoaderListener listener = new ZipLoader.ZipLoaderListener() {
         @Override
@@ -59,6 +66,8 @@ public class ZipActivity extends PagerActivity {
         } catch (ZipException e) {
             e.printStackTrace();
         }
+
+        updateTopSidePanelColor();
     }
 
     @Override
@@ -110,6 +119,116 @@ public class ZipActivity extends PagerActivity {
 
             seekPage.setMax(imageList.size());
             seekPage.setProgress(1);
+        }
+    }
+
+    private void updateTopSidePanelColor() {
+        ImageView iv;
+        TextView tv;
+        switch(side) {
+            case LEFT:
+                iv = (ImageView)findViewById(R.id.img_left);
+                tv = (TextView)findViewById(R.id.text_left);
+                iv.setColorFilter(ContextCompat.getColor(this, android.R.color.holo_orange_light));
+                tv.setTextColor(ContextCompat.getColor(this, android.R.color.holo_orange_light));
+
+                // 나머지 두개를 꺼주어야 한다.
+                iv = (ImageView)findViewById(R.id.img_right);
+                tv = (TextView)findViewById(R.id.text_right);
+                iv.setColorFilter(ContextCompat.getColor(this, android.R.color.white));
+                tv.setTextColor(ContextCompat.getColor(this, android.R.color.white));
+
+                iv = (ImageView)findViewById(R.id.img_both);
+                tv = (TextView)findViewById(R.id.text_both);
+                iv.setColorFilter(ContextCompat.getColor(this, android.R.color.white));
+                tv.setTextColor(ContextCompat.getColor(this, android.R.color.white));
+                break;
+            case RIGHT:
+                iv = (ImageView)findViewById(R.id.img_right);
+                tv = (TextView)findViewById(R.id.text_right);
+                iv.setColorFilter(ContextCompat.getColor(this, android.R.color.holo_orange_light));
+                tv.setTextColor(ContextCompat.getColor(this, android.R.color.holo_orange_light));
+
+                // 나머지 두개를 꺼주어야 한다.
+                iv = (ImageView)findViewById(R.id.img_left);
+                tv = (TextView)findViewById(R.id.text_left);
+                iv.setColorFilter(ContextCompat.getColor(this, android.R.color.white));
+                tv.setTextColor(ContextCompat.getColor(this, android.R.color.white));
+
+                iv = (ImageView)findViewById(R.id.img_both);
+                tv = (TextView)findViewById(R.id.text_both);
+                iv.setColorFilter(ContextCompat.getColor(this, android.R.color.white));
+                tv.setTextColor(ContextCompat.getColor(this, android.R.color.white));
+                break;
+            case SIDE_ALL:
+                iv = (ImageView)findViewById(R.id.img_both);
+                tv = (TextView)findViewById(R.id.text_both);
+                iv.setColorFilter(ContextCompat.getColor(this, android.R.color.holo_orange_light));
+                tv.setTextColor(ContextCompat.getColor(this, android.R.color.holo_orange_light));
+
+                // 나머지 두개를 꺼주어야 한다.
+                iv = (ImageView)findViewById(R.id.img_right);
+                tv = (TextView)findViewById(R.id.text_right);
+                iv.setColorFilter(ContextCompat.getColor(this, android.R.color.white));
+                tv.setTextColor(ContextCompat.getColor(this, android.R.color.white));
+
+                iv = (ImageView)findViewById(R.id.img_left);
+                tv = (TextView)findViewById(R.id.text_left);
+                iv.setColorFilter(ContextCompat.getColor(this, android.R.color.white));
+                tv.setTextColor(ContextCompat.getColor(this, android.R.color.white));
+                break;
+        }
+    }
+
+    private void updatePageSide() {
+        // Task가 실행중이면 pause
+        // 그리고 리스트에서 좌우를 변경함
+        // 이후 task에서는 변경된 것으로 작업함
+    }
+
+    @Override
+    protected void setFullscreen(boolean fullscreen) {
+        super.setFullscreen(fullscreen);
+
+        if(!fullscreen) {
+            // top_side_panel을 보이게 하자
+            final LinearLayout topSidePanel = (LinearLayout)findViewById(R.id.top_side_panel);
+            topSidePanel.setVisibility(View.VISIBLE);
+
+            final LinearLayout layoutLeft = (LinearLayout)findViewById(R.id.layout_left);
+            layoutLeft.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(side == ExplorerFileItem.Side.LEFT)
+                        return;
+                    side = ExplorerFileItem.Side.LEFT;
+                    updateTopSidePanelColor();
+                    updatePageSide();
+                }
+            });
+            final LinearLayout layoutRight = (LinearLayout)findViewById(R.id.layout_right);
+            layoutRight.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(side == ExplorerFileItem.Side.RIGHT)
+                        return;
+                    side = ExplorerFileItem.Side.RIGHT;
+                    updateTopSidePanelColor();
+                    updatePageSide();
+                }
+            });
+
+            final LinearLayout layoutBoth = (LinearLayout)findViewById(R.id.layout_both);
+            layoutBoth.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(side == ExplorerFileItem.Side.SIDE_ALL)
+                        return;
+                    side = ExplorerFileItem.Side.SIDE_ALL;
+                    updateTopSidePanelColor();
+                    updatePageSide();
+                }
+            });
         }
     }
 }

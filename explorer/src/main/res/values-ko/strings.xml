@@ -8,4 +8,7 @@
     <string name="explorer">디렉토리</string>
     <string name="history">최근파일</string>
     <string name="search">검색</string>
+    <string name="left">왼쪽</string>
+    <string name="right">오른쪽</string>
+    <string name="both">양면</string>
 </resources>
