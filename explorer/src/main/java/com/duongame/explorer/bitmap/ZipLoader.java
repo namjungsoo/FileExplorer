@@ -42,6 +42,11 @@ public class ZipLoader {
         }
     }
 
+    public void setSide(ExplorerFileItem.Side side) {
+        if(task != null && !task.isCancelled()) {
+            task.setSide(side);
+        }
+    }
     public void pause() {
         if(task != null && !task.isCancelled()) {
             Log.d(TAG,"pause");

@@ -209,7 +209,7 @@ public class BitmapLoader {
 
         Bitmap page = BitmapCacheManager.getPage(key);
         if (page != null) {
-//            Log.d(TAG, "splitBitmapSide getPage=" + item.name);
+            Log.d(TAG, "splitBitmapSide getPage=" + item.name);
             return page;
         }
 

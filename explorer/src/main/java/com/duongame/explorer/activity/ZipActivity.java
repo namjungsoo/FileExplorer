@@ -205,11 +205,12 @@ public class ZipActivity extends PagerActivity {
         // 데이터를 업데이트 하자.
         // 좌우를 변경한다.
         final ArrayList<ExplorerFileItem> imageList = pagerAdapter.getImageList();
+        Log.e(TAG, "updatePageSide imageList size="+imageList.size());
         final ArrayList<ExplorerFileItem> newImageList = new ArrayList<>();
 
         for (int i = 0; i < imageList.size(); i++) {
             final ExplorerFileItem item = imageList.get(i);
-            Log.v(TAG, "updatePageSide i=" + i);
+            Log.e(TAG, "updatePageSide i=" + i);
 
             // 잘려진 데이터는 둘중 하나를 삭제한다.
             if (side == SIDE_ALL) {
@@ -246,6 +247,10 @@ public class ZipActivity extends PagerActivity {
                             newImageList.add(right);
                             newImageList.add(left);
                         }
+                    } else {
+                        // 잘려야 될 애들이 아니면 그냥 넣어준다.
+                        final ExplorerFileItem newItem = (ExplorerFileItem)item.clone();
+                        newImageList.add(newItem);
                     }
                 } else {
                     if (i == 0)
@@ -280,7 +285,6 @@ public class ZipActivity extends PagerActivity {
 
         // 전부 초기화 한다.
         // 초기화 하기전에 task를 전부 stop한다.
-        pagerAdapter.setImageList(null);
         pagerAdapter.stopAllTasks();
         pager.removeAllViews();
         BitmapCacheManager.recyclePage();
@@ -288,6 +292,9 @@ public class ZipActivity extends PagerActivity {
 
         // setAdapter를 다시 해줘야 모든 item이 다시 instantiate 된다.
         pager.setAdapter(pagerAdapter);
+        Log.e(TAG, "updatePageSide newImageList size="+newImageList.size());
+        Log.e(TAG, "updatePageSide newImageList 0="+newImageList.get(0));
+        Log.e(TAG, "updatePageSide newImageList 1="+newImageList.get(1));
         pagerAdapter.setImageList(newImageList);
         pagerAdapter.notifyDataSetChanged();
         Log.d(TAG, "updatePageSide notifyDataSetChanged");
@@ -307,6 +314,7 @@ public class ZipActivity extends PagerActivity {
         Log.d(TAG, "updatePageSide setCurrentItem END");
 
         if (!zipExtractCompleted) {
+            zipLoader.setSide(side);
             zipLoader.resume();
         }
     }

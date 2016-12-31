@@ -24,7 +24,7 @@ public class ZipExtractTask extends AsyncTask<String, Integer, Void> {
     private ArrayList<ExplorerFileItem> zipImageList;
     private ZipFile zipFile;
     private ZipLoader.ZipLoaderListener listener;
-    private ExplorerFileItem.Side firstSide = LEFT;
+    private ExplorerFileItem.Side side = LEFT;
 
     private final Object mPauseWorkLock = new Object();
     protected boolean mPauseWork = false;
@@ -45,9 +45,9 @@ public class ZipExtractTask extends AsyncTask<String, Integer, Void> {
         }
     }
 
-    public void setFirstSide(ExplorerFileItem.Side side) {
-//        synchronized (firstSide) {
-            this.firstSide = side;
+    public void setSide(ExplorerFileItem.Side side) {
+//        synchronized (side) {
+            this.side = side;
 //        }
     }
 
@@ -75,31 +75,31 @@ public class ZipExtractTask extends AsyncTask<String, Integer, Void> {
 
                 zipFile.extractFile(item.name, path);
 
-                BitmapFactory.Options options = BitmapLoader.decodeBounds(item.path);
+                final BitmapFactory.Options options = BitmapLoader.decodeBounds(item.path);
 
                 // 나중에 페이지 전환을 위해서 넣어둔다.
                 item.width = options.outWidth;
                 item.height = options.outHeight;
 
                 if (options.outWidth > options.outHeight) {// 잘라야 한다. 가로 파일이다.
-//                    synchronized (firstSide) {
-                        if(firstSide == LEFT) {
+//                    synchronized (side) {
+                        if(side == LEFT) {
                             // 한국식은 right를 먼저 넣는다.
-                            ExplorerFileItem left = (ExplorerFileItem) item.clone();
+                            final ExplorerFileItem left = (ExplorerFileItem) item.clone();
                             left.side = LEFT;
                             zipImageList.add(left);
 
-                            ExplorerFileItem right = (ExplorerFileItem) item.clone();
+                            final ExplorerFileItem right = (ExplorerFileItem) item.clone();
                             right.side = RIGHT;
                             zipImageList.add(right);
 
-                        } else if(firstSide == RIGHT) {
+                        } else if(side == RIGHT) {
                             // 일본식은 right를 먼저 넣는다.
-                            ExplorerFileItem right = (ExplorerFileItem) item.clone();
+                            final ExplorerFileItem right = (ExplorerFileItem) item.clone();
                             right.side = RIGHT;
                             zipImageList.add(right);
 
-                            ExplorerFileItem left = (ExplorerFileItem) item.clone();
+                            final ExplorerFileItem left = (ExplorerFileItem) item.clone();
                             left.side = LEFT;
                             zipImageList.add(left);
                         } else {// 전체보기
