@@ -98,7 +98,7 @@ public class PhotoPagerAdapter extends ViewerPagerAdapter {
         if (item.side == ExplorerFileItem.Side.SIDE_ALL) {
             return BitmapCacheManager.getBitmap(item.path) == null ? false : true;
         } else {
-            return BitmapCacheManager.getPage(BitmapCacheManager.changePath(item)) == null ? false : true;
+            return BitmapCacheManager.getPage(BitmapCacheManager.changePathToPage(item)) == null ? false : true;
         }
     }
 

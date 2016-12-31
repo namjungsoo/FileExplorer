@@ -4,6 +4,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -20,6 +21,10 @@ import net.lingala.zip4j.exception.ZipException;
 
 import java.util.ArrayList;
 
+import static com.duongame.explorer.adapter.ExplorerFileItem.Side.LEFT;
+import static com.duongame.explorer.adapter.ExplorerFileItem.Side.RIGHT;
+import static com.duongame.explorer.adapter.ExplorerFileItem.Side.SIDE_ALL;
+
 /**
  * Created by namjungsoo on 2016-11-19.
  */
@@ -29,13 +34,19 @@ public class ZipActivity extends PagerActivity {
 
     private boolean zipExtractCompleted = false;
     private final ZipLoader zipLoader = new ZipLoader();
-    private ExplorerFileItem.Side side = ExplorerFileItem.Side.LEFT;
+    private ExplorerFileItem.Side side = LEFT;
+    private ExplorerFileItem.Side lastSide = LEFT;
+
+    private void changeSide(ExplorerFileItem.Side side) {
+        lastSide = this.side;
+        this.side = side;
+    }
 
     private ZipLoader.ZipLoaderListener listener = new ZipLoader.ZipLoaderListener() {
         @Override
         public void onSuccess(int i, ArrayList<ExplorerFileItem> zipImageList) {
 //            Log.d(TAG, "onSuccess="+i);
-            final ArrayList<ExplorerFileItem> imageList = (ArrayList<ExplorerFileItem> )zipImageList.clone();
+            final ArrayList<ExplorerFileItem> imageList = (ArrayList<ExplorerFileItem>) zipImageList.clone();
 
             pagerAdapter.setImageList(imageList);
             pagerAdapter.notifyDataSetChanged();
@@ -104,7 +115,7 @@ public class ZipActivity extends PagerActivity {
 
             // zip 파일을 로딩한다.
             final ArrayList<ExplorerFileItem> imageList = zipLoader.load(this, path, listener, false);
-            if(imageList.size() <= 0) {
+            if (imageList.size() <= 0) {
                 AlertManager.showAlert(this, "알림", "압축(ZIP) 파일에 이미지가 없습니다.", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -125,55 +136,55 @@ public class ZipActivity extends PagerActivity {
     private void updateTopSidePanelColor() {
         ImageView iv;
         TextView tv;
-        switch(side) {
+        switch (side) {
             case LEFT:
-                iv = (ImageView)findViewById(R.id.img_left);
-                tv = (TextView)findViewById(R.id.text_left);
+                iv = (ImageView) findViewById(R.id.img_left);
+                tv = (TextView) findViewById(R.id.text_left);
                 iv.setColorFilter(ContextCompat.getColor(this, android.R.color.holo_orange_light));
                 tv.setTextColor(ContextCompat.getColor(this, android.R.color.holo_orange_light));
 
                 // 나머지 두개를 꺼주어야 한다.
-                iv = (ImageView)findViewById(R.id.img_right);
-                tv = (TextView)findViewById(R.id.text_right);
+                iv = (ImageView) findViewById(R.id.img_right);
+                tv = (TextView) findViewById(R.id.text_right);
                 iv.setColorFilter(ContextCompat.getColor(this, android.R.color.white));
                 tv.setTextColor(ContextCompat.getColor(this, android.R.color.white));
 
-                iv = (ImageView)findViewById(R.id.img_both);
-                tv = (TextView)findViewById(R.id.text_both);
+                iv = (ImageView) findViewById(R.id.img_both);
+                tv = (TextView) findViewById(R.id.text_both);
                 iv.setColorFilter(ContextCompat.getColor(this, android.R.color.white));
                 tv.setTextColor(ContextCompat.getColor(this, android.R.color.white));
                 break;
             case RIGHT:
-                iv = (ImageView)findViewById(R.id.img_right);
-                tv = (TextView)findViewById(R.id.text_right);
+                iv = (ImageView) findViewById(R.id.img_right);
+                tv = (TextView) findViewById(R.id.text_right);
                 iv.setColorFilter(ContextCompat.getColor(this, android.R.color.holo_orange_light));
                 tv.setTextColor(ContextCompat.getColor(this, android.R.color.holo_orange_light));
 
                 // 나머지 두개를 꺼주어야 한다.
-                iv = (ImageView)findViewById(R.id.img_left);
-                tv = (TextView)findViewById(R.id.text_left);
+                iv = (ImageView) findViewById(R.id.img_left);
+                tv = (TextView) findViewById(R.id.text_left);
                 iv.setColorFilter(ContextCompat.getColor(this, android.R.color.white));
                 tv.setTextColor(ContextCompat.getColor(this, android.R.color.white));
 
-                iv = (ImageView)findViewById(R.id.img_both);
-                tv = (TextView)findViewById(R.id.text_both);
+                iv = (ImageView) findViewById(R.id.img_both);
+                tv = (TextView) findViewById(R.id.text_both);
                 iv.setColorFilter(ContextCompat.getColor(this, android.R.color.white));
                 tv.setTextColor(ContextCompat.getColor(this, android.R.color.white));
                 break;
             case SIDE_ALL:
-                iv = (ImageView)findViewById(R.id.img_both);
-                tv = (TextView)findViewById(R.id.text_both);
+                iv = (ImageView) findViewById(R.id.img_both);
+                tv = (TextView) findViewById(R.id.text_both);
                 iv.setColorFilter(ContextCompat.getColor(this, android.R.color.holo_orange_light));
                 tv.setTextColor(ContextCompat.getColor(this, android.R.color.holo_orange_light));
 
                 // 나머지 두개를 꺼주어야 한다.
-                iv = (ImageView)findViewById(R.id.img_right);
-                tv = (TextView)findViewById(R.id.text_right);
+                iv = (ImageView) findViewById(R.id.img_right);
+                tv = (TextView) findViewById(R.id.text_right);
                 iv.setColorFilter(ContextCompat.getColor(this, android.R.color.white));
                 tv.setTextColor(ContextCompat.getColor(this, android.R.color.white));
 
-                iv = (ImageView)findViewById(R.id.img_left);
-                tv = (TextView)findViewById(R.id.text_left);
+                iv = (ImageView) findViewById(R.id.img_left);
+                tv = (TextView) findViewById(R.id.text_left);
                 iv.setColorFilter(ContextCompat.getColor(this, android.R.color.white));
                 tv.setTextColor(ContextCompat.getColor(this, android.R.color.white));
                 break;
@@ -181,50 +192,159 @@ public class ZipActivity extends PagerActivity {
     }
 
     private void updatePageSide() {
+        Log.d(TAG, "updatePageSide");
+
         // Task가 실행중이면 pause
         // 그리고 리스트에서 좌우를 변경함
         // 이후 task에서는 변경된 것으로 작업함
+        if (!zipExtractCompleted) {
+            zipLoader.pause();
+        }
+
+        // 데이터를 업데이트 하자.
+        // 좌우를 변경한다.
+        final ArrayList<ExplorerFileItem> imageList = pagerAdapter.getImageList();
+        final ArrayList<ExplorerFileItem> newImageList = new ArrayList<>();
+
+        for (int i = 0; i < imageList.size(); i++) {
+            final ExplorerFileItem item = imageList.get(i);
+            Log.d(TAG, "updatePageSide i="+i);
+
+            // 잘려진 데이터는 둘중 하나를 삭제한다.
+            if (side == SIDE_ALL) {
+                if (item.side != SIDE_ALL) {
+                    // 둘중하나는 삭제 해야 함
+                    // 앞에꺼가 있는지 확인하고 삭제하자
+                    if (i == 0)
+                        continue;
+
+                    final ExplorerFileItem item1 = imageList.get(i - 1);
+
+                    // 같은 파일이면...
+                    if (item.path.equals(item1.path)) {
+                        // 2번째것을 삭제하고, 1번째것은 값을 변경하자
+                        item.side = SIDE_ALL;
+                        newImageList.add(item);
+                    }
+                }
+            } else {// 좌우 변경, 강제 BOTH에서 잘라야 할 것이라면...
+                // 같은 파일명을 공유하는 애들끼리 LEFT, RIGHT 순서를 체크한 후에 바꿀 필요가 있을 경우에 바꾸자.
+                // 현재 포지션은 바뀌지 않는다.
+                if (item.side == SIDE_ALL) {
+                    // 원래 잘려야할 애들이라면 잘라주어야 한다.
+                    if (item.width > item.height) {
+                        ExplorerFileItem left = (ExplorerFileItem)item.clone();
+                        ExplorerFileItem right = (ExplorerFileItem)item.clone();
+                        left.side = LEFT;
+                        right.side = RIGHT;
+
+                        if (side == LEFT) {
+                            newImageList.add(left);
+                            newImageList.add(right);
+                        } else if (side == RIGHT) {
+                            newImageList.add(right);
+                            newImageList.add(left);
+                        }
+                    }
+                } else {
+                    if (i == 0)
+                        continue;
+                    final ExplorerFileItem item1 = imageList.get(i - 1);
+
+                    // 같은 파일일 경우 좌우를 바꿈
+                    if (item.path.equals(item1.path)) {
+                        switch (side) {
+                            case LEFT:
+                                if (item.side == LEFT)
+                                    continue;
+                                item.side = LEFT;
+                                item1.side = RIGHT;
+                                newImageList.add(item);
+                                newImageList.add(item1);
+                                break;
+                            case RIGHT:
+                                if (item.side == RIGHT)
+                                    continue;
+                                item.side = RIGHT;
+                                item1.side = LEFT;
+                                newImageList.add(item);
+                                newImageList.add(item1);
+                                break;
+                        }
+                    }
+                }
+            }
+        }
+
+        Log.d(TAG, "updatePageSide imageList END");
+
+        // 단순 좌우 변경인지, split 변경인지 확인한다.
+        String lastPath = null;
+        if(lastSide == SIDE_ALL || side == SIDE_ALL) {
+            // 페이지 연산을 파일명 단위로 한다.
+            final int position = pager.getCurrentItem();
+            lastPath = imageList.get(position).path;
+        }
+
+        pagerAdapter.setImageList(newImageList);
+        pagerAdapter.notifyDataSetChanged();
+        Log.d(TAG, "updatePageSide notifyDataSetChanged");
+
+        if(lastPath != null) {
+            int i;
+            for(i=0; i<newImageList.size(); i++) {
+                if(newImageList.get(i).path.equals(lastPath)) {
+                    break;
+                }
+            }
+            pager.setCurrentItem(i);
+        }
+        Log.d(TAG, "updatePageSide setCurrentItem END");
+
+        if (!zipExtractCompleted) {
+            zipLoader.resume();
+        }
     }
 
     @Override
     protected void setFullscreen(boolean fullscreen) {
         super.setFullscreen(fullscreen);
 
-        if(!fullscreen) {
+        if (!fullscreen) {
             // top_side_panel을 보이게 하자
-            final LinearLayout topSidePanel = (LinearLayout)findViewById(R.id.top_side_panel);
+            final LinearLayout topSidePanel = (LinearLayout) findViewById(R.id.top_side_panel);
             topSidePanel.setVisibility(View.VISIBLE);
 
-            final LinearLayout layoutLeft = (LinearLayout)findViewById(R.id.layout_left);
+            final LinearLayout layoutLeft = (LinearLayout) findViewById(R.id.layout_left);
             layoutLeft.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if(side == ExplorerFileItem.Side.LEFT)
+                    if (side == LEFT)
                         return;
-                    side = ExplorerFileItem.Side.LEFT;
+                    changeSide(LEFT);
                     updateTopSidePanelColor();
                     updatePageSide();
                 }
             });
-            final LinearLayout layoutRight = (LinearLayout)findViewById(R.id.layout_right);
+            final LinearLayout layoutRight = (LinearLayout) findViewById(R.id.layout_right);
             layoutRight.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if(side == ExplorerFileItem.Side.RIGHT)
+                    if (side == RIGHT)
                         return;
-                    side = ExplorerFileItem.Side.RIGHT;
+                    changeSide(RIGHT);
                     updateTopSidePanelColor();
                     updatePageSide();
                 }
             });
 
-            final LinearLayout layoutBoth = (LinearLayout)findViewById(R.id.layout_both);
+            final LinearLayout layoutBoth = (LinearLayout) findViewById(R.id.layout_both);
             layoutBoth.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if(side == ExplorerFileItem.Side.SIDE_ALL)
+                    if (side == SIDE_ALL)
                         return;
-                    side = ExplorerFileItem.Side.SIDE_ALL;
+                    changeSide(SIDE_ALL);
                     updateTopSidePanelColor();
                     updatePageSide();
                 }

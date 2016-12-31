@@ -33,7 +33,7 @@ public class BitmapCacheManager {
     // zip파일 잘린 이미지 관련
     static HashMap<String, Bitmap> pageCache = new HashMap<>();
 
-    public static String changePath(ExplorerFileItem item) {
+    public static String changePathToPage(ExplorerFileItem item) {
         String path;
         if (item.side == ExplorerFileItem.Side.LEFT) {
             path = item.path + ".left";

@@ -35,9 +35,26 @@ public class ZipLoader {
     }
 
     public void cancelTask() {
-        if(task != null) {
-            Log.d(TAG, "cancelTask");
+        Log.d(TAG, "cancelTask");
+        if (task != null) {
+            Log.d(TAG, "cancelTask OK");
             task.cancel(true);
+        }
+    }
+
+    public void pause() {
+        if(task != null && !task.isCancelled()) {
+            Log.d(TAG,"pause");
+            task.setPauseWork(true);
+            Log.d(TAG,"pause OK");
+        }
+    }
+
+    public void resume() {
+        Log.d(TAG,"resume");
+        if(task != null && !task.isCancelled()) {
+            task.setPauseWork(false);
+            Log.d(TAG,"resume OK");
         }
     }
 
@@ -83,7 +100,7 @@ public class ZipLoader {
             // 이미 풀어놓은게 없으면 AsyncTask로 로딩함
             // 첫번째 이미지 파일이 로딩이 끝나면 바로 띄운다
             // 리턴할때는 첫번째 인자만 리턴한다.
-            if(imageList.size() > 0) {
+            if (imageList.size() > 0) {
                 task = new ZipExtractTask(zipFile, imageList, listener);
                 task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, extractPath);
 

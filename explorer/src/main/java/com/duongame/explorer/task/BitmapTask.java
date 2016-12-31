@@ -37,8 +37,8 @@ public class BitmapTask extends AsyncTask<ExplorerFileItem, Void, Bitmap> {
         // split일 경우에는 무조건 없다
         Bitmap bitmap = null;
         if (item.side != ExplorerFileItem.Side.SIDE_ALL) {
-            String path = BitmapCacheManager.changePath(item);
-            bitmap = BitmapCacheManager.getPage(path);
+            final String page = BitmapCacheManager.changePathToPage(item);
+            bitmap = BitmapCacheManager.getPage(page);
 
             if (bitmap != null) {
 //                Log.d(TAG, "loadBitmap found cached page");
@@ -50,6 +50,7 @@ public class BitmapTask extends AsyncTask<ExplorerFileItem, Void, Bitmap> {
         if (bitmap == null) {
 
             // 렌더러를 어떻게 전달하지..
+            // PDF는 동적으로 읽을수 없다.
 //            if(item.type == ExplorerFileItem.FileType.PDF) {
 //                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 //                    final int pageNum = FileHelper.getPdfPageFromFileName(item.path);
@@ -67,7 +68,7 @@ public class BitmapTask extends AsyncTask<ExplorerFileItem, Void, Bitmap> {
 //                }
 //            }
 
-            BitmapFactory.Options options = BitmapLoader.decodeBounds(item.path);
+            final BitmapFactory.Options options = BitmapLoader.decodeBounds(item.path);
 
             // 자르는 경우에는 실제 예상보다 width/2를 하자
             if (item.side != ExplorerFileItem.Side.SIDE_ALL) {

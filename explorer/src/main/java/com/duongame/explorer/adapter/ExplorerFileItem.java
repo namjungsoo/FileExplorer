@@ -37,6 +37,10 @@ public class ExplorerFileItem implements Cloneable {
     public Side side = SIDE_ALL;
     public int index;
 
+    // ZIP 추가 데이터
+    public int width;
+    public int height;
+
     public ExplorerFileItem(String path, String name, String date, long size, FileType type) {
         this.path = path;
         this.name = name;
