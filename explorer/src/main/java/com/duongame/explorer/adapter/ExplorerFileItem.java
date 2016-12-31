@@ -50,7 +50,7 @@ public class ExplorerFileItem implements Cloneable {
     }
 
     public String toString() {
-        return "path=" + path + " name=" + name + " date=" + date + " size=" + size + " type=" + type + " side=" + side + " index=" + index;
+        return "path=" + path + " name=" + name + " date=" + date + " size=" + size + " type=" + type + " side=" + side + " index=" + index + " width=" + width + " height=" + height;
     }
 
     @Override

@@ -14,6 +14,7 @@ import com.duongame.explorer.R;
 import com.duongame.explorer.adapter.ExplorerFileItem;
 import com.duongame.explorer.adapter.PhotoPagerAdapter;
 import com.duongame.explorer.adapter.ViewerPagerAdapter;
+import com.duongame.explorer.bitmap.BitmapCacheManager;
 import com.duongame.explorer.bitmap.ZipLoader;
 import com.duongame.explorer.helper.AlertManager;
 
@@ -208,7 +209,7 @@ public class ZipActivity extends PagerActivity {
 
         for (int i = 0; i < imageList.size(); i++) {
             final ExplorerFileItem item = imageList.get(i);
-            Log.d(TAG, "updatePageSide i="+i);
+            Log.v(TAG, "updatePageSide i=" + i);
 
             // 잘려진 데이터는 둘중 하나를 삭제한다.
             if (side == SIDE_ALL) {
@@ -227,14 +228,14 @@ public class ZipActivity extends PagerActivity {
                         newImageList.add(item);
                     }
                 }
-            } else {// 좌우 변경, 강제 BOTH에서 잘라야 할 것이라면...
+            } else {// 좌우 변경, 강제 BOTH에서 잘라야 할 것이라면... (side = LEFT or RIGHT)
                 // 같은 파일명을 공유하는 애들끼리 LEFT, RIGHT 순서를 체크한 후에 바꿀 필요가 있을 경우에 바꾸자.
                 // 현재 포지션은 바뀌지 않는다.
                 if (item.side == SIDE_ALL) {
                     // 원래 잘려야할 애들이라면 잘라주어야 한다.
                     if (item.width > item.height) {
-                        ExplorerFileItem left = (ExplorerFileItem)item.clone();
-                        ExplorerFileItem right = (ExplorerFileItem)item.clone();
+                        final ExplorerFileItem left = (ExplorerFileItem) item.clone();
+                        final ExplorerFileItem right = (ExplorerFileItem) item.clone();
                         left.side = LEFT;
                         right.side = RIGHT;
 
@@ -249,27 +250,22 @@ public class ZipActivity extends PagerActivity {
                 } else {
                     if (i == 0)
                         continue;
+
                     final ExplorerFileItem item1 = imageList.get(i - 1);
 
                     // 같은 파일일 경우 좌우를 바꿈
                     if (item.path.equals(item1.path)) {
-                        switch (side) {
-                            case LEFT:
-                                if (item.side == LEFT)
-                                    continue;
-                                item.side = LEFT;
-                                item1.side = RIGHT;
-                                newImageList.add(item);
-                                newImageList.add(item1);
-                                break;
-                            case RIGHT:
-                                if (item.side == RIGHT)
-                                    continue;
-                                item.side = RIGHT;
-                                item1.side = LEFT;
-                                newImageList.add(item);
-                                newImageList.add(item1);
-                                break;
+                        final ExplorerFileItem left = (ExplorerFileItem) item.clone();
+                        final ExplorerFileItem right = (ExplorerFileItem) item.clone();
+                        left.side = LEFT;
+                        right.side = RIGHT;
+
+                        if (side == LEFT) {
+                            newImageList.add(left);
+                            newImageList.add(right);
+                        } else if (side == RIGHT) {
+                            newImageList.add(right);
+                            newImageList.add(left);
                         }
                     }
                 }
@@ -279,25 +275,34 @@ public class ZipActivity extends PagerActivity {
         Log.d(TAG, "updatePageSide imageList END");
 
         // 단순 좌우 변경인지, split 변경인지 확인한다.
-        String lastPath = null;
-        if(lastSide == SIDE_ALL || side == SIDE_ALL) {
-            // 페이지 연산을 파일명 단위로 한다.
-            final int position = pager.getCurrentItem();
-            lastPath = imageList.get(position).path;
-        }
+        final int position = pager.getCurrentItem();
+        final String lastPath = imageList.get(position).path;
 
+        // 전부 초기화 한다.
+        // 초기화 하기전에 task를 전부 stop한다.
+        pagerAdapter.setImageList(null);
+        pagerAdapter.stopAllTasks();
+        pager.removeAllViews();
+        BitmapCacheManager.recyclePage();
+        BitmapCacheManager.recycleBitmap();
+
+        // setAdapter를 다시 해줘야 모든 item이 다시 instantiate 된다.
+        pager.setAdapter(pagerAdapter);
         pagerAdapter.setImageList(newImageList);
         pagerAdapter.notifyDataSetChanged();
         Log.d(TAG, "updatePageSide notifyDataSetChanged");
 
-        if(lastPath != null) {
+        if (lastSide == SIDE_ALL || side == SIDE_ALL) {
+            // 페이지 연산을 파일명 단위로 한다.
             int i;
-            for(i=0; i<newImageList.size(); i++) {
-                if(newImageList.get(i).path.equals(lastPath)) {
+            for (i = 0; i < newImageList.size(); i++) {
+                if (newImageList.get(i).path.equals(lastPath)) {
                     break;
                 }
             }
             pager.setCurrentItem(i);
+        } else {
+            pager.setCurrentItem(position);
         }
         Log.d(TAG, "updatePageSide setCurrentItem END");
 

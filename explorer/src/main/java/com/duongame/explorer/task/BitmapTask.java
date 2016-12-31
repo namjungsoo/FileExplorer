@@ -41,7 +41,7 @@ public class BitmapTask extends AsyncTask<ExplorerFileItem, Void, Bitmap> {
             bitmap = BitmapCacheManager.getPage(page);
 
             if (bitmap != null) {
-//                Log.d(TAG, "loadBitmap found cached page");
+                Log.d(this.getClass().getSimpleName(), "loadBitmap found cached page="+item.path);
                 return bitmap;
             }
         }
@@ -98,11 +98,15 @@ public class BitmapTask extends AsyncTask<ExplorerFileItem, Void, Bitmap> {
                     }
                     Log.w("BitmapTask", "decode retry=" + count);
                 } else {
-                    if (item.side == ExplorerFileItem.Side.SIDE_ALL)
+                    if (item.side == ExplorerFileItem.Side.SIDE_ALL) {
+                        Log.d(this.getClass().getSimpleName(), "loadBitmap setBitmap="+item.path);
                         BitmapCacheManager.setBitmap(item.path, bitmap);
-                    else
+                    }
+                    else {
                         // 비트맵을 로딩했으면 이제 자르자
+                        Log.d(this.getClass().getSimpleName(), "loadBitmap splitBitmapSide="+item.path);
                         bitmap = BitmapLoader.splitBitmapSide(bitmap, item);
+                    }
                     break;
                 }
             }

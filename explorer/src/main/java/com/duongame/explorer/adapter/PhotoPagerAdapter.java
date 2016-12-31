@@ -2,6 +2,7 @@ package com.duongame.explorer.adapter;
 
 import android.app.Activity;
 import android.os.AsyncTask;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
@@ -41,13 +42,11 @@ public class PhotoPagerAdapter extends ViewerPagerAdapter {
     }
 
     @Override
-    public Object instantiateItem(final ViewGroup container, int position) {
-//        Log.w(TAG, "instantiateItem position=" + position);
+    public Object instantiateItem(final ViewGroup container, final int position) {
+        Log.w(TAG, "instantiateItem position=" + position);
 
         final ViewGroup rootView = (ViewGroup) context.getLayoutInflater().inflate(R.layout.viewer_page, container, false);
         final ImageView imageView = (ImageView) rootView.findViewById(R.id.image_viewer);
-
-        final ExplorerFileItem item = imageList.get(position);
 
 //        final TextView textPath = (TextView) rootView.findViewById(R.id.text_path);
 //        textPath.setText(item.path);
@@ -65,23 +64,40 @@ public class PhotoPagerAdapter extends ViewerPagerAdapter {
                     final int width = container.getWidth();
                     final int height = container.getHeight();
 //                    Log.d(TAG, "onGlobalLayout width=" + width + " height=" + height);
-
-                    final LoadBitmapTask task = new LoadBitmapTask(imageView, width, height, exifRotation);
-                    task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, item);
 //                    Log.d(TAG, "LoadBitmapTask execute");
-                    taskList.add(task);
+
+                    loadCurrentBitmap(position, imageView, width, height);
+//                    final LoadBitmapTask task = new LoadBitmapTask(imageView, width, height, exifRotation);
+//                    task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, item);
+//                    taskList.add(task);
 
                     container.getViewTreeObserver().removeGlobalOnLayoutListener(this);
                 }
             });
 
         } else {
-            final LoadBitmapTask task = new LoadBitmapTask(imageView, width, height, exifRotation);
-            task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, item);
-            taskList.add(task);
+            loadCurrentBitmap(position, imageView, width, height);
+//            final LoadBitmapTask task = new LoadBitmapTask(imageView, width, height, exifRotation);
+//            task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, item);
+//            taskList.add(task);
         }
 
         return rootView;
+    }
+
+    private void loadCurrentBitmap(int position, ImageView imageView, int width, int height) {
+        final ExplorerFileItem item = imageList.get(position);
+        final LoadBitmapTask task = new LoadBitmapTask(imageView, width, height, exifRotation);
+        task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, item);
+        taskList.add(task);
+    }
+
+    private void preloadAndRemoveNearBitmap(int position, int width, int height) {
+        final ExplorerFileItem[] preloadArray = getPreloadArray(position, width, height);
+        final ExplorerFileItem[] removeArray = getRemoveArray(position);
+        final RemoveAndPreloadTask task = new RemoveAndPreloadTask(width, height, exifRotation);
+        task.setRemoveArray(removeArray);
+        task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, preloadArray);
     }
 
     @Override
@@ -104,7 +120,7 @@ public class PhotoPagerAdapter extends ViewerPagerAdapter {
 
     @Override
     public void setPrimaryItem(final ViewGroup container, final int position, Object object) {
-//        Log.d(TAG, "setPrimaryItem position=" + position);
+        Log.d(TAG, "setPrimaryItem position=" + position);
         final int width = container.getWidth();
         final int height = container.getHeight();
 //        Log.d(TAG, "setPrimaryItem width=" + width + " height=" + height);
@@ -119,11 +135,12 @@ public class PhotoPagerAdapter extends ViewerPagerAdapter {
 //                    Log.d(TAG, "onGlobalLayout width=" + width + " height=" + height);
 
                     //runPreloadTask(position, width, height);
-                    final ExplorerFileItem[] preloadArray = getPreloadArray(position, width, height);
-                    final ExplorerFileItem[] removeArray = getRemoveArray(position);
-                    final RemoveAndPreloadTask task = new RemoveAndPreloadTask(width, height, exifRotation);
-                    task.setRemoveArray(removeArray);
-                    task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, preloadArray);
+                    preloadAndRemoveNearBitmap(position, width, height);
+//                    final ExplorerFileItem[] preloadArray = getPreloadArray(position, width, height);
+//                    final ExplorerFileItem[] removeArray = getRemoveArray(position);
+//                    final RemoveAndPreloadTask task = new RemoveAndPreloadTask(width, height, exifRotation);
+//                    task.setRemoveArray(removeArray);
+//                    task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, preloadArray);
 
                     container.getViewTreeObserver().removeGlobalOnLayoutListener(this);
                 }
@@ -131,11 +148,12 @@ public class PhotoPagerAdapter extends ViewerPagerAdapter {
 
         } else {
             //runPreloadTask(position, width, height);
-            final ExplorerFileItem[] preloadArray = getPreloadArray(position, width, height);
-            final ExplorerFileItem[] removeArray = getRemoveArray(position);
-            final RemoveAndPreloadTask task = new RemoveAndPreloadTask(width, height, exifRotation);
-            task.setRemoveArray(removeArray);
-            task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, preloadArray);
+            preloadAndRemoveNearBitmap(position, width, height);
+//            final ExplorerFileItem[] preloadArray = getPreloadArray(position, width, height);
+//            final ExplorerFileItem[] removeArray = getRemoveArray(position);
+//            final RemoveAndPreloadTask task = new RemoveAndPreloadTask(width, height, exifRotation);
+//            task.setRemoveArray(removeArray);
+//            task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, preloadArray);
         }
 
         // remove bitmap task

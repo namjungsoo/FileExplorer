@@ -1,17 +1,21 @@
 package com.duongame.explorer.task;
 
 import android.graphics.Bitmap;
+import android.util.Log;
 import android.view.Gravity;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 
 import com.duongame.explorer.adapter.ExplorerFileItem;
 
+import static android.R.attr.bitmap;
+
 /**
  * Created by namjungsoo on 2016-12-16.
  */
 
 public class LoadBitmapTask extends BitmapTask {
+
     private final ImageView imageView;
 
     public LoadBitmapTask(ImageView imageView, int width, int height, boolean exif) {
@@ -24,10 +28,11 @@ public class LoadBitmapTask extends BitmapTask {
 //        Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
 
         final ExplorerFileItem item = params[0];
-
         Bitmap bitmap = null;
-        if (!isCancelled())
+        if (!isCancelled()) {
+            Log.d(this.getClass().getSimpleName(), "loadBitmap");
             bitmap = loadBitmap(item);
+        }
         return bitmap;
     }
 
