@@ -31,6 +31,7 @@ import static com.duongame.explorer.bitmap.BitmapCacheManager.getThumbnail;
 public abstract class ExplorerAdapter extends BaseAdapter {
     protected ArrayList<ExplorerFileItem> fileList;
     protected Activity context;
+
     protected HashMap<ImageView, AsyncTask> taskMap = new HashMap<ImageView, AsyncTask>();
 
     public ExplorerAdapter(Activity context, ArrayList<ExplorerFileItem> fileList) {

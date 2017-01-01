@@ -8,8 +8,6 @@ import android.widget.ImageView;
 
 import com.duongame.explorer.adapter.ExplorerFileItem;
 
-import static android.R.attr.bitmap;
-
 /**
  * Created by namjungsoo on 2016-12-16.
  */

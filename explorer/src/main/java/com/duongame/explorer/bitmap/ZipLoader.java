@@ -43,23 +43,24 @@ public class ZipLoader {
     }
 
     public void setSide(ExplorerFileItem.Side side) {
-        if(task != null && !task.isCancelled()) {
+        if (task != null && !task.isCancelled()) {
             task.setSide(side);
         }
     }
+
     public void pause() {
-        if(task != null && !task.isCancelled()) {
-            Log.d(TAG,"pause");
+        if (task != null && !task.isCancelled()) {
+            Log.d(TAG, "pause");
             task.setPauseWork(true);
-            Log.d(TAG,"pause OK");
+            Log.d(TAG, "pause OK");
         }
     }
 
     public void resume() {
-        Log.d(TAG,"resume");
-        if(task != null && !task.isCancelled()) {
+        Log.d(TAG, "resume");
+        if (task != null && !task.isCancelled()) {
             task.setPauseWork(false);
-            Log.d(TAG,"resume OK");
+            Log.d(TAG, "resume OK");
         }
     }
 

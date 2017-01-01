@@ -204,13 +204,14 @@ public class ZipActivity extends PagerActivity {
 
         // 데이터를 업데이트 하자.
         // 좌우를 변경한다.
-        final ArrayList<ExplorerFileItem> imageList = pagerAdapter.getImageList();
+        //final ArrayList<ExplorerFileItem> imageList = pagerAdapter.getImageList();
+        final ArrayList<ExplorerFileItem> imageList = (ArrayList<ExplorerFileItem>)pagerAdapter.getImageList().clone();
         Log.e(TAG, "updatePageSide imageList size="+imageList.size());
         final ArrayList<ExplorerFileItem> newImageList = new ArrayList<>();
 
         for (int i = 0; i < imageList.size(); i++) {
             final ExplorerFileItem item = imageList.get(i);
-            Log.e(TAG, "updatePageSide i=" + i);
+//            Log.e(TAG, "updatePageSide i=" + i);
 
             // 잘려진 데이터는 둘중 하나를 삭제한다.
             if (side == SIDE_ALL) {
@@ -227,7 +228,13 @@ public class ZipActivity extends PagerActivity {
                         // 2번째것을 삭제하고, 1번째것은 값을 변경하자
                         item.side = SIDE_ALL;
                         newImageList.add(item);
+                        Log.e(TAG, "updatePageSide equal to SIDE_ALL i=" + i);
+                    } else {
+                        Log.e(TAG, "item="+item.path + " item1="+item1.path);
                     }
+                } else {// 이미 SIDE_ALL이면 그냥 더하자
+                    final ExplorerFileItem newItem = (ExplorerFileItem)item.clone();
+                    newImageList.add(newItem);
                 }
             } else {// 좌우 변경, 강제 BOTH에서 잘라야 할 것이라면... (side = LEFT or RIGHT)
                 // 같은 파일명을 공유하는 애들끼리 LEFT, RIGHT 순서를 체크한 후에 바꿀 필요가 있을 경우에 바꾸자.
@@ -291,12 +298,13 @@ public class ZipActivity extends PagerActivity {
         BitmapCacheManager.recycleBitmap();
 
         // setAdapter를 다시 해줘야 모든 item이 다시 instantiate 된다.
+        pagerAdapter.setImageList(newImageList);
+        pagerAdapter.notifyDataSetChanged();
         pager.setAdapter(pagerAdapter);
+
         Log.e(TAG, "updatePageSide newImageList size="+newImageList.size());
         Log.e(TAG, "updatePageSide newImageList 0="+newImageList.get(0));
         Log.e(TAG, "updatePageSide newImageList 1="+newImageList.get(1));
-        pagerAdapter.setImageList(newImageList);
-        pagerAdapter.notifyDataSetChanged();
         Log.d(TAG, "updatePageSide notifyDataSetChanged");
 
         if (lastSide == SIDE_ALL || side == SIDE_ALL) {

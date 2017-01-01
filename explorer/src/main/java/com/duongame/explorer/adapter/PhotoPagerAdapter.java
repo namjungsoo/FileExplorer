@@ -120,7 +120,7 @@ public class PhotoPagerAdapter extends ViewerPagerAdapter {
 
     @Override
     public void setPrimaryItem(final ViewGroup container, final int position, Object object) {
-        Log.d(TAG, "setPrimaryItem position=" + position);
+//        Log.d(TAG, "setPrimaryItem position=" + position);
         final int width = container.getWidth();
         final int height = container.getHeight();
 //        Log.d(TAG, "setPrimaryItem width=" + width + " height=" + height);
