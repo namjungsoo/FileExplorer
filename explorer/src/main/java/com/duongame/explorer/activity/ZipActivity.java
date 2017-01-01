@@ -226,8 +226,9 @@ public class ZipActivity extends PagerActivity {
                     // 같은 파일이면...
                     if (item.path.equals(item1.path)) {
                         // 2번째것을 삭제하고, 1번째것은 값을 변경하자
-                        item.side = SIDE_ALL;
-                        newImageList.add(item);
+                        final ExplorerItem newItem = (ExplorerItem)item.clone();
+                        newItem.side = SIDE_ALL;
+                        newImageList.add(newItem);
                         Log.e(TAG, "updatePageSide equal to SIDE_ALL i=" + i);
                     } else {
                         Log.e(TAG, "item="+item.path + " item1="+item1.path);
@@ -265,7 +266,7 @@ public class ZipActivity extends PagerActivity {
 
                     final ExplorerItem item1 = imageList.get(i - 1);
 
-                    // 같은 파일일 경우 좌우를 바꿈
+                    // 같은 파일일 경우 좌우 순서를 바꿈
                     if (item.path.equals(item1.path)) {
                         final ExplorerItem left = (ExplorerItem) item.clone();
                         final ExplorerItem right = (ExplorerItem) item.clone();
