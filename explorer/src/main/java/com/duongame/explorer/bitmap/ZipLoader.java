@@ -42,6 +42,12 @@ public class ZipLoader {
         }
     }
 
+    public void setZipImageList(ArrayList<ExplorerItem> zipImageList) {
+        if (task != null && !task.isCancelled()) {
+            task.setZipImageList(zipImageList);
+        }
+    }
+
     public void setSide(ExplorerItem.Side side) {
         if (task != null && !task.isCancelled()) {
             task.setSide(side);

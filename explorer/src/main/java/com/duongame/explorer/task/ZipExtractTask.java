@@ -45,9 +45,13 @@ public class ZipExtractTask extends AsyncTask<String, Integer, Void> {
         }
     }
 
+    public void setZipImageList(ArrayList<ExplorerItem> zipImageList) {
+        this.zipImageList = zipImageList;
+    }
+
     public void setSide(ExplorerItem.Side side) {
 //        synchronized (side) {
-            this.side = side;
+        this.side = side;
 //        }
     }
 
@@ -62,14 +66,15 @@ public class ZipExtractTask extends AsyncTask<String, Integer, Void> {
             for (i = 0; i < imageList.size(); i++) {
                 final ExplorerItem item = imageList.get(i);
 
-                if(isCancelled())
+                if (isCancelled())
                     break;
 
                 synchronized (mPauseWorkLock) {
                     while (mPauseWork && !isCancelled()) {
                         try {
                             mPauseWorkLock.wait();
-                        } catch (InterruptedException e) {}
+                        } catch (InterruptedException e) {
+                        }
                     }
                 }
 
@@ -81,32 +86,41 @@ public class ZipExtractTask extends AsyncTask<String, Integer, Void> {
                 item.width = options.outWidth;
                 item.height = options.outHeight;
 
+                final int size = zipImageList.size();
                 if (options.outWidth > options.outHeight) {// 잘라야 한다. 가로 파일이다.
 //                    synchronized (side) {
-                        if(side == LEFT) {
-                            // 한국식은 right를 먼저 넣는다.
-                            final ExplorerItem left = (ExplorerItem) item.clone();
-                            left.side = LEFT;
-                            zipImageList.add(left);
+                    if (side == LEFT) {
+                        // 한국식은 right를 먼저 넣는다.
+                        final ExplorerItem left = (ExplorerItem) item.clone();
+                        left.side = LEFT;
+                        left.index = size;
+                        zipImageList.add(left);
 
-                            final ExplorerItem right = (ExplorerItem) item.clone();
-                            right.side = RIGHT;
-                            zipImageList.add(right);
+                        final ExplorerItem right = (ExplorerItem) item.clone();
+                        right.side = RIGHT;
+                        right.index = size + 1;
+                        zipImageList.add(right);
 
-                        } else if(side == RIGHT) {
-                            // 일본식은 right를 먼저 넣는다.
-                            final ExplorerItem right = (ExplorerItem) item.clone();
-                            right.side = RIGHT;
-                            zipImageList.add(right);
+                    } else if (side == RIGHT) {
+                        // 일본식은 right를 먼저 넣는다.
+                        final ExplorerItem right = (ExplorerItem) item.clone();
+                        right.side = RIGHT;
+                        right.index = size;
+                        zipImageList.add(right);
 
-                            final ExplorerItem left = (ExplorerItem) item.clone();
-                            left.side = LEFT;
-                            zipImageList.add(left);
-                        } else {// 전체보기
-                            zipImageList.add(item);
-                        }
+                        final ExplorerItem left = (ExplorerItem) item.clone();
+                        left.side = LEFT;
+                        left.index = size + 1;
+                        zipImageList.add(left);
+                    } else {// 전체보기
+                        final ExplorerItem newItem = (ExplorerItem) item.clone();
+                        newItem.index = size;
+                        zipImageList.add(newItem);
+                    }
 //                    }
                 } else {
+                    final ExplorerItem newItem = (ExplorerItem) item.clone();
+                    newItem.index = size;
                     zipImageList.add(item);
                 }
 

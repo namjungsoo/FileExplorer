@@ -202,6 +202,13 @@ public class ZipActivity extends PagerActivity {
             zipLoader.pause();
         }
 
+        // 전부 초기화 한다.
+        // 초기화 하기전에 task를 전부 stop한다.
+        pagerAdapter.stopAllTasks();
+        pager.removeAllViews();
+        BitmapCacheManager.recyclePage();
+        BitmapCacheManager.recycleBitmap();
+
         // 데이터를 업데이트 하자.
         // 좌우를 변경한다.
         //final ArrayList<ExplorerItem> imageList = pagerAdapter.getImageList();
@@ -291,13 +298,6 @@ public class ZipActivity extends PagerActivity {
         final int position = pager.getCurrentItem();
         final String lastPath = imageList.get(position).path;
 
-        // 전부 초기화 한다.
-        // 초기화 하기전에 task를 전부 stop한다.
-        pagerAdapter.stopAllTasks();
-        pager.removeAllViews();
-        BitmapCacheManager.recyclePage();
-        BitmapCacheManager.recycleBitmap();
-
         // setAdapter를 다시 해줘야 모든 item이 다시 instantiate 된다.
         pagerAdapter.setImageList(newImageList);
         pagerAdapter.notifyDataSetChanged();
@@ -323,6 +323,7 @@ public class ZipActivity extends PagerActivity {
         Log.d(TAG, "updatePageSide setCurrentItem END");
 
         if (!zipExtractCompleted) {
+            zipLoader.setZipImageList((ArrayList<ExplorerItem>)newImageList.clone());
             zipLoader.setSide(side);
             zipLoader.resume();
         }

@@ -9,6 +9,8 @@ import com.duongame.explorer.adapter.ExplorerItem;
 import com.duongame.explorer.bitmap.BitmapCacheManager;
 import com.duongame.explorer.bitmap.BitmapLoader;
 
+import static android.content.ContentValues.TAG;
+
 /**
  * Created by namjungsoo on 2016-12-17.
  */
@@ -48,7 +50,6 @@ public class BitmapTask extends AsyncTask<ExplorerItem, Void, Bitmap> {
 
         bitmap = BitmapCacheManager.getBitmap(item.path);
         if (bitmap == null) {
-
             // 렌더러를 어떻게 전달하지..
             // PDF는 동적으로 읽을수 없다.
 //            if(item.type == ExplorerItem.FileType.PDF) {
@@ -110,6 +111,8 @@ public class BitmapTask extends AsyncTask<ExplorerItem, Void, Bitmap> {
                     break;
                 }
             }
+        } else {
+            Log.d(TAG, "loadBitmap found cached bitmap=" + item.path);
         }
         return bitmap;
     }
