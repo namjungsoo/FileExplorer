@@ -5,7 +5,6 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.duongame.explorer.R;
 
@@ -20,7 +19,7 @@ public class SearchFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         rootView = (ViewGroup) inflater.inflate(R.layout.fragment_search, container, false);
-        ((TextView) rootView.findViewById(R.id.number)).setText(2 + "");
+//        ((TextView) rootView.findViewById(R.id.number)).setText(2 + "");
         return rootView;
     }
 

@@ -11,4 +11,5 @@
     <string name="left">왼쪽</string>
     <string name="right">오른쪽</string>
     <string name="both">양면</string>
+    <string name="filename">파일명</string>
 </resources>

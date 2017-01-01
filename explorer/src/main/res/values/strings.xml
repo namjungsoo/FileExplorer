@@ -11,4 +11,5 @@
     <string name="left">Left</string>
     <string name="right">Right</string>
     <string name="both">Both</string>
+    <string name="filename">FileName</string>
 </resources>
