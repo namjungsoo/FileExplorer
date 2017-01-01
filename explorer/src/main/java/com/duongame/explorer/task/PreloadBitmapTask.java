@@ -2,7 +2,7 @@ package com.duongame.explorer.task;
 
 import android.graphics.Bitmap;
 
-import com.duongame.explorer.adapter.ExplorerFileItem;
+import com.duongame.explorer.adapter.ExplorerItem;
 
 /**
  * Created by namjungsoo on 2016-12-16.
@@ -14,10 +14,10 @@ public class PreloadBitmapTask extends BitmapTask {
     }
 
     @Override
-    protected Bitmap doInBackground(ExplorerFileItem... params) {
+    protected Bitmap doInBackground(ExplorerItem... params) {
         // preload
         for (int i = 0; i < params.length; i++) {
-            ExplorerFileItem item = params[i];
+            ExplorerItem item = params[i];
 
             if(!isCancelled())
                 loadBitmap(item);

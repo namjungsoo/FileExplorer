@@ -5,7 +5,7 @@ import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.duongame.explorer.adapter.ExplorerFileItem;
+import com.duongame.explorer.adapter.ExplorerItem;
 import com.duongame.explorer.bitmap.BitmapCacheManager;
 import com.duongame.explorer.bitmap.BitmapLoader;
 
@@ -13,7 +13,7 @@ import com.duongame.explorer.bitmap.BitmapLoader;
  * Created by namjungsoo on 2016-12-17.
  */
 
-public class BitmapTask extends AsyncTask<ExplorerFileItem, Void, Bitmap> {
+public class BitmapTask extends AsyncTask<ExplorerItem, Void, Bitmap> {
     private static final int RETRY_INTERVAL_MS = 500;
     private static final int RETRY_COUNT = 5;
 
@@ -28,15 +28,15 @@ public class BitmapTask extends AsyncTask<ExplorerFileItem, Void, Bitmap> {
     }
 
     @Override
-    protected Bitmap doInBackground(ExplorerFileItem... params) {
+    protected Bitmap doInBackground(ExplorerItem... params) {
         return null;
     }
 
-    protected Bitmap loadBitmap(ExplorerFileItem item) {
+    protected Bitmap loadBitmap(ExplorerItem item) {
         // 캐시에 있는지 확인해 보고
         // split일 경우에는 무조건 없다
         Bitmap bitmap = null;
-        if (item.side != ExplorerFileItem.Side.SIDE_ALL) {
+        if (item.side != ExplorerItem.Side.SIDE_ALL) {
             final String page = BitmapCacheManager.changePathToPage(item);
             bitmap = BitmapCacheManager.getPage(page);
 
@@ -51,7 +51,7 @@ public class BitmapTask extends AsyncTask<ExplorerFileItem, Void, Bitmap> {
 
             // 렌더러를 어떻게 전달하지..
             // PDF는 동적으로 읽을수 없다.
-//            if(item.type == ExplorerFileItem.FileType.PDF) {
+//            if(item.type == ExplorerItem.FileType.PDF) {
 //                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 //                    final int pageNum = FileHelper.getPdfPageFromFileName(item.path);
 //                    final PdfRenderer.Page page = PdfActivity.renderer.openPage(pageNum);
@@ -71,7 +71,7 @@ public class BitmapTask extends AsyncTask<ExplorerFileItem, Void, Bitmap> {
             final BitmapFactory.Options options = BitmapLoader.decodeBounds(item.path);
 
             // 자르는 경우에는 실제 예상보다 width/2를 하자
-            if (item.side != ExplorerFileItem.Side.SIDE_ALL) {
+            if (item.side != ExplorerItem.Side.SIDE_ALL) {
                 options.outWidth >>= 1;
             }
             float bitmapRatio = (float) options.outHeight / (float) options.outWidth;
@@ -98,7 +98,7 @@ public class BitmapTask extends AsyncTask<ExplorerFileItem, Void, Bitmap> {
                     }
                     Log.w("BitmapTask", "decode retry=" + count);
                 } else {
-                    if (item.side == ExplorerFileItem.Side.SIDE_ALL) {
+                    if (item.side == ExplorerItem.Side.SIDE_ALL) {
                         Log.d(this.getClass().getSimpleName(), "loadBitmap setBitmap="+item.path);
                         BitmapCacheManager.setBitmap(item.path, bitmap);
                     }

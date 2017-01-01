@@ -3,7 +3,7 @@ package com.duongame.explorer.activity;
 import android.content.Intent;
 import android.os.Bundle;
 
-import com.duongame.explorer.adapter.ExplorerFileItem;
+import com.duongame.explorer.adapter.ExplorerItem;
 import com.duongame.explorer.adapter.ViewerPagerAdapter;
 import com.duongame.explorer.adapter.PhotoPagerAdapter;
 import com.duongame.explorer.helper.ExplorerSearcher;
@@ -26,7 +26,7 @@ public class PhotoActivity extends PagerActivity {
         processIntent();
     }
 
-    protected ArrayList<ExplorerFileItem> getImageList() {
+    protected ArrayList<ExplorerItem> getImageList() {
         return ExplorerSearcher.getImageList();
     }
 
@@ -36,7 +36,7 @@ public class PhotoActivity extends PagerActivity {
     }
 
     private void initPagerAdapter() {
-        final ArrayList<ExplorerFileItem> imageList = getImageList();
+        final ArrayList<ExplorerItem> imageList = getImageList();
         pagerAdapter.setImageList(imageList);
         pager.setAdapter(pagerAdapter);
 
@@ -44,7 +44,7 @@ public class PhotoActivity extends PagerActivity {
     }
 
     protected void processIntent() {
-        final ArrayList<ExplorerFileItem> imageList = getImageList();
+        final ArrayList<ExplorerItem> imageList = getImageList();
         final Intent intent = getIntent();
         final Bundle extras = intent.getExtras();
         if (extras != null) {

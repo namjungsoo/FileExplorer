@@ -21,7 +21,7 @@ import com.duongame.explorer.view.RoundedImageView;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import static com.duongame.explorer.adapter.ExplorerFileItem.FileType.IMAGE;
+import static com.duongame.explorer.adapter.ExplorerItem.FileType.IMAGE;
 import static com.duongame.explorer.bitmap.BitmapCacheManager.getThumbnail;
 
 /**
@@ -29,12 +29,12 @@ import static com.duongame.explorer.bitmap.BitmapCacheManager.getThumbnail;
  */
 
 public abstract class ExplorerAdapter extends BaseAdapter {
-    protected ArrayList<ExplorerFileItem> fileList;
+    protected ArrayList<ExplorerItem> fileList;
     protected Activity context;
 
     protected HashMap<ImageView, AsyncTask> taskMap = new HashMap<ImageView, AsyncTask>();
 
-    public ExplorerAdapter(Activity context, ArrayList<ExplorerFileItem> fileList) {
+    public ExplorerAdapter(Activity context, ArrayList<ExplorerItem> fileList) {
         this.context = context;
         this.fileList = fileList;
     }
@@ -63,7 +63,7 @@ public abstract class ExplorerAdapter extends BaseAdapter {
         public TextView name;
         public TextView date;
         public TextView size;
-        public ExplorerFileItem.FileType type;
+        public ExplorerItem.FileType type;
     }
 
     @Override
@@ -81,7 +81,7 @@ public abstract class ExplorerAdapter extends BaseAdapter {
             viewHolder = (ViewHolder) convertView.getTag();
         }
 
-        ExplorerFileItem item = fileList.get(position);
+        ExplorerItem item = fileList.get(position);
 
         setViewHolder(viewHolder, item);
         setIcon(viewHolder, item);
@@ -89,11 +89,11 @@ public abstract class ExplorerAdapter extends BaseAdapter {
         return convertView;
     }
 
-    public void setFileList(ArrayList<ExplorerFileItem> fileList) {
+    public void setFileList(ArrayList<ExplorerItem> fileList) {
         this.fileList = fileList;
     }
 
-    void setIcon(final ViewHolder viewHolder, ExplorerFileItem item) {
+    void setIcon(final ViewHolder viewHolder, ExplorerItem item) {
         if (item.type == IMAGE) {
             if(taskMap.get(viewHolder.icon) != null)
                 taskMap.get(viewHolder.icon).cancel(true);
@@ -110,7 +110,7 @@ public abstract class ExplorerAdapter extends BaseAdapter {
 //                Log.w(TAG,"cache hit path="+item.path);
                 viewHolder.icon.setImageBitmap(bitmap);
             }
-        } else if (item.type == ExplorerFileItem.FileType.ZIP) {
+        } else if (item.type == ExplorerItem.FileType.ZIP) {
             if(taskMap.get(viewHolder.icon) != null)
                 taskMap.get(viewHolder.icon).cancel(true);
 
@@ -126,7 +126,7 @@ public abstract class ExplorerAdapter extends BaseAdapter {
 //                Log.w(TAG,"cache hit path="+item.path);
                 viewHolder.icon.setImageBitmap(bitmap);
             }
-        } else if (item.type == ExplorerFileItem.FileType.APK) {
+        } else if (item.type == ExplorerItem.FileType.APK) {
             //TODO: 동적으로 읽기
             Drawable drawable = BitmapCacheManager.getDrawable(item.path);
             if (drawable == null) {
@@ -148,7 +148,7 @@ public abstract class ExplorerAdapter extends BaseAdapter {
         viewHolder.type = item.type;
     }
 
-    void setTypeIcon(ExplorerFileItem.FileType type, ImageView icon) {
+    void setTypeIcon(ExplorerItem.FileType type, ImageView icon) {
         switch (type) {
             case IMAGE:
                 return;
@@ -191,7 +191,7 @@ public abstract class ExplorerAdapter extends BaseAdapter {
 
     public abstract void initViewHolder(ViewHolder viewHolder, View convertView);
 
-    public abstract void setViewHolder(ViewHolder viewHolder, ExplorerFileItem item);
+    public abstract void setViewHolder(ViewHolder viewHolder, ExplorerItem item);
 
     public abstract View inflateLayout(ViewGroup parent);
 }

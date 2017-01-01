@@ -16,7 +16,7 @@ import java.util.ArrayList;
  */
 
 public class ExplorerGridAdapter extends ExplorerAdapter {
-    public ExplorerGridAdapter(Activity context, ArrayList<ExplorerFileItem> fileList) {
+    public ExplorerGridAdapter(Activity context, ArrayList<ExplorerItem> fileList) {
         super(context, fileList);
     }
 
@@ -33,7 +33,7 @@ public class ExplorerGridAdapter extends ExplorerAdapter {
     }
 
     @Override
-    public void setViewHolder(ViewHolder viewHolder, ExplorerFileItem item) {
+    public void setViewHolder(ViewHolder viewHolder, ExplorerItem item) {
         viewHolder.name.setText(item.name);
         viewHolder.icon.setRadiusDp(5);
         viewHolder.small_icon.setVisibility(View.INVISIBLE);

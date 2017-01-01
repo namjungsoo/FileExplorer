@@ -7,7 +7,7 @@ import android.os.Bundle;
 import android.os.ParcelFileDescriptor;
 import android.util.Log;
 
-import com.duongame.explorer.adapter.ExplorerFileItem;
+import com.duongame.explorer.adapter.ExplorerItem;
 import com.duongame.explorer.adapter.ViewerPagerAdapter;
 import com.duongame.explorer.adapter.PdfPagerAdapter;
 import com.duongame.explorer.helper.FileHelper;
@@ -52,7 +52,7 @@ public class PdfActivity extends PagerActivity {
 
     protected void processIntent() {
         Log.d(TAG, "processIntent pdf");
-        final ArrayList<ExplorerFileItem> imageList;
+        final ArrayList<ExplorerItem> imageList;
         final Intent intent = getIntent();
         final Bundle extras = intent.getExtras();
 
@@ -72,7 +72,7 @@ public class PdfActivity extends PagerActivity {
                     imageList = new ArrayList<>();
                     for(int i=0; i<renderer.getPageCount(); i++) {
                         // path를 페이지 번호로 사용하자
-                        imageList.add(new ExplorerFileItem(FileHelper.setPdfFileNameFromPage(path, i), name, null, 0, ExplorerFileItem.FileType.PDF));
+                        imageList.add(new ExplorerItem(FileHelper.setPdfFileNameFromPage(path, i), name, null, 0, ExplorerItem.FileType.PDF));
                     }
 
                     adapter.setRenderer(renderer);

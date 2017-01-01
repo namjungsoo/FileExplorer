@@ -11,7 +11,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.duongame.explorer.R;
-import com.duongame.explorer.adapter.ExplorerFileItem;
+import com.duongame.explorer.adapter.ExplorerItem;
 import com.duongame.explorer.adapter.PhotoPagerAdapter;
 import com.duongame.explorer.adapter.ViewerPagerAdapter;
 import com.duongame.explorer.bitmap.BitmapCacheManager;
@@ -22,9 +22,9 @@ import net.lingala.zip4j.exception.ZipException;
 
 import java.util.ArrayList;
 
-import static com.duongame.explorer.adapter.ExplorerFileItem.Side.LEFT;
-import static com.duongame.explorer.adapter.ExplorerFileItem.Side.RIGHT;
-import static com.duongame.explorer.adapter.ExplorerFileItem.Side.SIDE_ALL;
+import static com.duongame.explorer.adapter.ExplorerItem.Side.LEFT;
+import static com.duongame.explorer.adapter.ExplorerItem.Side.RIGHT;
+import static com.duongame.explorer.adapter.ExplorerItem.Side.SIDE_ALL;
 
 /**
  * Created by namjungsoo on 2016-11-19.
@@ -35,19 +35,19 @@ public class ZipActivity extends PagerActivity {
 
     private boolean zipExtractCompleted = false;
     private final ZipLoader zipLoader = new ZipLoader();
-    private ExplorerFileItem.Side side = LEFT;
-    private ExplorerFileItem.Side lastSide = LEFT;
+    private ExplorerItem.Side side = LEFT;
+    private ExplorerItem.Side lastSide = LEFT;
 
-    private void changeSide(ExplorerFileItem.Side side) {
+    private void changeSide(ExplorerItem.Side side) {
         lastSide = this.side;
         this.side = side;
     }
 
     private ZipLoader.ZipLoaderListener listener = new ZipLoader.ZipLoaderListener() {
         @Override
-        public void onSuccess(int i, ArrayList<ExplorerFileItem> zipImageList) {
+        public void onSuccess(int i, ArrayList<ExplorerItem> zipImageList) {
 //            Log.d(TAG, "onSuccess="+i);
-            final ArrayList<ExplorerFileItem> imageList = (ArrayList<ExplorerFileItem>) zipImageList.clone();
+            final ArrayList<ExplorerItem> imageList = (ArrayList<ExplorerItem>) zipImageList.clone();
 
             pagerAdapter.setImageList(imageList);
             pagerAdapter.notifyDataSetChanged();
@@ -61,7 +61,7 @@ public class ZipActivity extends PagerActivity {
         }
 
         @Override
-        public void onFinish(ArrayList<ExplorerFileItem> zipImageList) {
+        public void onFinish(ArrayList<ExplorerItem> zipImageList) {
             // 체크해놓고 나중에 파일을 지우지 말자
             zipExtractCompleted = true;
         }
@@ -89,7 +89,7 @@ public class ZipActivity extends PagerActivity {
         super.onDestroy();
     }
 
-    protected ArrayList<ExplorerFileItem> getImageList() {
+    protected ArrayList<ExplorerItem> getImageList() {
         return null;
     }
 
@@ -115,7 +115,7 @@ public class ZipActivity extends PagerActivity {
             pager.setAdapter(pagerAdapter);// setAdapter이후에 imageList를 변경하면 항상 notify해주어야 한다.
 
             // zip 파일을 로딩한다.
-            final ArrayList<ExplorerFileItem> imageList = zipLoader.load(this, path, listener, false);
+            final ArrayList<ExplorerItem> imageList = zipLoader.load(this, path, listener, false);
             if (imageList.size() <= 0) {
                 AlertManager.showAlert(this, "알림", "압축(ZIP) 파일에 이미지가 없습니다.", new DialogInterface.OnClickListener() {
                     @Override
@@ -204,13 +204,13 @@ public class ZipActivity extends PagerActivity {
 
         // 데이터를 업데이트 하자.
         // 좌우를 변경한다.
-        //final ArrayList<ExplorerFileItem> imageList = pagerAdapter.getImageList();
-        final ArrayList<ExplorerFileItem> imageList = (ArrayList<ExplorerFileItem>)pagerAdapter.getImageList().clone();
+        //final ArrayList<ExplorerItem> imageList = pagerAdapter.getImageList();
+        final ArrayList<ExplorerItem> imageList = (ArrayList<ExplorerItem>)pagerAdapter.getImageList().clone();
         Log.e(TAG, "updatePageSide imageList size="+imageList.size());
-        final ArrayList<ExplorerFileItem> newImageList = new ArrayList<>();
+        final ArrayList<ExplorerItem> newImageList = new ArrayList<>();
 
         for (int i = 0; i < imageList.size(); i++) {
-            final ExplorerFileItem item = imageList.get(i);
+            final ExplorerItem item = imageList.get(i);
 //            Log.e(TAG, "updatePageSide i=" + i);
 
             // 잘려진 데이터는 둘중 하나를 삭제한다.
@@ -221,7 +221,7 @@ public class ZipActivity extends PagerActivity {
                     if (i == 0)
                         continue;
 
-                    final ExplorerFileItem item1 = imageList.get(i - 1);
+                    final ExplorerItem item1 = imageList.get(i - 1);
 
                     // 같은 파일이면...
                     if (item.path.equals(item1.path)) {
@@ -233,7 +233,7 @@ public class ZipActivity extends PagerActivity {
                         Log.e(TAG, "item="+item.path + " item1="+item1.path);
                     }
                 } else {// 이미 SIDE_ALL이면 그냥 더하자
-                    final ExplorerFileItem newItem = (ExplorerFileItem)item.clone();
+                    final ExplorerItem newItem = (ExplorerItem)item.clone();
                     newImageList.add(newItem);
                 }
             } else {// 좌우 변경, 강제 BOTH에서 잘라야 할 것이라면... (side = LEFT or RIGHT)
@@ -242,8 +242,8 @@ public class ZipActivity extends PagerActivity {
                 if (item.side == SIDE_ALL) {
                     // 원래 잘려야할 애들이라면 잘라주어야 한다.
                     if (item.width > item.height) {
-                        final ExplorerFileItem left = (ExplorerFileItem) item.clone();
-                        final ExplorerFileItem right = (ExplorerFileItem) item.clone();
+                        final ExplorerItem left = (ExplorerItem) item.clone();
+                        final ExplorerItem right = (ExplorerItem) item.clone();
                         left.side = LEFT;
                         right.side = RIGHT;
 
@@ -256,19 +256,19 @@ public class ZipActivity extends PagerActivity {
                         }
                     } else {
                         // 잘려야 될 애들이 아니면 그냥 넣어준다.
-                        final ExplorerFileItem newItem = (ExplorerFileItem)item.clone();
+                        final ExplorerItem newItem = (ExplorerItem)item.clone();
                         newImageList.add(newItem);
                     }
                 } else {
                     if (i == 0)
                         continue;
 
-                    final ExplorerFileItem item1 = imageList.get(i - 1);
+                    final ExplorerItem item1 = imageList.get(i - 1);
 
                     // 같은 파일일 경우 좌우를 바꿈
                     if (item.path.equals(item1.path)) {
-                        final ExplorerFileItem left = (ExplorerFileItem) item.clone();
-                        final ExplorerFileItem right = (ExplorerFileItem) item.clone();
+                        final ExplorerItem left = (ExplorerItem) item.clone();
+                        final ExplorerItem right = (ExplorerItem) item.clone();
                         left.side = LEFT;
                         right.side = RIGHT;
 

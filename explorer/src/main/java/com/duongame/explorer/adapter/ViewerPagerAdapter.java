@@ -13,7 +13,7 @@ import java.util.ArrayList;
 public abstract class ViewerPagerAdapter extends PagerAdapter {
     private static final String TAG = "ViewerPagerAdapter";
 
-    protected ArrayList<ExplorerFileItem> imageList;
+    protected ArrayList<ExplorerItem> imageList;
     protected Activity context;
     protected boolean exifRotation = true;
 
@@ -21,11 +21,11 @@ public abstract class ViewerPagerAdapter extends PagerAdapter {
         this.context = context;
     }
 
-    public void setImageList(ArrayList<ExplorerFileItem> imageList) {
+    public void setImageList(ArrayList<ExplorerItem> imageList) {
         this.imageList = imageList;
     }
 
-    public ArrayList<ExplorerFileItem> getImageList() {
+    public ArrayList<ExplorerItem> getImageList() {
         return imageList;
     }
 

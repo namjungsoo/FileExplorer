@@ -70,7 +70,7 @@ public class PdfPagerAdapter extends ViewerPagerAdapter {
 //        Log.d(TAG, "loadPage position=" + position);
 
         if (imageView != null) {
-            final ExplorerFileItem item = imageList.get(position);
+            final ExplorerItem item = imageList.get(position);
             if (item == null)
                 return;
 
@@ -128,7 +128,7 @@ public class PdfPagerAdapter extends ViewerPagerAdapter {
     public void destroyItem(ViewGroup container, int position, Object object) {
         container.removeView((View) object);
 
-        final ExplorerFileItem item = imageList.get(position);
+        final ExplorerItem item = imageList.get(position);
         if (item == null)
             return;
 

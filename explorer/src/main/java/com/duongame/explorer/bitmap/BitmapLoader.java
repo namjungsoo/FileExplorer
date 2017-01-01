@@ -11,13 +11,13 @@ import android.media.ExifInterface;
 import android.provider.MediaStore;
 import android.util.Log;
 
-import com.duongame.explorer.adapter.ExplorerFileItem;
+import com.duongame.explorer.adapter.ExplorerItem;
 import com.duongame.explorer.helper.FileHelper;
 
 import java.io.IOException;
 
-import static com.duongame.explorer.adapter.ExplorerFileItem.Side.LEFT;
-import static com.duongame.explorer.adapter.ExplorerFileItem.Side.RIGHT;
+import static com.duongame.explorer.adapter.ExplorerItem.Side.LEFT;
+import static com.duongame.explorer.adapter.ExplorerItem.Side.RIGHT;
 
 /**
  * Created by namjungsoo on 2016. 11. 17..
@@ -196,13 +196,13 @@ public class BitmapLoader {
 //    }
 
     // 왼쪽 오른쪽을 자른 비트맵을 리턴한다
-    public static Bitmap splitBitmapSide(Bitmap bitmap, ExplorerFileItem item) {
+    public static Bitmap splitBitmapSide(Bitmap bitmap, ExplorerItem item) {
 //        Log.d(TAG, "splitBitmapSide=" + item.name);
 
         // 이미 캐시된 페이지가 있으면
         final String key;
         final String keyOther;
-        final ExplorerFileItem itemOther = (ExplorerFileItem) item.clone();
+        final ExplorerItem itemOther = (ExplorerItem) item.clone();
         itemOther.side = item.side == LEFT ? RIGHT : LEFT;
         key = BitmapCacheManager.changePathToPage(item);
         keyOther = BitmapCacheManager.changePathToPage(itemOther);

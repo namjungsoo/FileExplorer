@@ -2,7 +2,7 @@ package com.duongame.explorer.helper;
 
 import android.content.Context;
 
-import com.duongame.explorer.adapter.ExplorerFileItem;
+import com.duongame.explorer.adapter.ExplorerItem;
 
 import java.io.File;
 import java.util.Comparator;
@@ -46,9 +46,9 @@ public class FileHelper {
         return cachePath;
     }
 
-    public static class FileNameAscendingCompare implements Comparator<ExplorerFileItem> {
+    public static class FileNameAscendingCompare implements Comparator<ExplorerItem> {
         @Override
-        public int compare(ExplorerFileItem lhs, ExplorerFileItem rhs) {
+        public int compare(ExplorerItem lhs, ExplorerItem rhs) {
             return lhs.name.compareToIgnoreCase(rhs.name);
         }
     }

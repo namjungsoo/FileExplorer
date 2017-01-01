@@ -3,7 +3,7 @@ package com.duongame.explorer.task;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 
-import com.duongame.explorer.adapter.ExplorerFileItem;
+import com.duongame.explorer.adapter.ExplorerItem;
 import com.duongame.explorer.bitmap.BitmapLoader;
 import com.duongame.explorer.bitmap.ZipLoader;
 
@@ -12,28 +12,28 @@ import net.lingala.zip4j.exception.ZipException;
 
 import java.util.ArrayList;
 
-import static com.duongame.explorer.adapter.ExplorerFileItem.Side.LEFT;
-import static com.duongame.explorer.adapter.ExplorerFileItem.Side.RIGHT;
+import static com.duongame.explorer.adapter.ExplorerItem.Side.LEFT;
+import static com.duongame.explorer.adapter.ExplorerItem.Side.RIGHT;
 
 /**
  * Created by namjungsoo on 2016-12-16.
  */
 
 public class ZipExtractTask extends AsyncTask<String, Integer, Void> {
-    private ArrayList<ExplorerFileItem> imageList;
-    private ArrayList<ExplorerFileItem> zipImageList;
+    private ArrayList<ExplorerItem> imageList;
+    private ArrayList<ExplorerItem> zipImageList;
     private ZipFile zipFile;
     private ZipLoader.ZipLoaderListener listener;
-    private ExplorerFileItem.Side side = LEFT;
+    private ExplorerItem.Side side = LEFT;
 
     private final Object mPauseWorkLock = new Object();
     protected boolean mPauseWork = false;
 
-    public ZipExtractTask(ZipFile zipFile, ArrayList<ExplorerFileItem> imageList, ZipLoader.ZipLoaderListener listener) {
+    public ZipExtractTask(ZipFile zipFile, ArrayList<ExplorerItem> imageList, ZipLoader.ZipLoaderListener listener) {
         this.zipFile = zipFile;
         this.imageList = imageList;
         this.listener = listener;
-        zipImageList = new ArrayList<ExplorerFileItem>();
+        zipImageList = new ArrayList<ExplorerItem>();
     }
 
     public void setPauseWork(boolean pauseWork) {
@@ -45,7 +45,7 @@ public class ZipExtractTask extends AsyncTask<String, Integer, Void> {
         }
     }
 
-    public void setSide(ExplorerFileItem.Side side) {
+    public void setSide(ExplorerItem.Side side) {
 //        synchronized (side) {
             this.side = side;
 //        }
@@ -60,7 +60,7 @@ public class ZipExtractTask extends AsyncTask<String, Integer, Void> {
 
         try {
             for (i = 0; i < imageList.size(); i++) {
-                final ExplorerFileItem item = imageList.get(i);
+                final ExplorerItem item = imageList.get(i);
 
                 if(isCancelled())
                     break;
@@ -85,21 +85,21 @@ public class ZipExtractTask extends AsyncTask<String, Integer, Void> {
 //                    synchronized (side) {
                         if(side == LEFT) {
                             // 한국식은 right를 먼저 넣는다.
-                            final ExplorerFileItem left = (ExplorerFileItem) item.clone();
+                            final ExplorerItem left = (ExplorerItem) item.clone();
                             left.side = LEFT;
                             zipImageList.add(left);
 
-                            final ExplorerFileItem right = (ExplorerFileItem) item.clone();
+                            final ExplorerItem right = (ExplorerItem) item.clone();
                             right.side = RIGHT;
                             zipImageList.add(right);
 
                         } else if(side == RIGHT) {
                             // 일본식은 right를 먼저 넣는다.
-                            final ExplorerFileItem right = (ExplorerFileItem) item.clone();
+                            final ExplorerItem right = (ExplorerItem) item.clone();
                             right.side = RIGHT;
                             zipImageList.add(right);
 
-                            final ExplorerFileItem left = (ExplorerFileItem) item.clone();
+                            final ExplorerItem left = (ExplorerItem) item.clone();
                             left.side = LEFT;
                             zipImageList.add(left);
                         } else {// 전체보기

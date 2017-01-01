@@ -29,7 +29,7 @@ import com.duongame.explorer.activity.PhotoActivity;
 import com.duongame.explorer.activity.TextActivity;
 import com.duongame.explorer.activity.ZipActivity;
 import com.duongame.explorer.adapter.ExplorerAdapter;
-import com.duongame.explorer.adapter.ExplorerFileItem;
+import com.duongame.explorer.adapter.ExplorerItem;
 import com.duongame.explorer.adapter.ExplorerGridAdapter;
 import com.duongame.explorer.adapter.ExplorerListAdapter;
 import com.duongame.explorer.bitmap.BitmapCacheManager;
@@ -53,7 +53,7 @@ public class ExplorerFragment extends Fragment {
     private int viewType = SWITCH_LIST;
 
     private ExplorerAdapter adapter;
-    private ArrayList<ExplorerFileItem> fileList;
+    private ArrayList<ExplorerItem> fileList;
     private TextView textPath;
     private HorizontalScrollView scrollPath;
     private GridView gridView;
@@ -217,8 +217,8 @@ public class ExplorerFragment extends Fragment {
     }
 
     void refreshThumbnail(String path) {
-        ArrayList<ExplorerFileItem> imageList = ExplorerSearcher.getImageList();
-        for (ExplorerFileItem item : imageList) {
+        ArrayList<ExplorerItem> imageList = ExplorerSearcher.getImageList();
+        for (ExplorerItem item : imageList) {
             getActivity().sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse("file://" + item.path)));
         }
     }
@@ -235,7 +235,7 @@ public class ExplorerFragment extends Fragment {
     }
 
     void onAdapterItemClick(int position) {
-        ExplorerFileItem item = fileList.get(position);
+        ExplorerItem item = fileList.get(position);
         switch (item.type) {
             case DIRECTORY:
                 backupPosition();
@@ -329,7 +329,7 @@ public class ExplorerFragment extends Fragment {
 
 //    private void threadStart() {
 //        thread = new Thread(new Runnable() {
-//            private void load(ExplorerFileItem item) {
+//            private void load(ExplorerItem item) {
 //                Bitmap bitmap = getThumbnail(item.path);
 //
 //                if (bitmap == null) {
@@ -345,7 +345,7 @@ public class ExplorerFragment extends Fragment {
 //            }
 //
 //            private int findImage(String path) {
-//                final ArrayList<ExplorerFileItem> imageList = ExplorerSearcher.getImageList();
+//                final ArrayList<ExplorerItem> imageList = ExplorerSearcher.getImageList();
 //                for (int i = 0; i < imageList.size(); i++) {
 //                    if (imageList.get(i).path.equals(path))
 //                        return i;
@@ -355,8 +355,8 @@ public class ExplorerFragment extends Fragment {
 //
 //            @Override
 //            public void run() {
-//                final ArrayList<ExplorerFileItem> newFileList = new ArrayList<>();
-//                final ArrayList<ExplorerFileItem> newImageList = new ArrayList<>();
+//                final ArrayList<ExplorerItem> newFileList = new ArrayList<>();
+//                final ArrayList<ExplorerItem> newImageList = new ArrayList<>();
 //
 //                newFileList.addAll(fileList);
 //                newImageList.addAll(ExplorerSearcher.getImageList());
@@ -366,13 +366,13 @@ public class ExplorerFragment extends Fragment {
 //                final int startPosition = findImage(startPath);
 //
 //                for (int i = startPosition; i < newImageList.size(); i++) {
-//                    final ExplorerFileItem item = newImageList.get(i);
+//                    final ExplorerItem item = newImageList.get(i);
 //                    if(Thread.currentThread().isInterrupted())
 //                        return;
 //                    load(item);
 //                }
 //                for (int i = 0; i < startPosition; i++) {
-//                    final ExplorerFileItem item = newImageList.get(i);
+//                    final ExplorerItem item = newImageList.get(i);
 //                    if(Thread.currentThread().isInterrupted())
 //                        return;
 //                    load(item);

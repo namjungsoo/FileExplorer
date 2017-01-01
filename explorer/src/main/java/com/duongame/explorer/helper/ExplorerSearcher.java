@@ -2,7 +2,7 @@ package com.duongame.explorer.helper;
 
 import android.os.Environment;
 
-import com.duongame.explorer.adapter.ExplorerFileItem;
+import com.duongame.explorer.adapter.ExplorerItem;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -18,7 +18,7 @@ public class ExplorerSearcher {
     private static String lastPath;
     private static final String initialPath = Environment.getExternalStorageDirectory().getAbsolutePath();
     private static final SimpleDateFormat dateFormat = new SimpleDateFormat("yy-MM-dd(E) hh:mm:ss a");
-    private static ArrayList<ExplorerFileItem> imageList = new ArrayList<>();
+    private static ArrayList<ExplorerItem> imageList = new ArrayList<>();
 
     public static String getLastPath() {
         return lastPath;
@@ -28,15 +28,15 @@ public class ExplorerSearcher {
         return lastPath.equals(initialPath);
     }
 
-    public static ArrayList<ExplorerFileItem> search(String path) {
+    public static ArrayList<ExplorerItem> search(String path) {
         if (path == null) {
             path = initialPath;
         }
         lastPath = path;
 
-        ArrayList<ExplorerFileItem> fileList = new ArrayList<ExplorerFileItem>();
-        ArrayList<ExplorerFileItem> directoryList = new ArrayList<ExplorerFileItem>();
-        ArrayList<ExplorerFileItem> normalList = new ArrayList<ExplorerFileItem>();
+        ArrayList<ExplorerItem> fileList = new ArrayList<ExplorerItem>();
+        ArrayList<ExplorerItem> directoryList = new ArrayList<ExplorerItem>();
+        ArrayList<ExplorerItem> normalList = new ArrayList<ExplorerItem>();
 
         File file = new File(path);
         if (file == null)
@@ -61,10 +61,10 @@ public class ExplorerSearcher {
             String date = dateFormat.format(dateSource);
             long size = eachFile.length();
 
-            ExplorerFileItem.FileType type = getFileType(eachFile);
+            ExplorerItem.FileType type = getFileType(eachFile);
 
-            ExplorerFileItem item = new ExplorerFileItem(FileHelper.getFullPath(path, name), name, date, size, type);
-            if (type == ExplorerFileItem.FileType.DIRECTORY) {
+            ExplorerItem item = new ExplorerItem(FileHelper.getFullPath(path, name), name, date, size, type);
+            if (type == ExplorerItem.FileType.DIRECTORY) {
                 item.size = -1;
                 directoryList.add(item);
             } else {
@@ -82,36 +82,36 @@ public class ExplorerSearcher {
 
         imageList.clear();
         for (int i = 0; i < normalList.size(); i++) {
-            if (normalList.get(i).type == ExplorerFileItem.FileType.IMAGE) {
+            if (normalList.get(i).type == ExplorerItem.FileType.IMAGE) {
                 imageList.add(normalList.get(i));
             }
         }
         return fileList;
     }
 
-    public static ArrayList<ExplorerFileItem> getImageList() {
+    public static ArrayList<ExplorerItem> getImageList() {
         return imageList;
     }
 
-    public static ExplorerFileItem.FileType getFileType(File eachFile) {
-        ExplorerFileItem.FileType type = eachFile.isDirectory() ? ExplorerFileItem.FileType.DIRECTORY : ExplorerFileItem.FileType.FILE;
+    public static ExplorerItem.FileType getFileType(File eachFile) {
+        ExplorerItem.FileType type = eachFile.isDirectory() ? ExplorerItem.FileType.DIRECTORY : ExplorerItem.FileType.FILE;
         final String lower = eachFile.getName().toLowerCase();
 
         if (FileHelper.isImage(eachFile.getName())) {
-            type = ExplorerFileItem.FileType.IMAGE;
+            type = ExplorerItem.FileType.IMAGE;
         }
         else if (lower.endsWith(".zip"))
-            type = ExplorerFileItem.FileType.ZIP;
+            type = ExplorerItem.FileType.ZIP;
         else if (lower.endsWith(".rar"))
-            type = ExplorerFileItem.FileType.RAR;
+            type = ExplorerItem.FileType.RAR;
         else if (lower.endsWith(".pdf"))
-            type = ExplorerFileItem.FileType.PDF;
+            type = ExplorerItem.FileType.PDF;
         else if (lower.endsWith(".mp3"))
-            type = ExplorerFileItem.FileType.AUDIO;
+            type = ExplorerItem.FileType.AUDIO;
         else if (lower.endsWith(".txt") || lower.endsWith(".cap") || lower.endsWith(".log"))
-            type = ExplorerFileItem.FileType.TEXT;
+            type = ExplorerItem.FileType.TEXT;
         else if (lower.endsWith(".apk"))
-            type = ExplorerFileItem.FileType.APK;
+            type = ExplorerItem.FileType.APK;
 
         return type;
     }

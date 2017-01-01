@@ -17,7 +17,7 @@ import java.util.ArrayList;
  */
 
 public class ExplorerListAdapter extends ExplorerAdapter {
-    public ExplorerListAdapter(Activity context, ArrayList<ExplorerFileItem> fileList) {
+    public ExplorerListAdapter(Activity context, ArrayList<ExplorerItem> fileList) {
         super(context, fileList);
     }
 
@@ -36,7 +36,7 @@ public class ExplorerListAdapter extends ExplorerAdapter {
     }
 
     @Override
-    public void setViewHolder(ViewHolder viewHolder, ExplorerFileItem item) {
+    public void setViewHolder(ViewHolder viewHolder, ExplorerItem item) {
         viewHolder.name.setText(item.name);
         viewHolder.date.setText(item.date);
         viewHolder.size.setText(FileSizeHelper.getMinimizedSize(item.size));

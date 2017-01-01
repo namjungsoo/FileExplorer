@@ -6,7 +6,7 @@ import android.view.Gravity;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 
-import com.duongame.explorer.adapter.ExplorerFileItem;
+import com.duongame.explorer.adapter.ExplorerItem;
 
 /**
  * Created by namjungsoo on 2016-12-16.
@@ -22,10 +22,10 @@ public class LoadBitmapTask extends BitmapTask {
     }
 
     @Override
-    protected Bitmap doInBackground(ExplorerFileItem... params) {
+    protected Bitmap doInBackground(ExplorerItem... params) {
 //        Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
 
-        final ExplorerFileItem item = params[0];
+        final ExplorerItem item = params[0];
         Bitmap bitmap = null;
         if (!isCancelled()) {
             Log.d(this.getClass().getSimpleName(), "loadBitmap");

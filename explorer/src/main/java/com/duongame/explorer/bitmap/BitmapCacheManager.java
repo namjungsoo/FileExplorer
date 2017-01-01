@@ -7,7 +7,7 @@ import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.widget.ImageView;
 
-import com.duongame.explorer.adapter.ExplorerFileItem;
+import com.duongame.explorer.adapter.ExplorerItem;
 
 import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
@@ -33,11 +33,11 @@ public class BitmapCacheManager {
     // zip파일 잘린 이미지 관련
     static ConcurrentHashMap<String, Bitmap> pageCache = new ConcurrentHashMap<>();
 
-    public static String changePathToPage(ExplorerFileItem item) {
+    public static String changePathToPage(ExplorerItem item) {
         String path;
-        if (item.side == ExplorerFileItem.Side.LEFT) {
+        if (item.side == ExplorerItem.Side.LEFT) {
             path = item.path + ".left";
-        } else if (item.side == ExplorerFileItem.Side.RIGHT) {
+        } else if (item.side == ExplorerItem.Side.RIGHT) {
             path = item.path + ".right";
         } else {
             path = item.path;
