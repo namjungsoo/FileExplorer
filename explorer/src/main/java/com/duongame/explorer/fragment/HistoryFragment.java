@@ -1,7 +1,6 @@
 package com.duongame.explorer.fragment;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +16,7 @@ import java.util.ArrayList;
  * Created by namjungsoo on 2016. 12. 30..
  */
 
-public class HistoryFragment extends Fragment {
+public class HistoryFragment extends BaseFragment {
     ViewGroup rootView;
     ListView listView;
     HistoryAdapter adapter;
@@ -28,12 +27,18 @@ public class HistoryFragment extends Fragment {
         rootView = (ViewGroup) inflater.inflate(R.layout.fragment_history, container, false);
 //        ((TextView) rootView.findViewById(R.id.number)).setText(1 + "");
         listView = (ListView) rootView.findViewById(R.id.list_history);
-
-        final ArrayList<BookDB.Book> bookList = BookDB.getBooks(getActivity());
-        adapter = new HistoryAdapter(getActivity(), bookList);
+        adapter = new HistoryAdapter(getActivity(), null);
         listView.setAdapter(adapter);
 
+        refresh();
         return rootView;
+    }
+
+    @Override
+    public void refresh() {
+        final ArrayList<BookDB.Book> bookList = BookDB.getBooks(getActivity());
+        adapter.setBookList(bookList);
+        adapter.notifyDataSetChanged();
     }
 }
 

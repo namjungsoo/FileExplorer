@@ -5,7 +5,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v4.content.res.ResourcesCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -29,8 +28,8 @@ import com.duongame.explorer.activity.PhotoActivity;
 import com.duongame.explorer.activity.TextActivity;
 import com.duongame.explorer.activity.ZipActivity;
 import com.duongame.explorer.adapter.ExplorerAdapter;
-import com.duongame.explorer.adapter.ExplorerItem;
 import com.duongame.explorer.adapter.ExplorerGridAdapter;
+import com.duongame.explorer.adapter.ExplorerItem;
 import com.duongame.explorer.adapter.ExplorerListAdapter;
 import com.duongame.explorer.bitmap.BitmapCacheManager;
 import com.duongame.explorer.helper.ExplorerSearcher;
@@ -43,7 +42,7 @@ import java.util.ArrayList;
  * Created by namjungsoo on 2016-11-23.
  */
 
-public class ExplorerFragment extends Fragment {
+public class ExplorerFragment extends BaseFragment {
     private final static String TAG = "ExplorerFragment";
 
     private final static int MAX_THUMBNAILS = 100;

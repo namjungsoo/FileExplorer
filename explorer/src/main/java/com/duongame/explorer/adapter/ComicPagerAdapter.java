@@ -3,10 +3,12 @@ package com.duongame.explorer.adapter;
 import android.app.Activity;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.app.FragmentPagerAdapter;
 import android.util.Log;
+import android.view.ViewGroup;
 
 import com.duongame.explorer.R;
+import com.duongame.explorer.fragment.BaseFragment;
 import com.duongame.explorer.fragment.ExplorerFragment;
 import com.duongame.explorer.fragment.HistoryFragment;
 import com.duongame.explorer.fragment.SearchFragment;
@@ -17,11 +19,11 @@ import java.util.HashMap;
  * Created by namjungsoo on 2016. 12. 30..
  */
 
-public class ComicPagerAdapter extends FragmentStatePagerAdapter {
+public class ComicPagerAdapter extends FragmentPagerAdapter {
     private final static String TAG = "ComicPagerAdapter";
     private final int PAGE_COUNT = 3;
     Activity context;
-    HashMap<Integer, Fragment> fragmentMap = new HashMap<>();
+    HashMap<Integer, BaseFragment> fragmentMap = new HashMap<>();
 
     public ComicPagerAdapter(FragmentManager fm, Activity context) {
         super(fm);
@@ -36,10 +38,10 @@ public class ComicPagerAdapter extends FragmentStatePagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
-        Fragment fragment = null;
+        BaseFragment fragment = null;
         Log.d(TAG, "getItem=" + position);
         fragment = fragmentMap.get(position);
-        if(fragment == null) {
+        if (fragment == null) {
             switch (position) {
                 case 0:
                     fragment = new ExplorerFragment();
@@ -70,6 +72,18 @@ public class ComicPagerAdapter extends FragmentStatePagerAdapter {
                 return context.getResources().getString(R.string.search);
         }
         return "";
+    }
+
+    @Override
+    public void setPrimaryItem(ViewGroup container, int position, Object object) {
+        super.setPrimaryItem(container, position, object);
+
+        Log.d(TAG, "setPrimaryItem=" + position);
+        if (fragmentMap.containsKey(position)) {
+            BaseFragment fragment = fragmentMap.get(position);
+            fragment.refresh();
+        }
+
     }
 
 //    @Override

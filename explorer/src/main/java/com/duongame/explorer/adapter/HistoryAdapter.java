@@ -1,16 +1,21 @@
 package com.duongame.explorer.adapter;
 
 import android.app.Activity;
+import android.graphics.Bitmap;
+import android.os.AsyncTask;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.duongame.explorer.R;
 import com.duongame.explorer.db.BookDB;
+import com.duongame.explorer.task.LoadZipThumbnailTask;
+import com.duongame.explorer.view.RoundedImageView;
 
 import java.util.ArrayList;
+
+import static com.duongame.explorer.bitmap.BitmapCacheManager.getThumbnail;
 
 /**
  * Created by namjungsoo on 2017-01-02.
@@ -35,7 +40,7 @@ public class HistoryAdapter extends BaseAdapter {
     }
 
     private static class ViewHolder {
-        ImageView thumbnail;
+        RoundedImageView thumb;
         TextView name;
         TextView page;
         TextView count;
@@ -65,22 +70,36 @@ public class HistoryAdapter extends BaseAdapter {
         ViewHolder viewHolder;
 
         if (convertView == null) {
-            viewHolder = new ViewHolder();
             convertView = context.getLayoutInflater().inflate(R.layout.history_item, parent, false);
+
+            viewHolder = new ViewHolder();
+            viewHolder.thumb = (RoundedImageView) convertView.findViewById(R.id.image_thumb);
+            viewHolder.thumb.setRadiusDp(5);
             viewHolder.name = (TextView) convertView.findViewById(R.id.text_name);
             viewHolder.page = (TextView) convertView.findViewById(R.id.text_page);
-            viewHolder.count = (TextView) convertView.findViewById(R.id.text_count);
-            viewHolder.extract = (TextView) convertView.findViewById(R.id.text_extract);
+//            viewHolder.count = (TextView) convertView.findViewById(R.id.text_count);
+//            viewHolder.extract = (TextView) convertView.findViewById(R.id.text_extract);
 
+            convertView.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
         }
 
-        final BookDB.Book book = bookList.get(position);
-        viewHolder.name.setText(book.name);
-        viewHolder.page.setText(String.valueOf(book.page));
-        viewHolder.count.setText(String.valueOf(book.count));
-        viewHolder.extract.setText(String.valueOf(book.extract));
+        if (bookList != null) {
+            final BookDB.Book book = bookList.get(position);
+            viewHolder.name.setText(book.name);
+            viewHolder.page.setText(String.valueOf(book.page));
+//            viewHolder.count.setText(String.valueOf(book.count));
+//            viewHolder.extract.setText(String.valueOf(book.extract));
+
+            final Bitmap bitmap = getThumbnail(book.path);
+            if(bitmap == null) {
+                LoadZipThumbnailTask task = new LoadZipThumbnailTask(context, viewHolder.thumb);
+                task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, book.path);
+            } else {
+                viewHolder.thumb.setImageBitmap(bitmap);
+            }
+        }
 
         return convertView;
     }

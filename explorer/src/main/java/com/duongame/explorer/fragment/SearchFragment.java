@@ -1,7 +1,6 @@
 package com.duongame.explorer.fragment;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,7 +11,7 @@ import com.duongame.explorer.R;
  * Created by namjungsoo on 2016. 12. 30..
  */
 
-public class SearchFragment extends Fragment {
+public class SearchFragment extends BaseFragment {
     ViewGroup rootView;
 
     @Override
