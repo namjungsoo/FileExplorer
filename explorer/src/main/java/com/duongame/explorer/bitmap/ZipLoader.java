@@ -27,7 +27,7 @@ public class ZipLoader {
     private ZipExtractTask task;
 
     public interface ZipLoaderListener {
-        void onSuccess(int i, ArrayList<ExplorerItem> zipImageList);
+        void onSuccess(int i, ArrayList<ExplorerItem> zipImageList, int totalCount);
 
         void onFail(int i, String name);
 

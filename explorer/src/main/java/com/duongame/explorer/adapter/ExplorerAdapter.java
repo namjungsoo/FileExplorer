@@ -57,7 +57,7 @@ public abstract class ExplorerAdapter extends BaseAdapter {
         return 0;
     }
 
-    public static class ViewHolder {
+    protected static class ViewHolder {
         public ImageView small_icon;
         public RoundedImageView icon;
         public TextView name;

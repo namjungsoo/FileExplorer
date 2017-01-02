@@ -140,7 +140,7 @@ public class ZipExtractTask extends AsyncTask<String, Integer, Void> {
     protected void onProgressUpdate(Integer... progress) {
         if (listener != null) {
             int i = progress[0];
-            listener.onSuccess(i, zipImageList);
+            listener.onSuccess(i, zipImageList, imageList.size());
         }
     }
 

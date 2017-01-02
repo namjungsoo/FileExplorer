@@ -16,6 +16,7 @@ import com.duongame.explorer.adapter.PhotoPagerAdapter;
 import com.duongame.explorer.adapter.ViewerPagerAdapter;
 import com.duongame.explorer.bitmap.BitmapCacheManager;
 import com.duongame.explorer.bitmap.ZipLoader;
+import com.duongame.explorer.db.BookDB;
 import com.duongame.explorer.helper.AlertManager;
 
 import net.lingala.zip4j.exception.ZipException;
@@ -37,6 +38,8 @@ public class ZipActivity extends PagerActivity {
     private final ZipLoader zipLoader = new ZipLoader();
     private ExplorerItem.Side side = LEFT;
     private ExplorerItem.Side lastSide = LEFT;
+    private int totalCount = 0;
+    private int extract = 0;
 
     private void changeSide(ExplorerItem.Side side) {
         lastSide = this.side;
@@ -45,8 +48,11 @@ public class ZipActivity extends PagerActivity {
 
     private ZipLoader.ZipLoaderListener listener = new ZipLoader.ZipLoaderListener() {
         @Override
-        public void onSuccess(int i, ArrayList<ExplorerItem> zipImageList) {
+        public void onSuccess(int i, ArrayList<ExplorerItem> zipImageList, int totalCount) {
 //            Log.d(TAG, "onSuccess="+i);
+            ZipActivity.this.totalCount = totalCount;
+            extract = i;
+
             final ArrayList<ExplorerItem> imageList = (ArrayList<ExplorerItem>) zipImageList.clone();
 
             pagerAdapter.setImageList(imageList);
@@ -64,6 +70,7 @@ public class ZipActivity extends PagerActivity {
         public void onFinish(ArrayList<ExplorerItem> zipImageList) {
             // 체크해놓고 나중에 파일을 지우지 말자
             zipExtractCompleted = true;
+            extract = totalCount;
         }
     };
 
@@ -85,6 +92,21 @@ public class ZipActivity extends PagerActivity {
     @Override
     protected void onDestroy() {
         zipLoader.cancelTask();
+
+        final BookDB.Book book = new BookDB.Book();
+
+        book.path = path;
+        book.name = name;
+
+        final int page = pager.getCurrentItem();
+        book.page = page;
+        book.type = ExplorerItem.FileType.ZIP;
+
+        book.side = side;
+        book.count = totalCount;
+        book.extract = extract;
+
+        BookDB.setLastBook(this, book);
 
         super.onDestroy();
     }
