@@ -17,9 +17,9 @@ import java.util.ArrayList;
  */
 
 public class HistoryFragment extends BaseFragment {
-    ViewGroup rootView;
-    ListView listView;
-    HistoryAdapter adapter;
+    private ViewGroup rootView;
+    private ListView listView;
+    private HistoryAdapter adapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

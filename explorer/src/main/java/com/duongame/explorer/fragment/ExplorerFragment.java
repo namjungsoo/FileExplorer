@@ -95,7 +95,7 @@ public class ExplorerFragment extends BaseFragment {
 //        Log.d(TAG, "onResume "+rootView.getWidth() + " " + rootView.getHeight());
 
         // 밖에 나갔다 들어오면 리프레시함
-        updateFileList(ExplorerSearcher.getLastPath());
+        refresh();
     }
 
     @Override
@@ -431,5 +431,10 @@ public class ExplorerFragment extends BaseFragment {
             }
         }).start();
         refreshThumbnail(path);
+    }
+
+    @Override
+    public void refresh() {
+        updateFileList(ExplorerSearcher.getLastPath());
     }
 }
