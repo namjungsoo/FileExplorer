@@ -29,9 +29,10 @@ public class BookDB extends SQLiteOpenHelper {
 
         // ExplorerItem에 없는거. zip파일의 이미지 기준
         public int page;// 현재 페이지
-        public int count;// 최대 페이지
+
+        public int count;// 최대 파일수.
         public int extract;// 압축 풀린 파일수. zip에만 해당함
-        public long size;
+        public long size;// zip파일 사이즈
 
         public String date;
         public int percent;

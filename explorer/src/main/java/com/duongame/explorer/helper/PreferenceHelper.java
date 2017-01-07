@@ -13,7 +13,7 @@ public class PreferenceHelper {
 
     private static final String PREF_NAME = "FileExplorer";
 
-//    private static final String PREF_IS_SHORTCUT = "is_shortcut";
+    private static final String IS_SHORTCUT = "is_shortcut";
 //    private static final String PREF_IS_EXPLORER_HELP = "is_explorer_help";
 
     // 3번중에서 1번을 보여준다.
@@ -30,11 +30,11 @@ public class PreferenceHelper {
             pref = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
     }
 
-//    public static boolean isShortcut(Context context) {
-//        checkPrefManager(context);
-//        final boolean prefIsShortcut = pref.getBoolean(PREF_IS_SHORTCUT, false);
-//        return prefIsShortcut;
-//    }
+    public static boolean isShortcut(Context context) {
+        checkPrefManager(context);
+        final boolean prefIsShortcut = pref.getBoolean(IS_SHORTCUT, false);
+        return prefIsShortcut;
+    }
 //
 //    public static boolean isExplorerHelp(Context context) {
 //        checkPrefManager(context);
@@ -42,12 +42,12 @@ public class PreferenceHelper {
 //        return prefIsExplorerHelp;
 //    }
 //
-//    public static void setShortcut(Context context, boolean shortcut) {
-//        checkPrefManager(context);
-//        final SharedPreferences.Editor editor = pref.edit();
-//        editor.putBoolean(PREF_IS_SHORTCUT, shortcut);
-//        editor.commit();
-//    }
+    public static void setShortcut(Context context, boolean shortcut) {
+        checkPrefManager(context);
+        final SharedPreferences.Editor editor = pref.edit();
+        editor.putBoolean(IS_SHORTCUT, shortcut);
+        editor.commit();
+    }
 //
 //    public static void setExplorerHelp(Context context, boolean explorerHelp) {
 //        checkPrefManager(context);

@@ -16,12 +16,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.duongame.comicz.pro.R;
 import com.duongame.comicz.adapter.ComicPagerAdapter;
+import com.duongame.comicz.pro.R;
 import com.duongame.explorer.fragment.ExplorerFragment;
 import com.duongame.explorer.helper.ExplorerSearcher;
 import com.duongame.explorer.helper.PositionManager;
 import com.duongame.explorer.helper.PreferenceHelper;
+import com.duongame.explorer.helper.ShortcutManager;
 
 public class MainActivity extends AppCompatActivity {
     private final static String TAG = "MainActivity";
@@ -110,6 +111,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main);
+
+        ShortcutManager.checkShortcut(this);
         initTabs();
 
         // 단일 프라그먼트
