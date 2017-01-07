@@ -30,17 +30,20 @@
                 android:maxLines="2"
                 android:ellipsize="start"
                 android:gravity="center_vertical|left"
+                android:textSize="14sp"
                 />
 
             <TextView
                 android:id="@+id/text_size"
                 android:layout_width="match_parent"
-                android:layout_height="15dp" />
+                android:layout_height="18dp"
+                android:textSize="14sp"/>
 
             <TextView
                 android:id="@+id/text_date"
                 android:layout_width="match_parent"
-                android:layout_height="15dp" />
+                android:layout_height="18dp"
+                android:textSize="14sp"/>
 
             <ProgressBar
                 style="?android:attr/progressBarStyleHorizontal"
@@ -55,12 +58,15 @@
                     android:id="@+id/text_page"
                     android:layout_width="0dp"
                     android:layout_weight="1"
-                    android:layout_height="match_parent"/>
+                    android:layout_height="match_parent"
+                    android:textSize="10sp"/>
                 <TextView
                     android:id="@+id/text_percent"
                     android:layout_width="0dp"
                     android:layout_weight="1"
-                    android:layout_height="match_parent"/>
+                    android:layout_height="match_parent"
+                    android:textSize="10sp"
+                    />
             </LinearLayout>
             <!--<TextView-->
             <!--android:id="@+id/text_count"-->

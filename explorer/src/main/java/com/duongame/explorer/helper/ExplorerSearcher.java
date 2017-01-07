@@ -5,7 +5,6 @@ import android.os.Environment;
 import com.duongame.explorer.adapter.ExplorerItem;
 
 import java.io.File;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -17,7 +16,6 @@ import java.util.Date;
 public class ExplorerSearcher {
     private static String lastPath;
     private static final String initialPath = Environment.getExternalStorageDirectory().getAbsolutePath();
-    private static final SimpleDateFormat dateFormat = new SimpleDateFormat("yy-MM-dd(E) hh:mm:ss a");
     private static ArrayList<ExplorerItem> imageList = new ArrayList<>();
 
     public static String getLastPath() {
@@ -58,7 +56,8 @@ public class ExplorerSearcher {
             String name = eachFile.getName();
             Date dateSource = new Date(eachFile.lastModified());
 
-            String date = dateFormat.format(dateSource);
+            //String date = dateFormat.format(dateSource);
+            String date = DateHelper.getExplorerDate(dateSource);
             long size = eachFile.length();
 
             ExplorerItem.FileType type = getFileType(eachFile);
