@@ -15,6 +15,7 @@ import net.lingala.zip4j.exception.ZipException;
 
 import java.util.ArrayList;
 
+import static com.duongame.explorer.adapter.ExplorerItem.Side.LEFT;
 import static com.duongame.explorer.bitmap.BitmapCacheManager.getThumbnail;
 
 /**
@@ -48,7 +49,7 @@ public class LoadZipThumbnailTask extends AsyncTask<String, Void, Bitmap> {
             try {
                 //image = ZipLoader.getFirstImage(context, path);
                 final ZipLoader loader = new ZipLoader();
-                final ArrayList<ExplorerItem> imageList = loader.load(context, path, null, true);
+                final ArrayList<ExplorerItem> imageList = loader.load(context, path, null, 0, LEFT, true);
 
                 if(imageList != null && imageList.size() > 0) {
                     image = imageList.get(0).path;

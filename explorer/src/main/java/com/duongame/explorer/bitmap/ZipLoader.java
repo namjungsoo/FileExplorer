@@ -72,7 +72,7 @@ public class ZipLoader {
 
     // 리턴값은 이미지 리스트이다.
     // 압축을 풀지 않으면 정보를 알수가 없다. 좌우 잘라야 되는지 마는지를
-    public ArrayList<ExplorerItem> load(Context context, String filename, ZipLoaderListener listener, boolean firstImageOnly) throws ZipException {
+    public ArrayList<ExplorerItem> load(Context context, String filename, ZipLoaderListener listener, int extract, ExplorerItem.Side side, boolean firstImageOnly) throws ZipException {
         // 일단 무조건 압축 풀자
         //TODO: 이미 전체 압축이 풀려있는지 검사해야함
         checkCachedPath(context, filename);
@@ -109,26 +109,32 @@ public class ZipLoader {
                 return imageList;
             }
         } else {
-            // 이미 풀어놓은게 없으면 AsyncTask로 로딩함
-            // 첫번째 이미지 파일이 로딩이 끝나면 바로 띄운다
-            // 리턴할때는 첫번째 인자만 리턴한다.
             if (imageList.size() > 0) {
-                task = new ZipExtractTask(zipFile, imageList, listener);
+                task = new ZipExtractTask(zipFile, imageList, listener, extract);
                 task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, extractPath);
 
-                final ArrayList<ExplorerItem> firstList = (ArrayList<ExplorerItem>) imageList.clone();
-                ExplorerItem item = firstList.get(0);
-                firstList.clear();
+                final ArrayList<ExplorerItem> firstList = new ArrayList<>();
 
-                BitmapFactory.Options options = BitmapLoader.decodeBounds(item.path);
+                // 이미지 파일이 있으면 첫번째 페이지만 추가해줌
+                if (extract == 0) {
+                    final ExplorerItem item = (ExplorerItem) imageList.get(0).clone();
+                    final BitmapFactory.Options options = BitmapLoader.decodeBounds(item.path);
 
-                // 일본식(RIGHT)를 기준으로 잡자
-                if (options.outWidth > options.outHeight) {
-                    item.side = ExplorerItem.Side.LEFT;
+                    // 일본식(RIGHT)를 기준으로 잡자
+                    if (options.outWidth > options.outHeight) {
+                        item.side = ExplorerItem.Side.LEFT;
+                    }
+
+                    firstList.add(item);
+                    return firstList;
+                } else {
+                    // 동기적으로 이미 압축 풀린 놈들을 가져오자
+                    for (int i = 0; i < extract; i++) {
+                        final ExplorerItem item = (ExplorerItem) imageList.get(0);
+                        ZipExtractTask.processItem(item, side, firstList);
+                    }
+                    return firstList;
                 }
-
-                firstList.add(item);
-                return firstList;
             }
         }
         return imageList;

@@ -51,6 +51,7 @@
 
             <ProgressBar
                 style="?android:attr/progressBarStyleHorizontal"
+                android:id="@+id/progress_history"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
@@ -63,13 +64,14 @@
                     android:layout_width="0dp"
                     android:layout_weight="1"
                     android:layout_height="match_parent"
-                    android:textSize="10sp"/>
+                    android:textSize="11sp"/>
                 <TextView
                     android:id="@+id/text_percent"
                     android:layout_width="0dp"
                     android:layout_weight="1"
                     android:layout_height="match_parent"
-                    android:textSize="10sp"
+                    android:gravity="right"
+                    android:textSize="11sp"
                     />
             </LinearLayout>
             <!--<TextView-->
