@@ -69,8 +69,8 @@ public class BookDB extends SQLiteOpenHelper {
         }
 
         public void updatePercent() {
-            if(count > 0) {
-                percent = ((page+1)*100)/count;
+            if (count > 0) {
+                percent = ((page + 1) * 100) / count;
             }
         }
     }
@@ -125,6 +125,13 @@ public class BookDB extends SQLiteOpenHelper {
 
         book.updatePercent();
         return book;
+    }
+
+    public static void clearBooks(Context context) {
+        final SQLiteDatabase db = getInstance(context).getWritableDatabase();
+        final String sql = "DELETE FROM book";
+        db.execSQL(sql);
+        db.close();
     }
 
     // 최근 50개 읽은 책 리스트를 반환

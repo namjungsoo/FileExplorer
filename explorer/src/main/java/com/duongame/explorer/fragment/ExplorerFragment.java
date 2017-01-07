@@ -23,10 +23,6 @@ import android.widget.TextView;
 import android.widget.ViewSwitcher;
 
 import com.duongame.explorer.R;
-import com.duongame.viewer.activity.PdfActivity;
-import com.duongame.viewer.activity.PhotoActivity;
-import com.duongame.viewer.activity.TextActivity;
-import com.duongame.viewer.activity.ZipActivity;
 import com.duongame.explorer.adapter.ExplorerAdapter;
 import com.duongame.explorer.adapter.ExplorerGridAdapter;
 import com.duongame.explorer.adapter.ExplorerItem;
@@ -35,6 +31,10 @@ import com.duongame.explorer.bitmap.BitmapCacheManager;
 import com.duongame.explorer.helper.ExplorerSearcher;
 import com.duongame.explorer.helper.PositionManager;
 import com.duongame.explorer.helper.PreferenceHelper;
+import com.duongame.viewer.activity.PdfActivity;
+import com.duongame.viewer.activity.PhotoActivity;
+import com.duongame.viewer.activity.TextActivity;
+import com.duongame.viewer.activity.ZipActivity;
 
 import java.util.ArrayList;
 
@@ -181,7 +181,7 @@ public class ExplorerFragment extends BaseFragment {
 
         final Button view = (Button) rootView.findViewById(R.id.btn_view);
         view.setText(getResources().getString(R.string.grid));
-        final ImageView image = (ImageView)  rootView.findViewById(R.id.image_view);
+        final ImageView image = (ImageView) rootView.findViewById(R.id.image_view);
         image.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.grid, null));
 
         viewType = SWITCH_LIST;
@@ -206,7 +206,7 @@ public class ExplorerFragment extends BaseFragment {
 
         final Button view = (Button) rootView.findViewById(R.id.btn_view);
         view.setText(getResources().getString(R.string.list));
-        final ImageView image = (ImageView)  rootView.findViewById(R.id.image_view);
+        final ImageView image = (ImageView) rootView.findViewById(R.id.image_view);
         image.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.list, null));
 
         viewType = SWITCH_GRID;
@@ -390,7 +390,7 @@ public class ExplorerFragment extends BaseFragment {
 //    }
 
     public void updateFileList(String path) {
-        if(adapter == null)
+        if (adapter == null)
             return;
 //        Log.d(TAG, "updateFileList start "+rootView.getWidth() + " " + rootView.getHeight());
         adapter.stopAllTasks();
@@ -437,5 +437,14 @@ public class ExplorerFragment extends BaseFragment {
     @Override
     public void refresh() {
         updateFileList(ExplorerSearcher.getLastPath());
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (!ExplorerSearcher.isInitialPath()) {
+            gotoUpDirectory();
+        } else {
+            super.onBackPressed();
+        }
     }
 }

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">코믹z뷰어</string>
+    <string name="action_clear_cache">캐쉬 삭제</string>
+    <string name="action_clear_history">최근파일 삭제</string>
+</resources>

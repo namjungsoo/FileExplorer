@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Explorer</string>
     <string name="ok">OK</string>
@@ -12,4 +13,6 @@
     <string name="right">Right</string>
     <string name="both">Both</string>
     <string name="filename">FileName</string>
+    <string name="backpressed">To quit, press the back button again.</string>
+    <string name="action_settings">Settings</string>
 </resources>

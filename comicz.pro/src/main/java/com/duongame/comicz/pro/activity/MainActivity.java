@@ -11,28 +11,28 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
+import android.view.Menu;
+import android.view.MenuItem;
 
 import com.duongame.comicz.adapter.ComicPagerAdapter;
+import com.duongame.comicz.db.BookDB;
 import com.duongame.comicz.pro.R;
+import com.duongame.explorer.fragment.BaseFragment;
 import com.duongame.explorer.fragment.ExplorerFragment;
-import com.duongame.explorer.helper.ExplorerSearcher;
 import com.duongame.explorer.helper.PositionManager;
 import com.duongame.explorer.helper.PreferenceHelper;
 import com.duongame.explorer.helper.ShortcutManager;
+import com.duongame.explorer.helper.ToastHelper;
+
+import java.io.File;
 
 public class MainActivity extends AppCompatActivity {
     private final static String TAG = "MainActivity";
     private final static int PERMISSION_STORAGE = 1;
 
-    ExplorerFragment fragment;
-    ViewPager pager;
-//    ComicPagerAdapter adapter;
-    FragmentPagerAdapter adapter;
-    TabLayout tab;
+    private ViewPager pager;
+    private ComicPagerAdapter adapter;
+    private TabLayout tab;
 
     private class PagerAdapter extends FragmentPagerAdapter {
         public PagerAdapter(FragmentManager fm) {
@@ -56,54 +56,10 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public CharSequence getPageTitle(int position) {
             String title = String.valueOf(position);
-            Log.d("tag", "title="+title);
+            Log.d("tag", "title=" + title);
             return title;
         }
 
-    }
-
-    public static class PageFragment extends Fragment {
-        private int mPageNumber;
-        ViewGroup rootView;
-
-//        public static PageFragment create(int pageNumber) {
-//            PageFragment fragment = new PageFragment();
-//            Bundle args = new Bundle();
-//            args.putInt("page", pageNumber);
-//            fragment.setArguments(args);
-//            return fragment;
-//        }
-
-//        @Override
-//        public void onCreate(Bundle savedInstanceState) {
-//            super.onCreate(savedInstanceState);
-////            mPageNumber = getArguments().getInt("page");
-//        }
-
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                                 Bundle savedInstanceState) {
-            rootView = (ViewGroup) inflater.inflate(R.layout.page_fragment, container, false);
-            ((TextView) rootView.findViewById(R.id.number)).setText(mPageNumber + "");
-
-//            rootView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-//                @Override
-//                public void onGlobalLayout() {
-//                    rootView.post(new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            Log.d(TAG, "onGlobalLayout "+rootView.getWidth() + " " + rootView.getHeight());
-//                        }
-//                    });
-//                }
-//            });
-            return rootView;
-        }
-
-        @Override
-        public void onResume() {
-            super.onResume();
-        }
     }
 
     @Override
@@ -114,45 +70,12 @@ public class MainActivity extends AppCompatActivity {
 
         ShortcutManager.checkShortcut(this);
         initTabs();
-
-        // 단일 프라그먼트
-//        FragmentManager fm = getSupportFragmentManager();
-//        FragmentTransaction ft = fm.beginTransaction();
-//        fragment = new ExplorerFragment();
-//        ft.replace(android.R.id.content, fragment);
-//        ft.commit();
     }
 
     private void initTabs() {
         pager = (ViewPager) findViewById(R.id.pager);
         adapter = new ComicPagerAdapter(getSupportFragmentManager(), this);
-//        adapter = new PagerAdapter(getSupportFragmentManager());
         pager.setAdapter(adapter);
-//        pager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-//            @Override
-//            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-//
-//            }
-//
-//            @Override
-//            public void onPageSelected(int position) {
-//                Log.d(TAG, "onPageSelected=" + position);
-//                fragment = (ExplorerFragment) adapter.getItem(position);
-//            }
-//
-//            @Override
-//            public void onPageScrollStateChanged(int state) {
-//
-//            }
-//        });
-
-//        ArrayList<Fragment> fragmentList = new ArrayList<>();
-//        fragmentList.add(new ExplorerFragment());
-//        adapter.setFragmentList(fragmentList);
-//        adapter.notifyDataSetChanged();
-
-//        fragment = (ExplorerFragment) adapter.getItem(0);
-//
         tab = (TabLayout) findViewById(R.id.tab);
         tab.setupWithViewPager(pager);
     }
@@ -160,10 +83,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-
-        // 동적 생성한다.
-//        FragmentManager fm = getSupportFragmentManager();
-//        fragment = (ExplorerFragment)fm.findFragmentById(R.id.fragment_explorer);
 
         if (checkStoragePermissions()) {
             final String lastPath = PreferenceHelper.getLastPath(MainActivity.this);
@@ -174,9 +93,6 @@ public class MainActivity extends AppCompatActivity {
 
             PositionManager.setPosition(lastPath, position);
             PositionManager.setTop(lastPath, top);
-
-            if (fragment != null)
-                fragment.updateFileList(lastPath);
         }
     }
 
@@ -199,16 +115,15 @@ public class MainActivity extends AppCompatActivity {
 
         if (readEnable && writeEnable) {
             // 최초 이므로 무조건 null
-            if (fragment != null)
-                fragment.updateFileList(null);
         }
     }
 
     @Override
     public void onBackPressed() {
-        if (!ExplorerSearcher.isInitialPath()) {
-            if (fragment != null)
-                fragment.gotoUpDirectory();
+        final int position = pager.getCurrentItem();
+        final BaseFragment fragment = (BaseFragment) adapter.getItem(position);
+        if (fragment != null) {
+            fragment.onBackPressed();
         }
     }
 
@@ -222,4 +137,49 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_settings) {
+            return true;
+        }
+
+        if (id == R.id.action_clear_cache) {
+            final File file = getFilesDir();
+            deleteRecursive(file);
+
+            ToastHelper.showToast(this, "캐쉬 파일을 삭제하였습니다.");
+        }
+
+        if (id == R.id.action_clear_history) {
+            BookDB.clearBooks(this);
+
+            final BaseFragment fragment = (BaseFragment) adapter.getItem(1);
+            fragment.refresh();
+
+            ToastHelper.showToast(this, "최근파일 목록을 삭제하였습니다.");
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    void deleteRecursive(File fileOrDirectory) {
+        if (fileOrDirectory.isDirectory())
+            for (File child : fileOrDirectory.listFiles())
+                deleteRecursive(child);
+
+        fileOrDirectory.delete();
+    }
 }

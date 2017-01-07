@@ -105,7 +105,7 @@ public class ZipActivity extends PagerActivity {
         book.type = ExplorerItem.FileType.ZIP;
 
         book.side = side;
-        book.count = totalCount;
+        book.count = totalCount;// 파일의 갯수이다.
         book.extract = extract + 1;// 앞으로 읽어야할 위치를 기억하기 위해 +1을 함
 
         book.size = size;

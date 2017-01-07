@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="app_name">파일탐색기</string>
     <string name="ok">확인</string>
     <string name="cancel">취소</string>
     <string name="grid">그리드</string>
@@ -12,4 +13,6 @@
     <string name="right">오른쪽</string>
     <string name="both">양면</string>
     <string name="filename">파일명</string>
+    <string name="backpressed">종료하시려면 뒤로가기 버튼을 한번 더 누르세요.</string>
+    <string name="action_settings">설정</string>
 </resources>
