@@ -176,6 +176,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     void deleteRecursive(File fileOrDirectory) {
+        if(fileOrDirectory.getAbsolutePath().endsWith("instant-run"))
+            return;
+
         if (fileOrDirectory.isDirectory())
             for (File child : fileOrDirectory.listFiles())
                 deleteRecursive(child);
