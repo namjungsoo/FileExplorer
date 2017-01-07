@@ -5,9 +5,6 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -18,7 +15,6 @@ import com.duongame.comicz.adapter.ComicPagerAdapter;
 import com.duongame.comicz.db.BookDB;
 import com.duongame.comicz.pro.R;
 import com.duongame.explorer.fragment.BaseFragment;
-import com.duongame.explorer.fragment.ExplorerFragment;
 import com.duongame.explorer.helper.PositionManager;
 import com.duongame.explorer.helper.PreferenceHelper;
 import com.duongame.explorer.helper.ShortcutManager;
@@ -34,34 +30,6 @@ public class MainActivity extends AppCompatActivity {
     private ComicPagerAdapter adapter;
     private TabLayout tab;
 
-    private class PagerAdapter extends FragmentPagerAdapter {
-        public PagerAdapter(FragmentManager fm) {
-            super(fm);
-        }
-
-        @Override
-        public Fragment getItem(int position) {
-            // 해당하는 page의 Fragment를 생성합니다.
-            //return PageFragment.create(position);
-
-            //return new PageFragment();
-            return new ExplorerFragment();
-        }
-
-        @Override
-        public int getCount() {
-            return 1;  // 총 5개의 page를 보여줍니다.
-        }
-
-        @Override
-        public CharSequence getPageTitle(int position) {
-            String title = String.valueOf(position);
-            Log.d("tag", "title=" + title);
-            return title;
-        }
-
-    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,6 +38,9 @@ public class MainActivity extends AppCompatActivity {
 
         ShortcutManager.checkShortcut(this);
         initTabs();
+
+//        getSupportActionBar().setHideOnContentScrollEnabled(true);
+        getSupportActionBar().setElevation(0.0f);
     }
 
     private void initTabs() {
@@ -157,22 +128,30 @@ public class MainActivity extends AppCompatActivity {
         }
 
         if (id == R.id.action_clear_cache) {
-            final File file = getFilesDir();
-            deleteRecursive(file);
+            clearHistory();
+            clearCache();
 
             ToastHelper.showToast(this, "캐쉬 파일을 삭제하였습니다.");
         }
 
         if (id == R.id.action_clear_history) {
-            BookDB.clearBooks(this);
-
-            final BaseFragment fragment = (BaseFragment) adapter.getItem(1);
-            fragment.refresh();
 
             ToastHelper.showToast(this, "최근파일 목록을 삭제하였습니다.");
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    void clearCache() {
+        final File file = getFilesDir();
+        deleteRecursive(file);
+    }
+
+    void clearHistory() {
+        BookDB.clearBooks(this);
+
+        final BaseFragment fragment = (BaseFragment) adapter.getItem(1);
+        fragment.refresh();
     }
 
     void deleteRecursive(File fileOrDirectory) {
