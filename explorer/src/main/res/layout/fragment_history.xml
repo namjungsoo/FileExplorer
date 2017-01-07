@@ -10,8 +10,6 @@
         android:background="@color/colorDivider" />
 
     <ListView
-        android:layout_marginLeft="9dp"
-        android:layout_marginRight="9dp"
         android:id="@+id/list_history"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
