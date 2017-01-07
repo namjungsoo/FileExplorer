@@ -18,10 +18,10 @@
             </intent-filter>
 
         </activity>
-        <activity android:name="com.duongame.explorer.activity.PhotoActivity"
+        <activity android:name="com.duongame.viewer.activity.PhotoActivity"
             android:theme="@style/ComicViewerTheme"
             />
-        <activity android:name="com.duongame.explorer.activity.ZipActivity"
+        <activity android:name="com.duongame.viewer.activity.ZipActivity"
             android:theme="@style/ComicViewerTheme"
             />
     </application>

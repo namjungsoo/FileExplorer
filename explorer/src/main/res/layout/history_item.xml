@@ -6,30 +6,41 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="100dp"
         android:layout_marginBottom="4.5dp"
         android:layout_marginTop="4.5dp">
 
         <com.duongame.explorer.view.RoundedImageView
             android:id="@+id/image_thumb"
             android:layout_width="80dp"
-            android:layout_height="80dp"
+            android:layout_height="match_parent"
             android:layout_marginRight="9dp"/>
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="80dp"
+            android:layout_height="match_parent"
             android:orientation="vertical">
 
             <TextView
                 android:id="@+id/text_name"
                 android:layout_width="match_parent"
-                android:layout_height="40dp" />
+                android:layout_height="35dp"
+                android:textStyle="bold"
+                android:textColor="@android:color/black"
+                android:maxLines="2"
+                android:ellipsize="start"
+                android:gravity="center_vertical|left"
+                />
 
             <TextView
-                android:id="@+id/text_page"
+                android:id="@+id/text_size"
                 android:layout_width="match_parent"
-                android:layout_height="10dp" />
+                android:layout_height="15dp" />
+
+            <TextView
+                android:id="@+id/text_date"
+                android:layout_width="match_parent"
+                android:layout_height="15dp" />
 
             <ProgressBar
                 style="?android:attr/progressBarStyleHorizontal"
@@ -38,12 +49,18 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="10dp"
+                android:layout_height="match_parent"
                 android:orientation="horizontal">
                 <TextView
+                    android:id="@+id/text_page"
                     android:layout_width="0dp"
                     android:layout_weight="1"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="match_parent"/>
+                <TextView
+                    android:id="@+id/text_percent"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="match_parent"/>
             </LinearLayout>
             <!--<TextView-->
             <!--android:id="@+id/text_count"-->

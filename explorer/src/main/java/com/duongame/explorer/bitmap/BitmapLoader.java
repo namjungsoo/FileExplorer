@@ -162,7 +162,7 @@ public class BitmapLoader {
 //            Log.d("tag", "decoder path=" + path + " width="+width + " height="+height);
 
             Bitmap bitmap;
-            if (ratio > 1) {
+            if (ratio > 1) {// 어떤 크기가 들어오더라도 가운데 크롭을 하기 위해서이다.
                 int top = (decoder.getHeight() - decoder.getWidth()) >> 1;
                 bitmap = decoder.decodeRegion(new Rect(0, top, decoder.getWidth(), top + decoder.getWidth()), options);
                 decoder.recycle();

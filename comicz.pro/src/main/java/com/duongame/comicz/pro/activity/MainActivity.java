@@ -17,7 +17,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.duongame.comicz.pro.R;
-import com.duongame.explorer.adapter.ComicPagerAdapter;
+import com.duongame.comicz.adapter.ComicPagerAdapter;
 import com.duongame.explorer.fragment.ExplorerFragment;
 import com.duongame.explorer.helper.ExplorerSearcher;
 import com.duongame.explorer.helper.PositionManager;

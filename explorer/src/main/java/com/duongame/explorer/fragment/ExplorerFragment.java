@@ -23,10 +23,10 @@ import android.widget.TextView;
 import android.widget.ViewSwitcher;
 
 import com.duongame.explorer.R;
-import com.duongame.explorer.activity.PdfActivity;
-import com.duongame.explorer.activity.PhotoActivity;
-import com.duongame.explorer.activity.TextActivity;
-import com.duongame.explorer.activity.ZipActivity;
+import com.duongame.viewer.activity.PdfActivity;
+import com.duongame.viewer.activity.PhotoActivity;
+import com.duongame.viewer.activity.TextActivity;
+import com.duongame.viewer.activity.ZipActivity;
 import com.duongame.explorer.adapter.ExplorerAdapter;
 import com.duongame.explorer.adapter.ExplorerGridAdapter;
 import com.duongame.explorer.adapter.ExplorerItem;
@@ -276,6 +276,7 @@ public class ExplorerFragment extends BaseFragment {
                 intent.putExtra("path", item.path);
                 intent.putExtra("name", item.name);
                 intent.putExtra("page", 0);
+                intent.putExtra("size", item.size);
                 startActivity(intent);
             }
             break;
