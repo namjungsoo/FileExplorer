@@ -20,12 +20,14 @@ import static com.duongame.explorer.adapter.ExplorerItem.Side.RIGHT;
  */
 
 public class ZipExtractTask extends AsyncTask<String, Integer, Void> {
-    private ArrayList<ExplorerItem> imageList;
-    private ArrayList<ExplorerItem> zipImageList;
+    private ArrayList<ExplorerItem> imageList;// zip안의 이미지 파일의 갯수
+    private ArrayList<ExplorerItem> zipImageList;// 잘려진 zip 파일의 이미지 갯수. 파일갯수와 다름
+
     private ZipFile zipFile;
     private ZipLoader.ZipLoaderListener listener;
+
     private ExplorerItem.Side side = LEFT;
-    private int extract;
+    private int extract;// 압축 풀린 이미지 파일의 갯수
 
     private final Object mPauseWorkLock = new Object();
     protected boolean mPauseWork = false;
@@ -170,7 +172,7 @@ public class ZipExtractTask extends AsyncTask<String, Integer, Void> {
     @Override
     protected void onPostExecute(Void result) {
         if (listener != null) {
-            listener.onFinish(zipImageList);
+            listener.onFinish(zipImageList, imageList.size());
         }
     }
 

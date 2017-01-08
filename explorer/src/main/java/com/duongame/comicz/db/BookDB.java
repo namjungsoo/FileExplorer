@@ -147,7 +147,7 @@ public class BookDB extends SQLiteOpenHelper {
             book = newBook(cursor);
             bookList.add(book);
 
-            Log.d(TAG, "getBooks " + book.toString());
+            Log.i(TAG, "getBooks " + book.toString());
         }
         cursor.close();
         db.close();
@@ -188,11 +188,11 @@ public class BookDB extends SQLiteOpenHelper {
         if (exist) {
             // 변경되는 내용: page, extract, side, datetime
             final String sql2 = "UPDATE book SET page=" + book.page + ",extract=" + book.extract + ",side=" + book.side.getValue() + ",datetime=datetime('now','localtime') WHERE path='" + book.path + "'";
-            Log.d(TAG, "setLastBook=" + sql2);
+            Log.i(TAG, "setLastBook=" + sql2);
             db.execSQL(sql2);
         } else {// 없으면 추가
             final String sql2 = "INSERT INTO book VALUES('" + book.path + "','" + book.name + "'," + book.type.getValue() + "," + book.side.getValue() + "," + book.page + "," + book.count + "," + book.extract + "," + book.size + ",datetime('now','localtime'))";
-            Log.d(TAG, "setLastBook=" + sql2);
+            Log.i(TAG, "setLastBook=" + sql2);
             db.execSQL(sql2);
         }
         db.close();

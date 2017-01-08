@@ -31,11 +31,11 @@ public class ZipLoader {
     private ZipExtractTask task;
 
     public interface ZipLoaderListener {
-        void onSuccess(int i, ArrayList<ExplorerItem> zipImageList, int totalCount);
+        void onSuccess(int i, ArrayList<ExplorerItem> zipImageList, int totalFileCount);
 
         void onFail(int i, String name);
 
-        void onFinish(ArrayList<ExplorerItem> zipImageList);
+        void onFinish(ArrayList<ExplorerItem> zipImageList, int totalFileCount);
     }
 
     public void cancelTask() {

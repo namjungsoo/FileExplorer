@@ -73,7 +73,7 @@ public class HistoryFragment extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
-        Log.d(TAG, "onResume");
+        Log.i(TAG, "onResume");
         refresh();
     }
 

@@ -38,10 +38,11 @@ public class ZipActivity extends PagerActivity {
 
     private ExplorerItem.Side side = LEFT;
     private ExplorerItem.Side lastSide = LEFT;
-    private int totalCount = 0;
-    private int extract = 0;
+
+    private int totalFileCount = 0;
+    private int extract = 0;// 압축 풀린 파일의 갯수
     private boolean zipExtractCompleted = false;
-    private long size;
+    private long size;// zip 파일의 용량
 
     private void changeSide(ExplorerItem.Side side) {
         lastSide = this.side;
@@ -50,9 +51,9 @@ public class ZipActivity extends PagerActivity {
 
     private ZipLoader.ZipLoaderListener listener = new ZipLoader.ZipLoaderListener() {
         @Override
-        public void onSuccess(int i, ArrayList<ExplorerItem> zipImageList, int totalCount) {
-            Log.i(TAG, "onSuccess=" + i + " totalCount=" + totalCount);
-            ZipActivity.this.totalCount = totalCount;
+        public void onSuccess(int i, ArrayList<ExplorerItem> zipImageList, int totalFileCount) {
+            Log.i(TAG, "onSuccess=" + i + " totalFileCount=" + totalFileCount);
+            ZipActivity.this.totalFileCount = totalFileCount;
             extract = i;
 
             final ArrayList<ExplorerItem> imageList = (ArrayList<ExplorerItem>) zipImageList.clone();
@@ -69,10 +70,12 @@ public class ZipActivity extends PagerActivity {
         }
 
         @Override
-        public void onFinish(ArrayList<ExplorerItem> zipImageList) {
+        public void onFinish(ArrayList<ExplorerItem> zipImageList, int totalFileCount) {
             // 체크해놓고 나중에 파일을 지우지 말자
+            Log.i(TAG, "onFinish totalFileCount=" + totalFileCount);
             zipExtractCompleted = true;
-            extract = totalCount;
+            ZipActivity.this.totalFileCount = totalFileCount;
+            extract = totalFileCount;
         }
     };
 
@@ -92,7 +95,8 @@ public class ZipActivity extends PagerActivity {
     }
 
     @Override
-    protected void onDestroy() {
+    protected void onPause() {
+        Log.i(TAG, "onPause");
         zipLoader.cancelTask();
 
         final BookDB.Book book = new BookDB.Book();
@@ -105,19 +109,20 @@ public class ZipActivity extends PagerActivity {
         book.type = ExplorerItem.FileType.ZIP;
 
         book.side = side;
-        book.count = totalCount;// 파일의 갯수이다.
+        book.count = totalFileCount;// 파일의 갯수이다.
 
         // 전부 압축이 다 풀렸으므로 전체 파일 갯수를 입력해준다.
-        if(zipExtractCompleted)
-            book.extract = totalCount;
-        else
+        if (zipExtractCompleted) {
+            book.extract = extract;
+        }
+        else {
             book.extract = extract + 1;// 앞으로 읽어야할 위치를 기억하기 위해 +1을 함
-
+        }
         book.size = size;
 
         BookDB.setLastBook(this, book);
 
-        super.onDestroy();
+        super.onPause();
     }
 
     protected ArrayList<ExplorerItem> getImageList() {
