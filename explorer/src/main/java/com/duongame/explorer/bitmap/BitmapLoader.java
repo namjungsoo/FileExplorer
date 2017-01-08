@@ -8,14 +8,20 @@ import android.graphics.BitmapRegionDecoder;
 import android.graphics.Matrix;
 import android.graphics.Rect;
 import android.media.ExifInterface;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
 
 import com.duongame.explorer.adapter.ExplorerItem;
 import com.duongame.explorer.helper.FileHelper;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 
+import static android.graphics.Bitmap.createBitmap;
 import static com.duongame.explorer.adapter.ExplorerItem.Side.LEFT;
 import static com.duongame.explorer.adapter.ExplorerItem.Side.RIGHT;
 
@@ -25,6 +31,22 @@ import static com.duongame.explorer.adapter.ExplorerItem.Side.RIGHT;
 
 public class BitmapLoader {
     public static final String TAG = "BitmapLoader";
+
+    public static void writeDebugBitmap(String path, Bitmap bitmap) {
+        File file = new File(path);
+        String name = file.getName();
+        name = name.replace(".zip", ".png");
+        String extPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + name;
+        try {
+            OutputStream os = new FileOutputStream(extPath);
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, os);
+            os.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     public static Bitmap getThumbnail(Activity context, String path, boolean exifRotation) {
 //        Log.d("BitmapLoader", "getThumbnail path="+path);
@@ -95,7 +117,7 @@ public class BitmapLoader {
             if (bitmap != null && degree != 0) {
                 Matrix m = new Matrix();
                 m.setRotate(degree, (float) bitmap.getWidth() * 0.5f, (float) bitmap.getHeight() * 0.5f);
-                Bitmap rotated = bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), m, false);
+                Bitmap rotated = createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), m, false);
                 if (rotated != null) {
                     bitmap.recycle();
                     bitmap = rotated;
@@ -135,6 +157,37 @@ public class BitmapLoader {
         return bitmap;
     }
 
+    private static Bitmap cropBitmap(String path, float ratio, BitmapFactory.Options options) {
+        Bitmap decoder = BitmapFactory.decodeFile(path, options);
+        Bitmap bitmap;
+        if (ratio > 1) {
+            int top = (decoder.getHeight() - decoder.getWidth()) >> 1;
+            bitmap = Bitmap.createBitmap(decoder, 0, top, decoder.getWidth(), decoder.getWidth());
+            decoder.recycle();
+        } else {
+            int left = (decoder.getWidth() - decoder.getHeight()) >> 1;
+            bitmap = Bitmap.createBitmap(decoder, left, 0, decoder.getHeight(), decoder.getHeight());
+            decoder.recycle();
+        }
+        return bitmap;
+    }
+
+    private static Bitmap cropBitmapUsingDecoder(String path, float ratio, BitmapFactory.Options options) throws IOException {
+        Bitmap bitmap;
+        final BitmapRegionDecoder decoder = BitmapRegionDecoder.newInstance(path, false);
+//            Log.d("tag", "decoder path=" + path + " width="+width + " height="+height);
+        if (ratio > 1) {// 어떤 크기가 들어오더라도 가운데 크롭을 하기 위해서이다.
+            int top = (decoder.getHeight() - decoder.getWidth()) >> 1;
+            bitmap = decoder.decodeRegion(new Rect(0, top, decoder.getWidth(), top + decoder.getWidth()), options);
+            decoder.recycle();
+        } else {
+            int left = (decoder.getWidth() - decoder.getHeight()) >> 1;
+            bitmap = decoder.decodeRegion(new Rect(left, 0, left + decoder.getHeight(), decoder.getHeight()), options);
+            decoder.recycle();
+        }
+        return bitmap;
+    }
+
     public static Bitmap decodeSquareThumbnailFromFile(String path, int size, boolean exifRotation) {
         final BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
@@ -158,25 +211,14 @@ public class BitmapLoader {
         // 로드하기 위해서는 위에서 true 로 설정했던 inJustDecodeBounds 의 값을 false 로 설정합니다.
         options.inJustDecodeBounds = false;
         try {
-            final BitmapRegionDecoder decoder = BitmapRegionDecoder.newInstance(path, false);
-//            Log.d("tag", "decoder path=" + path + " width="+width + " height="+height);
-
-            Bitmap bitmap;
-            if (ratio > 1) {// 어떤 크기가 들어오더라도 가운데 크롭을 하기 위해서이다.
-                int top = (decoder.getHeight() - decoder.getWidth()) >> 1;
-                bitmap = decoder.decodeRegion(new Rect(0, top, decoder.getWidth(), top + decoder.getWidth()), options);
-                decoder.recycle();
-            } else {
-                int left = (decoder.getWidth() - decoder.getHeight()) >> 1;
-                bitmap = decoder.decodeRegion(new Rect(left, 0, left + decoder.getHeight(), decoder.getHeight()), options);
-                decoder.recycle();
-            }
+            //Bitmap bitmap = cropBitmapUsingDecoder(path, ratio, options);
+            Bitmap bitmap = cropBitmap(path, ratio, options);
 
             if (exifRotation) {
                 bitmap = rotateBitmapOnExif(bitmap, options, path);
             }
             return bitmap;
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             return null;
         }
@@ -216,15 +258,15 @@ public class BitmapLoader {
         Bitmap pageOther = null;
         switch (item.side) {
             case LEFT:
-                page = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth() >> 1, bitmap.getHeight());
+                page = createBitmap(bitmap, 0, 0, bitmap.getWidth() >> 1, bitmap.getHeight());
 //                Log.d(TAG, "splitBitmapSide LEFT page=" + item.name);
-                pageOther = Bitmap.createBitmap(bitmap, bitmap.getWidth() >> 1, 0, bitmap.getWidth() >> 1, bitmap.getHeight());
+                pageOther = createBitmap(bitmap, bitmap.getWidth() >> 1, 0, bitmap.getWidth() >> 1, bitmap.getHeight());
 //                Log.d(TAG, "splitBitmapSide LEFT pageOther=" + itemOther.name);
                 break;
             case RIGHT:
-                page = Bitmap.createBitmap(bitmap, bitmap.getWidth() >> 1, 0, bitmap.getWidth() >> 1, bitmap.getHeight());
+                page = createBitmap(bitmap, bitmap.getWidth() >> 1, 0, bitmap.getWidth() >> 1, bitmap.getHeight());
 //                Log.d(TAG, "splitBitmapSide RIGHT page=" + item.name);
-                pageOther = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth() >> 1, bitmap.getHeight());
+                pageOther = createBitmap(bitmap, 0, 0, bitmap.getWidth() >> 1, bitmap.getHeight());
 //                Log.d(TAG, "splitBitmapSide RIGHT pageOther=" + itemOther.name);
                 break;
         }

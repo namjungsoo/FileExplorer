@@ -14,6 +14,10 @@ import net.lingala.zip4j.exception.ZipException;
 import net.lingala.zip4j.model.FileHeader;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.nio.channels.FileChannel;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -70,6 +74,16 @@ public class ZipLoader {
         }
     }
 
+    public void copy(File src, File dst) throws IOException {
+        FileInputStream inStream = new FileInputStream(src);
+        FileOutputStream outStream = new FileOutputStream(dst);
+        FileChannel inChannel = inStream.getChannel();
+        FileChannel outChannel = outStream.getChannel();
+        inChannel.transferTo(0, inChannel.size(), outChannel);
+        inStream.close();
+        outStream.close();
+    }
+
     // 리턴값은 이미지 리스트이다.
     // 압축을 풀지 않으면 정보를 알수가 없다. 좌우 잘라야 되는지 마는지를
     public ArrayList<ExplorerItem> load(Context context, String filename, ZipLoaderListener listener, int extract, ExplorerItem.Side side, boolean firstImageOnly) throws ZipException {
@@ -99,8 +113,17 @@ public class ZipLoader {
             if (imageList.size() > 0) {
                 // 이미지 로딩후 확인해보고 좌우를 나눠야 되면 나누어 주자
                 zipFile.extractFile(imageList.get(0).name, extractPath);
-
                 final BitmapFactory.Options options = BitmapLoader.decodeBounds(imageList.get(0).path);
+
+                //DEBUG
+//                File file = new File(imageList.get(0).path);
+//                File dstFile = new File(Environment.getExternalStorageDirectory() + "/" + imageList.get(0).name);
+//                try {
+//                    copy(file, dstFile);
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+
 
                 // 일본식(RIGHT)를 기준으로 잡자
                 if (options.outWidth > options.outHeight) {

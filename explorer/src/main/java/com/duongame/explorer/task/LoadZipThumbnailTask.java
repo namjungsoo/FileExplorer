@@ -3,6 +3,7 @@ package com.duongame.explorer.task;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
+import android.util.Log;
 import android.widget.ImageView;
 
 import com.duongame.explorer.R;
@@ -25,6 +26,7 @@ import static com.duongame.explorer.bitmap.BitmapCacheManager.getThumbnail;
 public class LoadZipThumbnailTask extends AsyncTask<String, Void, Bitmap> {
     private final ImageView imageView;
     private final Context context;
+    private String path;
 
     public LoadZipThumbnailTask(Context context, ImageView imageView) {
         this.imageView = imageView;
@@ -35,13 +37,13 @@ public class LoadZipThumbnailTask extends AsyncTask<String, Void, Bitmap> {
     protected Bitmap doInBackground(String... params) {
 //        Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
 
-        final String path = params[0];
+        path = params[0];
 
-        if(isCancelled())
+        if (isCancelled())
             return null;
 
         Bitmap bitmap = getThumbnail(path);
-        if(isCancelled())
+        if (isCancelled())
             return bitmap;
 
         if (bitmap == null) {
@@ -51,7 +53,7 @@ public class LoadZipThumbnailTask extends AsyncTask<String, Void, Bitmap> {
                 final ZipLoader loader = new ZipLoader();
                 final ArrayList<ExplorerItem> imageList = loader.load(context, path, null, 0, LEFT, true);
 
-                if(imageList != null && imageList.size() > 0) {
+                if (imageList != null && imageList.size() > 0) {
                     image = imageList.get(0).path;
                 }
 
@@ -59,19 +61,19 @@ public class LoadZipThumbnailTask extends AsyncTask<String, Void, Bitmap> {
                 e.printStackTrace();
             }
 
-            if(isCancelled())
+            if (isCancelled())
                 return bitmap;
 
             if (image == null) {
                 bitmap = BitmapCacheManager.getResourceBitmap(context.getResources(), R.drawable.zip);
-                if(bitmap != null)
+                if (bitmap != null)
                     BitmapCacheManager.setThumbnail(path, bitmap, imageView);
-            }
-            else {
+            } else {
                 //bitmap = BitmapLoader.decodeSampleBitmapFromFile(image, 96, 96, false);
                 bitmap = BitmapLoader.decodeSquareThumbnailFromFile(image, 96, false);
-                if(bitmap != null)
+                if (bitmap != null) {
                     BitmapCacheManager.setThumbnail(path, bitmap, imageView);
+                }
             }
         }
 
@@ -85,6 +87,8 @@ public class LoadZipThumbnailTask extends AsyncTask<String, Void, Bitmap> {
             if (imageView != null) {
                 imageView.setImageBitmap(bitmap);
             }
+        } else {
+            Log.e("LoadZipThumbnailTask", "onPostExecute imageView=" + imageView + " bitmap=" + bitmap);
         }
     }
 }

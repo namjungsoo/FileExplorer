@@ -8,6 +8,7 @@ import android.graphics.Canvas;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -23,6 +24,7 @@ import com.duongame.explorer.view.RoundedImageView;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import static android.content.ContentValues.TAG;
 import static com.duongame.explorer.adapter.ExplorerItem.FileType.IMAGE;
 import static com.duongame.explorer.bitmap.BitmapCacheManager.getThumbnail;
 
@@ -123,8 +125,11 @@ public abstract class ExplorerAdapter extends BaseAdapter {
                 task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, item.path);
                 taskMap.put(viewHolder.icon, task);
             } else {
-//                Log.w(TAG,"cache hit path="+item.path);
+                Log.w(TAG, "ZIP cache hit path=" + item.path);
                 viewHolder.icon.setImageBitmap(bitmap);
+
+                //DEBUG
+                //BitmapLoader.writeDebugBitmap(item.path, bitmap);
             }
         } else if (item.type == ExplorerItem.FileType.APK) {
             //TODO: 동적으로 읽기

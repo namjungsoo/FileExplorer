@@ -56,7 +56,6 @@ public class LoadThumbnailTask extends AsyncTask<String, Void, Bitmap> {
         if (imageView != null && bitmap != null) {
             if (imageView != null) {
                 imageView.setImageBitmap(bitmap);
-                imageView.setTag(path);
             }
         }
     }
