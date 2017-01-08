@@ -41,13 +41,13 @@
                 android:id="@+id/text_size"
                 android:layout_width="match_parent"
                 android:layout_height="18dp"
-                android:textSize="14sp"/>
+                android:textSize="12sp"/>
 
             <TextView
                 android:id="@+id/text_date"
                 android:layout_width="match_parent"
                 android:layout_height="18dp"
-                android:textSize="14sp"/>
+                android:textSize="12sp"/>
 
             <ProgressBar
                 style="?android:attr/progressBarStyleHorizontal"

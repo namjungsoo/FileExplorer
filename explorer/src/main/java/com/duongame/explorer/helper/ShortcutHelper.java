@@ -9,7 +9,7 @@ import com.duongame.explorer.R;
 /**
  * Created by 정수 on 2015-11-15.
  */
-public class ShortcutManager {
+public class ShortcutHelper {
     public static void checkShortcut(Context context) {
         initShortcut(context);
     }

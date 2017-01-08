@@ -8,7 +8,7 @@ import android.widget.ImageView;
 
 import com.duongame.explorer.R;
 import com.duongame.explorer.adapter.ExplorerItem;
-import com.duongame.explorer.bitmap.BitmapCacheManager;
+import com.duongame.explorer.bitmap.BitmapCache;
 import com.duongame.explorer.bitmap.BitmapLoader;
 import com.duongame.explorer.bitmap.ZipLoader;
 
@@ -17,7 +17,7 @@ import net.lingala.zip4j.exception.ZipException;
 import java.util.ArrayList;
 
 import static com.duongame.explorer.adapter.ExplorerItem.Side.LEFT;
-import static com.duongame.explorer.bitmap.BitmapCacheManager.getThumbnail;
+import static com.duongame.explorer.bitmap.BitmapCache.getThumbnail;
 
 /**
  * Created by namjungsoo on 2016-12-16.
@@ -64,15 +64,15 @@ public class LoadZipThumbnailTask extends AsyncTask<String, Void, Bitmap> {
                 return bitmap;
 
             if (image == null) {
-                bitmap = BitmapCacheManager.getResourceBitmap(context.getResources(), R.drawable.zip);
+                bitmap = BitmapCache.getResourceBitmap(context.getResources(), R.drawable.zip);
                 if (bitmap != null) {
-                    BitmapCacheManager.setThumbnail(path, bitmap, imageView);
+                    BitmapCache.setThumbnail(path, bitmap, imageView);
                 }
             } else {
                 //bitmap = BitmapLoader.decodeSampleBitmapFromFile(image, 96, 96, false);
                 bitmap = BitmapLoader.decodeSquareThumbnailFromFile(image, 96, false);
                 if (bitmap != null) {
-                    BitmapCacheManager.setThumbnail(path, bitmap, imageView);
+                    BitmapCache.setThumbnail(path, bitmap, imageView);
                 }
             }
         }

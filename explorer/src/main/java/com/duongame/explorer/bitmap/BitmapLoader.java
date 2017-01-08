@@ -246,10 +246,10 @@ public class BitmapLoader {
         final String keyOther;
         final ExplorerItem itemOther = (ExplorerItem) item.clone();
         itemOther.side = item.side == LEFT ? RIGHT : LEFT;
-        key = BitmapCacheManager.changePathToPage(item);
-        keyOther = BitmapCacheManager.changePathToPage(itemOther);
+        key = BitmapCache.changePathToPage(item);
+        keyOther = BitmapCache.changePathToPage(itemOther);
 
-        Bitmap page = BitmapCacheManager.getPage(key);
+        Bitmap page = BitmapCache.getPage(key);
         if (page != null) {
             Log.d(TAG, "splitBitmapSide getPage=" + item.name);
             return page;
@@ -272,8 +272,8 @@ public class BitmapLoader {
         }
 
         if (page != null && pageOther != null) {
-            BitmapCacheManager.setPage(key, page);
-            BitmapCacheManager.setPage(keyOther, pageOther);
+            BitmapCache.setPage(key, page);
+            BitmapCache.setPage(keyOther, pageOther);
         } else {
             Log.e(TAG, "splitBitmapSide page or pageOther is null");
         }
@@ -281,7 +281,7 @@ public class BitmapLoader {
         // 잘리는 비트맵은 더이상 사용하지 않으므로 삭제한다.
         // 이거 때문에 recycled 에러가 발생한다.
         // remove를 하지 않으면 oom이 발생한다.
-        BitmapCacheManager.removeBitmap(item.path);
+        BitmapCache.removeBitmap(item.path);
 //        Log.d(TAG, "splitBitmapSide removeBitmap=" + item.name);
 
         return page;

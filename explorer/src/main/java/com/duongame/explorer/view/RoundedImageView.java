@@ -7,7 +7,7 @@ import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.widget.ImageView;
 
-import com.duongame.explorer.helper.UnitConverter;
+import com.duongame.explorer.helper.UnitHelper;
 
 /**
  * Created by namjungsoo on 2016-06-19.
@@ -39,7 +39,7 @@ public class RoundedImageView extends ImageView {
     protected void onDraw(Canvas canvas) {
         final Path clipPath = new Path();
 
-        final float radius = UnitConverter.dpToPx(radiusDp);
+        final float radius = UnitHelper.dpToPx(radiusDp);
         final float padding = 0;
         final int w = this.getWidth();
         final int h = this.getHeight();

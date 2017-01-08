@@ -14,11 +14,11 @@ import android.view.MenuItem;
 import com.duongame.comicz.adapter.ComicPagerAdapter;
 import com.duongame.comicz.db.BookDB;
 import com.duongame.comicz.pro.R;
-import com.duongame.explorer.bitmap.BitmapCacheManager;
+import com.duongame.explorer.bitmap.BitmapCache;
 import com.duongame.explorer.fragment.BaseFragment;
-import com.duongame.explorer.helper.PositionManager;
+import com.duongame.explorer.manager.PositionManager;
 import com.duongame.explorer.helper.PreferenceHelper;
-import com.duongame.explorer.helper.ShortcutManager;
+import com.duongame.explorer.helper.ShortcutHelper;
 import com.duongame.explorer.helper.ToastHelper;
 
 import java.io.File;
@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_main);
 
-        ShortcutManager.checkShortcut(this);
+        ShortcutHelper.checkShortcut(this);
         initTabs();
 
 //        getSupportActionBar().setHideOnContentScrollEnabled(true);
@@ -145,9 +145,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     void clearCache() {
-        BitmapCacheManager.recycleThumbnail();
-        BitmapCacheManager.recyclePage();
-        BitmapCacheManager.recycleBitmap();
+        BitmapCache.recycleThumbnail();
+        BitmapCache.recyclePage();
+        BitmapCache.recycleBitmap();
 
         final File file = getFilesDir();
         deleteRecursive(file);

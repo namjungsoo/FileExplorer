@@ -3,7 +3,7 @@ package com.duongame.explorer.task;
 import android.graphics.Bitmap;
 
 import com.duongame.explorer.adapter.ExplorerItem;
-import com.duongame.explorer.bitmap.BitmapCacheManager;
+import com.duongame.explorer.bitmap.BitmapCache;
 
 /**
  * Created by namjungsoo on 2016. 12. 25..
@@ -28,10 +28,10 @@ public class RemoveAndPreloadTask extends BitmapTask {
                 final ExplorerItem item = removeList[i];
 
                 if (item.side == ExplorerItem.Side.SIDE_ALL)
-                    BitmapCacheManager.removeBitmap(item.path);
+                    BitmapCache.removeBitmap(item.path);
                 else {
-                    String path = BitmapCacheManager.changePathToPage(item);
-                    BitmapCacheManager.removePage(path);
+                    String path = BitmapCache.changePathToPage(item);
+                    BitmapCache.removePage(path);
                 }
             }
         }

@@ -7,7 +7,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.duongame.explorer.R;
-import com.duongame.explorer.helper.FileSizeHelper;
+import com.duongame.explorer.helper.FileHelper;
 import com.duongame.explorer.view.RoundedImageView;
 
 import java.util.ArrayList;
@@ -39,7 +39,7 @@ public class ExplorerListAdapter extends ExplorerAdapter {
     public void setViewHolder(ViewHolder viewHolder, ExplorerItem item) {
         viewHolder.name.setText(item.name);
         viewHolder.date.setText(item.date);
-        viewHolder.size.setText(FileSizeHelper.getMinimizedSize(item.size));
+        viewHolder.size.setText(FileHelper.getMinimizedSize(item.size));
         viewHolder.icon.setRadiusDp(5);
         viewHolder.small_icon.setVisibility(View.INVISIBLE);
     }

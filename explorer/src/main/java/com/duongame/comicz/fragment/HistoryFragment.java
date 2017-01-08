@@ -32,7 +32,6 @@ public class HistoryFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         rootView = (ViewGroup) inflater.inflate(R.layout.fragment_history, container, false);
-//        ((TextView) rootView.findViewById(R.id.number)).setText(1 + "");
         listView = (ListView) rootView.findViewById(R.id.list_history);
         adapter = new HistoryAdapter(getActivity(), null);
         listView.setAdapter(adapter);
@@ -60,8 +59,10 @@ public class HistoryFragment extends BaseFragment {
     @Override
     public void refresh() {
         bookList = BookDB.getBooks(getActivity());
-        adapter.setBookList(bookList);
-        adapter.notifyDataSetChanged();
+        if(adapter != null) {
+            adapter.setBookList(bookList);
+            adapter.notifyDataSetChanged();
+        }
     }
 
     @Override

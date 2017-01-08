@@ -21,12 +21,15 @@ public class ExplorerItem implements Cloneable {
         FILETYPE_ALL(10);
 
         private int value;
+
         FileType(int value) {
             this.value = value;
         }
+
         public int getValue() {
             return value;
         }
+
         public void setValue(int value) {
             this.value = value;
         }
@@ -39,12 +42,15 @@ public class ExplorerItem implements Cloneable {
         OTHER(3);
 
         private int value;
+
         Side(int value) {
             this.value = value;
         }
+
         public int getValue() {
             return value;
         }
+
         public void setValue(int value) {
             this.value = value;
         }
@@ -57,7 +63,8 @@ public class ExplorerItem implements Cloneable {
     public FileType type;
 
     public Side side = SIDE_ALL;
-    public int index;
+    public int index;// 내자신의 인덱스
+    public int orgIndex;// 원본의 인덱스(zip파일에 해당함)
 
     // ZIP 추가 데이터
     public int width;
@@ -72,7 +79,7 @@ public class ExplorerItem implements Cloneable {
     }
 
     public String toString() {
-        return "path=" + path + " name=" + name + " date=" + date + " size=" + size + " type=" + type + " side=" + side + " index=" + index + " width=" + width + " height=" + height;
+        return "path=" + path + " name=" + name + " date=" + date + " size=" + size + " type=" + type + " side=" + side + " index=" + index + " width=" + width + " height=" + height + " orgIndex=" + orgIndex;
     }
 
     @Override

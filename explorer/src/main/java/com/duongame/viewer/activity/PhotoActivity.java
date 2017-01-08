@@ -4,9 +4,9 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import com.duongame.explorer.adapter.ExplorerItem;
+import com.duongame.explorer.manager.ExplorerManager;
 import com.duongame.viewer.adapter.ViewerPagerAdapter;
 import com.duongame.viewer.adapter.PhotoPagerAdapter;
-import com.duongame.explorer.helper.ExplorerSearcher;
 
 import java.util.ArrayList;
 
@@ -27,7 +27,7 @@ public class PhotoActivity extends PagerActivity {
     }
 
     protected ArrayList<ExplorerItem> getImageList() {
-        return ExplorerSearcher.getImageList();
+        return ExplorerManager.getImageList();
     }
 
     @Override

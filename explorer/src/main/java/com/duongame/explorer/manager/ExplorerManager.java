@@ -1,8 +1,10 @@
-package com.duongame.explorer.helper;
+package com.duongame.explorer.manager;
 
 import android.os.Environment;
 
 import com.duongame.explorer.adapter.ExplorerItem;
+import com.duongame.explorer.helper.DateHelper;
+import com.duongame.explorer.helper.FileHelper;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -13,7 +15,7 @@ import java.util.Date;
  * Created by namjungsoo on 2016-11-06.
  */
 
-public class ExplorerSearcher {
+public class ExplorerManager {
     private static String lastPath;
     private static final String initialPath = Environment.getExternalStorageDirectory().getAbsolutePath();
     private static ArrayList<ExplorerItem> imageList = new ArrayList<>();

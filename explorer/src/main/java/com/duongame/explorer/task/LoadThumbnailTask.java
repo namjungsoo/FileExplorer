@@ -5,10 +5,10 @@ import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.widget.ImageView;
 
-import com.duongame.explorer.bitmap.BitmapCacheManager;
+import com.duongame.explorer.bitmap.BitmapCache;
 import com.duongame.explorer.bitmap.BitmapLoader;
 
-import static com.duongame.explorer.bitmap.BitmapCacheManager.getThumbnail;
+import static com.duongame.explorer.bitmap.BitmapCache.getThumbnail;
 
 /**
  * Created by namjungsoo on 2016-12-16.
@@ -44,7 +44,7 @@ public class LoadThumbnailTask extends AsyncTask<String, Void, Bitmap> {
                 bitmap = BitmapLoader.decodeSquareThumbnailFromFile(path, 96, true);
             }
             if (bitmap != null) {
-                BitmapCacheManager.setThumbnail(path, bitmap, imageView);
+                BitmapCache.setThumbnail(path, bitmap, imageView);
             }
         }
         return bitmap;

@@ -10,8 +10,8 @@ import android.view.ViewConfiguration;
 import android.widget.SeekBar;
 
 import com.duongame.explorer.R;
+import com.duongame.explorer.bitmap.BitmapCache;
 import com.duongame.viewer.adapter.ViewerPagerAdapter;
-import com.duongame.explorer.bitmap.BitmapCacheManager;
 
 /**
  * Created by namjungsoo on 2016-11-19.
@@ -64,8 +64,8 @@ public class PagerActivity extends ViewerActivity {
                 Log.d(TAG,"onStopTrackingTouch");
                 final int page = seekBar.getProgress() - 1;
                 pagerAdapter.stopAllTasks();
-                BitmapCacheManager.recyclePage();
-                BitmapCacheManager.recycleBitmap();
+                BitmapCache.recyclePage();
+                BitmapCache.recycleBitmap();
                 pager.setCurrentItem(page, false);
             }
         });

@@ -6,7 +6,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.duongame.explorer.adapter.ExplorerItem;
-import com.duongame.explorer.bitmap.BitmapCacheManager;
+import com.duongame.explorer.bitmap.BitmapCache;
 import com.duongame.explorer.bitmap.BitmapLoader;
 
 import static android.content.ContentValues.TAG;
@@ -39,8 +39,8 @@ public class BitmapTask extends AsyncTask<ExplorerItem, Void, Bitmap> {
         // split일 경우에는 무조건 없다
         Bitmap bitmap = null;
         if (item.side != ExplorerItem.Side.SIDE_ALL) {
-            final String page = BitmapCacheManager.changePathToPage(item);
-            bitmap = BitmapCacheManager.getPage(page);
+            final String page = BitmapCache.changePathToPage(item);
+            bitmap = BitmapCache.getPage(page);
 
             if (bitmap != null) {
                 Log.d(this.getClass().getSimpleName(), "loadBitmap found cached page="+item.path);
@@ -48,7 +48,7 @@ public class BitmapTask extends AsyncTask<ExplorerItem, Void, Bitmap> {
             }
         }
 
-        bitmap = BitmapCacheManager.getBitmap(item.path);
+        bitmap = BitmapCache.getBitmap(item.path);
         if (bitmap == null) {
             // 렌더러를 어떻게 전달하지..
             // PDF는 동적으로 읽을수 없다.
@@ -64,7 +64,7 @@ public class BitmapTask extends AsyncTask<ExplorerItem, Void, Bitmap> {
 //                    bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
 //
 //                    page.render(bitmap, null, null, PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY);
-//                    BitmapCacheManager.setBitmap(item.path, bitmap);
+//                    BitmapCache.setBitmap(item.path, bitmap);
 //                    return bitmap;
 //                }
 //            }
@@ -101,7 +101,7 @@ public class BitmapTask extends AsyncTask<ExplorerItem, Void, Bitmap> {
                 } else {
                     if (item.side == ExplorerItem.Side.SIDE_ALL) {
                         Log.d(this.getClass().getSimpleName(), "loadBitmap setBitmap="+item.path);
-                        BitmapCacheManager.setBitmap(item.path, bitmap);
+                        BitmapCache.setBitmap(item.path, bitmap);
                     }
                     else {
                         // 비트맵을 로딩했으면 이제 자르자

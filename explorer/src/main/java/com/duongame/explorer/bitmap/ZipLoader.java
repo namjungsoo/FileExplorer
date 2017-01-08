@@ -155,7 +155,7 @@ public class ZipLoader {
                     // 동기적으로 이미 압축 풀린 놈들을 가져오자
                     for (int i = 0; i < extract; i++) {
                         final ExplorerItem item = (ExplorerItem) imageList.get(i);
-                        ZipExtractTask.processItem(item, side, firstList);
+                        ZipExtractTask.processItem(i, item, side, firstList);
                     }
 
                     Log.i(TAG, "firstList.size=" + firstList.size());

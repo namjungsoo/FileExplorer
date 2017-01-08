@@ -16,8 +16,8 @@ import java.util.concurrent.ConcurrentHashMap;
  * Created by namjungsoo on 2016-11-16.
  */
 
-public class BitmapCacheManager {
-    private final static String TAG = "BitmapCacheManager";
+public class BitmapCache {
+    private final static String TAG = "BitmapCache";
 
     // 썸네일 관련
     static ConcurrentHashMap<String, Bitmap> thumbnailCache = new ConcurrentHashMap<String, Bitmap>();

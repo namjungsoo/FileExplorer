@@ -13,9 +13,9 @@ import android.widget.TextView;
 import com.duongame.comicz.db.BookDB;
 import com.duongame.explorer.R;
 import com.duongame.explorer.adapter.ExplorerItem;
-import com.duongame.explorer.bitmap.BitmapCacheManager;
+import com.duongame.explorer.bitmap.BitmapCache;
 import com.duongame.explorer.bitmap.ZipLoader;
-import com.duongame.explorer.helper.AlertManager;
+import com.duongame.explorer.helper.AlertHelper;
 import com.duongame.viewer.adapter.PhotoPagerAdapter;
 import com.duongame.viewer.adapter.ViewerPagerAdapter;
 
@@ -159,7 +159,7 @@ public class ZipActivity extends PagerActivity {
             // zip 파일을 로딩한다.
             final ArrayList<ExplorerItem> imageList = zipLoader.load(this, path, listener, extract, side, false);
             if (imageList.size() <= 0) {
-                AlertManager.showAlert(this, "알림", "압축(ZIP) 파일에 이미지가 없습니다.", new DialogInterface.OnClickListener() {
+                AlertHelper.showAlert(this, "알림", "압축(ZIP) 파일에 이미지가 없습니다.", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         finish();
@@ -249,8 +249,8 @@ public class ZipActivity extends PagerActivity {
         // 초기화 하기전에 task를 전부 stop한다.
         pagerAdapter.stopAllTasks();
         pager.removeAllViews();
-        BitmapCacheManager.recyclePage();
-        BitmapCacheManager.recycleBitmap();
+        BitmapCache.recyclePage();
+        BitmapCache.recycleBitmap();
 
         // 데이터를 업데이트 하자.
         // 좌우를 변경한다.

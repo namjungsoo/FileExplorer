@@ -9,8 +9,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
 import com.duongame.explorer.fragment.ExplorerFragment;
-import com.duongame.explorer.helper.ExplorerSearcher;
-import com.duongame.explorer.helper.PositionManager;
+import com.duongame.explorer.manager.ExplorerManager;
+import com.duongame.explorer.manager.PositionManager;
 import com.duongame.explorer.helper.PreferenceHelper;
 import com.duongame.fileexplorer.R;
 
@@ -72,7 +72,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        if (!ExplorerSearcher.isInitialPath()) {
+        if (!ExplorerManager.isInitialPath()) {
             fragment.gotoUpDirectory();
         }
     }

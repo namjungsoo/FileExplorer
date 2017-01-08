@@ -19,7 +19,6 @@ public class SearchFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         rootView = (ViewGroup) inflater.inflate(R.layout.fragment_search, container, false);
-//        ((TextView) rootView.findViewById(R.id.number)).setText(2 + "");
         return rootView;
     }
 

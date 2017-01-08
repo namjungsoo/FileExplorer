@@ -27,9 +27,9 @@ import com.duongame.explorer.adapter.ExplorerAdapter;
 import com.duongame.explorer.adapter.ExplorerGridAdapter;
 import com.duongame.explorer.adapter.ExplorerItem;
 import com.duongame.explorer.adapter.ExplorerListAdapter;
-import com.duongame.explorer.bitmap.BitmapCacheManager;
-import com.duongame.explorer.helper.ExplorerSearcher;
-import com.duongame.explorer.helper.PositionManager;
+import com.duongame.explorer.bitmap.BitmapCache;
+import com.duongame.explorer.manager.ExplorerManager;
+import com.duongame.explorer.manager.PositionManager;
 import com.duongame.explorer.helper.PreferenceHelper;
 import com.duongame.viewer.activity.PdfActivity;
 import com.duongame.viewer.activity.PhotoActivity;
@@ -187,7 +187,7 @@ public class ExplorerFragment extends BaseFragment {
         viewType = SWITCH_LIST;
         currentView = listView;
 
-        moveToSelection(ExplorerSearcher.getLastPath());
+        moveToSelection(ExplorerManager.getLastPath());
     }
 
     void switchToGrid() {
@@ -212,18 +212,18 @@ public class ExplorerFragment extends BaseFragment {
         viewType = SWITCH_GRID;
         currentView = gridView;
 
-        moveToSelection(ExplorerSearcher.getLastPath());
+        moveToSelection(ExplorerManager.getLastPath());
     }
 
     void refreshThumbnail(String path) {
-        ArrayList<ExplorerItem> imageList = ExplorerSearcher.getImageList();
+        ArrayList<ExplorerItem> imageList = ExplorerManager.getImageList();
         for (ExplorerItem item : imageList) {
             getActivity().sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse("file://" + item.path)));
         }
     }
 
     public void gotoUpDirectory() {
-        String path = ExplorerSearcher.getLastPath();
+        String path = ExplorerManager.getLastPath();
         path = path.substring(0, path.lastIndexOf('/'));
         if (path.length() == 0) {
             path = "/";
@@ -240,10 +240,10 @@ public class ExplorerFragment extends BaseFragment {
                 backupPosition();
 
                 String newPath;
-                if (ExplorerSearcher.getLastPath().equals("/")) {
-                    newPath = ExplorerSearcher.getLastPath() + item.name;
+                if (ExplorerManager.getLastPath().equals("/")) {
+                    newPath = ExplorerManager.getLastPath() + item.name;
                 } else {
-                    newPath = ExplorerSearcher.getLastPath() + "/" + item.name;
+                    newPath = ExplorerManager.getLastPath() + "/" + item.name;
                 }
 
                 updateFileList(newPath);
@@ -293,8 +293,8 @@ public class ExplorerFragment extends BaseFragment {
     }
 
     void backupPosition() {
-        PositionManager.setPosition(ExplorerSearcher.getLastPath(), currentView.getFirstVisiblePosition());
-        PositionManager.setTop(ExplorerSearcher.getLastPath(), getCurrentViewScrollTop());
+        PositionManager.setPosition(ExplorerManager.getLastPath(), currentView.getFirstVisiblePosition());
+        PositionManager.setTop(ExplorerManager.getLastPath(), getCurrentViewScrollTop());
     }
 
     int getCurrentViewScrollTop() {
@@ -342,13 +342,13 @@ public class ExplorerFragment extends BaseFragment {
 //                        bitmap = BitmapLoader.decodeSquareThumbnailFromFile(item.path, 96);
 //                    }
 //                    if (bitmap != null) {
-//                        BitmapCacheManager.setThumbnail(item.path, bitmap, null);
+//                        BitmapCache.setThumbnail(item.path, bitmap, null);
 //                    }
 //                }
 //            }
 //
 //            private int findImage(String path) {
-//                final ArrayList<ExplorerItem> imageList = ExplorerSearcher.getImageList();
+//                final ArrayList<ExplorerItem> imageList = ExplorerManager.getImageList();
 //                for (int i = 0; i < imageList.size(); i++) {
 //                    if (imageList.get(i).path.equals(path))
 //                        return i;
@@ -362,7 +362,7 @@ public class ExplorerFragment extends BaseFragment {
 //                final ArrayList<ExplorerItem> newImageList = new ArrayList<>();
 //
 //                newFileList.addAll(fileList);
-//                newImageList.addAll(ExplorerSearcher.getImageList());
+//                newImageList.addAll(ExplorerManager.getImageList());
 //
 //                final int position = currentView.getFirstVisiblePosition();
 //                final String startPath = newFileList.get(position).path;
@@ -398,14 +398,14 @@ public class ExplorerFragment extends BaseFragment {
 //        Log.d(TAG, "updateFileList start "+rootView.getWidth() + " " + rootView.getHeight());
         adapter.stopAllTasks();
 
-        if (BitmapCacheManager.getThumbnailCount() > MAX_THUMBNAILS) {
+        if (BitmapCache.getThumbnailCount() > MAX_THUMBNAILS) {
 //            Log.w(TAG, "recycleThumbnail");
-            BitmapCacheManager.recycleThumbnail();
+            BitmapCache.recycleThumbnail();
         }
 
 //        threadStop();
 
-        fileList = ExplorerSearcher.search(path);
+        fileList = ExplorerManager.search(path);
         if (fileList != null) {
 //            Log.d(TAG, "fileList size="+fileList.size());
             adapter.setFileList(fileList);
@@ -414,7 +414,7 @@ public class ExplorerFragment extends BaseFragment {
 
 //        threadStart();
 
-        textPath.setText(ExplorerSearcher.getLastPath());
+        textPath.setText(ExplorerManager.getLastPath());
         textPath.requestLayout();
 
         // 가장 오른쪽으로 스크롤
@@ -431,7 +431,7 @@ public class ExplorerFragment extends BaseFragment {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                PreferenceHelper.setLastPath(getActivity(), ExplorerSearcher.getLastPath());
+                PreferenceHelper.setLastPath(getActivity(), ExplorerManager.getLastPath());
             }
         }).start();
         refreshThumbnail(path);
@@ -439,12 +439,12 @@ public class ExplorerFragment extends BaseFragment {
 
     @Override
     public void refresh() {
-        updateFileList(ExplorerSearcher.getLastPath());
+        updateFileList(ExplorerManager.getLastPath());
     }
 
     @Override
     public void onBackPressed() {
-        if (!ExplorerSearcher.isInitialPath()) {
+        if (!ExplorerManager.isInitialPath()) {
             gotoUpDirectory();
         } else {
             super.onBackPressed();

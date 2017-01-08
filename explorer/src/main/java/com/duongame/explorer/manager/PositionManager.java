@@ -1,4 +1,4 @@
-package com.duongame.explorer.helper;
+package com.duongame.explorer.manager;
 
 import java.util.HashMap;
 

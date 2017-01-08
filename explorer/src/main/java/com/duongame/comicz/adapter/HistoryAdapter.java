@@ -14,13 +14,13 @@ import android.widget.TextView;
 import com.duongame.comicz.db.BookDB;
 import com.duongame.explorer.R;
 import com.duongame.explorer.helper.DateHelper;
-import com.duongame.explorer.helper.FileSizeHelper;
+import com.duongame.explorer.helper.FileHelper;
 import com.duongame.explorer.task.LoadZipThumbnailTask;
 import com.duongame.explorer.view.RoundedImageView;
 
 import java.util.ArrayList;
 
-import static com.duongame.explorer.bitmap.BitmapCacheManager.getThumbnail;
+import static com.duongame.explorer.bitmap.BitmapCache.getThumbnail;
 
 /**
  * Created by namjungsoo on 2017-01-02.
@@ -99,7 +99,7 @@ public class HistoryAdapter extends BaseAdapter {
             final BookDB.Book book = bookList.get(position);
 
             viewHolder.name.setText(book.name);
-            viewHolder.size.setText(FileSizeHelper.getMinimizedSize(book.size));
+            viewHolder.size.setText(FileHelper.getMinimizedSize(book.size));
             viewHolder.date.setText(DateHelper.getDBDate(book.date));
             viewHolder.page.setText(getPageText(book));
             viewHolder.percent.setText(getPercentText(book));

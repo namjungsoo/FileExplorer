@@ -15,7 +15,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.duongame.explorer.R;
-import com.duongame.explorer.bitmap.BitmapCacheManager;
+import com.duongame.explorer.bitmap.BitmapCache;
 import com.duongame.explorer.task.LoadThumbnailTask;
 import com.duongame.explorer.task.LoadZipThumbnailTask;
 import com.duongame.explorer.view.RoundedImageView;
@@ -24,7 +24,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import static com.duongame.explorer.adapter.ExplorerItem.FileType.IMAGE;
-import static com.duongame.explorer.bitmap.BitmapCacheManager.getThumbnail;
+import static com.duongame.explorer.bitmap.BitmapCache.getThumbnail;
 
 /**
  * Created by namjungsoo on 2016-11-06.
@@ -131,7 +131,7 @@ public abstract class ExplorerAdapter extends BaseAdapter {
             }
         } else if (item.type == ExplorerItem.FileType.APK) {
             //TODO: 동적으로 읽기
-            Drawable drawable = BitmapCacheManager.getDrawable(item.path);
+            Drawable drawable = BitmapCache.getDrawable(item.path);
             if (drawable == null) {
                 final PackageManager pm = context.getPackageManager();
                 final PackageInfo pi = pm.getPackageArchiveInfo(item.path, 0);
@@ -139,7 +139,7 @@ public abstract class ExplorerAdapter extends BaseAdapter {
                 pi.applicationInfo.sourceDir = item.path;
                 pi.applicationInfo.publicSourceDir = item.path;
                 drawable = pi.applicationInfo.loadIcon(pm);
-                BitmapCacheManager.setDrawable(item.path, drawable);
+                BitmapCache.setDrawable(item.path, drawable);
             }
             //viewHolder.icon.setImageBitmap(drawableToBitmap(drawable));
             viewHolder.icon.setImageDrawable(drawable);
@@ -184,10 +184,10 @@ public abstract class ExplorerAdapter extends BaseAdapter {
             case PDF:
 //            case TEXT:
             case FILE:
-                icon.setImageBitmap(BitmapCacheManager.getResourceBitmap(context.getResources(), R.drawable.file));
+                icon.setImageBitmap(BitmapCache.getResourceBitmap(context.getResources(), R.drawable.file));
                 break;
             case DIRECTORY:
-                icon.setImageBitmap(BitmapCacheManager.getResourceBitmap(context.getResources(), R.drawable.directory));
+                icon.setImageBitmap(BitmapCache.getResourceBitmap(context.getResources(), R.drawable.directory));
                 break;
 //            case ZIP:
 //                icon.setImageBitmap(getResourceBitmap(context.getResources(), R.drawable.zip));
@@ -202,7 +202,7 @@ public abstract class ExplorerAdapter extends BaseAdapter {
 //                icon.setImageBitmap(getResourceBitmap(context.getResources(), R.drawable.mp3));
 //                break;
             case TEXT:
-                icon.setImageBitmap(BitmapCacheManager.getResourceBitmap(context.getResources(), R.drawable.text));
+                icon.setImageBitmap(BitmapCache.getResourceBitmap(context.getResources(), R.drawable.text));
                 break;
             default:
                 return;
