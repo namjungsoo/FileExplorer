@@ -311,10 +311,12 @@ public class ExplorerFragment extends BaseFragment {
 //        Log.d(TAG, "updateFileList path=" + path + " position=" + position + " top="+top);
 
         currentView.clearFocus();
+
         currentView.post(new Runnable() {
             @Override
             public void run() {
                 currentView.requestFocusFromTouch();
+
                 if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                     // only for gingerbread and newer versions
                     currentView.setSelectionFromTop(position, top);
@@ -322,7 +324,8 @@ public class ExplorerFragment extends BaseFragment {
                     currentView.setSelection(position);
                 }
 
-                currentView.requestFocus();
+                currentView.clearFocus();
+//                currentView.requestFocusFromTouch();
             }
         });
     }

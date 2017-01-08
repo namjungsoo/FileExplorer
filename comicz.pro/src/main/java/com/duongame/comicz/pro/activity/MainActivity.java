@@ -14,6 +14,7 @@ import android.view.MenuItem;
 import com.duongame.comicz.adapter.ComicPagerAdapter;
 import com.duongame.comicz.db.BookDB;
 import com.duongame.comicz.pro.R;
+import com.duongame.explorer.bitmap.BitmapCacheManager;
 import com.duongame.explorer.fragment.BaseFragment;
 import com.duongame.explorer.helper.PositionManager;
 import com.duongame.explorer.helper.PreferenceHelper;
@@ -143,8 +144,15 @@ public class MainActivity extends AppCompatActivity {
     }
 
     void clearCache() {
+        BitmapCacheManager.recycleThumbnail();
+        BitmapCacheManager.recyclePage();
+        BitmapCacheManager.recycleBitmap();
+
         final File file = getFilesDir();
         deleteRecursive(file);
+
+        final BaseFragment fragment = (BaseFragment) adapter.getItem(0);
+        fragment.refresh();
     }
 
     void clearHistory() {
