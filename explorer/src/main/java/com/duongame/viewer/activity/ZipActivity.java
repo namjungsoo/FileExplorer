@@ -10,14 +10,14 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.duongame.comicz.db.BookDB;
 import com.duongame.explorer.R;
 import com.duongame.explorer.adapter.ExplorerItem;
-import com.duongame.viewer.adapter.PhotoPagerAdapter;
-import com.duongame.viewer.adapter.ViewerPagerAdapter;
 import com.duongame.explorer.bitmap.BitmapCacheManager;
 import com.duongame.explorer.bitmap.ZipLoader;
-import com.duongame.comicz.db.BookDB;
 import com.duongame.explorer.helper.AlertManager;
+import com.duongame.viewer.adapter.PhotoPagerAdapter;
+import com.duongame.viewer.adapter.ViewerPagerAdapter;
 
 import net.lingala.zip4j.exception.ZipException;
 
@@ -51,7 +51,7 @@ public class ZipActivity extends PagerActivity {
     private ZipLoader.ZipLoaderListener listener = new ZipLoader.ZipLoaderListener() {
         @Override
         public void onSuccess(int i, ArrayList<ExplorerItem> zipImageList, int totalCount) {
-//            Log.d(TAG, "onSuccess="+i);
+            Log.i(TAG, "onSuccess=" + i + " totalCount=" + totalCount);
             ZipActivity.this.totalCount = totalCount;
             extract = i;
 
@@ -106,7 +106,12 @@ public class ZipActivity extends PagerActivity {
 
         book.side = side;
         book.count = totalCount;// 파일의 갯수이다.
-        book.extract = extract + 1;// 앞으로 읽어야할 위치를 기억하기 위해 +1을 함
+
+        // 전부 압축이 다 풀렸으므로 전체 파일 갯수를 입력해준다.
+        if(zipExtractCompleted)
+            book.extract = totalCount;
+        else
+            book.extract = extract + 1;// 앞으로 읽어야할 위치를 기억하기 위해 +1을 함
 
         book.size = size;
 
@@ -138,6 +143,10 @@ public class ZipActivity extends PagerActivity {
             name = extras.getString("name");
             size = extras.getLong("size");
             extract = extras.getInt("extract");
+            side.setValue(extras.getInt("side"));
+            lastSide = side;
+
+            Log.i(TAG, "page=" + page + " name=" + name + " size=" + size + " extract=" + extract + " side=" + side.getValue());
 
             // initPagerAdapter의 기능이다.
             pager.setAdapter(pagerAdapter);// setAdapter이후에 imageList를 변경하면 항상 notify해주어야 한다.

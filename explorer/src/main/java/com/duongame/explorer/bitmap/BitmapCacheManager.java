@@ -98,6 +98,7 @@ public class BitmapCacheManager {
         return drawableCache.get(path);
     }
 
+
     // image bitmap
     public static void setBitmap(String path, Bitmap bitmap) {
         bitmapCache.putIfAbsent(path, bitmap);

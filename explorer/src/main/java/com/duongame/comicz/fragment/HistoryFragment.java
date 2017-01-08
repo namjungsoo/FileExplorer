@@ -39,14 +39,15 @@ public class HistoryFragment extends BaseFragment {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if(bookList != null) {
-                    BookDB.Book book = bookList.get(position);
-                    Intent intent = new Intent(getActivity(), ZipActivity.class);
+                if (bookList != null) {
+                    final BookDB.Book book = bookList.get(position);
+                    final Intent intent = new Intent(getActivity(), ZipActivity.class);
                     intent.putExtra("path", book.path);
                     intent.putExtra("name", book.name);
                     intent.putExtra("page", book.page);
                     intent.putExtra("size", book.size);
                     intent.putExtra("extract", book.extract);
+                    intent.putExtra("side", book.side.getValue());
                     startActivity(intent);
                 }
             }
@@ -73,6 +74,7 @@ public class HistoryFragment extends BaseFragment {
     public void onResume() {
         super.onResume();
         Log.d(TAG, "onResume");
+        refresh();
     }
 
 }

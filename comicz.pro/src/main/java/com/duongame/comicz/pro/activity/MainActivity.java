@@ -136,6 +136,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         if (id == R.id.action_clear_history) {
+            clearHistory();
 
             ToastHelper.showToast(this, "최근파일 목록을 삭제하였습니다.");
         }

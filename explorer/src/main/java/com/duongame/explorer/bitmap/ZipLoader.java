@@ -124,7 +124,6 @@ public class ZipLoader {
 //                    e.printStackTrace();
 //                }
 
-
                 // 일본식(RIGHT)를 기준으로 잡자
                 if (options.outWidth > options.outHeight) {
                     imageList.get(0).side = ExplorerItem.Side.LEFT;
@@ -133,9 +132,6 @@ public class ZipLoader {
             }
         } else {
             if (imageList.size() > 0) {
-                task = new ZipExtractTask(zipFile, imageList, listener, extract);
-                task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, extractPath);
-
                 final ArrayList<ExplorerItem> firstList = new ArrayList<>();
 
                 // 이미지 파일이 있으면 첫번째 페이지만 추가해줌
@@ -149,13 +145,30 @@ public class ZipLoader {
                     }
 
                     firstList.add(item);
+
+                    task = new ZipExtractTask(zipFile, imageList, listener, extract, null);
+                    task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, extractPath);
+
                     return firstList;
                 } else {
+                    Log.i(TAG, "extract=" + extract);
                     // 동기적으로 이미 압축 풀린 놈들을 가져오자
                     for (int i = 0; i < extract; i++) {
-                        final ExplorerItem item = (ExplorerItem) imageList.get(0);
+                        final ExplorerItem item = (ExplorerItem) imageList.get(i);
                         ZipExtractTask.processItem(item, side, firstList);
                     }
+
+                    Log.i(TAG, "firstList.size=" + firstList.size());
+                    for(int i=0; i<firstList.size(); i++) {
+                        Log.i(TAG, i+ ": " + firstList.get(i).path + " " + firstList.get(i).side);
+                    }
+
+                    if (extract == imageList.size()) {
+                        Log.i(TAG, "extract == imageList.size()");
+                    }
+
+                    task = new ZipExtractTask(zipFile, imageList, listener, extract, (ArrayList<ExplorerItem>)firstList.clone());
+                    task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, extractPath);
                     return firstList;
                 }
             }

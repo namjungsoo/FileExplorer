@@ -56,7 +56,6 @@ public class LoadZipThumbnailTask extends AsyncTask<String, Void, Bitmap> {
                 if (imageList != null && imageList.size() > 0) {
                     image = imageList.get(0).path;
                 }
-
             } catch (ZipException e) {
                 e.printStackTrace();
             }
@@ -66,8 +65,9 @@ public class LoadZipThumbnailTask extends AsyncTask<String, Void, Bitmap> {
 
             if (image == null) {
                 bitmap = BitmapCacheManager.getResourceBitmap(context.getResources(), R.drawable.zip);
-                if (bitmap != null)
+                if (bitmap != null) {
                     BitmapCacheManager.setThumbnail(path, bitmap, imageView);
+                }
             } else {
                 //bitmap = BitmapLoader.decodeSampleBitmapFromFile(image, 96, 96, false);
                 bitmap = BitmapLoader.decodeSquareThumbnailFromFile(image, 96, false);

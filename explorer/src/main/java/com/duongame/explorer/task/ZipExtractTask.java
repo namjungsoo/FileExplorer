@@ -30,12 +30,17 @@ public class ZipExtractTask extends AsyncTask<String, Integer, Void> {
     private final Object mPauseWorkLock = new Object();
     protected boolean mPauseWork = false;
 
-    public ZipExtractTask(ZipFile zipFile, ArrayList<ExplorerItem> imageList, ZipLoader.ZipLoaderListener listener, int extract) {
+    public ZipExtractTask(ZipFile zipFile, ArrayList<ExplorerItem> imageList, ZipLoader.ZipLoaderListener listener, int extract, ArrayList<ExplorerItem> zipImageList) {
         this.zipFile = zipFile;
         this.imageList = imageList;
         this.listener = listener;
         this.extract = extract;
-        zipImageList = new ArrayList<ExplorerItem>();
+
+        if(zipImageList != null) {
+            this.zipImageList = zipImageList;
+        } else {
+            this.zipImageList = new ArrayList<ExplorerItem>();
+        }
     }
 
     public void setPauseWork(boolean pauseWork) {
