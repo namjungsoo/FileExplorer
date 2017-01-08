@@ -50,10 +50,28 @@ public class ZipActivity extends PagerActivity {
         this.side = side;
     }
 
+    @Override
+    protected void updateScrollInfo(int position) {
+//        Log.d(TAG, "updateScrollInfo="+position);
+        if (totalFileCount == 0) {
+            textPage.setText((position + 1) + "/" + pagerAdapter.getCount());
+        } else {
+            int loadingPercent = (extractFileCount + 1) * 100 / totalFileCount;
+            if (loadingPercent == 100) {
+                textPage.setText((position + 1) + "/" + pagerAdapter.getCount());
+            } else {
+                textPage.setText((position + 1) + "/" + pagerAdapter.getCount() + String.format(" (%02d%%)", loadingPercent));
+            }
+        }
+
+        seekPage.setMax(pagerAdapter.getCount());
+        seekPage.setProgress(position + 1);
+    }
+
     private ZipLoader.ZipLoaderListener listener = new ZipLoader.ZipLoaderListener() {
         @Override
         public void onSuccess(int i, ArrayList<ExplorerItem> zipImageList, int totalFileCount) {
-            Log.i(TAG, "onSuccess=" + i + " totalFileCount=" + totalFileCount);
+//            Log.i(TAG, "onSuccess=" + i + " totalFileCount=" + totalFileCount);
             ZipActivity.this.totalFileCount = totalFileCount;
             extractFileCount = i;
 
