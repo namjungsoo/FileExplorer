@@ -25,8 +25,10 @@ import com.duongame.viewer.adapter.ViewerPagerAdapter;
 public class PagerActivity extends ViewerActivity {
     private final static String TAG = "PagerActivity";
 
+    // 파일의 정보
     protected String path;
     protected String name;
+
     protected ViewPager pager;
     protected ViewerPagerAdapter pagerAdapter;
 
@@ -187,7 +189,7 @@ public class PagerActivity extends ViewerActivity {
                                 if (page > 0)
                                     pager.setCurrentItem(page - 1, true);
                             } else if (lastMotionPt.x > right) {
-                                //int count = pager.getChildCount();
+                                //int total_file = pager.getChildCount();
                                 int count = pagerAdapter.getCount();
                                 int page = pager.getCurrentItem();
                                 if (page < count + 1)

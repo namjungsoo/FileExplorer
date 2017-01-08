@@ -259,13 +259,13 @@ public class BitmapLoader {
         switch (item.side) {
             case LEFT:
                 page = createBitmap(bitmap, 0, 0, bitmap.getWidth() >> 1, bitmap.getHeight());
-//                Log.d(TAG, "splitBitmapSide LEFT page=" + item.name);
+//                Log.d(TAG, "splitBitmapSide LEFT current_page=" + item.name);
                 pageOther = createBitmap(bitmap, bitmap.getWidth() >> 1, 0, bitmap.getWidth() >> 1, bitmap.getHeight());
 //                Log.d(TAG, "splitBitmapSide LEFT pageOther=" + itemOther.name);
                 break;
             case RIGHT:
                 page = createBitmap(bitmap, bitmap.getWidth() >> 1, 0, bitmap.getWidth() >> 1, bitmap.getHeight());
-//                Log.d(TAG, "splitBitmapSide RIGHT page=" + item.name);
+//                Log.d(TAG, "splitBitmapSide RIGHT current_page=" + item.name);
                 pageOther = createBitmap(bitmap, 0, 0, bitmap.getWidth() >> 1, bitmap.getHeight());
 //                Log.d(TAG, "splitBitmapSide RIGHT pageOther=" + itemOther.name);
                 break;
@@ -275,7 +275,7 @@ public class BitmapLoader {
             BitmapCache.setPage(key, page);
             BitmapCache.setPage(keyOther, pageOther);
         } else {
-            Log.e(TAG, "splitBitmapSide page or pageOther is null");
+            Log.e(TAG, "splitBitmapSide current_page or pageOther is null");
         }
 
         // 잘리는 비트맵은 더이상 사용하지 않으므로 삭제한다.

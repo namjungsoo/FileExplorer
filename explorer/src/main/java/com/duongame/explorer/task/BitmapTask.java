@@ -43,7 +43,7 @@ public class BitmapTask extends AsyncTask<ExplorerItem, Void, Bitmap> {
             bitmap = BitmapCache.getPage(page);
 
             if (bitmap != null) {
-                Log.d(this.getClass().getSimpleName(), "loadBitmap found cached page="+item.path);
+                Log.d(this.getClass().getSimpleName(), "loadBitmap found cached current_page="+item.path);
                 return bitmap;
             }
         }
@@ -55,15 +55,15 @@ public class BitmapTask extends AsyncTask<ExplorerItem, Void, Bitmap> {
 //            if(item.type == ExplorerItem.FileType.PDF) {
 //                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 //                    final int pageNum = FileHelper.getPdfPageFromFileName(item.path);
-//                    final PdfRenderer.Page page = PdfActivity.renderer.openPage(pageNum);
+//                    final PdfRenderer.Page current_page = PdfActivity.renderer.openPage(pageNum);
 //                    Log.d(TAG,"pdf pageNum="+pageNum);
 //
 //                    //TODO: 화면크기와 PDF 이미지 크기를 체크할것
-//                    int width = page.getWidth();
-//                    int height = page.getHeight();
+//                    int width = current_page.getWidth();
+//                    int height = current_page.getHeight();
 //                    bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
 //
-//                    page.render(bitmap, null, null, PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY);
+//                    current_page.render(bitmap, null, null, PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY);
 //                    BitmapCache.setBitmap(item.path, bitmap);
 //                    return bitmap;
 //                }

@@ -22,35 +22,28 @@ public class BookDB extends SQLiteOpenHelper {
     }
 
     public static class Book {
+        // 변하지 않음
         public String path;// 패스
         public String name;// 파일명
         public ExplorerItem.FileType type = ExplorerItem.FileType.ZIP;
-        public ExplorerItem.Side side = ExplorerItem.Side.SIDE_ALL;// 책넘김 방법
-
-        // ExplorerItem에 없는거. zip파일의 이미지 기준
-        public int page;// 현재 페이지
-
-        public int count;// 최대 파일수.
-        public int extract;// 압축 풀린 파일수. zip에만 해당함
         public long size;// zip파일 사이즈
+        public int total_file;// 최대 파일 수
 
+        // 동적으로 변함
+        public int current_page;// 현재 페이지 인덱스
+        public int total_page;// 최대 페이지 수. 전체를 다 로딩하지 않으면 알수 없음
+
+        public int current_file;// 현재 파일 인덱스
+        public int extract_file;// 압축 풀린 파일수. zip에만 해당함. total_file == extract_file이면 로딩이 완료된것
+
+        public ExplorerItem.Side side = ExplorerItem.Side.SIDE_ALL;// 책넘김 방법
         public String date;
+
+        // DB에 저장되지 않음
         public int percent;
 
         public Book() {
 
-        }
-
-        public Book(String path, String name, ExplorerItem.FileType type, ExplorerItem.Side side, int page, int count, int extract, long size) {
-            this.path = path;
-            this.name = name;
-            this.type = type;
-            this.side = side;
-
-            this.page = page;
-            this.count = count;
-            this.extract = extract;
-            this.size = size;
         }
 
         @Override
@@ -58,19 +51,24 @@ public class BookDB extends SQLiteOpenHelper {
             return "path=" + path +
                     " name=" + name +
                     " type=" + type +
-                    " side=" + side +
-
-                    " page=" + page +
-                    " count=" + count +
-                    " extract=" + extract +
-
                     " size=" + size +
-                    " date=" + date;
+                    " total_file=" + total_file +
+
+                    " current_page=" + current_page +
+                    " total_page=" + total_page +
+                    " current_file=" + current_file +
+                    " extract_file=" + extract_file +
+                    " side=" + side +
+                    " date=" + date +
+
+                    " percent=" + percent;
         }
 
         public void updatePercent() {
-            if (count > 0) {
-                percent = ((page + 1) * 100) / count;
+            if(total_page > 0) {
+                percent = ((current_page + 1) * 100) / total_page;
+            } else if (total_file > 0) {
+                percent = ((current_file + 1) * 100) / total_file;
             }
         }
     }
@@ -78,18 +76,24 @@ public class BookDB extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         final String sql = "CREATE TABLE book " +
+                // 변하지 않음 5개
                 "(path TEXT PRIMARY KEY, " +
                 "name TEXT, " +
 
                 "type INTEGER, " +
+                "size INTEGER, " +
+                "total_file INTEGER, " +
+
+                // 동적으로 변함 6개
+                "current_page INTEGER, " +
+                "total_page INTEGER, " +
+
+                "current_file INTEGER, " +
+                "extract_file INTEGER, " +
+
                 "side INTEGER, " +
 
-                "page INTEGER, " +
-                "count INTEGER, " +
-                "extract INTEGER, " +
-
-                "size INTEGER, " +
-                "datetime TEXT);";
+                "date TEXT);";
         Log.d(TAG, "onCreate sql=" + sql);
         db.execSQL(sql);
     }
@@ -110,18 +114,19 @@ public class BookDB extends SQLiteOpenHelper {
 
     private static Book newBook(Cursor cursor) {
         Book book = new Book();
+
         book.path = cursor.getString(0);
         book.name = cursor.getString(1);
-
         book.type.setValue(cursor.getInt(2));
-        book.side.setValue(cursor.getInt(3));
+        book.size = cursor.getLong(3);
+        book.total_file = cursor.getInt(4);
 
-        book.page = cursor.getInt(4);
-        book.count = cursor.getInt(5);
-        book.extract = cursor.getInt(6);
-
-        book.size = cursor.getLong(7);
-        book.date = cursor.getString(8);
+        book.current_page = cursor.getInt(5);
+        book.total_page = cursor.getInt(6);
+        book.current_file = cursor.getInt(7);
+        book.extract_file = cursor.getInt(8);
+        book.side.setValue(cursor.getInt(9));
+        book.date = cursor.getString(10);
 
         book.updatePercent();
         return book;
@@ -138,7 +143,7 @@ public class BookDB extends SQLiteOpenHelper {
     public static ArrayList<Book> getBooks(Context context) {
         final SQLiteDatabase db = getInstance(context).getReadableDatabase();
 
-        final String sql = "SELECT * FROM book ORDER BY datetime DESC LIMIT 50";
+        final String sql = "SELECT * FROM book ORDER BY date DESC LIMIT 50";
         Book book = null;
         final ArrayList<Book> bookList = new ArrayList<Book>();
 
@@ -159,7 +164,7 @@ public class BookDB extends SQLiteOpenHelper {
         final SQLiteDatabase db = getInstance(context).getReadableDatabase();
 
         Book book = null;
-        final String sql = "SELECT * FROM book ORDER BY datetime DESC LIMIT 1";
+        final String sql = "SELECT * FROM book ORDER BY date DESC LIMIT 1";
         Log.d(TAG, "getLastBookmark sql=" + sql);
 
         final Cursor cursor = db.rawQuery(sql, null);
@@ -175,7 +180,9 @@ public class BookDB extends SQLiteOpenHelper {
     // 마지막 책을 셋팅
     public static void setLastBook(Context context, Book book) {
         final SQLiteDatabase db = getInstance(context).getReadableDatabase();
-        final String sql = "SELECT page FROM book WHERE path='" + book.path + "' LIMIT 1";
+
+        // 기존에 저장된게 있는지 없는지 찾아본다음에 INSERT, UPDATE를 구분해서 처리함
+        final String sql = "SELECT current_page FROM book WHERE path='" + book.path + "' LIMIT 1";
 
         final Cursor cursor = db.rawQuery(sql, null);
         boolean exist = false;
@@ -186,12 +193,31 @@ public class BookDB extends SQLiteOpenHelper {
 
         // 있으면 수정
         if (exist) {
-            // 변경되는 내용: page, extract, side, datetime
-            final String sql2 = "UPDATE book SET page=" + book.page + ",extract=" + book.extract + ",side=" + book.side.getValue() + ",datetime=datetime('now','localtime') WHERE path='" + book.path + "'";
+            // 변경되는 내용: current_page, extract_file, side, datetime
+            // 동적으로 변경되는 내용과 날짜만 변경해서 넣자
+            final String sql2 = "UPDATE book SET current_page=" + book.current_page
+                    + ",total_page=" + book.total_page
+                    + ",current_file=" + book.current_file
+                    + ",extract_file=" + book.extract_file
+                    + ",side=" + book.side.getValue()
+                    + ",date=datetime('now','localtime') WHERE path='" + book.path + "'";
             Log.i(TAG, "setLastBook=" + sql2);
             db.execSQL(sql2);
         } else {// 없으면 추가
-            final String sql2 = "INSERT INTO book VALUES('" + book.path + "','" + book.name + "'," + book.type.getValue() + "," + book.side.getValue() + "," + book.page + "," + book.count + "," + book.extract + "," + book.size + ",datetime('now','localtime'))";
+            final String sql2 = "INSERT INTO book VALUES('" + book.path
+                    + "','" + book.name
+                    + "'," + book.type.getValue()
+                    + "," + book.size
+                    + "," + book.total_file
+
+                    + "," + book.current_page
+                    + "," + book.total_page
+
+                    + "," + book.current_file
+                    + "," + book.extract_file
+
+                    + "," + book.side.getValue()
+                    + ",datetime('now','localtime'))";
             Log.i(TAG, "setLastBook=" + sql2);
             db.execSQL(sql2);
         }

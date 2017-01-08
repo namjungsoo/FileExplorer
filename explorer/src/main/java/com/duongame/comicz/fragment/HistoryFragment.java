@@ -43,9 +43,9 @@ public class HistoryFragment extends BaseFragment {
                     final Intent intent = new Intent(getActivity(), ZipActivity.class);
                     intent.putExtra("path", book.path);
                     intent.putExtra("name", book.name);
-                    intent.putExtra("page", book.page);
+                    intent.putExtra("current_page", book.current_page);
                     intent.putExtra("size", book.size);
-                    intent.putExtra("extract", book.extract);
+                    intent.putExtra("extract_file", book.extract_file);
                     intent.putExtra("side", book.side.getValue());
                     startActivity(intent);
                 }

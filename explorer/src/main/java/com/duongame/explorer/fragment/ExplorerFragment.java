@@ -263,7 +263,7 @@ public class ExplorerFragment extends BaseFragment {
                 Intent intent = new Intent(getActivity(), PdfActivity.class);
                 intent.putExtra("path", item.path);
                 intent.putExtra("name", item.name);
-                intent.putExtra("page", 0);
+                intent.putExtra("current_page", 0);
                 startActivity(intent);
 
                 Log.d(TAG, "onAdapterItemClick pdf");
@@ -275,7 +275,7 @@ public class ExplorerFragment extends BaseFragment {
                 Intent intent = new Intent(getActivity(), ZipActivity.class);
                 intent.putExtra("path", item.path);
                 intent.putExtra("name", item.name);
-                intent.putExtra("page", 0);
+                intent.putExtra("current_page", 0);
                 intent.putExtra("size", item.size);
                 startActivity(intent);
             }

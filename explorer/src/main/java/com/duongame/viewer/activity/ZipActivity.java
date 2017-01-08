@@ -36,13 +36,14 @@ public class ZipActivity extends PagerActivity {
 
     private final ZipLoader zipLoader = new ZipLoader();
 
+    private long size;// zip 파일의 용량
     private ExplorerItem.Side side = LEFT;
+
     private ExplorerItem.Side lastSide = LEFT;
 
     private int totalFileCount = 0;
-    private int extract = 0;// 압축 풀린 파일의 갯수
+    private int extractFileCount = 0;// 압축 풀린 파일의 갯수
     private boolean zipExtractCompleted = false;
-    private long size;// zip 파일의 용량
 
     private void changeSide(ExplorerItem.Side side) {
         lastSide = this.side;
@@ -54,7 +55,7 @@ public class ZipActivity extends PagerActivity {
         public void onSuccess(int i, ArrayList<ExplorerItem> zipImageList, int totalFileCount) {
             Log.i(TAG, "onSuccess=" + i + " totalFileCount=" + totalFileCount);
             ZipActivity.this.totalFileCount = totalFileCount;
-            extract = i;
+            extractFileCount = i;
 
             final ArrayList<ExplorerItem> imageList = (ArrayList<ExplorerItem>) zipImageList.clone();
 
@@ -75,7 +76,7 @@ public class ZipActivity extends PagerActivity {
             Log.i(TAG, "onFinish totalFileCount=" + totalFileCount);
             zipExtractCompleted = true;
             ZipActivity.this.totalFileCount = totalFileCount;
-            extract = totalFileCount;
+            extractFileCount = totalFileCount;
         }
     };
 
@@ -101,24 +102,27 @@ public class ZipActivity extends PagerActivity {
 
         final BookDB.Book book = new BookDB.Book();
 
+        // 고정적인 내용 5개
         book.path = path;
         book.name = name;
-
-        final int page = pager.getCurrentItem();
-        book.page = page;
         book.type = ExplorerItem.FileType.ZIP;
-
-        book.side = side;
-        book.count = totalFileCount;// 파일의 갯수이다.
-
-        // 전부 압축이 다 풀렸으므로 전체 파일 갯수를 입력해준다.
-        if (zipExtractCompleted) {
-            book.extract = extract;
-        }
-        else {
-            book.extract = extract + 1;// 앞으로 읽어야할 위치를 기억하기 위해 +1을 함
-        }
         book.size = size;
+        book.total_file = totalFileCount;// 파일의 갯수이다.
+
+        // 동적인 내용 6개
+        final int page = pager.getCurrentItem();
+        book.current_page = page;
+        final ArrayList<ExplorerItem> zipImageList = pagerAdapter.getImageList();
+        book.total_page = zipImageList.size();
+        book.current_file = zipImageList.get(page).orgIndex;
+        if (zipExtractCompleted) {
+            // 전부 압축이 다 풀렸으므로 전체 파일 갯수를 입력해준다.
+            book.extract_file = extractFileCount;
+        } else {
+            // 앞으로 읽어야할 위치를 기억하기 위해 +1을 함
+            book.extract_file = extractFileCount + 1;
+        }
+        book.side = side;
 
         BookDB.setLastBook(this, book);
 
@@ -143,21 +147,21 @@ public class ZipActivity extends PagerActivity {
         final Intent intent = getIntent();
         final Bundle extras = intent.getExtras();
         if (extras != null) {
-            final int page = extras.getInt("page");
+            final int page = extras.getInt("current_page");
             path = extras.getString("path");
             name = extras.getString("name");
             size = extras.getLong("size");
-            extract = extras.getInt("extract");
+            extractFileCount = extras.getInt("extract_file");
             side.setValue(extras.getInt("side"));
             lastSide = side;
 
-            Log.i(TAG, "page=" + page + " name=" + name + " size=" + size + " extract=" + extract + " side=" + side.getValue());
+            Log.i(TAG, "current_page=" + page + " name=" + name + " size=" + size + " extract_file=" + extractFileCount + " side=" + side.getValue());
 
             // initPagerAdapter의 기능이다.
             pager.setAdapter(pagerAdapter);// setAdapter이후에 imageList를 변경하면 항상 notify해주어야 한다.
 
             // zip 파일을 로딩한다.
-            final ArrayList<ExplorerItem> imageList = zipLoader.load(this, path, listener, extract, side, false);
+            final ArrayList<ExplorerItem> imageList = zipLoader.load(this, path, listener, extractFileCount, side, false);
             if (imageList.size() <= 0) {
                 AlertHelper.showAlert(this, "알림", "압축(ZIP) 파일에 이미지가 없습니다.", new DialogInterface.OnClickListener() {
                     @Override

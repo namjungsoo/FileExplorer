@@ -57,7 +57,7 @@ public class PdfActivity extends PagerActivity {
         final Bundle extras = intent.getExtras();
 
         if (extras != null) {
-            final int page = extras.getInt("page");
+            final int page = extras.getInt("current_page");
             path = extras.getString("path");
             name = extras.getString("name");
 

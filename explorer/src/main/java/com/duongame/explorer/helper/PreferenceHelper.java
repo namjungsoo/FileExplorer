@@ -63,7 +63,7 @@ public class PreferenceHelper {
     }
 
     public static void setStartCount(Context context, int count) {
-        Log.e(TAG, "setStartCount count="+count);
+        Log.e(TAG, "setStartCount total_file="+count);
 
         checkPrefManager(context);
         final SharedPreferences.Editor editor = pref.edit();

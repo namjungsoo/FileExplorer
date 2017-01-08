@@ -151,7 +151,7 @@ public class ZipLoader {
 
                     return firstList;
                 } else {
-                    Log.i(TAG, "extract=" + extract);
+                    Log.i(TAG, "extract_file=" + extract);
                     // 동기적으로 이미 압축 풀린 놈들을 가져오자
                     for (int i = 0; i < extract; i++) {
                         final ExplorerItem item = (ExplorerItem) imageList.get(i);
@@ -164,7 +164,7 @@ public class ZipLoader {
                     }
 
                     if (extract == imageList.size()) {
-                        Log.i(TAG, "extract == imageList.size()");
+                        Log.i(TAG, "extract_file == imageList.size()");
                     }
 
                     task = new ZipExtractTask(zipFile, imageList, listener, extract, (ArrayList<ExplorerItem>)firstList.clone());

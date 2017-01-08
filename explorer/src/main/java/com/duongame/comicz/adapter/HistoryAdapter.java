@@ -112,7 +112,12 @@ public class HistoryAdapter extends BaseAdapter {
     }
 
     private String getPageText(BookDB.Book book) {
-        return (book.page + 1) + "/" + book.count;
+        // 압축이 다 풀렸으면, 페이지를 기준으로 한다.
+        if(book.extract_file == book.total_file) {
+            return (book.current_page + 1) + "/" + book.total_page;
+        } else {
+            return (book.current_file + 1) + "/" + book.total_file;
+        }
     }
 
     private String getPercentText(BookDB.Book book) {

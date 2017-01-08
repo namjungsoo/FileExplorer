@@ -2,6 +2,7 @@ package com.duongame.explorer.task;
 
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
+import android.util.Log;
 
 import com.duongame.explorer.adapter.ExplorerItem;
 import com.duongame.explorer.bitmap.BitmapLoader;
@@ -12,6 +13,7 @@ import net.lingala.zip4j.exception.ZipException;
 
 import java.util.ArrayList;
 
+import static android.content.ContentValues.TAG;
 import static com.duongame.explorer.adapter.ExplorerItem.Side.LEFT;
 import static com.duongame.explorer.adapter.ExplorerItem.Side.RIGHT;
 
@@ -64,6 +66,7 @@ public class ZipExtractTask extends AsyncTask<String, Integer, Void> {
     }
 
     public static void processItem(int orgIndex, ExplorerItem item, ExplorerItem.Side side, ArrayList<ExplorerItem> imageList) {
+        Log.i(TAG,"processItem orgIndex="+orgIndex);
         final BitmapFactory.Options options = BitmapLoader.decodeBounds(item.path);
 
         // 나중에 페이지 전환을 위해서 넣어둔다.
@@ -107,7 +110,8 @@ public class ZipExtractTask extends AsyncTask<String, Integer, Void> {
         } else {
             final ExplorerItem newItem = (ExplorerItem) item.clone();
             newItem.index = size;
-            imageList.add(item);
+            newItem.orgIndex = orgIndex;
+            imageList.add(newItem);
         }
 
     }

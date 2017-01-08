@@ -45,7 +45,7 @@ public class BitmapCache {
         return path;
     }
 
-    // page
+    // current_page
     public static void setPage(String key, Bitmap bitmap) {
         pageCache.putIfAbsent(key, bitmap);
         Log.d(TAG, "setPage key=" + key + " pageCache size=" + pageCache.size());
