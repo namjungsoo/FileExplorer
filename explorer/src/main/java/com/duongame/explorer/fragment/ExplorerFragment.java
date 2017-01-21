@@ -209,7 +209,7 @@ public class ExplorerFragment extends BaseFragment {
         viewType = SWITCH_LIST;
         currentView = listView;
 
-        moveToSelection(ExplorerManager.getLastPath());
+//        moveToSelection(ExplorerManager.getLastPath());
     }
 
     void switchToGrid() {
@@ -234,7 +234,7 @@ public class ExplorerFragment extends BaseFragment {
         viewType = SWITCH_GRID;
         currentView = gridView;
 
-        moveToSelection(ExplorerManager.getLastPath());
+//        moveToSelection(ExplorerManager.getLastPath());
     }
 
     void refreshThumbnail(String path) {
@@ -448,7 +448,8 @@ public class ExplorerFragment extends BaseFragment {
                         }
         );
 
-        moveToSelection(path);
+        //TODO: V20에서 화면이 튀어서 임시로 막아두고 나중에 구현
+//        moveToSelection(path);
 
         new Thread(new Runnable() {
             @Override
