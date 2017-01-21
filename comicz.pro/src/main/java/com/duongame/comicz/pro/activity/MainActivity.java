@@ -16,10 +16,10 @@ import com.duongame.comicz.db.BookDB;
 import com.duongame.comicz.pro.R;
 import com.duongame.explorer.bitmap.BitmapCache;
 import com.duongame.explorer.fragment.BaseFragment;
-import com.duongame.explorer.manager.PositionManager;
 import com.duongame.explorer.helper.PreferenceHelper;
 import com.duongame.explorer.helper.ShortcutHelper;
 import com.duongame.explorer.helper.ToastHelper;
+import com.duongame.explorer.manager.PositionManager;
 
 import java.io.File;
 
@@ -164,7 +164,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     void deleteRecursive(File fileOrDirectory) {
-        if(fileOrDirectory.getAbsolutePath().endsWith("instant-run"))
+        if (fileOrDirectory.getAbsolutePath().endsWith("instant-run"))
             return;
 
         if (fileOrDirectory.isDirectory())

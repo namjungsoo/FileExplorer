@@ -38,6 +38,8 @@ import com.duongame.viewer.activity.ZipActivity;
 
 import java.util.ArrayList;
 
+import static com.duongame.explorer.helper.ExtSdCardHelper.getExternalSdCardPath;
+
 /**
  * Created by namjungsoo on 2016-11-23.
  */
@@ -60,6 +62,9 @@ public class ExplorerFragment extends BaseFragment {
     private AbsListView currentView;
     private ViewSwitcher switcher;
     private View rootView;
+
+    private ImageButton sdcard = null;
+    private String extSdCard = null;
 
 //    private Handler handler;
 //    private Thread thread;
@@ -85,6 +90,13 @@ public class ExplorerFragment extends BaseFragment {
 
         initUI();
         initViewType();
+
+        extSdCard = getExternalSdCardPath();
+        if(extSdCard != null) {
+            if(sdcard != null) {
+                sdcard.setVisibility(View.VISIBLE);
+            }
+        }
 
         return rootView;
     }
@@ -148,6 +160,16 @@ public class ExplorerFragment extends BaseFragment {
             @Override
             public void onClick(View view) {
                 gotoUpDirectory();
+            }
+        });
+
+        sdcard = (ImageButton) rootView.findViewById(R.id.btn_sdcard);
+        sdcard.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(extSdCard != null) {
+                    updateFileList(extSdCard);
+                }
             }
         });
     }
