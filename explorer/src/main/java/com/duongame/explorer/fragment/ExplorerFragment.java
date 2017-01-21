@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.content.FileProvider;
 import android.support.v4.content.res.ResourcesCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -28,16 +29,18 @@ import com.duongame.explorer.adapter.ExplorerGridAdapter;
 import com.duongame.explorer.adapter.ExplorerItem;
 import com.duongame.explorer.adapter.ExplorerListAdapter;
 import com.duongame.explorer.bitmap.BitmapCache;
+import com.duongame.explorer.helper.PreferenceHelper;
 import com.duongame.explorer.manager.ExplorerManager;
 import com.duongame.explorer.manager.PositionManager;
-import com.duongame.explorer.helper.PreferenceHelper;
 import com.duongame.viewer.activity.PdfActivity;
 import com.duongame.viewer.activity.PhotoActivity;
 import com.duongame.viewer.activity.TextActivity;
 import com.duongame.viewer.activity.ZipActivity;
 
+import java.io.File;
 import java.util.ArrayList;
 
+import static android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION;
 import static com.duongame.explorer.helper.ExtSdCardHelper.getExternalSdCardPath;
 
 /**
@@ -273,19 +276,21 @@ public class ExplorerFragment extends BaseFragment {
             case IMAGE: {
                 backupPosition();
 
-                Intent intent = new Intent(getActivity(), PhotoActivity.class);
+                final Intent intent = new Intent(getActivity(), PhotoActivity.class);
                 intent.putExtra("path", item.path.substring(0, item.path.lastIndexOf('/')));
                 intent.putExtra("name", item.name);
+
                 startActivity(intent);
             }
             break;
             case PDF: {
                 backupPosition();
 
-                Intent intent = new Intent(getActivity(), PdfActivity.class);
+                final Intent intent = new Intent(getActivity(), PdfActivity.class);
                 intent.putExtra("path", item.path);
                 intent.putExtra("name", item.name);
                 intent.putExtra("current_page", 0);
+
                 startActivity(intent);
 
                 Log.d(TAG, "onAdapterItemClick pdf");
@@ -294,20 +299,33 @@ public class ExplorerFragment extends BaseFragment {
             case ZIP: {
                 backupPosition();
 
-                Intent intent = new Intent(getActivity(), ZipActivity.class);
+                final Intent intent = new Intent(getActivity(), ZipActivity.class);
                 intent.putExtra("path", item.path);
                 intent.putExtra("name", item.name);
                 intent.putExtra("current_page", 0);
                 intent.putExtra("size", item.size);
+
                 startActivity(intent);
             }
             break;
             case TEXT: {
                 backupPosition();
 
-                Intent intent = new Intent(getActivity(), TextActivity.class);
+                final Intent intent = new Intent(getActivity(), TextActivity.class);
                 intent.putExtra("path", item.path);
                 intent.putExtra("name", item.name);
+
+                startActivity(intent);
+            }
+            break;
+            case APK: {
+                backupPosition();
+
+                final Intent intent = new Intent(Intent.ACTION_VIEW);
+                final Uri apkURI = FileProvider.getUriForFile(getActivity(), getActivity().getApplicationContext().getPackageName() + ".provider", new File(item.path));
+                intent.setDataAndType(apkURI, "application/vnd.android.package-archive");
+                intent.addFlags(FLAG_GRANT_READ_URI_PERMISSION);
+
                 startActivity(intent);
             }
             break;
