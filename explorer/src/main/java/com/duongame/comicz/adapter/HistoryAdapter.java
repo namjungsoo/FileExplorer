@@ -2,6 +2,7 @@ package com.duongame.comicz.adapter;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.view.View;
@@ -105,6 +106,9 @@ public class HistoryAdapter extends BaseAdapter {
             viewHolder.percent.setText(getPercentText(book));
             viewHolder.progressBar.setMax(100);
             viewHolder.progressBar.setProgress(book.percent);
+            if(book.percent == 100) {
+                viewHolder.progressBar.getProgressDrawable().setColorFilter(Color.YELLOW, android.graphics.PorterDuff.Mode.SRC_IN);
+            }
             loadBitmap(viewHolder.thumb, book.path);
         }
 
