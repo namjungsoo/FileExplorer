@@ -3,12 +3,11 @@ package com.duongame.viewer.activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.view.MotionEvent;
-import android.view.View;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.duongame.explorer.R;
+import com.duongame.viewer.listener.TextOnTouchListener;
 
 import org.mozilla.universalchardet.UniversalDetector;
 
@@ -32,16 +31,18 @@ public class TextActivity extends ViewerActivity {
 
         setContentView(R.layout.activity_text);
 
+
+        initToolBox();
+
+
         scrollText = (ScrollView) findViewById(R.id.scroll_text);
         textContent = (TextView) findViewById(R.id.text_content);
 
-        scrollText.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                return false;
-            }
-        });
+        scrollText.setOnTouchListener(new TextOnTouchListener(this));
         processIntent();
+
+        // 전체 화면으로 들어감
+        setFullscreen(true);
     }
 
     protected void processIntent() {

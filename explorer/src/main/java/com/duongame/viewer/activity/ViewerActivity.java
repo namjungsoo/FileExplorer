@@ -1,15 +1,12 @@
 package com.duongame.viewer.activity;
 
 import android.graphics.Color;
-import android.graphics.PointF;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.view.MotionEvent;
-import android.view.VelocityTracker;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -38,16 +35,6 @@ public class ViewerActivity extends AppCompatActivity {
     protected LinearLayout topPanel;
     protected TextView textPage;
     protected SeekBar seekPage;
-
-    // touch
-    protected boolean isPagerIdle = true;
-    protected boolean isBeingDragged = false;
-    protected PointF lastMotionPt = new PointF();
-    protected PointF initialMotionPt = new PointF();
-
-    // configuration
-    protected VelocityTracker velocityTracker = null;
-    protected int touchSlop = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,11 +89,14 @@ public class ViewerActivity extends AppCompatActivity {
         bottomPanel.setY(bottomPanel.getY() - height);
     }
 
+    public boolean getFullscreen() {
+        return isFullscreen;
+    }
     /**
      * Detects and toggles immersive mode (also known as "hidey bar" mode).
      */
     //TODO: 4.3, 4.4에서 테스트 해볼것
-    protected void setFullscreen(boolean fullscreen) {
+    public void setFullscreen(boolean fullscreen) {
         if(fullscreen)
             getWindow().getDecorView().setSystemUiVisibility(
                 View.SYSTEM_UI_FLAG_LAYOUT_STABLE
@@ -156,28 +146,6 @@ public class ViewerActivity extends AppCompatActivity {
             result = getResources().getDimensionPixelSize(resourceId);
         }
         return result;
-    }
-
-    protected void startDragXIfNeeded(MotionEvent ev) {
-        final float x = ev.getX(0);
-        final float xSignedDiff = x - initialMotionPt.x;
-        final float xDiff = Math.abs(xSignedDiff);
-        if (xDiff < touchSlop) {
-            isBeingDragged = false;
-            return;
-        }
-        isBeingDragged = true;
-    }
-
-    protected void startDragYIfNeeded(MotionEvent ev) {
-        final float y = ev.getY(0);
-        final float ySignedDiff = y - initialMotionPt.y;
-        final float yDiff = Math.abs(ySignedDiff);
-        if (yDiff < touchSlop) {
-            isBeingDragged = false;
-            return;
-        }
-        isBeingDragged = true;
     }
 
 }

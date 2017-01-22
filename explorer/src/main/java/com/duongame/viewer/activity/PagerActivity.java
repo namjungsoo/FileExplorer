@@ -3,15 +3,12 @@ package com.duongame.viewer.activity;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
-import android.view.MotionEvent;
-import android.view.VelocityTracker;
-import android.view.View;
-import android.view.ViewConfiguration;
 import android.widget.SeekBar;
 
 import com.duongame.explorer.R;
 import com.duongame.explorer.bitmap.BitmapCache;
 import com.duongame.viewer.adapter.ViewerPagerAdapter;
+import com.duongame.viewer.listener.PagerOnTouchListener;
 
 /**
  * Created by namjungsoo on 2016-11-19.
@@ -31,6 +28,7 @@ public class PagerActivity extends ViewerActivity {
 
     protected ViewPager pager;
     protected ViewerPagerAdapter pagerAdapter;
+    protected boolean isPagerIdle = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,6 +71,18 @@ public class PagerActivity extends ViewerActivity {
         });
     }
 
+    public ViewPager getPager() {
+        return pager;
+    }
+
+    public boolean getPagerIdle() {
+        return isPagerIdle;
+    }
+
+    public ViewerPagerAdapter getPagerAdapter() {
+        return pagerAdapter;
+    }
+
     protected ViewerPagerAdapter createPagerAdapter() {
         return null;
     }
@@ -112,9 +122,6 @@ public class PagerActivity extends ViewerActivity {
             }
         });
 
-        final ViewConfiguration configuration = ViewConfiguration.get(this);
-        touchSlop = configuration.getScaledTouchSlop() >> 1;
-
         pager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -140,73 +147,7 @@ public class PagerActivity extends ViewerActivity {
             }
         });
 
-        pager.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent ev) {
-//                Log.d(TAG, "onTouch");
-
-                if (velocityTracker == null) {
-                    velocityTracker = VelocityTracker.obtain();
-                }
-                velocityTracker.addMovement(ev);
-
-                switch (ev.getAction()) {
-                    case MotionEvent.ACTION_DOWN: {
-                        lastMotionPt.x = initialMotionPt.x = ev.getX(0);
-                        lastMotionPt.y = initialMotionPt.y = ev.getY(0);
-                        break;
-                    }
-
-                    case MotionEvent.ACTION_MOVE: {
-                        if (!isBeingDragged) {
-                            startDragXIfNeeded(ev);
-                        }
-                        final float x = ev.getX(0);
-                        final float y = ev.getY(0);
-                        lastMotionPt.x = x;
-                        lastMotionPt.y = y;
-                        break;
-                    }
-
-                    case MotionEvent.ACTION_CANCEL:
-                    case MotionEvent.ACTION_UP: {
-                        if (velocityTracker != null) {
-                            velocityTracker.recycle();
-                            velocityTracker = null;
-                        }
-                        if (!isBeingDragged && isPagerIdle) {
-
-                            // 터치 영역을 확인하여 좌/중/우를 확인하자.
-                            int width = pager.getWidth();
-                            int height = pager.getHeight();
-//                            Log.d(TAG, "width="+width + " height="+height);
-
-                            int left = width / 4;
-                            int right = width * 3 / 4;
-
-                            if (lastMotionPt.x < left) {
-                                int page = pager.getCurrentItem();
-                                if (page > 0)
-                                    pager.setCurrentItem(page - 1, true);
-                            } else if (lastMotionPt.x > right) {
-                                //int total_file = pager.getChildCount();
-                                int count = pagerAdapter.getCount();
-                                int page = pager.getCurrentItem();
-                                if (page < count + 1)
-                                    pager.setCurrentItem(page + 1, true);
-                            } else {
-                                setFullscreen(!isFullscreen);
-                            }
-                            return true;
-                        } else {
-                            isBeingDragged = false;
-                        }
-                        break;
-                    }
-                }
-                return false;
-            }
-        });
+        pager.setOnTouchListener(new PagerOnTouchListener(this));
     }
 
     @Override

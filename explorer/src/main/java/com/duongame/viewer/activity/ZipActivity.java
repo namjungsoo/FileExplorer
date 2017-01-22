@@ -395,13 +395,13 @@ public class ZipActivity extends PagerActivity {
     }
 
     @Override
-    protected void setFullscreen(boolean fullscreen) {
+    public void setFullscreen(boolean fullscreen) {
         super.setFullscreen(fullscreen);
 
         if (!fullscreen) {
             // top_side_panel을 보이게 하자
-            final LinearLayout topSidePanel = (LinearLayout) findViewById(R.id.top_side_panel);
-            topSidePanel.setVisibility(View.VISIBLE);
+            final LinearLayout topOptionPanel = (LinearLayout) findViewById(R.id.top_option_panel);
+            topOptionPanel.setVisibility(View.VISIBLE);
 
             final LinearLayout layoutLeft = (LinearLayout) findViewById(R.id.layout_left);
             layoutLeft.setOnClickListener(new View.OnClickListener() {
