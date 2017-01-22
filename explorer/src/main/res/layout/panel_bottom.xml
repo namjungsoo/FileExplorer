@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-
-    android:id="@+id/bottom_panel"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/panel_bottom"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_gravity="bottom|center_horizontal"
@@ -27,6 +24,5 @@
         android:layout_height="24dp"
         android:layout_gravity="bottom|center_horizontal"
         android:max="100"
-        android:progress="50" >
-    </SeekBar>
+        android:progress="50"></SeekBar>
 </LinearLayout>

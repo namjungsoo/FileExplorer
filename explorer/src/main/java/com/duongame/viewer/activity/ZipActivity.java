@@ -400,7 +400,7 @@ public class ZipActivity extends PagerActivity {
 
         if (!fullscreen) {
             // top_side_panel을 보이게 하자
-            final LinearLayout topOptionPanel = (LinearLayout) findViewById(R.id.top_option_panel);
+            final LinearLayout topOptionPanel = (LinearLayout) findViewById(R.id.panel_top_option);
             topOptionPanel.setVisibility(View.VISIBLE);
 
             final LinearLayout layoutLeft = (LinearLayout) findViewById(R.id.layout_left);

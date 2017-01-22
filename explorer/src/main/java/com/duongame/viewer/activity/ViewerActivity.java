@@ -78,10 +78,10 @@ public class ViewerActivity extends AppCompatActivity {
         textName = (TextView)findViewById(R.id.text_name);
 //        textName.setY(getStatusBarHeight());
 
-        topPanel = (LinearLayout) findViewById(R.id.top_panel);
+        topPanel = (LinearLayout) findViewById(R.id.panel_top);
         topPanel.setY(getStatusBarHeight());
 
-        bottomPanel = (LinearLayout) findViewById(R.id.bottom_panel);
+        bottomPanel = (LinearLayout) findViewById(R.id.panel_bottom);
         textPage = (TextView) findViewById(R.id.text_page);
         seekPage = (SeekBar) findViewById(R.id.seek_page);
 

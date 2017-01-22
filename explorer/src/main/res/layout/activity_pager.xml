@@ -23,8 +23,8 @@
         <!--android:visibility="invisible"-->
         <!--android:ellipsize="start"/>-->
 
-    <include layout="@layout/top_panel"/>
+    <include layout="@layout/panel_top"/>
 
-    <include layout="@layout/bottom_panel"/>
+    <include layout="@layout/panel_bottom"/>
 
 </FrameLayout>
