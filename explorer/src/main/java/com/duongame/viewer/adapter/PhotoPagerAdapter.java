@@ -12,7 +12,10 @@ import com.duongame.explorer.R;
 import com.duongame.explorer.adapter.ExplorerItem;
 import com.duongame.explorer.bitmap.BitmapCache;
 import com.duongame.explorer.task.LoadBitmapTask;
+import com.duongame.explorer.task.LoadGifTask;
 import com.duongame.explorer.task.RemoveAndPreloadTask;
+import com.duongame.viewer.activity.PhotoActivity;
+import com.felipecsl.gifimageview.library.GifImageView;
 
 import java.util.ArrayList;
 
@@ -25,6 +28,7 @@ public class PhotoPagerAdapter extends ViewerPagerAdapter {
 
     private ArrayList<AsyncTask> taskList = new ArrayList<>();
     private int lastPosition = -1;
+    private byte[] gifData = null;
 
 //    public boolean getExifRotation() {
 //        return exifRotation;
@@ -121,13 +125,14 @@ public class PhotoPagerAdapter extends ViewerPagerAdapter {
 
     @Override
     public void setPrimaryItem(final ViewGroup container, final int position, Object object) {
-//        Log.d(TAG, "setPrimaryItem position=" + position);
+        Log.d(TAG, "setPrimaryItem position=" + position);
         final int width = container.getWidth();
         final int height = container.getHeight();
 //        Log.d(TAG, "setPrimaryItem width=" + width + " height=" + height);
 
-        if(position != lastPosition) {
+        if (position != lastPosition) {
             lastPosition = position;
+            Log.d(TAG, "setPrimaryItem position changed");
 
             // preload bitmap task
             if (width == 0 || height == 0) {
@@ -159,6 +164,28 @@ public class PhotoPagerAdapter extends ViewerPagerAdapter {
 //            task.setRemoveArray(removeArray);
 //            task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, preloadArray);
             }
+
+            // GIF 이미지일 경우
+            if (imageList.get(position).path.toLowerCase().endsWith(".gif")) {
+                final PhotoActivity photoActivity = (PhotoActivity)context;
+
+                final LoadGifTask task = new LoadGifTask(new LoadGifTask.LoadGifListener() {
+                    @Override
+                    public void onSuccess(byte[] data) {
+                        final GifImageView imageView = (GifImageView) container.findViewById(R.id.image_viewer);
+                        imageView.setBytes(data);
+
+                        photoActivity.setGifImageView(imageView);
+                    }
+
+                    @Override
+                    public void onFail() {
+                        photoActivity.setGifImageView(null);
+                    }
+                });
+                task.execute(imageList.get(position).path);
+            }
+
         }
 
         // remove bitmap task
@@ -195,14 +222,14 @@ public class PhotoPagerAdapter extends ViewerPagerAdapter {
 
             // 전체 모드가 아니면 바로 전 이미지를 체크 한다.
             if (item.side == ExplorerItem.Side.SIDE_ALL) {
-                if(!checkBitmapOrPage(item)) {
+                if (!checkBitmapOrPage(item)) {
                     preloadList.add(item);
 //                    Log.w(TAG, "getPreloadArray position=" + (position + 3));
                 }
             } else {
                 ExplorerItem item1 = imageList.get(position + 2);
                 if (!item.path.equals(item1.path)) {
-                    if(!checkBitmapOrPage(item)) {
+                    if (!checkBitmapOrPage(item)) {
                         preloadList.add(item);
 //                        Log.w(TAG, "getPreloadArray position=" + (position + 2));
                     }
