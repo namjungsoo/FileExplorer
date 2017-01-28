@@ -31,7 +31,7 @@ public class TextActivity extends ViewerActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_text);
-        
+
         initToolBox();
 
         scrollText = (ScrollView) findViewById(R.id.scroll_text);
