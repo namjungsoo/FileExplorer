@@ -165,9 +165,9 @@ public class PhotoPagerAdapter extends ViewerPagerAdapter {
 //            task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, preloadArray);
             }
 
+            final PhotoActivity photoActivity = (PhotoActivity)context;
             // GIF 이미지일 경우
             if (imageList.get(position).path.toLowerCase().endsWith(".gif")) {
-                final PhotoActivity photoActivity = (PhotoActivity)context;
 
                 final LoadGifTask task = new LoadGifTask(new LoadGifTask.LoadGifListener() {
                     @Override
@@ -184,6 +184,8 @@ public class PhotoPagerAdapter extends ViewerPagerAdapter {
                     }
                 });
                 task.execute(imageList.get(position).path);
+            } else {
+                photoActivity.setGifImageView(null);
             }
 
         }
