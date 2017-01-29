@@ -14,7 +14,7 @@ import com.duongame.explorer.bitmap.BitmapCache;
 import com.duongame.explorer.task.LoadBitmapTask;
 import com.duongame.explorer.task.LoadGifTask;
 import com.duongame.explorer.task.RemoveAndPreloadTask;
-import com.duongame.viewer.activity.PhotoActivity;
+import com.duongame.viewer.activity.PagerActivity;
 import com.felipecsl.gifimageview.library.GifImageView;
 
 import java.util.ArrayList;
@@ -165,7 +165,7 @@ public class PhotoPagerAdapter extends ViewerPagerAdapter {
 //            task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, preloadArray);
             }
 
-            final PhotoActivity photoActivity = (PhotoActivity)context;
+            final PagerActivity pagerActivity = (PagerActivity)context;
             // GIF 이미지일 경우
             if (imageList.get(position).path.toLowerCase().endsWith(".gif")) {
 
@@ -175,17 +175,17 @@ public class PhotoPagerAdapter extends ViewerPagerAdapter {
                         final GifImageView imageView = (GifImageView) container.findViewById(R.id.image_viewer);
                         imageView.setBytes(data);
 
-                        photoActivity.setGifImageView(imageView);
+                        pagerActivity.setGifImageView(imageView);
                     }
 
                     @Override
                     public void onFail() {
-                        photoActivity.setGifImageView(null);
+                        pagerActivity.setGifImageView(null);
                     }
                 });
                 task.execute(imageList.get(position).path);
             } else {
-                photoActivity.setGifImageView(null);
+                pagerActivity.setGifImageView(null);
             }
 
         }

@@ -5,9 +5,8 @@ import android.os.Bundle;
 
 import com.duongame.explorer.adapter.ExplorerItem;
 import com.duongame.explorer.manager.ExplorerManager;
-import com.duongame.viewer.adapter.ViewerPagerAdapter;
 import com.duongame.viewer.adapter.PhotoPagerAdapter;
-import com.felipecsl.gifimageview.library.GifImageView;
+import com.duongame.viewer.adapter.ViewerPagerAdapter;
 
 import java.util.ArrayList;
 
@@ -17,7 +16,6 @@ import java.util.ArrayList;
 
 public class PhotoActivity extends PagerActivity {
     private final static String TAG = "PhotoActivity";
-    private GifImageView gifImageView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,22 +61,5 @@ public class PhotoActivity extends PagerActivity {
             }
             pager.setCurrentItem(item);
         }
-    }
-
-    public void setGifImageView(GifImageView gifImageView) {
-        if(this.gifImageView != null)
-            this.gifImageView.stopAnimation();
-
-        this.gifImageView = gifImageView;
-        if(this.gifImageView != null) {
-            this.gifImageView.startAnimation();
-        }
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        if(gifImageView != null)
-            gifImageView.stopAnimation();
     }
 }

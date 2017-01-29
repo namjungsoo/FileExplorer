@@ -9,6 +9,7 @@ import com.duongame.explorer.R;
 import com.duongame.explorer.bitmap.BitmapCache;
 import com.duongame.viewer.adapter.ViewerPagerAdapter;
 import com.duongame.viewer.listener.PagerOnTouchListener;
+import com.felipecsl.gifimageview.library.GifImageView;
 
 /**
  * Created by namjungsoo on 2016-11-19.
@@ -29,6 +30,8 @@ public class PagerActivity extends ViewerActivity {
     protected ViewPager pager;
     protected ViewerPagerAdapter pagerAdapter;
     protected boolean isPagerIdle = true;
+
+    private GifImageView gifImageView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -153,6 +156,23 @@ public class PagerActivity extends ViewerActivity {
     @Override
     protected void updateName(int i) {
         textName.setText(pagerAdapter.getImageList().get(i).name);
+    }
+
+    public void setGifImageView(GifImageView gifImageView) {
+        if(this.gifImageView != null)
+            this.gifImageView.stopAnimation();
+
+        this.gifImageView = gifImageView;
+        if(this.gifImageView != null) {
+            this.gifImageView.startAnimation();
+        }
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if(gifImageView != null)
+            gifImageView.stopAnimation();
     }
 
 }
