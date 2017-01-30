@@ -158,22 +158,20 @@ public class PagerActivity extends ViewerActivity {
         textName.setText(pagerAdapter.getImageList().get(i).name);
     }
 
-    public void setGifImageView(GifImageView gifImageView) {
-        if(this.gifImageView != null)
-            this.gifImageView.stopAnimation();
+    // startAnimation은 외부에서 수행함
+//    public void setGifImageView(GifImageView gifImageView) {
+//        if(this.gifImageView != null)
+//            this.gifImageView.stopAnimation();
+//
+//        this.gifImageView = gifImageView;
+//    }
 
-        this.gifImageView = gifImageView;
-        if(this.gifImageView != null) {
-            this.gifImageView.startAnimation();
-        }
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        if(gifImageView != null)
-            gifImageView.stopAnimation();
-    }
+//    @Override
+//    public void onStop() {
+//        super.onStop();
+//        if(gifImageView != null)
+//            gifImageView.stopAnimation();
+//    }
 
 }
 

@@ -17,6 +17,7 @@ import com.duongame.explorer.task.RemoveAndPreloadTask;
 import com.duongame.viewer.activity.PagerActivity;
 import com.felipecsl.gifimageview.library.GifImageView;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 /**
@@ -28,19 +29,6 @@ public class PhotoPagerAdapter extends ViewerPagerAdapter {
 
     private ArrayList<AsyncTask> taskList = new ArrayList<>();
     private int lastPosition = -1;
-    private byte[] gifData = null;
-
-//    public boolean getExifRotation() {
-//        return exifRotation;
-//    }
-//
-//    public void setMaxIndex(int index) {
-//        maxIndex = index;
-//    }
-//
-//    public int getMaxIndex() {
-//        return maxIndex;
-//    }
 
     public PhotoPagerAdapter(Activity context) {
         super(context);
@@ -52,9 +40,6 @@ public class PhotoPagerAdapter extends ViewerPagerAdapter {
 
         final ViewGroup rootView = (ViewGroup) context.getLayoutInflater().inflate(R.layout.viewer_page, container, false);
         final ImageView imageView = (ImageView) rootView.findViewById(R.id.image_viewer);
-
-//        final TextView textPath = (TextView) rootView.findViewById(R.id.text_path);
-//        textPath.setText(item.path);
 
         container.addView(rootView);
 
@@ -72,9 +57,6 @@ public class PhotoPagerAdapter extends ViewerPagerAdapter {
 //                    Log.d(TAG, "LoadBitmapTask execute");
 
                     loadCurrentBitmap(position, imageView, width, height);
-//                    final LoadBitmapTask task = new LoadBitmapTask(imageView, width, height, exifRotation);
-//                    task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, item);
-//                    taskList.add(task);
 
                     container.getViewTreeObserver().removeGlobalOnLayoutListener(this);
                 }
@@ -82,9 +64,6 @@ public class PhotoPagerAdapter extends ViewerPagerAdapter {
 
         } else {
             loadCurrentBitmap(position, imageView, width, height);
-//            final LoadBitmapTask task = new LoadBitmapTask(imageView, width, height, exifRotation);
-//            task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, item);
-//            taskList.add(task);
         }
 
         return rootView;
@@ -125,14 +104,14 @@ public class PhotoPagerAdapter extends ViewerPagerAdapter {
 
     @Override
     public void setPrimaryItem(final ViewGroup container, final int position, Object object) {
-        Log.d(TAG, "setPrimaryItem position=" + position);
+        Log.w(TAG, "setPrimaryItem position=" + position);
         final int width = container.getWidth();
         final int height = container.getHeight();
 //        Log.d(TAG, "setPrimaryItem width=" + width + " height=" + height);
 
         if (position != lastPosition) {
             lastPosition = position;
-            Log.d(TAG, "setPrimaryItem position changed");
+            Log.w(TAG, "setPrimaryItem position changed");
 
             // preload bitmap task
             if (width == 0 || height == 0) {
@@ -143,55 +122,54 @@ public class PhotoPagerAdapter extends ViewerPagerAdapter {
                         final int height = container.getHeight();
 //                    Log.d(TAG, "onGlobalLayout width=" + width + " height=" + height);
 
-                        //runPreloadTask(position, width, height);
                         preloadAndRemoveNearBitmap(position, width, height);
-//                    final ExplorerItem[] preloadArray = getPreloadArray(position, width, height);
-//                    final ExplorerItem[] removeArray = getRemoveArray(position);
-//                    final RemoveAndPreloadTask task = new RemoveAndPreloadTask(width, height, exifRotation);
-//                    task.setRemoveArray(removeArray);
-//                    task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, preloadArray);
 
                         container.getViewTreeObserver().removeGlobalOnLayoutListener(this);
                     }
                 });
 
             } else {
-                //runPreloadTask(position, width, height);
                 preloadAndRemoveNearBitmap(position, width, height);
-//            final ExplorerItem[] preloadArray = getPreloadArray(position, width, height);
-//            final ExplorerItem[] removeArray = getRemoveArray(position);
-//            final RemoveAndPreloadTask task = new RemoveAndPreloadTask(width, height, exifRotation);
-//            task.setRemoveArray(removeArray);
-//            task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, preloadArray);
             }
 
-            final PagerActivity pagerActivity = (PagerActivity)context;
+            final PagerActivity pagerActivity = (PagerActivity) context;
+
+            // 현재 imageView를 무조건 등록
+            // 마지막 imageView를 정지
+//            imageView.stopAnimation();
+//            pagerActivity.setGifImageView(imageView);
+
+            final GifImageView imageView = (GifImageView) container.findViewById(R.id.image_viewer);
+            byte[] data = null;
+            try {
+                data = LoadGifTask.loadGif(imageList.get(position).path);
+                imageView.stopAnimation();
+                imageView.setBytes(data);
+                imageView.startAnimation();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
             // GIF 이미지일 경우
-            if (imageList.get(position).path.toLowerCase().endsWith(".gif")) {
-
-                final LoadGifTask task = new LoadGifTask(new LoadGifTask.LoadGifListener() {
-                    @Override
-                    public void onSuccess(byte[] data) {
-                        final GifImageView imageView = (GifImageView) container.findViewById(R.id.image_viewer);
-                        imageView.setBytes(data);
-
-                        pagerActivity.setGifImageView(imageView);
-                    }
-
-                    @Override
-                    public void onFail() {
-                        pagerActivity.setGifImageView(null);
-                    }
-                });
-                task.execute(imageList.get(position).path);
-            } else {
-                pagerActivity.setGifImageView(null);
-            }
-
+            // 메모리에 사라졌다가 재 로딩일 경우에 애니메이션이 잘 안된다.
+//            if (imageList.get(position).path.toLowerCase().endsWith(".gif")) {
+//                final LoadGifTask task = new LoadGifTask(new LoadGifTask.LoadGifListener() {
+//                    @Override
+//                    public void onSuccess(byte[] data) {
+//                        Log.w(TAG, "onSuccess path=" + imageList.get(position).path);
+//                        imageView.stopAnimation();
+//                        imageView.setBytes(data);
+//                        imageView.startAnimation();
+//                    }
+//
+//                    @Override
+//                    public void onFail() {
+//                        Log.e(TAG, "onFail " + imageList.get(position).path);
+//                    }
+//                });
+//                task.execute(imageList.get(position).path);
+//            }
         }
-
-        // remove bitmap task
-//        runRemoveTask(position);
     }
 
     private ExplorerItem[] getPreloadArray(int position, int width, int height) {
@@ -274,16 +252,6 @@ public class PhotoPagerAdapter extends ViewerPagerAdapter {
         return preloadArray;
     }
 
-//    private void runPreloadTask(int position, int width, int height) {
-//        final ExplorerItem[] preloadArray = getPreloadArray(position, width, height);
-//        if (preloadArray == null)
-//            return;
-//
-//        final PreloadBitmapTask task = new PreloadBitmapTask(width, height, exifRotation);
-//        task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, preloadArray);
-//        taskList.add(task);
-//    }
-
     private ExplorerItem[] getRemoveArray(int position) {
         if (imageList == null)
             return null;
@@ -315,16 +283,6 @@ public class PhotoPagerAdapter extends ViewerPagerAdapter {
 
         return removeArray;
     }
-
-//    private void runRemoveTask(int position) {
-//        final ExplorerItem[] removeArray = getRemoveArray(position);
-//        if (removeArray == null)
-//            return;
-//
-//        final RemoveBitmapTask task = new RemoveBitmapTask();
-//        task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, removeArray);
-//        taskList.add(task);
-//    }
 
     public void stopAllTasks() {
         for (AsyncTask task : taskList) {

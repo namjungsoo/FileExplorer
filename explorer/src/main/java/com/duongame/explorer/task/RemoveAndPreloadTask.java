@@ -1,9 +1,12 @@
 package com.duongame.explorer.task;
 
 import android.graphics.Bitmap;
+import android.util.Log;
 
 import com.duongame.explorer.adapter.ExplorerItem;
 import com.duongame.explorer.bitmap.BitmapCache;
+
+import static android.content.ContentValues.TAG;
 
 /**
  * Created by namjungsoo on 2016. 12. 25..
@@ -12,6 +15,7 @@ import com.duongame.explorer.bitmap.BitmapCache;
 public class RemoveAndPreloadTask extends BitmapTask {
 
     private ExplorerItem[] removeList;
+
     public void setRemoveArray(ExplorerItem[] removeList) {
         this.removeList = removeList;
     }
@@ -22,27 +26,30 @@ public class RemoveAndPreloadTask extends BitmapTask {
 
     @Override
     protected Bitmap doInBackground(ExplorerItem... params) {
-        if(removeList != null) {
+        if (removeList != null) {
             // remove
             for (int i = 0; i < removeList.length; i++) {
                 final ExplorerItem item = removeList[i];
 
-                if (item.side == ExplorerItem.Side.SIDE_ALL)
+                if (item.side == ExplorerItem.Side.SIDE_ALL) {
+                    Log.w(TAG, "RemoveAndPreloadTask REMOVE " + item.path);
                     BitmapCache.removeBitmap(item.path);
-                else {
+                } else {
                     String path = BitmapCache.changePathToPage(item);
                     BitmapCache.removePage(path);
                 }
             }
         }
 
-        if(params != null) {
+        if (params != null) {
             // preload
             for (int i = 0; i < params.length; i++) {
                 ExplorerItem item = params[i];
 
-                if(!isCancelled())
+                if (!isCancelled()) {
+                    Log.w(TAG, "RemoveAndPreloadTask PRELOAD " + item.path);
                     loadBitmap(item);
+                }
             }
         }
         return null;

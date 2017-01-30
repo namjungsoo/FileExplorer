@@ -50,25 +50,6 @@ public class BitmapTask extends AsyncTask<ExplorerItem, Void, Bitmap> {
 
         bitmap = BitmapCache.getBitmap(item.path);
         if (bitmap == null) {
-            // 렌더러를 어떻게 전달하지..
-            // PDF는 동적으로 읽을수 없다.
-//            if(item.type == ExplorerItem.FileType.PDF) {
-//                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-//                    final int pageNum = FileHelper.getPdfPageFromFileName(item.path);
-//                    final PdfRenderer.Page current_page = PdfActivity.renderer.openPage(pageNum);
-//                    Log.d(TAG,"pdf pageNum="+pageNum);
-//
-//                    //TODO: 화면크기와 PDF 이미지 크기를 체크할것
-//                    int width = current_page.getWidth();
-//                    int height = current_page.getHeight();
-//                    bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
-//
-//                    current_page.render(bitmap, null, null, PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY);
-//                    BitmapCache.setBitmap(item.path, bitmap);
-//                    return bitmap;
-//                }
-//            }
-
             final BitmapFactory.Options options = BitmapLoader.decodeBounds(item.path);
 
             // 자르는 경우에는 실제 예상보다 width/2를 하자
@@ -100,12 +81,12 @@ public class BitmapTask extends AsyncTask<ExplorerItem, Void, Bitmap> {
                     Log.w("BitmapTask", "decode retry=" + count);
                 } else {
                     if (item.side == ExplorerItem.Side.SIDE_ALL) {
-                        Log.d(this.getClass().getSimpleName(), "loadBitmap setBitmap="+item.path);
+                        Log.w(this.getClass().getSimpleName(), "loadBitmap setBitmap="+item.path);
                         BitmapCache.setBitmap(item.path, bitmap);
                     }
                     else {
                         // 비트맵을 로딩했으면 이제 자르자
-                        Log.d(this.getClass().getSimpleName(), "loadBitmap splitBitmapSide="+item.path);
+                        Log.w(this.getClass().getSimpleName(), "loadBitmap splitBitmapSide="+item.path);
                         bitmap = BitmapLoader.splitBitmapSide(bitmap, item);
                     }
                     break;

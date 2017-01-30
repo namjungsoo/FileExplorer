@@ -29,6 +29,17 @@ public class LoadGifTask extends AsyncTask<String, Integer, Void> {
         this.listener = listener;
     }
 
+    public static byte[] loadGif(String path) throws IOException {
+        final File file = new File(path);
+        byte[] data = new byte[(int) file.length()];
+        final FileInputStream fis = new FileInputStream(file);
+        final DataInputStream dis = new DataInputStream(fis);
+        dis.readFully(data);
+        dis.close();
+        fis.close();
+        return data;
+    }
+
     @Override
     protected Void doInBackground(String... params) {
         final String path = params[0];
