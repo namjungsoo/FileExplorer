@@ -75,8 +75,8 @@ public class ExplorerManager {
         }
 
         // 디렉토리 우선 정렬 및 가나다 정렬
-        Collections.sort(directoryList, new FileHelper.FileNameAscendingCompare());
-        Collections.sort(normalList, new FileHelper.FileNameAscendingCompare());
+        Collections.sort(directoryList, new FileHelper.FileNameAscendingComparator());
+        Collections.sort(normalList, new FileHelper.FileNameAscendingComparator());
 
         fileList.addAll(directoryList);
         fileList.addAll(normalList);

@@ -107,7 +107,7 @@ public class ZipLoader {
             }
         }
 
-        Collections.sort(imageList, new FileHelper.FileNameAscendingCompare());
+        Collections.sort(imageList, new FileHelper.FileNameAscendingComparator());
 
         if (firstImageOnly) {
             if (imageList.size() > 0) {

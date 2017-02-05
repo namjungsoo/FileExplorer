@@ -22,6 +22,7 @@ import com.felipecsl.gifimageview.library.GifImageView;
 // +하단 툴박스
 public class PagerActivity extends ViewerActivity {
     private final static String TAG = "PagerActivity";
+    private final static int OFFLINE_PAGE_LIMIT = 1;
 
     // 파일의 정보
     protected String path;
@@ -93,6 +94,7 @@ public class PagerActivity extends ViewerActivity {
     protected void initPager() {
         pager = (ViewPager) findViewById(R.id.pager);
         pagerAdapter = createPagerAdapter();
+//        pager.setOffscreenPageLimit(OFFLINE_PAGE_LIMIT);
     }
 
     protected void updateScrollInfo(int position) {

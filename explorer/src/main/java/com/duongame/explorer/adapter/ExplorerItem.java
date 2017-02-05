@@ -70,6 +70,9 @@ public class ExplorerItem implements Cloneable {
     public int width;
     public int height;
 
+    // 로딩큐 우선순위
+    public int priority;// 0이면 최우선, 1이면 낮음
+
     public ExplorerItem(String path, String name, String date, long size, FileType type) {
         this.path = path;
         this.name = name;

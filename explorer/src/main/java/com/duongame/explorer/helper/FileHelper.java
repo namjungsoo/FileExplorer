@@ -77,10 +77,21 @@ public class FileHelper {
         return cachePath;
     }
 
-    public static class FileNameAscendingCompare implements Comparator<ExplorerItem> {
+    public static class FileNameAscendingComparator implements Comparator<ExplorerItem> {
         @Override
         public int compare(ExplorerItem lhs, ExplorerItem rhs) {
             return lhs.name.compareToIgnoreCase(rhs.name);
+        }
+    }
+
+    public static class FilePriorityComparator implements Comparator<ExplorerItem> {
+        @Override
+        public int compare(ExplorerItem lhs, ExplorerItem rhs) {
+            if(lhs.priority < rhs.priority)
+                return -1;
+            else if(lhs.priority > rhs.priority)
+                return 1;
+            return 0;
         }
     }
 

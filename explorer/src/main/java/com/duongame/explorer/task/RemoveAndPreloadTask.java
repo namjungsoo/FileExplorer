@@ -26,6 +26,8 @@ public class RemoveAndPreloadTask extends BitmapTask {
 
     @Override
     protected Bitmap doInBackground(ExplorerItem... params) {
+        // 메모리 때문에 지우는 것을 우선함
+        // 지우는 것이 속도가 더 빠름
         if (removeList != null) {
             // remove
             for (int i = 0; i < removeList.length; i++) {
@@ -41,6 +43,8 @@ public class RemoveAndPreloadTask extends BitmapTask {
             }
         }
 
+        // 우선순위별로 정렬 되어 있음
+        // 0번부터 로딩하게 된다.
         if (params != null) {
             // preload
             for (int i = 0; i < params.length; i++) {

@@ -72,6 +72,7 @@ public class PhotoPagerAdapter extends ViewerPagerAdapter {
     private void loadCurrentBitmap(int position, ImageView imageView, int width, int height) {
         final ExplorerItem item = imageList.get(position);
         final LoadBitmapTask task = new LoadBitmapTask(imageView, width, height, exifRotation);
+
         task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, item);
         taskList.add(task);
     }
@@ -80,6 +81,7 @@ public class PhotoPagerAdapter extends ViewerPagerAdapter {
         final ExplorerItem[] preloadArray = getPreloadArray(position, width, height);
         final ExplorerItem[] removeArray = getRemoveArray(position);
         final RemoveAndPreloadTask task = new RemoveAndPreloadTask(width, height, exifRotation);
+
         task.setRemoveArray(removeArray);
         task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, preloadArray);
     }
@@ -94,7 +96,8 @@ public class PhotoPagerAdapter extends ViewerPagerAdapter {
         imageView.setImageBitmap(null);
     }
 
-    private boolean checkBitmapOrPage(ExplorerItem item) {
+    // 캐쉬에 비트맵이나 페이지가 있는지를 리턴
+    private boolean checkCacheExistBitmapOrPage(ExplorerItem item) {
         if (item.side == ExplorerItem.Side.SIDE_ALL) {
             return BitmapCache.getBitmap(item.path) == null ? false : true;
         } else {
@@ -172,72 +175,75 @@ public class PhotoPagerAdapter extends ViewerPagerAdapter {
         }
     }
 
+    private void addPreloadListWithPriority(final ArrayList<ExplorerItem> preloadList, final ExplorerItem item, int i, int BEGIN) {
+        if (i == BEGIN) {// 시작인 것만 0(최우선 순위), 나머지는 1
+            item.priority = 0;
+        }
+        else {
+            item.priority = 1;
+        }
+        preloadList.add(item);
+    }
+
     private ExplorerItem[] getPreloadArray(int position, int width, int height) {
         if (imageList == null)
             return null;
 
         final ArrayList<ExplorerItem> preloadList = new ArrayList<ExplorerItem>();
 
-        if (position + 2 < imageList.size()) {
-            ExplorerItem item = imageList.get(position + 2);
+        final int NEXT_BEGIN = 2;
+        final int NEXT_END = 3;
 
-            // 전체 모드가 아니면 바로 전 이미지를 체크 한다.
-            if (item.side == ExplorerItem.Side.SIDE_ALL) {
-                if (!checkBitmapOrPage(item)) {
-                    preloadList.add(item);
-//                    Log.w(TAG, "getPreloadArray position=" + (position + 2));
-                }
-            } else {
-                ExplorerItem item1 = imageList.get(position + 1);
-                if (!item.path.equals(item1.path)) {
-                    if (!checkBitmapOrPage(item)) {
-                        preloadList.add(item);
-//                        Log.w(TAG, "getPreloadArray position=" + (position + 1));
+        // 앞쪽(오른쪽)의 이미지를 읽는다.
+        for (int i = NEXT_BEGIN; i <= NEXT_END; i++) {
+            final int index = position + i;
+            if (index < imageList.size()) {
+                final ExplorerItem item = imageList.get(index);
+
+                // 전체 모드가 아니면 바로 전 이미지를 체크 한다.
+                if (item.side == ExplorerItem.Side.SIDE_ALL) {
+                    if (!checkCacheExistBitmapOrPage(item)) {
+                        addPreloadListWithPriority(preloadList, item, i, NEXT_BEGIN);
                     }
-                }
-            }
-        }
-        if (position + 3 < imageList.size()) {
-            ExplorerItem item = imageList.get(position + 3);
-
-            // 전체 모드가 아니면 바로 전 이미지를 체크 한다.
-            if (item.side == ExplorerItem.Side.SIDE_ALL) {
-                if (!checkBitmapOrPage(item)) {
-                    preloadList.add(item);
-//                    Log.w(TAG, "getPreloadArray position=" + (position + 3));
-                }
-            } else {
-                ExplorerItem item1 = imageList.get(position + 2);
-                if (!item.path.equals(item1.path)) {
-                    if (!checkBitmapOrPage(item)) {
-                        preloadList.add(item);
-//                        Log.w(TAG, "getPreloadArray position=" + (position + 2));
-                    }
-                }
-            }
-        }
-        if (position - 2 >= 0) {
-            ExplorerItem item = imageList.get(position - 2);
-
-            // 전체 모드가 아니면 바로 전 이미지를 체크 한다.
-            if (item.side == ExplorerItem.Side.SIDE_ALL) {
-                if (!checkBitmapOrPage(item)) {
-                    preloadList.add(item);
-//                    Log.w(TAG, "getPreloadArray position=" + (position - 2));
-                }
-            } else {
-                if (position - 3 >= 0) {// 바로 전 파일이 있으면
-                    ExplorerItem item1 = imageList.get(position - 3);
+                } else {
+                    // 무조건 바로전 파일이 있다.
+                    // 왜냐면 i(BEGIN)가 최소 1이기 때문이다.
+                    ExplorerItem item1 = imageList.get(index - 1);
                     if (!item.path.equals(item1.path)) {
-                        if (!checkBitmapOrPage(item)) {
-                            preloadList.add(item);
-//                            Log.w(TAG, "getPreloadArray position=" + (position - 3));
+                        if (!checkCacheExistBitmapOrPage(item)) {
+                            addPreloadListWithPriority(preloadList, item, i, NEXT_BEGIN);
                         }
                     }
-                } else {// 없으면 내 파일을 읽는다
-                    if (!checkBitmapOrPage(item)) {
-                        preloadList.add(item);
-//                        Log.w(TAG, "getPreloadArray position=" + (position - 2));
+                }
+            }
+        }
+
+        final int PREV_BEGIN = 2;
+        final int PREV_END = 2;
+
+        // 뒤쪽(왼쪽)의 이미지를 읽는다.
+        for (int i = PREV_BEGIN; i <= PREV_END; i++) {
+            final int index = position - i;
+            if (index >= 0) {
+                final ExplorerItem item = imageList.get(index);
+
+                // 전체 모드가 아니면 바로 전 이미지를 체크 한다.
+                if (item.side == ExplorerItem.Side.SIDE_ALL) {
+                    if (!checkCacheExistBitmapOrPage(item)) {
+                        addPreloadListWithPriority(preloadList, item, i, PREV_BEGIN);
+                    }
+                } else {
+                    if (index - 1 >= 0) {// 바로 전 파일이 있으면
+                        ExplorerItem item1 = imageList.get(index - 1);
+                        if (!item.path.equals(item1.path)) {
+                            if (!checkCacheExistBitmapOrPage(item)) {
+                                addPreloadListWithPriority(preloadList, item, i, PREV_BEGIN);
+                            }
+                        }
+                    } else {// 없으면 내 파일을 읽는다
+                        if (!checkCacheExistBitmapOrPage(item)) {
+                            addPreloadListWithPriority(preloadList, item, i, PREV_BEGIN);
+                        }
                     }
                 }
             }
@@ -245,6 +251,8 @@ public class PhotoPagerAdapter extends ViewerPagerAdapter {
 
         if (preloadList.size() <= 0)
             return null;
+
+//        Collections.sort(preloadList, new FileHelper.FilePriorityComparator());
 
         final ExplorerItem[] preloadArray = new ExplorerItem[preloadList.size()];
         preloadList.toArray(preloadArray);
@@ -256,23 +264,30 @@ public class PhotoPagerAdapter extends ViewerPagerAdapter {
         if (imageList == null)
             return null;
 
-        // split일 경우에는 현재 reload된 것에 bitmap이 사용되는지 안되는지 확인해라
+        // split일 경우에는 현재 reload된 것에 bitmap이 사용되는지 안되는지 확인해야 한다.
         final ArrayList<ExplorerItem> removeList = new ArrayList<ExplorerItem>();
 
-        if (position - 3 >= 0) {
-            ExplorerItem item = imageList.get(position - 3);
-            removeList.add(item);
-//            Log.w(TAG, "getRemoveArray position=" + (position - 3));
+        // 지우는 것은 순서가 필요 없다.
+        final int NEXT_BEGIN = 3;
+        final int NEXT_END = 4;
+
+        for (int i = NEXT_BEGIN; i <= NEXT_END; i++) {
+            final int index = position + i;
+            if (index >= 0 && imageList.size() > index) {
+                final ExplorerItem item = imageList.get(index);
+                removeList.add(item);
+            }
         }
-        if (position + 3 < imageList.size()) {
-            ExplorerItem item = imageList.get(position + 3);
-            removeList.add(item);
-//            Log.w(TAG, "getRemoveArray position=" + (position + 3));
-        }
-        if (position + 4 < imageList.size()) {
-            ExplorerItem item = imageList.get(position + 4);
-            removeList.add(item);
-//            Log.w(TAG, "getRemoveArray position=" + (position + 4));
+
+        final int PREV_BEGIN = 3;
+        final int PREV_END = 3;
+
+        for (int i = PREV_BEGIN; i <= PREV_END; i++) {
+            final int index = position - i;
+            if (index >= 0 && imageList.size() > index){
+                final ExplorerItem item = imageList.get(index);
+                removeList.add(item);
+            }
         }
 
         if (removeList.size() <= 0)
