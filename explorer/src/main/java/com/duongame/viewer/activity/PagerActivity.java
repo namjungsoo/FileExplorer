@@ -173,7 +173,7 @@ public class PagerActivity extends ViewerActivity {
 
     public void stopGifAnimation() {
         if(gifImageView != null) {
-            Log.e(TAG, "stopGifAnimation");
+            Log.w(TAG, "stopGifAnimation");
             gifImageView.stopAnimation();
         }
     }
