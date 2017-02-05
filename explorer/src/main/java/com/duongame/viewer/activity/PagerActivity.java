@@ -109,16 +109,16 @@ public class PagerActivity extends ViewerActivity {
         pager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-//                Log.d("PagerActivity", "onPageScrolled position=" + position);
-                updateScrollInfo(position);
-
-                updateName(position);
+//                Log.e(TAG, "onPageScrolled position=" + position);
 //                textName.setText(pagerAdapter.getImageList().get(position).name);
             }
 
             @Override
             public void onPageSelected(int position) {
+                Log.w(TAG, "onPageSelected position=" + position);
 
+                updateScrollInfo(position);
+                updateName(position);
             }
 
             @Override
@@ -161,19 +161,28 @@ public class PagerActivity extends ViewerActivity {
     }
 
     // startAnimation은 외부에서 수행함
-//    public void setGifImageView(GifImageView gifImageView) {
+    public void setGifImageView(GifImageView gifImageView) {
 //        if(this.gifImageView != null)
 //            this.gifImageView.stopAnimation();
-//
-//        this.gifImageView = gifImageView;
-//    }
+        this.gifImageView = gifImageView;
+    }
 
-//    @Override
-//    public void onStop() {
-//        super.onStop();
-//        if(gifImageView != null)
-//            gifImageView.stopAnimation();
-//    }
+    public GifImageView getGifImageView() {
+        return gifImageView;
+    }
 
+    public void stopGifAnimation() {
+        if(gifImageView != null) {
+            Log.e(TAG, "stopGifAnimation");
+            gifImageView.stopAnimation();
+        }
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+
+        // 종료시에 현재 GIF가 있으면 stop 해줌
+        stopGifAnimation();
+    }
 }
-

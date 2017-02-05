@@ -17,7 +17,6 @@ import com.duongame.explorer.task.RemoveAndPreloadTask;
 import com.duongame.viewer.activity.PagerActivity;
 import com.felipecsl.gifimageview.library.GifImageView;
 
-import java.io.IOException;
 import java.util.ArrayList;
 
 /**
@@ -135,51 +134,53 @@ public class PhotoPagerAdapter extends ViewerPagerAdapter {
                 preloadAndRemoveNearBitmap(position, width, height);
             }
 
-            final PagerActivity pagerActivity = (PagerActivity) context;
-
-            // 현재 imageView를 무조건 등록
-            // 마지막 imageView를 정지
-//            imageView.stopAnimation();
-//            pagerActivity.setGifImageView(imageView);
-
-            final GifImageView imageView = (GifImageView) container.findViewById(R.id.image_viewer);
-            byte[] data = null;
-            try {
-                data = LoadGifTask.loadGif(imageList.get(position).path);
-                imageView.stopAnimation();
-                imageView.setBytes(data);
-                imageView.startAnimation();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
             // GIF 이미지일 경우
             // 메모리에 사라졌다가 재 로딩일 경우에 애니메이션이 잘 안된다.
-//            if (imageList.get(position).path.toLowerCase().endsWith(".gif")) {
-//                final LoadGifTask task = new LoadGifTask(new LoadGifTask.LoadGifListener() {
-//                    @Override
-//                    public void onSuccess(byte[] data) {
-//                        Log.w(TAG, "onSuccess path=" + imageList.get(position).path);
+            final ViewGroup rootView = (ViewGroup)object;
+
+            final PagerActivity pagerActivity = (PagerActivity) context;
+            final GifImageView imageView = (GifImageView) rootView.findViewById(R.id.image_viewer);
+            Log.w(TAG, "imageView tag=" + imageView.getTag());
+
+            if (imageList.get(position).path.toLowerCase().endsWith(".gif")) {
+                final LoadGifTask task = new LoadGifTask(new LoadGifTask.LoadGifListener() {
+                    @Override
+                    public void onSuccess(byte[] data) {
+                        Log.w(TAG, "onSuccess path=" + imageList.get(position).path);
+
+                        // 기존 GIF가 있으면 가져와서 stop해줌
+                        pagerActivity.stopGifAnimation();
+
 //                        imageView.stopAnimation();
-//                        imageView.setBytes(data);
-//                        imageView.startAnimation();
-//                    }
-//
-//                    @Override
-//                    public void onFail() {
-//                        Log.e(TAG, "onFail " + imageList.get(position).path);
-//                    }
-//                });
-//                task.execute(imageList.get(position).path);
-//            }
+                        imageView.setBytes(data);
+                        imageView.startAnimation();
+
+                        // 성공이면 imageView를 저장해 놓음
+                        pagerActivity.setGifImageView(imageView);
+                    }
+
+                    @Override
+                    public void onFail() {
+                        Log.e(TAG, "onFail " + imageList.get(position).path);
+
+                        // 기존 GIF가 있으면 가져와서 stop해줌
+                        pagerActivity.stopGifAnimation();
+                        pagerActivity.setGifImageView(null);
+                    }
+                });
+                task.execute(imageList.get(position).path);
+            } else {// GIF가 아니면
+                // 기존 GIF가 있으면 가져와서 stop해줌
+                pagerActivity.stopGifAnimation();
+                pagerActivity.setGifImageView(null);
+            }
         }
     }
 
     private void addPreloadListWithPriority(final ArrayList<ExplorerItem> preloadList, final ExplorerItem item, int i, int BEGIN) {
         if (i == BEGIN) {// 시작인 것만 0(최우선 순위), 나머지는 1
             item.priority = 0;
-        }
-        else {
+        } else {
             item.priority = 1;
         }
         preloadList.add(item);
@@ -284,7 +285,7 @@ public class PhotoPagerAdapter extends ViewerPagerAdapter {
 
         for (int i = PREV_BEGIN; i <= PREV_END; i++) {
             final int index = position - i;
-            if (index >= 0 && imageList.size() > index){
+            if (index >= 0 && imageList.size() > index) {
                 final ExplorerItem item = imageList.get(index);
                 removeList.add(item);
             }

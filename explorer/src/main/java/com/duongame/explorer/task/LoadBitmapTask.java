@@ -13,8 +13,8 @@ import com.duongame.explorer.adapter.ExplorerItem;
  */
 
 public class LoadBitmapTask extends BitmapTask {
-
     private final ImageView imageView;
+    private ExplorerItem item;
 
     public LoadBitmapTask(ImageView imageView, int width, int height, boolean exif) {
         super(width, height, exif);
@@ -25,7 +25,7 @@ public class LoadBitmapTask extends BitmapTask {
     protected Bitmap doInBackground(ExplorerItem... params) {
 //        Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
 
-        final ExplorerItem item = params[0];
+        item = params[0];
         Bitmap bitmap = null;
         if (!isCancelled()) {
             Log.d(this.getClass().getSimpleName(), "loadBitmap");
@@ -42,6 +42,7 @@ public class LoadBitmapTask extends BitmapTask {
         if (imageView != null && bitmap != null) {
             if (imageView != null) {
                 imageView.setImageBitmap(bitmap);
+                imageView.setTag(item.path);
 
                 // 종횡비 체크
                 final int bmWidth = bitmap.getWidth();
