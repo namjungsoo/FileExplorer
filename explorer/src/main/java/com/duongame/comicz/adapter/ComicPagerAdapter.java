@@ -85,7 +85,7 @@ public class ComicPagerAdapter extends FragmentPagerAdapter {
             lastPosition = position;
             if (fragmentMap.containsKey(position)) {
                 final BaseFragment fragment = fragmentMap.get(position);
-                fragment.refresh();
+                fragment.onRefresh();
             }
         }
     }

@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ViewSwitcher;
 
 import com.duongame.explorer.R;
 import com.duongame.explorer.fragment.BaseFragment;
@@ -13,13 +14,23 @@ import com.duongame.explorer.fragment.BaseFragment;
  */
 
 public class SearchFragment extends BaseFragment {
-    ViewGroup rootView;
+    private ViewGroup rootView;
+    private ViewSwitcher switcherContents;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         rootView = (ViewGroup) inflater.inflate(R.layout.fragment_search, container, false);
+        switcherContents = (ViewSwitcher) rootView.findViewById(R.id.switcher_contents);
+
+        onRefresh();
         return rootView;
     }
 
+    @Override
+    public void onRefresh() {
+        if(switcherContents != null) {
+            switcherContents.setDisplayedChild(1);
+        }
+    }
 }

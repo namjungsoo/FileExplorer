@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.ViewSwitcher;
 
 import com.duongame.comicz.adapter.HistoryAdapter;
 import com.duongame.comicz.db.BookDB;
@@ -28,6 +29,7 @@ public class HistoryFragment extends BaseFragment {
     private ListView listView;
     private HistoryAdapter adapter;
     private ArrayList<BookDB.Book> bookList;
+    private ViewSwitcher switcherContents;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -61,17 +63,29 @@ public class HistoryFragment extends BaseFragment {
                 }
             }
         });
+        switcherContents = (ViewSwitcher) rootView.findViewById(R.id.switcher_contents);
 
-        refresh();
+        onRefresh();
         return rootView;
     }
 
     @Override
-    public void refresh() {
+    public void onRefresh() {
         bookList = BookDB.getBooks(getActivity());
         if (adapter != null) {
             adapter.setBookList(bookList);
             adapter.notifyDataSetChanged();
+        }
+
+        if(bookList != null && bookList.size() > 0) {
+            if(switcherContents != null) {
+                switcherContents.setDisplayedChild(0);
+            }
+        }
+        else {
+            if(switcherContents != null) {
+                switcherContents.setDisplayedChild(1);
+            }
         }
     }
 
@@ -85,8 +99,6 @@ public class HistoryFragment extends BaseFragment {
     public void onResume() {
         super.onResume();
         Log.i(TAG, "onResume");
-        refresh();
+        onRefresh();
     }
-
 }
-

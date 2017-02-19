@@ -16,4 +16,10 @@
     <string name="backpressed">종료하시려면 뒤로가기 버튼을 한번 더 누르세요.</string>
     <string name="action_settings">설정</string>
     <string name="no_contents">결과가 없습니다.</string>
+    <string-array name="search_file">
+        <item>ZIP</item>
+        <item>TXT</item>
+        <item>PDF</item>
+    </string-array>
+    <string name="permissions">권한 요청</string>
 </resources>

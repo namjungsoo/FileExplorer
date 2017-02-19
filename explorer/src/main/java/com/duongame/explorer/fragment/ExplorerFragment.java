@@ -1,6 +1,8 @@
 package com.duongame.explorer.fragment;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -49,6 +51,7 @@ import static com.duongame.explorer.helper.ExtSdCardHelper.getExternalSdCardPath
 
 public class ExplorerFragment extends BaseFragment {
     private final static String TAG = "ExplorerFragment";
+    private final static int PERMISSION_STORAGE = 1;
 
     private final static int MAX_THUMBNAILS = 100;
     private final static int SWITCH_LIST = 0;
@@ -63,8 +66,9 @@ public class ExplorerFragment extends BaseFragment {
     private GridView gridView;
     private ListView listView;
     private AbsListView currentView;
-    private ViewSwitcher switcher;
+    private ViewSwitcher switcherViewType;
     private View rootView;
+    private ViewSwitcher switcherContents;
 
     private ImageButton sdcard = null;
     private String extSdCard = null;
@@ -93,6 +97,7 @@ public class ExplorerFragment extends BaseFragment {
 
         initUI();
         initViewType();
+        checkStoragePermissions();
 
         extSdCard = getExternalSdCardPath();
         if(extSdCard != null) {
@@ -110,7 +115,7 @@ public class ExplorerFragment extends BaseFragment {
 //        Log.d(TAG, "onResume "+rootView.getWidth() + " " + rootView.getHeight());
 
         // 밖에 나갔다 들어오면 리프레시함
-        refresh();
+        onRefresh();
     }
 
     @Override
@@ -130,7 +135,8 @@ public class ExplorerFragment extends BaseFragment {
     }
 
     void initUI() {
-        switcher = (ViewSwitcher) rootView.findViewById(R.id.switcher);
+        switcherContents = (ViewSwitcher) rootView.findViewById(R.id.switcher_contents);
+        switcherViewType = (ViewSwitcher) rootView.findViewById(R.id.switcher);
         textPath = (TextView) rootView.findViewById(R.id.text_path);
         scrollPath = (HorizontalScrollView) rootView.findViewById(R.id.scroll_path);
         fileList = new ArrayList<>();
@@ -175,7 +181,28 @@ public class ExplorerFragment extends BaseFragment {
                 }
             }
         });
+
+        final Button permission = (Button)rootView.findViewById(R.id.btn_permission);
+        if(permission != null) {
+            permission.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    checkStoragePermissions();
+                }
+            });
+        }
     }
+
+    private boolean checkStoragePermissions() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (getActivity().checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED || getActivity().checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, PERMISSION_STORAGE);
+                return false;
+            }
+        }
+        return true;
+    }
+
 
     void initViewType() {
         int viewType = PreferenceHelper.getViewType(getActivity());
@@ -191,7 +218,7 @@ public class ExplorerFragment extends BaseFragment {
     }
 
     void switchToList() {
-        switcher.setDisplayedChild(SWITCH_LIST);
+        switcherViewType.setDisplayedChild(SWITCH_LIST);
 
         adapter = new ExplorerListAdapter(getActivity(), fileList);
 
@@ -216,7 +243,7 @@ public class ExplorerFragment extends BaseFragment {
     }
 
     void switchToGrid() {
-        switcher.setDisplayedChild(SWITCH_GRID);
+        switcherViewType.setDisplayedChild(SWITCH_GRID);
 
         adapter = new ExplorerGridAdapter(getActivity(), fileList);
 
@@ -258,11 +285,12 @@ public class ExplorerFragment extends BaseFragment {
         updateFileList(path);
     }
 
+    //TODO: 읽던 파일이면 읽던 페이지로 이동해야 함.
     void onAdapterItemClick(int position) {
         ExplorerItem item = fileList.get(position);
         switch (item.type) {
             case DIRECTORY:
-                backupPosition();
+//                backupPosition();
 
                 String newPath;
                 if (ExplorerManager.getLastPath().equals("/")) {
@@ -274,7 +302,7 @@ public class ExplorerFragment extends BaseFragment {
                 updateFileList(newPath);
                 break;
             case IMAGE: {
-                backupPosition();
+//                backupPosition();
 
                 final Intent intent = new Intent(getActivity(), PhotoActivity.class);
                 intent.putExtra("path", item.path.substring(0, item.path.lastIndexOf('/')));
@@ -284,7 +312,7 @@ public class ExplorerFragment extends BaseFragment {
             }
             break;
             case PDF: {
-                backupPosition();
+//                backupPosition();
 
                 final Intent intent = new Intent(getActivity(), PdfActivity.class);
                 intent.putExtra("path", item.path);
@@ -298,7 +326,7 @@ public class ExplorerFragment extends BaseFragment {
             }
             break;
             case ZIP: {
-                backupPosition();
+//                backupPosition();
 
                 final Intent intent = new Intent(getActivity(), ZipActivity.class);
                 intent.putExtra("path", item.path);
@@ -310,7 +338,7 @@ public class ExplorerFragment extends BaseFragment {
             }
             break;
             case TEXT: {
-                backupPosition();
+//                backupPosition();
 
                 final Intent intent = new Intent(getActivity(), TextActivity.class);
                 intent.putExtra("path", item.path);
@@ -320,7 +348,7 @@ public class ExplorerFragment extends BaseFragment {
             }
             break;
             case APK: {
-                backupPosition();
+//                backupPosition();
 
                 final Intent intent = new Intent(Intent.ACTION_VIEW);
                 final Uri apkURI = FileProvider.getUriForFile(getActivity(), getActivity().getApplicationContext().getPackageName() + ".provider", new File(item.path));
@@ -480,8 +508,17 @@ public class ExplorerFragment extends BaseFragment {
     }
 
     @Override
-    public void refresh() {
+    public void onRefresh() {
         updateFileList(ExplorerManager.getLastPath());
+
+        if(switcherContents != null) {
+            if(fileList == null || fileList.size() <= 0) {
+                switcherContents.setDisplayedChild(1);
+            }
+            else {
+                switcherContents.setDisplayedChild(0);
+            }
+        }
     }
 
     @Override

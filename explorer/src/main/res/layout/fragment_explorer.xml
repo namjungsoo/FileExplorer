@@ -164,7 +164,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@id/panel_bottom"
-        android:layout_below="@id/panel_top">
+        android:layout_below="@id/panel_top"
+        android:layout_weight="1">
+
 
         <ViewSwitcher
             android:id="@+id/switcher"
@@ -187,17 +189,17 @@
 
         </ViewSwitcher>
 
-        <LinearLayout
+        <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <TextView
-                android:layout_width="match_parent"
+            <Button
+                android:id="@+id/btn_permission"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:gravity="center"
-                android:text="@string/no_contents" />
-        </LinearLayout>
+                android:text="@string/permissions" />
+        </FrameLayout>
 
     </ViewSwitcher>
 

@@ -1,13 +1,10 @@
 package com.duongame.comicz.pro.activity;
 
 import android.Manifest;
-import android.content.pm.PackageManager;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -16,16 +13,13 @@ import com.duongame.comicz.db.BookDB;
 import com.duongame.comicz.pro.R;
 import com.duongame.explorer.bitmap.BitmapCache;
 import com.duongame.explorer.fragment.BaseFragment;
-import com.duongame.explorer.helper.PreferenceHelper;
 import com.duongame.explorer.helper.ShortcutHelper;
 import com.duongame.explorer.helper.ToastHelper;
-import com.duongame.explorer.manager.PositionManager;
 
 import java.io.File;
 
 public class MainActivity extends AppCompatActivity {
     private final static String TAG = "MainActivity";
-    private final static int PERMISSION_STORAGE = 1;
 
     private ViewPager pager;
     private ComicPagerAdapter adapter;
@@ -56,16 +50,16 @@ public class MainActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
 
-        if (checkStoragePermissions()) {
-            final String lastPath = PreferenceHelper.getLastPath(MainActivity.this);
-            final int position = PreferenceHelper.getLastPosition(MainActivity.this);
-            final int top = PreferenceHelper.getLastTop(MainActivity.this);
-
-            Log.d(TAG, "onCreate path=" + lastPath + " position=" + position + " top=" + top);
-
-            PositionManager.setPosition(lastPath, position);
-            PositionManager.setTop(lastPath, top);
-        }
+//        if (checkStoragePermissions()) {
+//            final String lastPath = PreferenceHelper.getLastPath(MainActivity.this);
+//            final int position = PreferenceHelper.getLastPosition(MainActivity.this);
+//            final int top = PreferenceHelper.getLastTop(MainActivity.this);
+//
+//            Log.d(TAG, "onCreate path=" + lastPath + " position=" + position + " top=" + top);
+//
+//            PositionManager.setPosition(lastPath, position);
+//            PositionManager.setTop(lastPath, top);
+//        }
     }
 
     @Override
@@ -97,16 +91,6 @@ public class MainActivity extends AppCompatActivity {
         if (fragment != null) {
             fragment.onBackPressed();
         }
-    }
-
-    private boolean checkStoragePermissions() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED || checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, PERMISSION_STORAGE);
-                return false;
-            }
-        }
-        return true;
     }
 
     @Override
@@ -153,14 +137,14 @@ public class MainActivity extends AppCompatActivity {
         deleteRecursive(file);
 
         final BaseFragment fragment = (BaseFragment) adapter.getItem(0);
-        fragment.refresh();
+        fragment.onRefresh();
     }
 
     void clearHistory() {
         BookDB.clearBooks(this);
 
         final BaseFragment fragment = (BaseFragment) adapter.getItem(1);
-        fragment.refresh();
+        fragment.onRefresh();
     }
 
     void deleteRecursive(File fileOrDirectory) {

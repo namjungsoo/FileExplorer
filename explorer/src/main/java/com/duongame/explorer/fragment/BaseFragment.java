@@ -13,7 +13,7 @@ public class BaseFragment extends Fragment {
     long lastBackPressed = 0;
     private final static int TIME_MS = 2000;
 
-    public void refresh() {
+    public void onRefresh() {
     }
 
     public void onBackPressed() {
