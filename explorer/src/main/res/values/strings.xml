@@ -15,4 +15,5 @@
     <string name="filename">FileName</string>
     <string name="backpressed">To quit, press the back button again.</string>
     <string name="action_settings">Settings</string>
+    <string name="no_contents">No contents</string>
 </resources>

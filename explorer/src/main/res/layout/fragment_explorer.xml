@@ -11,6 +11,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:orientation="vertical">
+
         <View
             android:layout_width="match_parent"
             android:layout_height="0.5dp"
@@ -62,8 +63,7 @@
                 android:scaleType="fitXY"
                 android:src="@drawable/sdcard"
                 android:tint="@color/colorPrimary"
-                android:visibility="gone"
-                />
+                android:visibility="gone" />
 
             <HorizontalScrollView
                 android:id="@+id/scroll_path"
@@ -126,8 +126,8 @@
                     style="@style/ExplorerButton"
                     android:layout_width="match_parent"
                     android:layout_height="12dp"
-                    android:gravity="center_horizontal"
                     android:layout_marginTop="-3dp"
+                    android:gravity="center_horizontal"
                     android:text="@string/list" />
             </LinearLayout>
 
@@ -160,25 +160,43 @@
     </LinearLayout>
 
     <ViewSwitcher
-        android:id="@+id/switcher"
+        android:id="@+id/switcher_contents"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@id/panel_bottom"
-        android:layout_below="@id/panel_top">
+        android:layout_height="wrap_content">
 
-        <ListView
-            android:id="@+id/list_explorer"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
-        <GridView
-            android:id="@+id/grid_explorer"
+        <ViewSwitcher
+            android:id="@+id/switcher"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:columnWidth="90dp"
-            android:gravity="center"
-            android:numColumns="auto_fit"
-            android:stretchMode="columnWidth" />
+            android:layout_above="@id/panel_bottom"
+            android:layout_below="@id/panel_top">
+
+            <ListView
+                android:id="@+id/list_explorer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <GridView
+                android:id="@+id/grid_explorer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:columnWidth="90dp"
+                android:gravity="center"
+                android:numColumns="auto_fit"
+                android:stretchMode="columnWidth" />
+
+        </ViewSwitcher>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:text="@string/no_contents"/>
+        </LinearLayout>
 
     </ViewSwitcher>
 

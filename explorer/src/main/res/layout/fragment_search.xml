@@ -29,8 +29,26 @@
             android:layout_height="match_parent"
             android:text="@string/search"/>
     </LinearLayout>
-    <ListView
-        android:id="@+id/list_search"
+    <ViewSwitcher
+        android:id="@+id/switcher_contents"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent">
+
+        <ListView
+            android:id="@+id/list_search"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:text="@string/no_contents"/>
+        </LinearLayout>
+
+    </ViewSwitcher>
 </LinearLayout>
