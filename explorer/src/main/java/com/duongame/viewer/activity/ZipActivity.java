@@ -132,6 +132,8 @@ public class ZipActivity extends PagerActivity {
         final ArrayList<ExplorerItem> zipImageList = pagerAdapter.getImageList();
         book.total_page = zipImageList.size();
         book.current_file = zipImageList.get(page).orgIndex;
+
+        //TODO: 숫자가 맞는지 검증할것
         if (zipExtractCompleted) {
             // 전부 압축이 다 풀렸으므로 전체 파일 갯수를 입력해준다.
             book.extract_file = extractFileCount;

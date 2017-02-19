@@ -79,6 +79,11 @@ public class PdfActivity extends PagerActivity {
         }
     }
 
+    @Override
+    protected void updateName(int i) {
+        textName.setText(name);
+    }
+
     protected void processIntent() {
         Log.d(TAG, "processIntent pdf");
         final ArrayList<ExplorerItem> imageList;
@@ -110,6 +115,7 @@ public class PdfActivity extends PagerActivity {
                     pagerAdapter.notifyDataSetChanged();
 
                     pager.setCurrentItem(page);
+                    updateName(page);
 
                     seekPage.setMax(imageList.size());
                     seekPage.setProgress(1);
