@@ -1,4 +1,4 @@
-package com.duongame.explorer.task;
+package com.duongame.explorer.task.bitmap;
 
 import android.graphics.Bitmap;
 import android.util.Log;
@@ -12,7 +12,7 @@ import static android.content.ContentValues.TAG;
  * Created by namjungsoo on 2016. 12. 25..
  */
 
-public class RemoveAndPreloadTask extends BitmapTask {
+public class RemoveAndPreloadBitmapTask extends BitmapTask {
 
     private ExplorerItem[] removeList;
 
@@ -20,7 +20,7 @@ public class RemoveAndPreloadTask extends BitmapTask {
         this.removeList = removeList;
     }
 
-    public RemoveAndPreloadTask(int width, int height, boolean exif) {
+    public RemoveAndPreloadBitmapTask(int width, int height, boolean exif) {
         super(width, height, exif);
     }
 
@@ -34,7 +34,7 @@ public class RemoveAndPreloadTask extends BitmapTask {
                 final ExplorerItem item = removeList[i];
 
                 if (item.side == ExplorerItem.Side.SIDE_ALL) {
-                    Log.w(TAG, "RemoveAndPreloadTask REMOVE " + item.path);
+                    Log.w(TAG, "RemoveAndPreloadBitmapTask REMOVE " + item.path);
                     BitmapCache.removeBitmap(item.path);
                 } else {
                     String path = BitmapCache.changePathToPage(item);
@@ -51,7 +51,7 @@ public class RemoveAndPreloadTask extends BitmapTask {
                 ExplorerItem item = params[i];
 
                 if (!isCancelled()) {
-                    Log.w(TAG, "RemoveAndPreloadTask PRELOAD " + item.path);
+                    Log.w(TAG, "RemoveAndPreloadBitmapTask PRELOAD " + item.path);
                     loadBitmap(item);
                 }
             }

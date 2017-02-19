@@ -8,6 +8,7 @@ import android.graphics.Canvas;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -16,8 +17,9 @@ import android.widget.TextView;
 
 import com.duongame.explorer.R;
 import com.duongame.explorer.bitmap.BitmapCache;
-import com.duongame.explorer.task.LoadThumbnailTask;
-import com.duongame.explorer.task.LoadZipThumbnailTask;
+import com.duongame.explorer.task.thumbnail.LoadPdfThumbnailTask;
+import com.duongame.explorer.task.thumbnail.LoadThumbnailTask;
+import com.duongame.explorer.task.thumbnail.LoadZipThumbnailTask;
 import com.duongame.explorer.view.RoundedImageView;
 
 import java.util.ArrayList;
@@ -31,6 +33,7 @@ import static com.duongame.explorer.bitmap.BitmapCache.getThumbnail;
  */
 
 public abstract class ExplorerAdapter extends BaseAdapter {
+    private final static String TAG = "ExplorerAdapter";
     protected ArrayList<ExplorerItem> fileList;
     protected Activity context;
 
@@ -95,55 +98,95 @@ public abstract class ExplorerAdapter extends BaseAdapter {
         this.fileList = fileList;
     }
 
+    void setIconImage(final ViewHolder viewHolder, ExplorerItem item) {
+        // 현재 아이콘 로딩되던 태스크 취소
+        if (taskMap.get(viewHolder.icon) != null)
+            taskMap.get(viewHolder.icon).cancel(true);
+
+        final Bitmap bitmap = getThumbnail(item.path);
+        if (bitmap == null) {
+            viewHolder.icon.setImageResource(android.R.color.transparent);
+
+            final LoadThumbnailTask task = new LoadThumbnailTask(context, viewHolder.icon);
+            task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, item.path);
+            taskMap.put(viewHolder.icon, task);
+        } else {
+//                Log.w(TAG,"cache hit path="+item.path);
+            viewHolder.icon.setImageBitmap(bitmap);
+        }
+    }
+
+    void setIconPdf(final ViewHolder viewHolder, ExplorerItem item) {
+        Log.d(TAG, "setIconPdf=" + item.path);
+
+        // 현재 아이콘 로딩되던 태스크 취소
+        if (taskMap.get(viewHolder.icon) != null)
+            taskMap.get(viewHolder.icon).cancel(true);
+
+        final Bitmap bitmap = getThumbnail(item.path);
+        if (bitmap == null) {
+            viewHolder.icon.setImageResource(android.R.color.transparent);
+
+            final LoadPdfThumbnailTask task = new LoadPdfThumbnailTask(context, viewHolder.icon);
+            task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, item.path);
+            taskMap.put(viewHolder.icon, task);
+            Log.d(TAG, "setIconPdf=" + item.path + " LoadPdfThumbnailTask");
+        } else {// 로딩된 비트맵을 셋팅
+            viewHolder.icon.setImageBitmap(bitmap);
+        }
+
+    }
+
+    void setIconZip(final ViewHolder viewHolder, ExplorerItem item) {
+        // 현재 아이콘 로딩되던 태스크 취소
+        if (taskMap.get(viewHolder.icon) != null)
+            taskMap.get(viewHolder.icon).cancel(true);
+
+        final Bitmap bitmap = getThumbnail(item.path);
+        if (bitmap == null) {
+            viewHolder.icon.setImageResource(android.R.color.transparent);
+
+            final LoadZipThumbnailTask task = new LoadZipThumbnailTask(context, viewHolder.icon);
+            task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, item.path);
+            taskMap.put(viewHolder.icon, task);
+        } else {
+//                Log.w(TAG, "ZIP cache hit path=" + item.path);
+            viewHolder.icon.setImageBitmap(bitmap);
+
+            //DEBUG
+            //BitmapLoader.writeDebugBitmap(item.path, bitmap);
+        }
+
+    }
+
+    void setIconApk(final ViewHolder viewHolder, ExplorerItem item) {
+        //TODO: 동적으로 읽기
+        Drawable drawable = BitmapCache.getDrawable(item.path);
+        if (drawable == null) {
+            final PackageManager pm = context.getPackageManager();
+            final PackageInfo pi = pm.getPackageArchiveInfo(item.path, 0);
+            // the secret are these two lines....
+            pi.applicationInfo.sourceDir = item.path;
+            pi.applicationInfo.publicSourceDir = item.path;
+            drawable = pi.applicationInfo.loadIcon(pm);
+            BitmapCache.setDrawable(item.path, drawable);
+        }
+        //viewHolder.icon.setImageBitmap(drawableToBitmap(drawable));
+        viewHolder.icon.setImageDrawable(drawable);
+    }
+
+
     void setIcon(final ViewHolder viewHolder, ExplorerItem item) {
         if (item.type == IMAGE) {
-            if (taskMap.get(viewHolder.icon) != null)
-                taskMap.get(viewHolder.icon).cancel(true);
-
-            final Bitmap bitmap = getThumbnail(item.path);
-            if (bitmap == null) {
-                viewHolder.icon.setImageResource(android.R.color.transparent);
-
-                LoadThumbnailTask task = new LoadThumbnailTask(context, viewHolder.icon);
-                task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, item.path);
-                taskMap.put(viewHolder.icon, task);
-            } else {
-//                Log.w(TAG,"cache hit path="+item.path);
-                viewHolder.icon.setImageBitmap(bitmap);
-            }
+            setIconImage(viewHolder, item);
         } else if (item.type == ExplorerItem.FileType.ZIP) {
-            if (taskMap.get(viewHolder.icon) != null)
-                taskMap.get(viewHolder.icon).cancel(true);
-
-            final Bitmap bitmap = getThumbnail(item.path);
-            if (bitmap == null) {
-                viewHolder.icon.setImageResource(android.R.color.transparent);
-
-                LoadZipThumbnailTask task = new LoadZipThumbnailTask(context, viewHolder.icon);
-                task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, item.path);
-                taskMap.put(viewHolder.icon, task);
-            } else {
-//                Log.w(TAG, "ZIP cache hit path=" + item.path);
-                viewHolder.icon.setImageBitmap(bitmap);
-
-                //DEBUG
-                //BitmapLoader.writeDebugBitmap(item.path, bitmap);
-            }
+            setIconZip(viewHolder, item);
         } else if (item.type == ExplorerItem.FileType.APK) {
-            //TODO: 동적으로 읽기
-            Drawable drawable = BitmapCache.getDrawable(item.path);
-            if (drawable == null) {
-                final PackageManager pm = context.getPackageManager();
-                final PackageInfo pi = pm.getPackageArchiveInfo(item.path, 0);
-                // the secret are these two lines....
-                pi.applicationInfo.sourceDir = item.path;
-                pi.applicationInfo.publicSourceDir = item.path;
-                drawable = pi.applicationInfo.loadIcon(pm);
-                BitmapCache.setDrawable(item.path, drawable);
-            }
-            //viewHolder.icon.setImageBitmap(drawableToBitmap(drawable));
-            viewHolder.icon.setImageDrawable(drawable);
+            setIconApk(viewHolder, item);
+        } else if (item.type == ExplorerItem.FileType.PDF) {
+            setIconPdf(viewHolder, item);
         } else {
+            // 이전 타입과 다르게 새 타입이 들어왔다면 업데이트 한다.
             if (viewHolder.type != item.type) {
                 setTypeIcon(item.type, viewHolder.icon);
             }
@@ -177,12 +220,13 @@ public abstract class ExplorerAdapter extends BaseAdapter {
 
     void setTypeIcon(ExplorerItem.FileType type, ImageView icon) {
         switch (type) {
-            case IMAGE:
-                return;
             case AUDIO:
             case VIDEO:
-            case PDF:
+
+                // 구현완료된것들은 주석처리
+//            case PDF:
 //            case TEXT:
+//            case IMAGE:
             case FILE:
                 icon.setImageBitmap(BitmapCache.getResourceBitmap(context.getResources(), R.drawable.file));
                 break;

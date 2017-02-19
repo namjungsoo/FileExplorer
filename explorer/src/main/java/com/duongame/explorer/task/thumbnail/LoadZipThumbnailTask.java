@@ -1,4 +1,4 @@
-package com.duongame.explorer.task;
+package com.duongame.explorer.task.thumbnail;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -15,9 +15,6 @@ import com.duongame.explorer.bitmap.ZipLoader;
 import net.lingala.zip4j.exception.ZipException;
 
 import java.util.ArrayList;
-
-import static com.duongame.explorer.adapter.ExplorerItem.Side.LEFT;
-import static com.duongame.explorer.bitmap.BitmapCache.getThumbnail;
 
 /**
  * Created by namjungsoo on 2016-12-16.
@@ -42,7 +39,7 @@ public class LoadZipThumbnailTask extends AsyncTask<String, Void, Bitmap> {
         if (isCancelled())
             return null;
 
-        Bitmap bitmap = getThumbnail(path);
+        Bitmap bitmap = BitmapCache.getThumbnail(path);
         if (isCancelled())
             return bitmap;
 
@@ -51,7 +48,7 @@ public class LoadZipThumbnailTask extends AsyncTask<String, Void, Bitmap> {
             try {
                 //image = ZipLoader.getFirstImage(context, path);
                 final ZipLoader loader = new ZipLoader();
-                final ArrayList<ExplorerItem> imageList = loader.load(context, path, null, 0, LEFT, true);
+                final ArrayList<ExplorerItem> imageList = loader.load(context, path, null, 0, ExplorerItem.Side.LEFT, true);
 
                 if (imageList != null && imageList.size() > 0) {
                     image = imageList.get(0).path;

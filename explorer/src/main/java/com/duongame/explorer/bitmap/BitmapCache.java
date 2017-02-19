@@ -135,6 +135,7 @@ public class BitmapCache {
 
     // thumbnail
     public static void setThumbnail(String path, Bitmap bitmap, ImageView imageView) {
+        Log.d(TAG, "setThumbnail path=" + path);
         thumbnailCache.putIfAbsent(path, bitmap);
         thumbnailImageCache.putIfAbsent(path, imageView);
     }

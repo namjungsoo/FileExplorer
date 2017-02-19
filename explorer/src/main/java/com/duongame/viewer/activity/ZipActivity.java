@@ -38,7 +38,6 @@ public class ZipActivity extends PagerActivity {
 
     private long size;// zip 파일의 용량
     private ExplorerItem.Side side = LEFT;
-
     private ExplorerItem.Side lastSide = LEFT;
 
     private int totalFileCount = 0;

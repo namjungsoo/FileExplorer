@@ -13,6 +13,7 @@ import com.duongame.comicz.adapter.HistoryAdapter;
 import com.duongame.comicz.db.BookDB;
 import com.duongame.explorer.R;
 import com.duongame.explorer.fragment.BaseFragment;
+import com.duongame.viewer.activity.PdfActivity;
 import com.duongame.viewer.activity.ZipActivity;
 
 import java.util.ArrayList;
@@ -40,14 +41,23 @@ public class HistoryFragment extends BaseFragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if (bookList != null) {
                     final BookDB.Book book = bookList.get(position);
-                    final Intent intent = new Intent(getActivity(), ZipActivity.class);
-                    intent.putExtra("path", book.path);
-                    intent.putExtra("name", book.name);
-                    intent.putExtra("current_page", book.current_page);
-                    intent.putExtra("size", book.size);
-                    intent.putExtra("extract_file", book.extract_file);
-                    intent.putExtra("side", book.side.getValue());
-                    startActivity(intent);
+                    Class<?> cls = null;
+                    if (book.path.toLowerCase().endsWith(".zip")) {
+                        cls = ZipActivity.class;
+                    } else if (book.path.toLowerCase().endsWith(".pdf")) {
+                        cls = PdfActivity.class;
+                    }
+
+                    if (cls != null) {
+                        final Intent intent = new Intent(getActivity(), cls);
+                        intent.putExtra("path", book.path);
+                        intent.putExtra("name", book.name);
+                        intent.putExtra("current_page", book.current_page);
+                        intent.putExtra("size", book.size);
+                        intent.putExtra("extract_file", book.extract_file);
+                        intent.putExtra("side", book.side.getValue());
+                        startActivity(intent);
+                    }
                 }
             }
         });
@@ -59,7 +69,7 @@ public class HistoryFragment extends BaseFragment {
     @Override
     public void refresh() {
         bookList = BookDB.getBooks(getActivity());
-        if(adapter != null) {
+        if (adapter != null) {
             adapter.setBookList(bookList);
             adapter.notifyDataSetChanged();
         }

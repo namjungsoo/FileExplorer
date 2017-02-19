@@ -7,10 +7,11 @@ import android.os.Bundle;
 import android.os.ParcelFileDescriptor;
 import android.util.Log;
 
+import com.duongame.comicz.db.BookDB;
 import com.duongame.explorer.adapter.ExplorerItem;
-import com.duongame.viewer.adapter.ViewerPagerAdapter;
-import com.duongame.viewer.adapter.PdfPagerAdapter;
 import com.duongame.explorer.helper.FileHelper;
+import com.duongame.viewer.adapter.PdfPagerAdapter;
+import com.duongame.viewer.adapter.ViewerPagerAdapter;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -20,18 +21,18 @@ import java.util.ArrayList;
 /**
  * Created by namjungsoo on 2016-11-18.
  */
-//TODO: 아직 구현되지 않음 작업중
 public class PdfActivity extends PagerActivity {
     private final static String TAG = "PhotoActivity";
     private PdfRenderer renderer;
     private PdfPagerAdapter adapter;
+    private long size;// zip 파일의 용량
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.d(TAG, "onCreate pdf");
 
-        this.adapter = (PdfPagerAdapter)pagerAdapter;
+        this.adapter = (PdfPagerAdapter) pagerAdapter;
         processIntent();
     }
 
@@ -41,9 +42,37 @@ public class PdfActivity extends PagerActivity {
     }
 
     @Override
+    protected void onPause() {
+        Log.i(TAG, "onPause");
+
+        final BookDB.Book book = new BookDB.Book();
+
+        // 고정적인 내용 5개
+        book.path = path;
+        book.name = name;
+        book.type = ExplorerItem.FileType.ZIP;
+        book.size = size;
+        book.total_file = 0;// 파일의 갯수이다.
+
+        // 동적인 내용 6개
+        final int page = pager.getCurrentItem();
+        book.current_page = page;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            book.total_page = renderer.getPageCount();
+        }
+        book.current_file = 0;
+        book.extract_file = 0;
+        book.side = ExplorerItem.Side.SIDE_ALL;
+
+        BookDB.setLastBook(this, book);
+
+        super.onPause();
+    }
+
+    @Override
     protected void onDestroy() {
         super.onDestroy();
-        if(renderer != null) {
+        if (renderer != null) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 renderer.close();
             }
@@ -70,7 +99,7 @@ public class PdfActivity extends PagerActivity {
                     renderer = new PdfRenderer(parcel);
 
                     imageList = new ArrayList<>();
-                    for(int i=0; i<renderer.getPageCount(); i++) {
+                    for (int i = 0; i < renderer.getPageCount(); i++) {
                         // path를 페이지 번호로 사용하자
                         imageList.add(new ExplorerItem(FileHelper.setPdfFileNameFromPage(path, i), name, null, 0, ExplorerItem.FileType.PDF));
                     }
@@ -79,6 +108,8 @@ public class PdfActivity extends PagerActivity {
 
                     pagerAdapter.setImageList(imageList);
                     pagerAdapter.notifyDataSetChanged();
+
+                    pager.setCurrentItem(page);
 
                     seekPage.setMax(imageList.size());
                     seekPage.setProgress(1);

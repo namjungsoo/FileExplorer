@@ -1,4 +1,4 @@
-package com.duongame.explorer.task;
+package com.duongame.explorer.task.thumbnail;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
@@ -7,8 +7,6 @@ import android.widget.ImageView;
 
 import com.duongame.explorer.bitmap.BitmapCache;
 import com.duongame.explorer.bitmap.BitmapLoader;
-
-import static com.duongame.explorer.bitmap.BitmapCache.getThumbnail;
 
 /**
  * Created by namjungsoo on 2016-12-16.
@@ -31,7 +29,7 @@ public class LoadThumbnailTask extends AsyncTask<String, Void, Bitmap> {
         if(isCancelled())
             return null;
 
-        Bitmap bitmap = getThumbnail(path);
+        Bitmap bitmap = BitmapCache.getThumbnail(path);
         if(isCancelled())
             return bitmap;
 

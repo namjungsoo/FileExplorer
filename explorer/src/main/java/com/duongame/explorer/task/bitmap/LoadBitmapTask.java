@@ -1,4 +1,4 @@
-package com.duongame.explorer.task;
+package com.duongame.explorer.task.bitmap;
 
 import android.graphics.Bitmap;
 import android.util.Log;

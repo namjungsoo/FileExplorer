@@ -7,8 +7,11 @@ import android.graphics.BitmapFactory;
 import android.graphics.BitmapRegionDecoder;
 import android.graphics.Matrix;
 import android.graphics.Rect;
+import android.graphics.pdf.PdfRenderer;
 import android.media.ExifInterface;
+import android.os.Build;
 import android.os.Environment;
+import android.os.ParcelFileDescriptor;
 import android.provider.MediaStore;
 import android.util.Log;
 
@@ -157,9 +160,8 @@ public class BitmapLoader {
         return bitmap;
     }
 
-    private static Bitmap cropBitmap(String path, float ratio, BitmapFactory.Options options) {
-        Bitmap decoder = BitmapFactory.decodeFile(path, options);
-        Bitmap bitmap;
+    private static Bitmap cropSquareBitmap(Bitmap decoder, float ratio) {
+        final Bitmap bitmap;
         if (ratio > 1) {
             int top = (decoder.getHeight() - decoder.getWidth()) >> 1;
             bitmap = Bitmap.createBitmap(decoder, 0, top, decoder.getWidth(), decoder.getWidth());
@@ -172,8 +174,13 @@ public class BitmapLoader {
         return bitmap;
     }
 
+    private static Bitmap cropSquareBitmap(String path, float ratio, BitmapFactory.Options options) {
+        final Bitmap decoder = BitmapFactory.decodeFile(path, options);
+        return cropSquareBitmap(decoder, ratio);
+    }
+
     private static Bitmap cropBitmapUsingDecoder(String path, float ratio, BitmapFactory.Options options) throws IOException {
-        Bitmap bitmap;
+        final Bitmap bitmap;
         final BitmapRegionDecoder decoder = BitmapRegionDecoder.newInstance(path, false);
 //            Log.d("tag", "decoder path=" + path + " width="+width + " height="+height);
         if (ratio > 1) {// 어떤 크기가 들어오더라도 가운데 크롭을 하기 위해서이다.
@@ -188,15 +195,52 @@ public class BitmapLoader {
         return bitmap;
     }
 
+    public static Bitmap decodeSquareThumbnailFromPdfFile(String path, int size) {
+        Bitmap bitmap = null;
+        try {
+            final ParcelFileDescriptor parcel = ParcelFileDescriptor.open(new File(path), ParcelFileDescriptor.MODE_READ_ONLY);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                PdfRenderer renderer = new PdfRenderer(parcel);
+                final PdfRenderer.Page page = renderer.openPage(0);
+
+                // 종횡비를 계산하자.
+                float ratio = (float) page.getHeight() / (float) page.getWidth();
+                final Rect rectClip = new Rect();
+
+                if (ratio > 1) {// 세로
+                    final int newSize = (int) (size * ratio);
+                    bitmap = Bitmap.createBitmap(size, newSize, Bitmap.Config.ARGB_8888);
+                } else {// 가로
+                    final int newSize = (int) (size / ratio);
+                    bitmap = Bitmap.createBitmap(newSize, size, Bitmap.Config.ARGB_8888);
+                }
+
+                // 이미지를 렌더링후 close한다.
+                page.render(bitmap, null, null, PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY);
+                page.close();
+                renderer.close();
+
+                bitmap = cropSquareBitmap(bitmap, ratio);
+
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return bitmap;
+    }
+
     public static Bitmap decodeSquareThumbnailFromFile(String path, int size, boolean exifRotation) {
         final BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
+
+        // 이미지의 크기만 읽는다.
         BitmapFactory.decodeFile(path, options);
 
+        // size는 일반적으로 96이다.
         int width = size;
         int height = size;
 
-        // 종횡비 계산해야 함
+        // 종횡비 계산해야 해서 sample size를 결정한다.
         float ratio = (float) options.outHeight / (float) options.outWidth;
         if (ratio > 1) {
             height = (int) (size * ratio);
@@ -212,7 +256,9 @@ public class BitmapLoader {
         options.inJustDecodeBounds = false;
         try {
             //Bitmap bitmap = cropBitmapUsingDecoder(path, ratio, options);
-            Bitmap bitmap = cropBitmap(path, ratio, options);
+
+            // 이미지를 로딩하고서 크롭한다.
+            Bitmap bitmap = cropSquareBitmap(path, ratio, options);
 
             if (exifRotation) {
                 bitmap = rotateBitmapOnExif(bitmap, options, path);

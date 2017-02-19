@@ -290,6 +290,7 @@ public class ExplorerFragment extends BaseFragment {
                 intent.putExtra("path", item.path);
                 intent.putExtra("name", item.name);
                 intent.putExtra("current_page", 0);
+                intent.putExtra("size", item.size);
 
                 startActivity(intent);
 

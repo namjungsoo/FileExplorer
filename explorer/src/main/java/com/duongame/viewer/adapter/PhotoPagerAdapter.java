@@ -11,9 +11,9 @@ import android.widget.ImageView;
 import com.duongame.explorer.R;
 import com.duongame.explorer.adapter.ExplorerItem;
 import com.duongame.explorer.bitmap.BitmapCache;
-import com.duongame.explorer.task.LoadBitmapTask;
+import com.duongame.explorer.task.bitmap.LoadBitmapTask;
 import com.duongame.explorer.task.LoadGifTask;
-import com.duongame.explorer.task.RemoveAndPreloadTask;
+import com.duongame.explorer.task.bitmap.RemoveAndPreloadBitmapTask;
 import com.duongame.viewer.activity.PagerActivity;
 import com.felipecsl.gifimageview.library.GifImageView;
 
@@ -79,7 +79,7 @@ public class PhotoPagerAdapter extends ViewerPagerAdapter {
     private void preloadAndRemoveNearBitmap(int position, int width, int height) {
         final ExplorerItem[] preloadArray = getPreloadArray(position, width, height);
         final ExplorerItem[] removeArray = getRemoveArray(position);
-        final RemoveAndPreloadTask task = new RemoveAndPreloadTask(width, height, exifRotation);
+        final RemoveAndPreloadBitmapTask task = new RemoveAndPreloadBitmapTask(width, height, exifRotation);
 
         task.setRemoveArray(removeArray);
         task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, preloadArray);

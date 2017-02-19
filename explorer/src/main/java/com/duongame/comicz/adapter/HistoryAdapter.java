@@ -17,7 +17,8 @@ import com.duongame.comicz.db.BookDB;
 import com.duongame.explorer.R;
 import com.duongame.explorer.helper.DateHelper;
 import com.duongame.explorer.helper.FileHelper;
-import com.duongame.explorer.task.LoadZipThumbnailTask;
+import com.duongame.explorer.task.thumbnail.LoadPdfThumbnailTask;
+import com.duongame.explorer.task.thumbnail.LoadZipThumbnailTask;
 import com.duongame.explorer.view.RoundedImageView;
 
 import java.util.ArrayList;
@@ -140,8 +141,14 @@ public class HistoryAdapter extends BaseAdapter {
         // zip 파일의 썸네일을 읽자
         final Bitmap bitmap = getThumbnail(path);
         if (bitmap == null) {
-            LoadZipThumbnailTask task = new LoadZipThumbnailTask(context, thumb);
-            task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, path);
+            if(path.toLowerCase().endsWith(".zip")) {
+                final LoadZipThumbnailTask task = new LoadZipThumbnailTask(context, thumb);
+                task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, path);
+
+            } else if(path.toLowerCase().endsWith(".pdf")) {
+                final LoadPdfThumbnailTask task = new LoadPdfThumbnailTask(context, thumb);
+                task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, path);
+            }
         } else {
             thumb.setImageBitmap(bitmap);
         }
