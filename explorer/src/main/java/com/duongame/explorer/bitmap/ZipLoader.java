@@ -147,7 +147,7 @@ public class ZipLoader {
                     firstList.add(item);
 
                     task = new ZipExtractTask(zipFile, imageList, listener, extract, null);
-                    task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, extractPath);
+                    task.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, extractPath);
 
                     return firstList;
                 } else {
@@ -168,7 +168,7 @@ public class ZipLoader {
                     }
 
                     task = new ZipExtractTask(zipFile, imageList, listener, extract, (ArrayList<ExplorerItem>)firstList.clone());
-                    task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, extractPath);
+                    task.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, extractPath);
                     return firstList;
                 }
             }

@@ -143,11 +143,11 @@ public class HistoryAdapter extends BaseAdapter {
         if (bitmap == null) {
             if(path.toLowerCase().endsWith(".zip")) {
                 final LoadZipThumbnailTask task = new LoadZipThumbnailTask(context, thumb);
-                task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, path);
+                task.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, path);
 
             } else if(path.toLowerCase().endsWith(".pdf")) {
                 final LoadPdfThumbnailTask task = new LoadPdfThumbnailTask(context, thumb);
-                task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, path);
+                task.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, path);
             }
         } else {
             thumb.setImageBitmap(bitmap);

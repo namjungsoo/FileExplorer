@@ -109,7 +109,7 @@ public abstract class ExplorerAdapter extends BaseAdapter {
             viewHolder.icon.setImageResource(android.R.color.transparent);
 
             final LoadThumbnailTask task = new LoadThumbnailTask(context, viewHolder.icon);
-            task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, item.path);
+            task.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, item.path);
             taskMap.put(viewHolder.icon, task);
         } else {
             viewHolder.icon.setImageBitmap(bitmap);
@@ -128,7 +128,7 @@ public abstract class ExplorerAdapter extends BaseAdapter {
             viewHolder.icon.setImageResource(android.R.color.transparent);
 
             final LoadPdfThumbnailTask task = new LoadPdfThumbnailTask(context, viewHolder.icon);
-            task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, item.path);
+            task.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, item.path);
             taskMap.put(viewHolder.icon, task);
             Log.d(TAG, "setIconPdf=" + item.path + " LoadPdfThumbnailTask");
         } else {// 로딩된 비트맵을 셋팅
@@ -189,7 +189,7 @@ public abstract class ExplorerAdapter extends BaseAdapter {
             viewHolder.icon.setImageResource(android.R.color.transparent);
 
             final LoadVideoThumbnailTask task = new LoadVideoThumbnailTask(context, viewHolder.icon);
-            task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, item.path);
+            task.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, item.path);
 
             taskMap.put(viewHolder.icon, task);
             Log.d(TAG, "setIconVideo=" + item.path + " LoadVideoThumbnailTask");

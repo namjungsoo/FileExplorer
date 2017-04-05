@@ -221,7 +221,6 @@ public class BitmapLoader {
                 renderer.close();
 
                 bitmap = cropSquareBitmap(bitmap, ratio);
-
             }
         } catch (Exception e) {
             e.printStackTrace();
