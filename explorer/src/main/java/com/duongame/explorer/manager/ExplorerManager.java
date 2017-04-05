@@ -107,6 +107,8 @@ public class ExplorerManager {
             type = ExplorerItem.FileType.RAR;
         else if (lower.endsWith(".pdf"))
             type = ExplorerItem.FileType.PDF;
+        else if (lower.endsWith(".mp4") || lower.endsWith(".avi") || lower.endsWith(".3gp") || lower.endsWith(".mkv"))
+            type = ExplorerItem.FileType.VIDEO;
         else if (lower.endsWith(".mp3"))
             type = ExplorerItem.FileType.AUDIO;
         else if (lower.endsWith(".txt") || lower.endsWith(".cap") || lower.endsWith(".log"))

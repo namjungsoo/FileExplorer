@@ -24,6 +24,8 @@ public class LoadThumbnailTask extends AsyncTask<String, Void, Bitmap> {
 
     @Override
     protected Bitmap doInBackground(String... params) {
+        Thread.currentThread().setPriority(Thread.MIN_PRIORITY);
+
         path = params[0];
 
         if(isCancelled())

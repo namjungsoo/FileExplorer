@@ -19,6 +19,7 @@ import com.duongame.explorer.R;
 import com.duongame.explorer.bitmap.BitmapCache;
 import com.duongame.explorer.task.thumbnail.LoadPdfThumbnailTask;
 import com.duongame.explorer.task.thumbnail.LoadThumbnailTask;
+import com.duongame.explorer.task.thumbnail.LoadVideoThumbnailTask;
 import com.duongame.explorer.task.thumbnail.LoadZipThumbnailTask;
 import com.duongame.explorer.view.RoundedImageView;
 
@@ -111,7 +112,6 @@ public abstract class ExplorerAdapter extends BaseAdapter {
             task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, item.path);
             taskMap.put(viewHolder.icon, task);
         } else {
-//                Log.w(TAG,"cache hit path="+item.path);
             viewHolder.icon.setImageBitmap(bitmap);
         }
     }
@@ -150,13 +150,8 @@ public abstract class ExplorerAdapter extends BaseAdapter {
             task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, item.path);
             taskMap.put(viewHolder.icon, task);
         } else {
-//                Log.w(TAG, "ZIP cache hit path=" + item.path);
             viewHolder.icon.setImageBitmap(bitmap);
-
-            //DEBUG
-            //BitmapLoader.writeDebugBitmap(item.path, bitmap);
         }
-
     }
 
     void setIconApk(final ViewHolder viewHolder, ExplorerItem item) {
@@ -165,16 +160,43 @@ public abstract class ExplorerAdapter extends BaseAdapter {
         if (drawable == null) {
             final PackageManager pm = context.getPackageManager();
             final PackageInfo pi = pm.getPackageArchiveInfo(item.path, 0);
-            // the secret are these two lines....
-            pi.applicationInfo.sourceDir = item.path;
-            pi.applicationInfo.publicSourceDir = item.path;
-            drawable = pi.applicationInfo.loadIcon(pm);
-            BitmapCache.setDrawable(item.path, drawable);
+
+            if (pi != null) {
+                pi.applicationInfo.sourceDir = item.path;
+                pi.applicationInfo.publicSourceDir = item.path;
+                drawable = pi.applicationInfo.loadIcon(pm);
+
+                if (drawable != null) {
+                    BitmapCache.setDrawable(item.path, drawable);
+                    viewHolder.icon.setImageDrawable(drawable);
+                    return;
+                }
+            }
+            viewHolder.icon.setImageBitmap(BitmapCache.getResourceBitmap(context.getResources(), R.drawable.file));
         }
-        //viewHolder.icon.setImageBitmap(drawableToBitmap(drawable));
-        viewHolder.icon.setImageDrawable(drawable);
+        else {
+            viewHolder.icon.setImageDrawable(drawable);
+        }
     }
 
+    void setIconVideo(final ViewHolder viewHolder, ExplorerItem item) {
+        // 현재 아이콘 로딩되던 태스크 취소
+        if (taskMap.get(viewHolder.icon) != null)
+            taskMap.get(viewHolder.icon).cancel(true);
+
+        final Bitmap bitmap = getThumbnail(item.path);
+        if (bitmap == null) {
+            viewHolder.icon.setImageResource(android.R.color.transparent);
+
+            final LoadVideoThumbnailTask task = new LoadVideoThumbnailTask(context, viewHolder.icon);
+            task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, item.path);
+
+            taskMap.put(viewHolder.icon, task);
+            Log.d(TAG, "setIconVideo=" + item.path + " LoadVideoThumbnailTask");
+        } else {// 로딩된 비트맵을 셋팅
+            viewHolder.icon.setImageBitmap(bitmap);
+        }
+    }
 
     void setIcon(final ViewHolder viewHolder, ExplorerItem item) {
         if (item.type == IMAGE) {
@@ -185,6 +207,8 @@ public abstract class ExplorerAdapter extends BaseAdapter {
             setIconApk(viewHolder, item);
         } else if (item.type == ExplorerItem.FileType.PDF) {
             setIconPdf(viewHolder, item);
+        } else if (item.type == ExplorerItem.FileType.VIDEO) {
+            setIconVideo(viewHolder, item);
         } else {
             // 이전 타입과 다르게 새 타입이 들어왔다면 업데이트 한다.
             if (viewHolder.type != item.type) {
@@ -212,7 +236,7 @@ public abstract class ExplorerAdapter extends BaseAdapter {
             bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
         }
 
-        Canvas canvas = new Canvas(bitmap);
+        final Canvas canvas = new Canvas(bitmap);
         drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
         drawable.draw(canvas);
         return bitmap;
@@ -221,30 +245,12 @@ public abstract class ExplorerAdapter extends BaseAdapter {
     void setTypeIcon(ExplorerItem.FileType type, ImageView icon) {
         switch (type) {
             case AUDIO:
-            case VIDEO:
-
-                // 구현완료된것들은 주석처리
-//            case PDF:
-//            case TEXT:
-//            case IMAGE:
             case FILE:
                 icon.setImageBitmap(BitmapCache.getResourceBitmap(context.getResources(), R.drawable.file));
                 break;
             case DIRECTORY:
                 icon.setImageBitmap(BitmapCache.getResourceBitmap(context.getResources(), R.drawable.directory));
                 break;
-//            case ZIP:
-//                icon.setImageBitmap(getResourceBitmap(context.getResources(), R.drawable.zip));
-//                break;
-//            case RAR:
-//                icon.setImageBitmap(getResourceBitmap(context.getResources(), R.drawable.rar));
-//                break;
-//            case PDF:
-//                icon.setImageBitmap(getResourceBitmap(context.getResources(), R.drawable.pdf));
-//                break;
-//            case AUDIO:
-//                icon.setImageBitmap(getResourceBitmap(context.getResources(), R.drawable.mp3));
-//                break;
             case TEXT:
                 icon.setImageBitmap(BitmapCache.getResourceBitmap(context.getResources(), R.drawable.text));
                 break;

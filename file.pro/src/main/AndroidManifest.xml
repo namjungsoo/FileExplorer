@@ -15,6 +15,18 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name="com.duongame.viewer.activity.PhotoActivity"
+            android:theme="@style/ComicViewerTheme"
+            />
+        <activity android:name="com.duongame.viewer.activity.ZipActivity"
+            android:theme="@style/ComicViewerTheme"
+            />
+        <activity android:name="com.duongame.viewer.activity.TextActivity"
+            android:theme="@style/ComicViewerTheme"
+            />
+        <activity android:name="com.duongame.viewer.activity.PdfActivity"
+            android:theme="@style/ComicViewerTheme"
+            />
     </application>
 
     <protected-broadcast android:name="android.intent.action.MEDIA_MOUNTED" />
