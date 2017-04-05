@@ -31,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
         super.onStart();
 
         FragmentManager fm = getSupportFragmentManager();
-//        fragment = (ExplorerFragment)fm.findFragmentById(R.id.fragment_explorer);
+        fragment = (ExplorerFragment)fm.findFragmentById(R.id.fragment_explorer);
 
         if (checkStoragePermissions()) {
             final String lastPath = PreferenceHelper.getLastPath(MainActivity.this);
