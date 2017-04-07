@@ -230,6 +230,7 @@ public class ExplorerFragment extends BaseFragment {
                 onAdapterItemClick(position);
             }
         });
+        listView.setOnScrollListener(adapter);
 
         final Button view = (Button) rootView.findViewById(R.id.btn_view);
         view.setText(getResources().getString(R.string.grid));

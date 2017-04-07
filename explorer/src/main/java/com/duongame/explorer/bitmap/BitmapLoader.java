@@ -1,28 +1,37 @@
 package com.duongame.explorer.bitmap;
 
 import android.app.Activity;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.BitmapRegionDecoder;
 import android.graphics.Matrix;
 import android.graphics.Rect;
+import android.graphics.drawable.Drawable;
 import android.graphics.pdf.PdfRenderer;
 import android.media.ExifInterface;
+import android.media.ThumbnailUtils;
 import android.os.Build;
 import android.os.Environment;
 import android.os.ParcelFileDescriptor;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.widget.ImageView;
 
+import com.duongame.explorer.R;
 import com.duongame.explorer.adapter.ExplorerItem;
 import com.duongame.explorer.helper.FileHelper;
+
+import net.lingala.zip4j.exception.ZipException;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.ArrayList;
 
 import static android.graphics.Bitmap.createBitmap;
 import static com.duongame.explorer.adapter.ExplorerItem.Side.LEFT;
@@ -34,6 +43,118 @@ import static com.duongame.explorer.adapter.ExplorerItem.Side.RIGHT;
 
 public class BitmapLoader {
     public static final String TAG = "BitmapLoader";
+    public static final int MICRO_KIND_SIZE = 96;
+
+    public static Drawable loadApkThumbnailDrawable(Activity context, String path) {
+        Drawable drawable = BitmapCache.getDrawable(path);
+        if(drawable != null)
+            return drawable;
+
+        final PackageManager pm = context.getPackageManager();
+        final PackageInfo pi = pm.getPackageArchiveInfo(path, 0);
+
+        if (pi != null) {
+            pi.applicationInfo.sourceDir = path;
+            pi.applicationInfo.publicSourceDir = path;
+            drawable = pi.applicationInfo.loadIcon(pm);
+
+            if (drawable != null) {
+                BitmapCache.setDrawable(path, drawable);
+                return drawable;
+            }
+        }
+
+        return drawable;
+    }
+
+    public static Bitmap loadImageThumbnailBitmap(Activity context, String path, ImageView imageView) {
+        Bitmap bitmap = BitmapCache.getThumbnail(path);
+        if(bitmap != null)
+            return bitmap;
+
+        // 시스템에서 찾은거
+        bitmap = BitmapLoader.getThumbnail(context, path, true);
+        if(bitmap != null) {
+            BitmapCache.setThumbnail(path, bitmap, imageView);
+            return bitmap;
+        }
+
+        // 직접 생성
+        bitmap = BitmapLoader.decodeSquareThumbnailFromFile(path, MICRO_KIND_SIZE, true);
+        if (bitmap != null) {
+            BitmapCache.setThumbnail(path, bitmap, imageView);
+            return bitmap;
+        }
+
+        return bitmap;
+    }
+
+    public static Bitmap loadVideoThumbnailBitmap(Activity context, String path, ImageView imageView) {
+        Bitmap bitmap = BitmapCache.getThumbnail(path);
+        if(bitmap != null)
+            return bitmap;
+
+        // 시스템에서 찾은거
+        bitmap = ThumbnailUtils.createVideoThumbnail(path, MediaStore.Images.Thumbnails.MICRO_KIND);
+        if(bitmap != null) {
+            BitmapCache.setThumbnail(path, bitmap, imageView);
+            return bitmap;
+        }
+
+        //TODO: 직접 만드는 것도 넣어야 한다.
+        return bitmap;
+    }
+
+    public static Bitmap loadPdfThumbnailBitmap(Activity context, String path, ImageView imageView) {
+        Bitmap bitmap = BitmapCache.getThumbnail(path);
+        if(bitmap != null)
+            return bitmap;
+
+        // 직접 생성
+        bitmap = BitmapLoader.decodeSquareThumbnailFromPdfFile(path, MICRO_KIND_SIZE);
+        if(bitmap != null) {
+            BitmapCache.setThumbnail(path, bitmap, imageView);
+            return bitmap;
+        }
+
+        return bitmap;
+    }
+
+    public static Bitmap loadZipThumbnailBitmap(Activity context, String path, ImageView imageView) {
+        Bitmap bitmap = BitmapCache.getThumbnail(path);
+        if(bitmap != null)
+            return bitmap;
+
+        // ZIP파일 안에 있는 이미지 파일을 찾자.
+        String image = null;
+        try {
+            //image = ZipLoader.getFirstImage(context, path);
+            final ZipLoader loader = new ZipLoader();
+            final ArrayList<ExplorerItem> imageList = loader.load(context, path, null, 0, ExplorerItem.Side.LEFT, true);
+
+            if (imageList != null && imageList.size() > 0) {
+                image = imageList.get(0).path;
+            }
+        } catch (ZipException e) {
+            e.printStackTrace();
+        }
+
+        // 못찾았을 경우에는 기본 ZIP 아이콘이 뜨게 한다.
+        if (image == null) {
+            bitmap = BitmapCache.getResourceBitmap(context.getResources(), R.drawable.zip);
+            if (bitmap != null) {
+                BitmapCache.setThumbnail(path, bitmap, imageView);
+            }
+        } else {
+            bitmap = BitmapLoader.decodeSquareThumbnailFromFile(image, MICRO_KIND_SIZE, false);
+            if (bitmap != null) {
+                BitmapCache.setThumbnail(path, bitmap, imageView);
+            }
+        }
+
+        return bitmap;
+    }
+
 
     public static void writeDebugBitmap(String path, Bitmap bitmap) {
         File file = new File(path);
