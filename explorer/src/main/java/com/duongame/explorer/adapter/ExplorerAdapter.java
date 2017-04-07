@@ -7,9 +7,9 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Handler;
-import android.os.HandlerThread;
 import android.os.Message;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
@@ -23,11 +23,10 @@ import com.duongame.explorer.bitmap.BitmapLoader;
 import com.duongame.explorer.bitmap.BitmapMsg;
 import com.duongame.explorer.view.RoundedImageView;
 
-import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 import static com.duongame.explorer.bitmap.BitmapCache.getThumbnail;
 
@@ -35,7 +34,7 @@ import static com.duongame.explorer.bitmap.BitmapCache.getThumbnail;
  * Created by namjungsoo on 2016-11-06.
  */
 
-public abstract class ExplorerAdapter extends BaseAdapter implements AbsListView.OnScrollListener {
+public abstract class ExplorerAdapter extends BaseAdapter implements AbsListView.OnScrollListener, View.OnTouchListener {
     private final static String TAG = "ExplorerAdapter";
     protected ArrayList<ExplorerItem> fileList;
     protected Activity context;
@@ -43,15 +42,73 @@ public abstract class ExplorerAdapter extends BaseAdapter implements AbsListView
     protected HashMap<ImageView, AsyncTask> taskMap = new HashMap<ImageView, AsyncTask>();
 
     private Handler mainHandler;
-    private Handler loaderHandler;
-    private HandlerThread loaderThread;
+//    private Handler loaderHandler;
+//    private HandlerThread loaderThread;
+
+    private Thread thread;
 
     private static int LOAD_BITMAP = 0;
     private static int LOAD_DRAWABLE = 1;
 
-    private Queue<Message> messageQueue = new LinkedList<>();
+    private Queue<BitmapMsg> messageQueue = new ConcurrentLinkedQueue<>();
 
     private int lastScrollState = SCROLL_STATE_IDLE;
+    private LoaderRunnable loaderRunnable = new LoaderRunnable();
+    private int firstVisibleItem;
+    private int visibleItemCount;
+
+    class LoaderRunnable implements Runnable {
+        private Object mPauseLock;
+        private boolean mPaused;
+        private boolean mFinished;
+
+        public LoaderRunnable() {
+            mPauseLock = new Object();
+            mPaused = false;
+            mFinished = false;
+        }
+
+        @Override
+        public void run() {
+            while (!mFinished) {
+                // Do stuff.
+                // 큐에 있는것을 꺼내자
+                BitmapMsg msg = messageQueue.poll();
+
+                // 꺼내서 로딩함
+                handleBitmapMsg(msg);
+
+                synchronized (mPauseLock) {
+                    while (mPaused) {
+                        try {
+                            mPauseLock.wait();
+                        } catch (InterruptedException e) {
+                        }
+                    }
+                }
+            }
+        }
+
+        /**
+         * Call this on pause.
+         */
+        public void onPause() {
+            synchronized (mPauseLock) {
+                mPaused = true;
+            }
+        }
+
+        /**
+         * Call this on resume.
+         */
+        public void onResume() {
+            synchronized (mPauseLock) {
+                mPaused = false;
+                mPauseLock.notifyAll();
+            }
+        }
+    }
+
 
     public void onScrollStateChanged(AbsListView view, int scrollState) {
         lastScrollState = scrollState;
@@ -59,15 +116,37 @@ public abstract class ExplorerAdapter extends BaseAdapter implements AbsListView
 
         // 지금 idle이면 queue에 있는것을 전부 handler로 밀어 넣는다.
         if (lastScrollState == SCROLL_STATE_IDLE) {
-            for (Message msg : messageQueue) {
-                loaderHandler.sendMessage(msg);
+            // 대기 중인거 중에서 position 범위에 안맞는건 삭제하자
+            final ArrayList<BitmapMsg> removeList = new ArrayList<>();
+            for (BitmapMsg msg : messageQueue) {
+                if (msg.position >= firstVisibleItem && msg.position < firstVisibleItem + visibleItemCount) {
+
+                } else {
+                    removeList.add(msg);
+                }
             }
-            messageQueue.clear();
+
+            for (BitmapMsg msg : removeList) {
+                messageQueue.remove(msg);
+            }
+
+            loaderRunnable.onResume();
+        } else {
+            loaderRunnable.onPause();
         }
     }
 
     public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+        this.firstVisibleItem = firstVisibleItem;
+        this.visibleItemCount = visibleItemCount;
+    }
 
+    public boolean onTouch(View v, MotionEvent event) {
+        if(event.getAction() == MotionEvent.ACTION_DOWN) {
+            loaderRunnable.onPause();
+            return true;
+        }
+        return false;
     }
 
     public ExplorerAdapter(Activity context, ArrayList<ExplorerItem> fileList) {
@@ -82,83 +161,90 @@ public abstract class ExplorerAdapter extends BaseAdapter implements AbsListView
                 if (bitmapMsg == null)
                     return;
 
-                if (bitmapMsg.imageView.get() == null)
+                if (bitmapMsg.imageView == null)
                     return;
 
                 if (msg.arg1 == LOAD_BITMAP) {
                     if (bitmapMsg.bitmap == null)
                         return;
 
-                    bitmapMsg.imageView.get().setImageBitmap(bitmapMsg.bitmap);
+                    bitmapMsg.imageView.setImageBitmap(bitmapMsg.bitmap);
                 } else if (msg.arg1 == LOAD_DRAWABLE) {
                     if (bitmapMsg.drawable == null)
                         return;
 
-                    bitmapMsg.imageView.get().setImageDrawable(bitmapMsg.drawable);
+                    bitmapMsg.imageView.setImageDrawable(bitmapMsg.drawable);
                 }
             }
         };
 
         //loaderThread = new HandlerThread("LoaderThread", 10);//THREAD_PRIORITY_BACKGROUND = 10
-        loaderThread = new HandlerThread("LoaderThread");//THREAD_PRIORITY_BACKGROUND = 10
-        loaderThread.start();
-        loaderHandler = new Handler(loaderThread.getLooper()) {
-            // 받은 메세지로 bitmap을 로딩해야함
-            @Override
-            public void handleMessage(Message msg) {
-                final BitmapMsg bitmapMsg = (BitmapMsg) msg.obj;
-                if (bitmapMsg == null)
-                    return;
+//        loaderThread = new HandlerThread("LoaderThread");//THREAD_PRIORITY_BACKGROUND = 10
+//        loaderThread.start();
 
-                switch (bitmapMsg.type) {
-                    case APK: {
-                        Message mainMsg = new Message();
-                        mainMsg.arg1 = LOAD_DRAWABLE;
-                        mainMsg.obj = bitmapMsg;
-                        bitmapMsg.drawable = BitmapLoader.loadApkThumbnailDrawable(ExplorerAdapter.this.context, bitmapMsg.path);
+        thread = new Thread(loaderRunnable);
+        thread.start();
 
-                        mainHandler.sendMessage(mainMsg);
-                    }
-                    break;
-                    case PDF: {
-                        Message mainMsg = new Message();
-                        mainMsg.arg1 = LOAD_BITMAP;
-                        mainMsg.obj = bitmapMsg;
-                        bitmapMsg.bitmap = BitmapLoader.loadPdfThumbnailBitmap(ExplorerAdapter.this.context, bitmapMsg.path, bitmapMsg.imageView.get());
+//        loaderHandler = new Handler(loaderThread.getLooper()) {
+//            // 받은 메세지로 bitmap을 로딩해야함
+//            @Override
+//            public void handleMessage(Message msg) {
+//                final BitmapMsg bitmapMsg = (BitmapMsg) msg.obj;
+//            }
+//        };
+    }
 
-                        mainHandler.sendMessage(mainMsg);
-                    }
-                    break;
-                    case IMAGE: {
-                        Message mainMsg = new Message();
-                        mainMsg.arg1 = LOAD_BITMAP;
-                        mainMsg.obj = bitmapMsg;
-                        bitmapMsg.bitmap = BitmapLoader.loadImageThumbnailBitmap(ExplorerAdapter.this.context, bitmapMsg.path, bitmapMsg.imageView.get());
+    private void handleBitmapMsg(BitmapMsg bitmapMsg) {
+        if (bitmapMsg == null)
+            return;
 
-                        mainHandler.sendMessage(mainMsg);
-                    }
-                    break;
-                    case VIDEO: {
-                        Message mainMsg = new Message();
-                        mainMsg.arg1 = LOAD_BITMAP;
-                        mainMsg.obj = bitmapMsg;
-                        bitmapMsg.bitmap = BitmapLoader.loadVideoThumbnailBitmap(ExplorerAdapter.this.context, bitmapMsg.path, bitmapMsg.imageView.get());
+        switch (bitmapMsg.type) {
+            case APK: {
+                Message mainMsg = new Message();
+                mainMsg.arg1 = LOAD_DRAWABLE;
+                mainMsg.obj = bitmapMsg;
+                bitmapMsg.drawable = BitmapLoader.loadApkThumbnailDrawable(ExplorerAdapter.this.context, bitmapMsg.path);
 
-                        mainHandler.sendMessage(mainMsg);
-                    }
-                    break;
-                    case ZIP: {
-                        Message mainMsg = new Message();
-                        mainMsg.arg1 = LOAD_BITMAP;
-                        mainMsg.obj = bitmapMsg;
-                        bitmapMsg.bitmap = BitmapLoader.loadZipThumbnailBitmap(ExplorerAdapter.this.context, bitmapMsg.path, bitmapMsg.imageView.get());
-
-                        mainHandler.sendMessage(mainMsg);
-                    }
-                    break;
-                }
+                mainHandler.sendMessage(mainMsg);
             }
-        };
+            break;
+            case PDF: {
+                Message mainMsg = new Message();
+                mainMsg.arg1 = LOAD_BITMAP;
+                mainMsg.obj = bitmapMsg;
+                bitmapMsg.bitmap = BitmapLoader.loadPdfThumbnailBitmap(ExplorerAdapter.this.context, bitmapMsg.path, bitmapMsg.imageView);
+
+                mainHandler.sendMessage(mainMsg);
+            }
+            break;
+            case IMAGE: {
+                Message mainMsg = new Message();
+                mainMsg.arg1 = LOAD_BITMAP;
+                mainMsg.obj = bitmapMsg;
+                bitmapMsg.bitmap = BitmapLoader.loadImageThumbnailBitmap(ExplorerAdapter.this.context, bitmapMsg.path, bitmapMsg.imageView);
+
+                mainHandler.sendMessage(mainMsg);
+            }
+            break;
+            case VIDEO: {
+                Message mainMsg = new Message();
+                mainMsg.arg1 = LOAD_BITMAP;
+                mainMsg.obj = bitmapMsg;
+                bitmapMsg.bitmap = BitmapLoader.loadVideoThumbnailBitmap(ExplorerAdapter.this.context, bitmapMsg.path, bitmapMsg.imageView);
+
+                mainHandler.sendMessage(mainMsg);
+            }
+            break;
+            case ZIP: {
+                Message mainMsg = new Message();
+                mainMsg.arg1 = LOAD_BITMAP;
+                mainMsg.obj = bitmapMsg;
+                bitmapMsg.bitmap = BitmapLoader.loadZipThumbnailBitmap(ExplorerAdapter.this.context, bitmapMsg.path, bitmapMsg.imageView);
+
+                mainHandler.sendMessage(mainMsg);
+            }
+            break;
+        }
     }
 
     @Override
@@ -206,7 +292,7 @@ public abstract class ExplorerAdapter extends BaseAdapter implements AbsListView
         ExplorerItem item = fileList.get(position);
 
         setViewHolder(viewHolder, item);
-        setIcon(viewHolder, item);
+        setIcon(viewHolder, item, position);
 
         return convertView;
     }
@@ -215,183 +301,104 @@ public abstract class ExplorerAdapter extends BaseAdapter implements AbsListView
         this.fileList = fileList;
     }
 
-    void setIconImage(final ViewHolder viewHolder, ExplorerItem item) {
-        // 현재 아이콘 로딩되던 태스크 취소
-//        if (taskMap.get(viewHolder.icon) != null)
-//            taskMap.get(viewHolder.icon).cancel(true);
-
+    void setIconImage(final ViewHolder viewHolder, ExplorerItem item, int position) {
         final Bitmap bitmap = getThumbnail(item.path);
         if (bitmap == null) {
             viewHolder.icon.setImageResource(R.drawable.file);
-//            viewHolder.icon.setImageResource(android.R.color.transparent);
 
-            Message msg = loaderHandler.obtainMessage();
             BitmapMsg bitmapMsg = new BitmapMsg();
             bitmapMsg.type = ExplorerItem.FileType.IMAGE;
             bitmapMsg.path = item.path;
-            bitmapMsg.imageView = new WeakReference<ImageView>(viewHolder.icon);
-            msg.obj = bitmapMsg;
+            bitmapMsg.imageView = viewHolder.icon;
+            bitmapMsg.position = position;
 
-            if (lastScrollState == SCROLL_STATE_IDLE) {
-                loaderHandler.sendMessage(msg);
-            } else {
-                messageQueue.add(msg);
-            }
-
-//            final LoadThumbnailTask task = new LoadThumbnailTask(context, viewHolder.icon);
-//            task.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, item.path);
-//            taskMap.put(viewHolder.icon, task);
+            messageQueue.add(bitmapMsg);
         } else {
             viewHolder.icon.setImageBitmap(bitmap);
         }
     }
 
-    void setIconPdf(final ViewHolder viewHolder, ExplorerItem item) {
-//        Log.d(TAG, "setIconPdf=" + item.path);
-
-        // 현재 아이콘 로딩되던 태스크 취소
-//        if (taskMap.get(viewHolder.icon) != null)
-//            taskMap.get(viewHolder.icon).cancel(true);
-
+    void setIconPdf(final ViewHolder viewHolder, ExplorerItem item, int position) {
         final Bitmap bitmap = getThumbnail(item.path);
         if (bitmap == null) {
             viewHolder.icon.setImageResource(R.drawable.file);
-//            viewHolder.icon.setImageResource(android.R.color.transparent);
 
-            Message msg = loaderHandler.obtainMessage();
             BitmapMsg bitmapMsg = new BitmapMsg();
             bitmapMsg.type = ExplorerItem.FileType.PDF;
             bitmapMsg.path = item.path;
-            bitmapMsg.imageView = new WeakReference<ImageView>(viewHolder.icon);
-            msg.obj = bitmapMsg;
+            bitmapMsg.imageView = viewHolder.icon;
+            bitmapMsg.position = position;
 
-            if (lastScrollState == SCROLL_STATE_IDLE) {
-                loaderHandler.sendMessage(msg);
-            } else {
-                messageQueue.add(msg);
-            }
-//            final LoadPdfThumbnailTask task = new LoadPdfThumbnailTask(context, viewHolder.icon);
-//            task.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, item.path);
-//            taskMap.put(viewHolder.icon, task);
-//            Log.d(TAG, "setIconPdf=" + item.path + " LoadPdfThumbnailTask");
+            messageQueue.add(bitmapMsg);
         } else {// 로딩된 비트맵을 셋팅
             viewHolder.icon.setImageBitmap(bitmap);
         }
 
     }
 
-    void setIconZip(final ViewHolder viewHolder, ExplorerItem item) {
-        // 현재 아이콘 로딩되던 태스크 취소
-//        if (taskMap.get(viewHolder.icon) != null)
-//            taskMap.get(viewHolder.icon).cancel(true);
-
+    void setIconZip(final ViewHolder viewHolder, ExplorerItem item, int position) {
         final Bitmap bitmap = getThumbnail(item.path);
         if (bitmap == null) {
             viewHolder.icon.setImageResource(R.drawable.file);
-//            viewHolder.icon.setImageResource(android.R.color.transparent);
 
-            Message msg = loaderHandler.obtainMessage();
             BitmapMsg bitmapMsg = new BitmapMsg();
             bitmapMsg.type = ExplorerItem.FileType.ZIP;
             bitmapMsg.path = item.path;
-            bitmapMsg.imageView = new WeakReference<ImageView>(viewHolder.icon);
-            msg.obj = bitmapMsg;
+            bitmapMsg.imageView = viewHolder.icon;
+            bitmapMsg.position = position;
 
-            if (lastScrollState == SCROLL_STATE_IDLE) {
-                loaderHandler.sendMessage(msg);
-            } else {
-                messageQueue.add(msg);
-            }
-//            final LoadZipThumbnailTask task = new LoadZipThumbnailTask(context, viewHolder.icon);
-//            task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, item.path);
-//            taskMap.put(viewHolder.icon, task);
+            messageQueue.add(bitmapMsg);
         } else {
             viewHolder.icon.setImageBitmap(bitmap);
         }
     }
 
-    void setIconApk(final ViewHolder viewHolder, ExplorerItem item) {
+    void setIconApk(final ViewHolder viewHolder, ExplorerItem item, int position) {
         //TODO: 동적으로 읽기
         Drawable drawable = BitmapCache.getDrawable(item.path);
         if (drawable == null) {
             viewHolder.icon.setImageResource(R.drawable.file);
 
-            Message msg = loaderHandler.obtainMessage();
             BitmapMsg bitmapMsg = new BitmapMsg();
             bitmapMsg.type = ExplorerItem.FileType.APK;
             bitmapMsg.path = item.path;
-            bitmapMsg.imageView = new WeakReference<ImageView>(viewHolder.icon);
-            msg.obj = bitmapMsg;
+            bitmapMsg.imageView = viewHolder.icon;
+            bitmapMsg.position = position;
 
-            if (lastScrollState == SCROLL_STATE_IDLE) {
-                loaderHandler.sendMessage(msg);
-            } else {
-                messageQueue.add(msg);
-            }
-//            final PackageManager pm = context.getPackageManager();
-//            final PackageInfo pi = pm.getPackageArchiveInfo(item.path, 0);
-//
-//            if (pi != null) {
-//                pi.applicationInfo.sourceDir = item.path;
-//                pi.applicationInfo.publicSourceDir = item.path;
-//                drawable = pi.applicationInfo.loadIcon(pm);
-//
-//                if (drawable != null) {
-//                    BitmapCache.setDrawable(item.path, drawable);
-//                    viewHolder.icon.setImageDrawable(drawable);
-//                    return;
-//                }
-//            }
-//            viewHolder.icon.setImageBitmap(BitmapCache.getResourceBitmap(context.getResources(), R.drawable.file));
+            messageQueue.add(bitmapMsg);
         } else {
             viewHolder.icon.setImageDrawable(drawable);
         }
     }
 
-    void setIconVideo(final ViewHolder viewHolder, ExplorerItem item) {
-        // 현재 아이콘 로딩되던 태스크 취소
-//        if (taskMap.get(viewHolder.icon) != null)
-//            taskMap.get(viewHolder.icon).cancel(true);
-
+    void setIconVideo(final ViewHolder viewHolder, ExplorerItem item, int position) {
         final Bitmap bitmap = getThumbnail(item.path);
         if (bitmap == null) {
             viewHolder.icon.setImageResource(R.drawable.file);
-//            viewHolder.icon.setImageResource(android.R.color.transparent);
 
-            Message msg = loaderHandler.obtainMessage();
             BitmapMsg bitmapMsg = new BitmapMsg();
             bitmapMsg.type = ExplorerItem.FileType.VIDEO;
             bitmapMsg.path = item.path;
-            bitmapMsg.imageView = new WeakReference<ImageView>(viewHolder.icon);
-            msg.obj = bitmapMsg;
+            bitmapMsg.imageView = viewHolder.icon;
+            bitmapMsg.position = position;
 
-            if (lastScrollState == SCROLL_STATE_IDLE) {
-                loaderHandler.sendMessage(msg);
-            } else {
-                messageQueue.add(msg);
-            }
-
-//            final LoadVideoThumbnailTask task = new LoadVideoThumbnailTask(context, viewHolder.icon);
-//            task.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, item.path);
-//
-//            taskMap.put(viewHolder.icon, task);
-//            Log.d(TAG, "setIconVideo=" + item.path + " LoadVideoThumbnailTask");
+            messageQueue.add(bitmapMsg);
         } else {// 로딩된 비트맵을 셋팅
             viewHolder.icon.setImageBitmap(bitmap);
         }
     }
 
-    void setIcon(final ViewHolder viewHolder, ExplorerItem item) {
+    void setIcon(final ViewHolder viewHolder, ExplorerItem item, int position) {
         if (item.type == ExplorerItem.FileType.IMAGE) {
-            setIconImage(viewHolder, item);
+            setIconImage(viewHolder, item, position);
         } else if (item.type == ExplorerItem.FileType.VIDEO) {
-            setIconVideo(viewHolder, item);
+            setIconVideo(viewHolder, item, position);
         } else if (item.type == ExplorerItem.FileType.ZIP) {
-            setIconZip(viewHolder, item);
+            setIconZip(viewHolder, item, position);
         } else if (item.type == ExplorerItem.FileType.PDF) {
-            setIconPdf(viewHolder, item);
+            setIconPdf(viewHolder, item, position);
         } else if (item.type == ExplorerItem.FileType.APK) {
-            setIconApk(viewHolder, item);
+            setIconApk(viewHolder, item, position);
         } else {
             // 이전 타입과 다르게 새 타입이 들어왔다면 업데이트 한다.
             //if (viewHolder.type != item.type) {

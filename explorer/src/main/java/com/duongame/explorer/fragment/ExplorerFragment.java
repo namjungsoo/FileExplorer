@@ -11,6 +11,7 @@ import android.support.v4.content.FileProvider;
 import android.support.v4.content.res.ResourcesCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
@@ -231,6 +232,15 @@ public class ExplorerFragment extends BaseFragment {
             }
         });
         listView.setOnScrollListener(adapter);
+        listView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if(event.getAction() == MotionEvent.ACTION_DOWN) {
+
+                }
+                return false;
+            }
+        });
 
         final Button view = (Button) rootView.findViewById(R.id.btn_view);
         view.setText(getResources().getString(R.string.grid));
