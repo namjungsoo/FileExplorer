@@ -42,9 +42,6 @@ public abstract class ExplorerAdapter extends BaseAdapter implements AbsListView
     protected HashMap<ImageView, AsyncTask> taskMap = new HashMap<ImageView, AsyncTask>();
 
     private Handler mainHandler;
-//    private Handler loaderHandler;
-//    private HandlerThread loaderThread;
-
     private Thread thread;
 
     private static int LOAD_BITMAP = 0;
@@ -178,20 +175,8 @@ public abstract class ExplorerAdapter extends BaseAdapter implements AbsListView
             }
         };
 
-        //loaderThread = new HandlerThread("LoaderThread", 10);//THREAD_PRIORITY_BACKGROUND = 10
-//        loaderThread = new HandlerThread("LoaderThread");//THREAD_PRIORITY_BACKGROUND = 10
-//        loaderThread.start();
-
         thread = new Thread(loaderRunnable);
         thread.start();
-
-//        loaderHandler = new Handler(loaderThread.getLooper()) {
-//            // 받은 메세지로 bitmap을 로딩해야함
-//            @Override
-//            public void handleMessage(Message msg) {
-//                final BitmapMsg bitmapMsg = (BitmapMsg) msg.obj;
-//            }
-//        };
     }
 
     private void handleBitmapMsg(BitmapMsg bitmapMsg) {
