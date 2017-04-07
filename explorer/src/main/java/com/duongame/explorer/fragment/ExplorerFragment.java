@@ -11,7 +11,6 @@ import android.support.v4.content.FileProvider;
 import android.support.v4.content.res.ResourcesCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
@@ -74,27 +73,11 @@ public class ExplorerFragment extends BaseFragment {
     private ImageButton sdcard = null;
     private String extSdCard = null;
 
-//    private Handler handler;
-//    private Thread thread;
-
     @Nullable
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
                              Bundle savedInstanceState) {
         Log.d(TAG, "onCreateView");
         rootView = inflater.inflate(R.layout.fragment_explorer, container, false);
-//        rootView = inflater.inflate(R.layout.fragment_explorer, null);
-
-//        rootView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-//            @Override
-//            public void onGlobalLayout() {
-//                rootView.post(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        Log.d(TAG, "onGlobalLayout "+rootView.getWidth() + " " + rootView.getHeight());
-//                    }
-//                });
-//            }
-//        });
 
         initUI();
         initViewType();
@@ -113,7 +96,6 @@ public class ExplorerFragment extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
-//        Log.d(TAG, "onResume "+rootView.getWidth() + " " + rootView.getHeight());
 
         // 밖에 나갔다 들어오면 리프레시함
         onRefresh();
@@ -125,7 +107,6 @@ public class ExplorerFragment extends BaseFragment {
 
         final int position = currentView.getFirstVisiblePosition();
         final int top = getCurrentViewScrollTop();
-//        Log.d(TAG, "onPause position=" + position + " top="+top);
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -146,7 +127,6 @@ public class ExplorerFragment extends BaseFragment {
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                LinearLayout btn = (LinearLayout) view;
                 if (viewType == SWITCH_LIST) {
                     switchToGrid();
                     PreferenceHelper.setViewType(getActivity(), SWITCH_GRID);
@@ -232,15 +212,7 @@ public class ExplorerFragment extends BaseFragment {
             }
         });
         listView.setOnScrollListener(adapter);
-        listView.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if(event.getAction() == MotionEvent.ACTION_DOWN) {
-
-                }
-                return false;
-            }
-        });
+        listView.setOnTouchListener(adapter);
 
         final Button view = (Button) rootView.findViewById(R.id.btn_view);
         view.setText(getResources().getString(R.string.grid));
@@ -266,6 +238,8 @@ public class ExplorerFragment extends BaseFragment {
                 onAdapterItemClick(position);
             }
         });
+        gridView.setOnScrollListener(adapter);
+        gridView.setOnTouchListener(adapter);
 
         final Button view = (Button) rootView.findViewById(R.id.btn_view);
         view.setText(getResources().getString(R.string.list));
@@ -388,8 +362,6 @@ public class ExplorerFragment extends BaseFragment {
         final int position = PositionManager.getPosition(path);
         final int top = PositionManager.getTop(path);
 
-//        Log.d(TAG, "updateFileList path=" + path + " position=" + position + " top="+top);
-
         currentView.clearFocus();
 
         currentView.post(new Runnable() {
@@ -405,94 +377,24 @@ public class ExplorerFragment extends BaseFragment {
                 }
 
                 currentView.clearFocus();
-//                currentView.requestFocusFromTouch();
             }
         });
     }
 
-//    private void threadStart() {
-//        thread = new Thread(new Runnable() {
-//            private void load(ExplorerItem item) {
-//                Bitmap bitmap = getThumbnail(item.path);
-//
-//                if (bitmap == null) {
-//                    bitmap = BitmapLoader.getThumbnail(getActivity(), item.path);
-//
-//                    if (bitmap == null) {
-//                        bitmap = BitmapLoader.decodeSquareThumbnailFromFile(item.path, 96);
-//                    }
-//                    if (bitmap != null) {
-//                        BitmapCache.setThumbnail(item.path, bitmap, null);
-//                    }
-//                }
-//            }
-//
-//            private int findImage(String path) {
-//                final ArrayList<ExplorerItem> imageList = ExplorerManager.getImageList();
-//                for (int i = 0; i < imageList.size(); i++) {
-//                    if (imageList.get(i).path.equals(path))
-//                        return i;
-//                }
-//                return 0;
-//            }
-//
-//            @Override
-//            public void run() {
-//                final ArrayList<ExplorerItem> newFileList = new ArrayList<>();
-//                final ArrayList<ExplorerItem> newImageList = new ArrayList<>();
-//
-//                newFileList.addAll(fileList);
-//                newImageList.addAll(ExplorerManager.getImageList());
-//
-//                final int position = currentView.getFirstVisiblePosition();
-//                final String startPath = newFileList.get(position).path;
-//                final int startPosition = findImage(startPath);
-//
-//                for (int i = startPosition; i < newImageList.size(); i++) {
-//                    final ExplorerItem item = newImageList.get(i);
-//                    if(Thread.currentThread().isInterrupted())
-//                        return;
-//                    load(item);
-//                }
-//                for (int i = 0; i < startPosition; i++) {
-//                    final ExplorerItem item = newImageList.get(i);
-//                    if(Thread.currentThread().isInterrupted())
-//                        return;
-//                    load(item);
-//                }
-//            }
-//        });
-//        thread.start();
-//        Log.d(TAG, "threadStart");
-//    }
-//
-//    private void threadStop() {
-//        if (thread != null && thread.isAlive())
-//            thread.interrupt();
-//        Log.d(TAG, "threadStop");
-//    }
-
     public void updateFileList(String path) {
         if (adapter == null)
             return;
-//        Log.d(TAG, "updateFileList start "+rootView.getWidth() + " " + rootView.getHeight());
         adapter.stopAllTasks();
 
         if (BitmapCache.getThumbnailCount() > MAX_THUMBNAILS) {
-//            Log.w(TAG, "recycleThumbnail");
             BitmapCache.recycleThumbnail();
         }
 
-//        threadStop();
-
         fileList = ExplorerManager.search(path);
         if (fileList != null) {
-//            Log.d(TAG, "fileList size="+fileList.size());
             adapter.setFileList(fileList);
             adapter.notifyDataSetChanged();
         }
-
-//        threadStart();
 
         textPath.setText(ExplorerManager.getLastPath());
         textPath.requestLayout();
@@ -505,9 +407,6 @@ public class ExplorerFragment extends BaseFragment {
                             }
                         }
         );
-
-        //TODO: V20에서 화면이 튀어서 임시로 막아두고 나중에 구현
-//        moveToSelection(path);
 
         new Thread(new Runnable() {
             @Override

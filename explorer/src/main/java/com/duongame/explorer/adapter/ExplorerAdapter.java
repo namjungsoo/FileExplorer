@@ -109,7 +109,7 @@ public abstract class ExplorerAdapter extends BaseAdapter implements AbsListView
 
     public void onScrollStateChanged(AbsListView view, int scrollState) {
         lastScrollState = scrollState;
-        Log.d(TAG, "lastScrollState=" + lastScrollState);
+//        Log.d(TAG, "lastScrollState=" + lastScrollState);
 
         // 지금 idle이면 queue에 있는것을 전부 handler로 밀어 넣는다.
         if (lastScrollState == SCROLL_STATE_IDLE) {
@@ -141,7 +141,6 @@ public abstract class ExplorerAdapter extends BaseAdapter implements AbsListView
     public boolean onTouch(View v, MotionEvent event) {
         if(event.getAction() == MotionEvent.ACTION_DOWN) {
             loaderRunnable.onPause();
-            return true;
         }
         return false;
     }
@@ -177,6 +176,8 @@ public abstract class ExplorerAdapter extends BaseAdapter implements AbsListView
 
         thread = new Thread(loaderRunnable);
         thread.start();
+
+        Log.d(TAG, "Thread Start");
     }
 
     private void handleBitmapMsg(BitmapMsg bitmapMsg) {
@@ -278,6 +279,7 @@ public abstract class ExplorerAdapter extends BaseAdapter implements AbsListView
 
         setViewHolder(viewHolder, item);
         setIcon(viewHolder, item, position);
+//        Log.d(TAG, "getView position="+position);
 
         return convertView;
     }
