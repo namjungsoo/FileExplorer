@@ -69,11 +69,6 @@ public abstract class ExplorerAdapter extends BaseAdapter implements AbsListView
         public void run() {
             while (!mFinished) {
                 // Do stuff.
-                // 큐에 있는것을 꺼내자
-                BitmapMsg msg = messageQueue.poll();
-
-                // 꺼내서 로딩함
-                handleBitmapMsg(msg);
 
                 synchronized (mPauseLock) {
                     while (mPaused) {
@@ -83,6 +78,12 @@ public abstract class ExplorerAdapter extends BaseAdapter implements AbsListView
                         }
                     }
                 }
+
+                // 큐에 있는것을 꺼내자
+                BitmapMsg msg = messageQueue.poll();
+
+                // 꺼내서 로딩함
+                handleBitmapMsg(msg);
             }
         }
 
@@ -90,6 +91,7 @@ public abstract class ExplorerAdapter extends BaseAdapter implements AbsListView
          * Call this on pause.
          */
         public void onPause() {
+            Log.d(TAG, "onPause");
             synchronized (mPauseLock) {
                 mPaused = true;
             }
@@ -99,6 +101,7 @@ public abstract class ExplorerAdapter extends BaseAdapter implements AbsListView
          * Call this on resume.
          */
         public void onResume() {
+            Log.d(TAG, "onResume");
             synchronized (mPauseLock) {
                 mPaused = false;
                 mPauseLock.notifyAll();
@@ -286,6 +289,7 @@ public abstract class ExplorerAdapter extends BaseAdapter implements AbsListView
 
     public void setFileList(ArrayList<ExplorerItem> fileList) {
         this.fileList = fileList;
+        loaderRunnable.onResume();
     }
 
     void setIconImage(final ViewHolder viewHolder, ExplorerItem item, int position) {
