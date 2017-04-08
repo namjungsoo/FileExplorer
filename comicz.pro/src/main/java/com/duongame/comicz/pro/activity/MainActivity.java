@@ -34,7 +34,6 @@ public class MainActivity extends AppCompatActivity {
         ShortcutHelper.checkShortcut(this);
         initTabs();
 
-//        getSupportActionBar().setHideOnContentScrollEnabled(true);
         getSupportActionBar().setElevation(0.0f);
     }
 
@@ -49,17 +48,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-
-//        if (checkStoragePermissions()) {
-//            final String lastPath = PreferenceHelper.getLastPath(MainActivity.this);
-//            final int position = PreferenceHelper.getLastPosition(MainActivity.this);
-//            final int top = PreferenceHelper.getLastTop(MainActivity.this);
-//
-//            Log.d(TAG, "onCreate path=" + lastPath + " position=" + position + " top=" + top);
-//
-//            PositionManager.setPosition(lastPath, position);
-//            PositionManager.setTop(lastPath, top);
-//        }
     }
 
     @Override

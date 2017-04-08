@@ -1,24 +1,22 @@
 package com.duongame.fileexplorer.pro.activity;
 
 import android.Manifest;
-import android.content.pm.PackageManager;
-import android.os.Build;
-import android.support.v4.app.FragmentManager;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
+import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
+import android.view.MenuItem;
 
-import com.duongame.explorer.fragment.ExplorerFragment;
+import com.duongame.comicz.db.BookDB;
+import com.duongame.explorer.bitmap.BitmapCache;
+import com.duongame.explorer.fragment.BaseFragment;
+import com.duongame.explorer.helper.ToastHelper;
 import com.duongame.explorer.manager.ExplorerManager;
-import com.duongame.explorer.manager.PositionManager;
-import com.duongame.explorer.helper.PreferenceHelper;
 import com.duongame.fileexplorer.pro.R;
+
+import java.io.File;
 
 public class MainActivity extends AppCompatActivity {
     private final static String TAG = "MainActivity";
-    private final static int PERMISSION_STORAGE = 1;
-
-    ExplorerFragment fragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,22 +27,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-
-        FragmentManager fm = getSupportFragmentManager();
-        fragment = (ExplorerFragment)fm.findFragmentById(R.id.fragment_explorer);
-
-        if (checkStoragePermissions()) {
-            final String lastPath = PreferenceHelper.getLastPath(MainActivity.this);
-            final int position = PreferenceHelper.getLastPosition(MainActivity.this);
-            final int top = PreferenceHelper.getLastTop(MainActivity.this);
-
-            Log.d(TAG, "onCreate path=" + lastPath + " position=" + position + " top="+top);
-
-            PositionManager.setPosition(lastPath, position);
-            PositionManager.setTop(lastPath, top);
-
-            fragment.updateFileList(lastPath);
-        }
     }
 
     @Override
@@ -66,24 +48,78 @@ public class MainActivity extends AppCompatActivity {
 
         if (readEnable && writeEnable) {
             // 최초 이므로 무조건 null
-            fragment.updateFileList(null);
         }
     }
 
     @Override
     public void onBackPressed() {
         if (!ExplorerManager.isInitialPath()) {
-            fragment.gotoUpDirectory();
+            final BaseFragment fragment = (BaseFragment)getSupportFragmentManager().getFragments().get(0);
+            fragment.onBackPressed();
         }
     }
 
-    private boolean checkStoragePermissions() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED || checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, PERMISSION_STORAGE);
-                return false;
-            }
-        }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_settings) {
+            return true;
+        }
+
+        if (id == R.id.action_clear_cache) {
+            clearHistory();
+            clearCache();
+
+            ToastHelper.showToast(this, "캐쉬 파일을 삭제하였습니다.");
+        }
+
+        if (id == R.id.action_clear_history) {
+            clearHistory();
+
+            ToastHelper.showToast(this, "최근파일 목록을 삭제하였습니다.");
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    void clearCache() {
+        BitmapCache.recycleThumbnail();
+        BitmapCache.recyclePage();
+        BitmapCache.recycleBitmap();
+
+        final File file = getFilesDir();
+        deleteRecursive(file);
+
+        final BaseFragment fragment = (BaseFragment)getSupportFragmentManager().getFragments().get(0);
+        fragment.onRefresh();
+    }
+
+    void clearHistory() {
+        BookDB.clearBooks(this);
+
+    }
+
+    void deleteRecursive(File fileOrDirectory) {
+        if (fileOrDirectory.getAbsolutePath().endsWith("instant-run"))
+            return;
+
+        if (fileOrDirectory.isDirectory())
+            for (File child : fileOrDirectory.listFiles())
+                deleteRecursive(child);
+
+        fileOrDirectory.delete();
+    }
+
 }

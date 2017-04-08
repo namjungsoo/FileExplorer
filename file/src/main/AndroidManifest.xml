@@ -17,12 +17,28 @@
             </intent-filter>
 
         </activity>
+
         <activity android:name="com.duongame.viewer.activity.PhotoActivity"
             android:theme="@style/ComicViewerTheme"
             />
         <activity android:name="com.duongame.viewer.activity.ZipActivity"
             android:theme="@style/ComicViewerTheme"
             />
+        <activity android:name="com.duongame.viewer.activity.TextActivity"
+            android:theme="@style/ComicViewerTheme"
+            />
+        <activity android:name="com.duongame.viewer.activity.PdfActivity"
+            android:theme="@style/ComicViewerTheme"
+            />
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="com.duongame.file.provider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/provider_paths"/>
+        </provider>
     </application>
 
     <protected-broadcast android:name="android.intent.action.MEDIA_MOUNTED" />
