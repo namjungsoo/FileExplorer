@@ -63,8 +63,8 @@ public class ZipActivity extends PagerActivity {
             }
         }
 
-        seekPage.setMax(pagerAdapter.getCount());
-        seekPage.setProgress(position + 1);
+        seekPage.setMax(pagerAdapter.getCount()-1);
+        seekPage.setProgress(position);
     }
 
     private ZipLoader.ZipLoaderListener listener = new ZipLoader.ZipLoaderListener() {

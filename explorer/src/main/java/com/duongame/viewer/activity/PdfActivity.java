@@ -117,8 +117,8 @@ public class PdfActivity extends PagerActivity {
                     pager.setCurrentItem(page);
                     updateName(page);
 
-                    seekPage.setMax(imageList.size());
-                    seekPage.setProgress(1);
+                    seekPage.setMax(imageList.size()-1);
+                    seekPage.setProgress(0);
                 } else {
                     finish();
                 }

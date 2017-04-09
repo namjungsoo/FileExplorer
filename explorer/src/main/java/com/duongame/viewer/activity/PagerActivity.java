@@ -101,8 +101,8 @@ public class PagerActivity extends ViewerActivity {
         Log.d(TAG, "updateScrollInfo="+position);
         textPage.setText((position + 1) + "/" + pagerAdapter.getCount());
 
-        seekPage.setMax(pagerAdapter.getCount());
-        seekPage.setProgress(position + 1);
+        seekPage.setMax(pagerAdapter.getCount() - 1);
+        seekPage.setProgress(position);
     }
 
     protected void initPagerListeners() {
