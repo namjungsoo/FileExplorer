@@ -98,7 +98,7 @@ public class PagerActivity extends ViewerActivity {
     }
 
     protected void updateScrollInfo(int position) {
-//        Log.d(TAG, "updateScrollInfo="+position);
+        Log.d(TAG, "updateScrollInfo="+position);
         textPage.setText((position + 1) + "/" + pagerAdapter.getCount());
 
         seekPage.setMax(pagerAdapter.getCount());

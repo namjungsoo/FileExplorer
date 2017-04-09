@@ -290,6 +290,8 @@ public class ExplorerFragment extends BaseFragment {
 //                backupPosition();
 
                 final Intent intent = new Intent(getActivity(), PhotoActivity.class);
+
+                // 풀패스에서 폴더만 떼옴
                 intent.putExtra("path", item.path.substring(0, item.path.lastIndexOf('/')));
                 intent.putExtra("name", item.name);
 
