@@ -1,6 +1,7 @@
 package com.duongame.explorer.fragment;
 
 import android.Manifest;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -9,6 +10,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.FileProvider;
 import android.support.v4.content.res.ResourcesCompat;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,6 +27,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.ViewSwitcher;
 
+import com.duongame.comicz.db.BookDB;
 import com.duongame.explorer.R;
 import com.duongame.explorer.adapter.ExplorerAdapter;
 import com.duongame.explorer.adapter.ExplorerGridAdapter;
@@ -316,12 +319,43 @@ public class ExplorerFragment extends BaseFragment {
 //                backupPosition();
 
                 final Intent intent = new Intent(getActivity(), ZipActivity.class);
-                intent.putExtra("path", item.path);
-                intent.putExtra("name", item.name);
-                intent.putExtra("current_page", 0);
-                intent.putExtra("size", item.size);
+                final BookDB.Book book = BookDB.getBook(getActivity(), item.path);
 
-                startActivity(intent);
+                if(book == null) {
+                    intent.putExtra("path", item.path);
+                    intent.putExtra("name", item.name);
+                    intent.putExtra("current_page", 0);
+                    intent.putExtra("size", item.size);
+                } else {
+                    intent.putExtra("path", book.path);
+                    intent.putExtra("name", book.name);
+                    intent.putExtra("size", book.size);
+                    intent.putExtra("extract_file", book.extract_file);
+                    intent.putExtra("side", book.side.getValue());
+
+                    // 이부분은 물어보고 셋팅하자.
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity())
+                            .setTitle("알림")
+                            .setMessage(String.format("마지막에 읽던 페이지가 있습니다.\n(페이지: %d)\n계속 읽으시겠습니까?", book.current_page+1))
+                            .setIcon(R.drawable.comicz)
+                            .setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    intent.putExtra("current_page", book.current_page);
+                                    startActivity(intent);
+                                }
+                            })
+                            .setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    intent.putExtra("current_page", 0);
+                                    startActivity(intent);
+                                }
+                            });
+                            builder.show();
+
+                }
+
             }
             break;
             case TEXT: {

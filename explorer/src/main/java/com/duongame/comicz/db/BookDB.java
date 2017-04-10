@@ -139,6 +139,20 @@ public class BookDB extends SQLiteOpenHelper {
         db.close();
     }
 
+    public static Book getBook(Context context, String path) {
+        final SQLiteDatabase db = getInstance(context).getReadableDatabase();
+        final String sql = "SELECT * FROM book WHERE path='"+path+"'";
+        final Cursor cursor = db.rawQuery(sql, null);
+        Book book = null;
+        while(cursor.moveToNext()) {
+            book = newBook(cursor);
+            break;
+        }
+        cursor.close();
+        db.close();
+        return book;
+    }
+
     // 최근 50개 읽은 책 리스트를 반환
     public static ArrayList<Book> getBooks(Context context) {
         final SQLiteDatabase db = getInstance(context).getReadableDatabase();
