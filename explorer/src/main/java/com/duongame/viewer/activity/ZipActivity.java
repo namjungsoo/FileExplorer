@@ -129,9 +129,12 @@ public class ZipActivity extends PagerActivity {
         // 동적인 내용 6개
         final int page = pager.getCurrentItem();
         book.current_page = page;
+
+        // 페이지로 잘려져 있다.
         final ArrayList<ExplorerItem> zipImageList = pagerAdapter.getImageList();
         book.total_page = zipImageList.size();
-        book.current_file = zipImageList.get(page).orgIndex;
+        final ExplorerItem item = zipImageList.get(page);
+        book.current_file = item.orgIndex;
 
         //TODO: 숫자가 맞는지 검증할것
         if (zipExtractCompleted) {
@@ -142,6 +145,7 @@ public class ZipActivity extends PagerActivity {
             book.extract_file = extractFileCount + 1;
         }
         book.side = side;
+        book.last_file = item.path;
 
         BookDB.setLastBook(this, book);
 

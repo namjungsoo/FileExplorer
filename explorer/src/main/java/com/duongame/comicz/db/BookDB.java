@@ -39,6 +39,8 @@ public class BookDB extends SQLiteOpenHelper {
         public ExplorerItem.Side side = ExplorerItem.Side.SIDE_ALL;// 책넘김 방법
         public String date;
 
+        public String last_file;// 마지막 이미지 파일의 파일명
+
         // DB에 저장되지 않음
         public int percent;
 
@@ -60,6 +62,7 @@ public class BookDB extends SQLiteOpenHelper {
                     " extract_file=" + extract_file +
                     " side=" + side +
                     " date=" + date +
+                    " last_file=" + last_file +
 
                     " percent=" + percent;
         }
@@ -92,8 +95,10 @@ public class BookDB extends SQLiteOpenHelper {
                 "extract_file INTEGER, " +
 
                 "side INTEGER, " +
+                "date TEXT," +
+                "last_file TEXT" +
 
-                "date TEXT);";
+                ");";
         Log.d(TAG, "onCreate sql=" + sql);
         db.execSQL(sql);
     }
@@ -127,6 +132,7 @@ public class BookDB extends SQLiteOpenHelper {
         book.extract_file = cursor.getInt(8);
         book.side.setValue(cursor.getInt(9));
         book.date = cursor.getString(10);
+        book.last_file = cursor.getString(11);
 
         book.updatePercent();
         return book;
@@ -214,7 +220,9 @@ public class BookDB extends SQLiteOpenHelper {
                     + ",current_file=" + book.current_file
                     + ",extract_file=" + book.extract_file
                     + ",side=" + book.side.getValue()
-                    + ",date=datetime('now','localtime') WHERE path='" + book.path + "'";
+                    + ",date=datetime('now','localtime')"
+                    + ",last_file="+book.last_file
+                    + " WHERE path='" + book.path + "'";
             Log.i(TAG, "setLastBook=" + sql2);
             db.execSQL(sql2);
         } else {// 없으면 추가
@@ -231,7 +239,10 @@ public class BookDB extends SQLiteOpenHelper {
                     + "," + book.extract_file
 
                     + "," + book.side.getValue()
-                    + ",datetime('now','localtime'))";
+
+                    + ",datetime('now','localtime')"
+                    + ","+book.last_file
+                    + ")";
             Log.i(TAG, "setLastBook=" + sql2);
             db.execSQL(sql2);
         }

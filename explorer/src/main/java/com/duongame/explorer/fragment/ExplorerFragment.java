@@ -326,6 +326,7 @@ public class ExplorerFragment extends BaseFragment {
                     intent.putExtra("name", item.name);
                     intent.putExtra("current_page", 0);
                     intent.putExtra("size", item.size);
+                    startActivity(intent);
                 } else {
                     intent.putExtra("path", book.path);
                     intent.putExtra("name", book.name);
@@ -352,6 +353,13 @@ public class ExplorerFragment extends BaseFragment {
                                     startActivity(intent);
                                 }
                             });
+
+                    //TODO: 나중에 이미지 preview를 만들자.
+//                    if(book.last_file != null) {
+//                        ImageView imageView = new ImageView(getActivity());
+//                        imageView.setImageBitmap();
+//                    }
+
                             builder.show();
 
                 }

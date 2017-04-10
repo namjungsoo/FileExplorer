@@ -345,7 +345,6 @@ public abstract class ExplorerAdapter extends BaseAdapter implements AbsListView
     }
 
     void setIconApk(final ViewHolder viewHolder, ExplorerItem item, int position) {
-        //TODO: 동적으로 읽기
         Drawable drawable = BitmapCache.getDrawable(item.path);
         if (drawable == null) {
             viewHolder.icon.setImageResource(R.drawable.file);
