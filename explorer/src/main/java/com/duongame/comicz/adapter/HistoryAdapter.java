@@ -12,7 +12,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -63,7 +62,7 @@ public class HistoryAdapter extends BaseAdapter {
         TextView page;
         TextView percent;
         ProgressBar progressBar;
-        ImageButton more;
+        ImageView more;
     }
 
     @Override
@@ -96,7 +95,7 @@ public class HistoryAdapter extends BaseAdapter {
             viewHolder.thumb = (RoundedImageView) convertView.findViewById(R.id.image_thumb);
             viewHolder.thumb.setRadiusDp(5);
 
-            viewHolder.more = (ImageButton)convertView.findViewById(R.id.btn_more);
+            viewHolder.more = (ImageView)convertView.findViewById(R.id.btn_more);
             viewHolder.more.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(final View v) {

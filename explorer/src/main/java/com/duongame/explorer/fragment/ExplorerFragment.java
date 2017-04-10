@@ -93,6 +93,14 @@ public class ExplorerFragment extends BaseFragment {
             }
         }
 
+//        final BookDB.Book book = BookDB.getLastBook(getActivity());
+//        if(book != null) {
+//            // zip파일인가 체크
+//            if(book.path.toLowerCase().endsWith(".zip")) {
+//                loadLastBookZip(book, false);
+//            }
+//        }
+
         return rootView;
     }
 
@@ -318,50 +326,17 @@ public class ExplorerFragment extends BaseFragment {
             case ZIP: {
 //                backupPosition();
 
-                final Intent intent = new Intent(getActivity(), ZipActivity.class);
                 final BookDB.Book book = BookDB.getBook(getActivity(), item.path);
 
                 if(book == null) {
+                    final Intent intent = new Intent(getActivity(), ZipActivity.class);
                     intent.putExtra("path", item.path);
                     intent.putExtra("name", item.name);
                     intent.putExtra("current_page", 0);
                     intent.putExtra("size", item.size);
                     startActivity(intent);
                 } else {
-                    intent.putExtra("path", book.path);
-                    intent.putExtra("name", book.name);
-                    intent.putExtra("size", book.size);
-                    intent.putExtra("extract_file", book.extract_file);
-                    intent.putExtra("side", book.side.getValue());
-
-                    // 이부분은 물어보고 셋팅하자.
-                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity())
-                            .setTitle("알림")
-                            .setMessage(String.format("마지막에 읽던 페이지가 있습니다.\n(페이지: %d)\n계속 읽으시겠습니까?", book.current_page+1))
-                            .setIcon(R.drawable.comicz)
-                            .setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    intent.putExtra("current_page", book.current_page);
-                                    startActivity(intent);
-                                }
-                            })
-                            .setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    intent.putExtra("current_page", 0);
-                                    startActivity(intent);
-                                }
-                            });
-
-                    //TODO: 나중에 이미지 preview를 만들자.
-//                    if(book.last_file != null) {
-//                        ImageView imageView = new ImageView(getActivity());
-//                        imageView.setImageBitmap();
-//                    }
-
-                            builder.show();
-
+                    loadLastBookZip(book, true);
                 }
 
             }
@@ -390,6 +365,44 @@ public class ExplorerFragment extends BaseFragment {
         }
     }
 
+    void loadLastBookZip(final BookDB.Book book, final boolean cancelToRead) {
+        final Intent intent = new Intent(getActivity(), ZipActivity.class);
+        intent.putExtra("path", book.path);
+        intent.putExtra("name", book.name);
+        intent.putExtra("size", book.size);
+        intent.putExtra("extract_file", book.extract_file);
+        intent.putExtra("side", book.side.getValue());
+
+        // 이부분은 물어보고 셋팅하자.
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity())
+                .setTitle("알림")
+                .setMessage(String.format("마지막에 읽던 페이지가 있습니다.\n(페이지: %d)\n계속 읽으시겠습니까?", book.current_page+1))
+                .setIcon(R.drawable.comicz)
+                .setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        intent.putExtra("current_page", book.current_page);
+                        startActivity(intent);
+                    }
+                })
+                .setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if(cancelToRead) {
+                            intent.putExtra("current_page", 0);
+                            startActivity(intent);
+                        }
+                    }
+                });
+
+        //TODO: 나중에 이미지 preview를 만들자.
+//                    if(book.last_file != null) {
+//                        ImageView imageView = new ImageView(getActivity());
+//                        imageView.setImageBitmap();
+//                    }
+
+        builder.show();
+    }
     void backupPosition() {
         PositionManager.setPosition(ExplorerManager.getLastPath(), currentView.getFirstVisiblePosition());
         PositionManager.setTop(ExplorerManager.getLastPath(), getCurrentViewScrollTop());
