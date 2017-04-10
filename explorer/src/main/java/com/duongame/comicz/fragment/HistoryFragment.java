@@ -36,7 +36,7 @@ public class HistoryFragment extends BaseFragment {
                              Bundle savedInstanceState) {
         rootView = (ViewGroup) inflater.inflate(R.layout.fragment_history, container, false);
         listView = (ListView) rootView.findViewById(R.id.list_history);
-        adapter = new HistoryAdapter(getActivity(), null);
+        adapter = new HistoryAdapter(getActivity(), this, null);
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -77,6 +77,7 @@ public class HistoryFragment extends BaseFragment {
             adapter.notifyDataSetChanged();
         }
 
+        // 결과가 있을때 없을때를 구분해서 SWICTH 함
         if(bookList != null && bookList.size() > 0) {
             if(switcherContents != null) {
                 switcherContents.setDisplayedChild(0);

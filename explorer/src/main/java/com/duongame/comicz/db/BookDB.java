@@ -138,6 +138,13 @@ public class BookDB extends SQLiteOpenHelper {
         return book;
     }
 
+    public static void clearBook(Context context, String path) {
+        final SQLiteDatabase db = getInstance(context).getWritableDatabase();
+        final String sql = "DELETE FROM book WHERE path='"+path+"'";
+        db.execSQL(sql);
+        db.close();
+    }
+
     public static void clearBooks(Context context) {
         final SQLiteDatabase db = getInstance(context).getWritableDatabase();
         final String sql = "DELETE FROM book";
@@ -221,7 +228,7 @@ public class BookDB extends SQLiteOpenHelper {
                     + ",extract_file=" + book.extract_file
                     + ",side=" + book.side.getValue()
                     + ",date=datetime('now','localtime')"
-                    + ",last_file="+book.last_file
+                    + ",last_file='"+book.last_file + "'"
                     + " WHERE path='" + book.path + "'";
             Log.i(TAG, "setLastBook=" + sql2);
             db.execSQL(sql2);
@@ -241,7 +248,7 @@ public class BookDB extends SQLiteOpenHelper {
                     + "," + book.side.getValue()
 
                     + ",datetime('now','localtime')"
-                    + ","+book.last_file
+                    + ",'"+book.last_file + "'"
                     + ")";
             Log.i(TAG, "setLastBook=" + sql2);
             db.execSQL(sql2);

@@ -29,6 +29,7 @@ public class SearchFragment extends BaseFragment {
 
     @Override
     public void onRefresh() {
+        // 현재는 무조건 결과 없음을 리턴함
         if(switcherContents != null) {
             switcherContents.setDisplayedChild(1);
         }

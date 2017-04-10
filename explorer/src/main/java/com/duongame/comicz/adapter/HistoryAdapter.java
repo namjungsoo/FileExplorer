@@ -5,16 +5,21 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.PopupMenu;
 import android.util.Log;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.duongame.comicz.db.BookDB;
 import com.duongame.explorer.R;
+import com.duongame.explorer.fragment.BaseFragment;
 import com.duongame.explorer.helper.DateHelper;
 import com.duongame.explorer.helper.FileHelper;
 import com.duongame.explorer.task.thumbnail.LoadPdfThumbnailTask;
@@ -32,10 +37,12 @@ import static com.duongame.explorer.bitmap.BitmapCache.getThumbnail;
 public class HistoryAdapter extends BaseAdapter {
     private final static String TAG = "HistoryAdapter";
     private Activity context;
+    private BaseFragment fragment;
     private ArrayList<BookDB.Book> bookList;
 
-    public HistoryAdapter(Activity context, ArrayList<BookDB.Book> bookList) {
+    public HistoryAdapter(Activity context, BaseFragment fragment, ArrayList<BookDB.Book> bookList) {
         this.context = context;
+        this.fragment = fragment;
         this.bookList = bookList;
     }
 
@@ -56,6 +63,7 @@ public class HistoryAdapter extends BaseAdapter {
         TextView page;
         TextView percent;
         ProgressBar progressBar;
+        ImageButton more;
     }
 
     @Override
@@ -84,8 +92,35 @@ public class HistoryAdapter extends BaseAdapter {
             convertView = context.getLayoutInflater().inflate(R.layout.history_item, parent, false);
 
             viewHolder = new ViewHolder();
+
             viewHolder.thumb = (RoundedImageView) convertView.findViewById(R.id.image_thumb);
             viewHolder.thumb.setRadiusDp(5);
+
+            viewHolder.more = (ImageButton)convertView.findViewById(R.id.btn_more);
+            viewHolder.more.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(final View v) {
+                    final PopupMenu popup = new PopupMenu(context, v);
+                    final MenuInflater inflater = popup.getMenuInflater();
+                    inflater.inflate(R.menu.menu_history, popup.getMenu());
+                    popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                        @Override
+                        public boolean onMenuItemClick(MenuItem item) {
+                            if(v.getTag() != null) {
+                                String path = (String)v.getTag();
+                                BookDB.clearBook(context, path);
+
+                                // 삭제한 이후에는 리프레시를 해주어야 한다.
+                                if(fragment != null)
+                                    fragment.onRefresh();
+                                return true;
+                            }
+                            return false;
+                        }
+                    });
+                    popup.show();
+                }
+            });
 
             viewHolder.name = (TextView) convertView.findViewById(R.id.text_name);
             viewHolder.size = (TextView) convertView.findViewById(R.id.text_size);
@@ -116,6 +151,7 @@ public class HistoryAdapter extends BaseAdapter {
                         ContextCompat.getColor(context, R.color.colorAccent),
                         android.graphics.PorterDuff.Mode.SRC_IN);
             }
+            viewHolder.more.setTag(book.path);
             loadBitmap(viewHolder.thumb, book.path);
         }
 
