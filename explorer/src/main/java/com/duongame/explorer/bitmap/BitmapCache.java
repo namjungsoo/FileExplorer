@@ -122,11 +122,9 @@ public class BitmapCache {
     public static void recycleBitmap() {
         for (String key : bitmapCache.keySet()) {
             final Bitmap bitmap = bitmapCache.get(key);
-            //if (bitmap != null && !bitmap.isRecycled())
             if (bitmap != null) {
                 if (!bitmap.isRecycled())
                     bitmap.recycle();
-                bitmap.recycle();
             }
         }
         bitmapCache.clear();

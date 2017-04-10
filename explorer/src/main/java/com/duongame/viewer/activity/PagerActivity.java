@@ -60,16 +60,27 @@ public class PagerActivity extends ViewerActivity {
 
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
-                Log.d(TAG,"onStartTrackingTouch");
+                Log.d(TAG, "onStartTrackingTouch");
             }
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-                Log.d(TAG,"onStopTrackingTouch");
-                final int page = seekBar.getProgress() - 1;
-                pagerAdapter.stopAllTasks();
-                BitmapCache.recyclePage();
-                BitmapCache.recycleBitmap();
+                Log.d(TAG, "onStopTrackingTouch");
+                final int page = seekBar.getProgress();
+
+                int current = pager.getCurrentItem();
+                int diff = Math.abs(current - page);
+                Log.d(TAG, "onStopTrackingTouch current=" + current + " diff=" + diff);
+
+
+                if (Math.abs(current - page) > 2) {
+                    // 모든 로딩 중인 태스크를 정리하고 비트맵을 리사이클을 한다.
+                    pagerAdapter.stopAllTasks();
+                    BitmapCache.recyclePage();
+                    BitmapCache.recycleBitmap();
+                    Log.d(TAG, "onStopTrackingTouch recycle");
+                }
+
                 pager.setCurrentItem(page, false);
             }
         });
@@ -98,7 +109,7 @@ public class PagerActivity extends ViewerActivity {
     }
 
     protected void updateScrollInfo(int position) {
-        Log.d(TAG, "updateScrollInfo="+position);
+        Log.d(TAG, "updateScrollInfo=" + position);
         textPage.setText((position + 1) + "/" + pagerAdapter.getCount());
 
         seekPage.setMax(pagerAdapter.getCount() - 1);
@@ -172,7 +183,7 @@ public class PagerActivity extends ViewerActivity {
     }
 
     public void stopGifAnimation() {
-        if(gifImageView != null) {
+        if (gifImageView != null) {
             Log.w(TAG, "stopGifAnimation");
             gifImageView.stopAnimation();
         }
