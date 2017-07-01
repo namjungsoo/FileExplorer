@@ -1,10 +1,15 @@
 package com.duongame.explorer.task.bitmap;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.util.Log;
 import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
 import com.duongame.explorer.adapter.ExplorerItem;
+import com.duongame.explorer.helper.FileHelper;
+
+import java.io.File;
 
 /**
  * Created by namjungsoo on 2016-12-16.
@@ -13,9 +18,12 @@ import com.duongame.explorer.adapter.ExplorerItem;
 public class LoadBitmapTask extends BitmapTask {
     private final ImageView imageView;
     private ExplorerItem item;
+    private Context context;
 
-    public LoadBitmapTask(ImageView imageView, int width, int height, boolean exif) {
+    public LoadBitmapTask(Context context, ImageView imageView, int width, int height, boolean exif) {
         super(width, height, exif);
+
+        this.context = context;
         this.imageView = imageView;
     }
 
@@ -23,12 +31,19 @@ public class LoadBitmapTask extends BitmapTask {
     protected Bitmap doInBackground(ExplorerItem... params) {
 //        Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
 
+        if (isCancelled())
+            return null;
+
         item = params[0];
-        Bitmap bitmap = null;
-        if (!isCancelled()) {
-            Log.d(this.getClass().getSimpleName(), "loadBitmap");
-            bitmap = loadBitmap(item);
+        if (FileHelper.isGifImage(item.path)) {
+//            Glide.with(context).load(new File(item.path)).into(imageView);
+            return null;
         }
+
+        Bitmap bitmap = null;
+        Log.d(this.getClass().getSimpleName(), "loadBitmap");
+
+        bitmap = loadBitmap(item);
         return bitmap;
     }
 
@@ -37,8 +52,8 @@ public class LoadBitmapTask extends BitmapTask {
         super.onPostExecute(bitmap);
 
         // imageView 셋팅은 UI 쓰레드에서 해야 한다.
-        if (imageView != null && bitmap != null) {
-            if (imageView != null) {
+        if (imageView != null) {
+            if (bitmap != null) {
                 imageView.setImageBitmap(bitmap);
                 imageView.setTag(item.path);
 
@@ -71,6 +86,8 @@ public class LoadBitmapTask extends BitmapTask {
 //
 //                imageView.setLayoutParams(params);
 //                imageView.requestLayout();
+            } else {
+                Glide.with(context).load(new File(item.path)).into(imageView);
             }
         }
     }

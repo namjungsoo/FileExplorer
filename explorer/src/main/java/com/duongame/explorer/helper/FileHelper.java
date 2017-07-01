@@ -55,6 +55,14 @@ public class FileHelper {
         return false;
     }
 
+    public static boolean isGifImage(String filename) {
+        final String lower = filename.toLowerCase();
+        if (lower.endsWith(".gif")) {
+            return true;
+        }
+        return false;
+    }
+
     public static boolean isJpegImage(String filename) {
         final String lower = filename.toLowerCase();
         if (lower.endsWith(".jpg")
@@ -87,9 +95,9 @@ public class FileHelper {
     public static class FilePriorityComparator implements Comparator<ExplorerItem> {
         @Override
         public int compare(ExplorerItem lhs, ExplorerItem rhs) {
-            if(lhs.priority < rhs.priority)
+            if (lhs.priority < rhs.priority)
                 return -1;
-            else if(lhs.priority > rhs.priority)
+            else if (lhs.priority > rhs.priority)
                 return 1;
             return 0;
         }

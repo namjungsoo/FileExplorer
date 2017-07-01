@@ -1,6 +1,5 @@
 package com.duongame.viewer.adapter;
 
-import android.app.Activity;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.view.View;
@@ -13,6 +12,8 @@ import com.duongame.explorer.adapter.ExplorerItem;
 import com.duongame.explorer.bitmap.BitmapCache;
 import com.duongame.explorer.task.bitmap.LoadBitmapTask;
 import com.duongame.explorer.task.bitmap.RemoveAndPreloadBitmapTask;
+import com.duongame.viewer.activity.PagerActivity;
+import com.duongame.viewer.listener.PagerOnTouchListener;
 
 import java.util.ArrayList;
 
@@ -26,8 +27,11 @@ public class PhotoPagerAdapter extends ViewerPagerAdapter {
     private ArrayList<AsyncTask> taskList = new ArrayList<>();
     private int lastPosition = -1;
 
-    public PhotoPagerAdapter(Activity context) {
+    PagerOnTouchListener mPagerOnTouchListener;
+
+    public PhotoPagerAdapter(PagerActivity context) {
         super(context);
+        mPagerOnTouchListener = new PagerOnTouchListener(context);
     }
 
     @Override
@@ -67,9 +71,11 @@ public class PhotoPagerAdapter extends ViewerPagerAdapter {
 
     private void loadCurrentBitmap(int position, ImageView imageView, int width, int height) {
         final ExplorerItem item = imageList.get(position);
-        final LoadBitmapTask task = new LoadBitmapTask(imageView, width, height, exifRotation);
+        final LoadBitmapTask task = new LoadBitmapTask(context, imageView, width, height, exifRotation);
 
         task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, item);
+        imageView.setOnTouchListener(mPagerOnTouchListener);
+
         taskList.add(task);
     }
 

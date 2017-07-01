@@ -5,6 +5,7 @@ import android.util.Log;
 
 import com.duongame.explorer.adapter.ExplorerItem;
 import com.duongame.explorer.bitmap.BitmapCache;
+import com.duongame.explorer.helper.FileHelper;
 
 import static android.content.ContentValues.TAG;
 
@@ -48,12 +49,16 @@ public class RemoveAndPreloadBitmapTask extends BitmapTask {
         if (params != null) {
             // preload
             for (int i = 0; i < params.length; i++) {
-                ExplorerItem item = params[i];
+                if(isCancelled())
+                    return null;
 
-                if (!isCancelled()) {
-                    Log.w(TAG, "RemoveAndPreloadBitmapTask PRELOAD " + item.path);
-                    loadBitmap(item);
-                }
+                ExplorerItem item = params[i];
+                if(FileHelper.isGifImage(item.path))
+                    continue;
+
+                // preload는 bitmap만 읽어서 캐쉬에 넣어놓는 용도이다.
+                Log.w(TAG, "RemoveAndPreloadBitmapTask PRELOAD " + item.path);
+                loadBitmap(item);
             }
         }
         return null;

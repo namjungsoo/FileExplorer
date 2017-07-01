@@ -1,6 +1,5 @@
 package com.duongame.viewer.adapter;
 
-import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
@@ -15,6 +14,8 @@ import android.widget.ImageView;
 
 import com.duongame.R;
 import com.duongame.explorer.adapter.ExplorerItem;
+import com.duongame.viewer.activity.PagerActivity;
+import com.duongame.viewer.listener.PagerOnTouchListener;
 
 /**
  * Created by namjungsoo on 2016-12-25.
@@ -25,9 +26,11 @@ public class PdfPagerAdapter extends ViewerPagerAdapter {
 
     private PdfRenderer renderer;
 //    private Bitmap bitmap;
+    PagerOnTouchListener mPagerOnTouchListener;
 
-    public PdfPagerAdapter(Activity context) {
+    public PdfPagerAdapter(PagerActivity context) {
         super(context);
+        mPagerOnTouchListener = new PagerOnTouchListener(context);
     }
 
     public void setRenderer(PdfRenderer renderer) {
@@ -108,6 +111,8 @@ public class PdfPagerAdapter extends ViewerPagerAdapter {
 
                     // 무조건 해주지 않으면 안된다. 알파로 처리되어 있기 때문이다. (RENDER_MODE_FOR_DISPLAY)
                     imageView.setBackgroundColor(Color.WHITE);
+
+                    imageView.setOnTouchListener(mPagerOnTouchListener);
                     //imageView.setBackgroundColor(context.getResources().getColor(R.color.colorGreyBackground));
 
 //                    final FrameLayout.LayoutParams params = (FrameLayout.LayoutParams )imageView.getLayoutParams();
