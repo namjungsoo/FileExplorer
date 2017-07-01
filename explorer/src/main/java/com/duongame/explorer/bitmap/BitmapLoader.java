@@ -20,7 +20,7 @@ import android.provider.MediaStore;
 import android.util.Log;
 import android.widget.ImageView;
 
-import com.duongame.explorer.R;
+import com.duongame.R;
 import com.duongame.explorer.adapter.ExplorerItem;
 import com.duongame.explorer.helper.FileHelper;
 

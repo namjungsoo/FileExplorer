@@ -16,8 +16,8 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.duongame.R;
 import com.duongame.comicz.db.BookDB;
-import com.duongame.explorer.R;
 import com.duongame.explorer.fragment.BaseFragment;
 import com.duongame.explorer.helper.DateHelper;
 import com.duongame.explorer.helper.FileHelper;

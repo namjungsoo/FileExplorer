@@ -10,8 +10,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.duongame.R;
 import com.duongame.comicz.db.BookDB;
-import com.duongame.explorer.R;
 import com.duongame.explorer.adapter.ExplorerItem;
 import com.duongame.explorer.bitmap.BitmapCache;
 import com.duongame.explorer.bitmap.ZipLoader;

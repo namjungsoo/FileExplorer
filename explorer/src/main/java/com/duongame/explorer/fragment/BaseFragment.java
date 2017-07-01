@@ -2,7 +2,7 @@ package com.duongame.explorer.fragment;
 
 import android.support.v4.app.Fragment;
 
-import com.duongame.explorer.R;
+import com.duongame.R;
 import com.duongame.explorer.helper.ToastHelper;
 
 /**

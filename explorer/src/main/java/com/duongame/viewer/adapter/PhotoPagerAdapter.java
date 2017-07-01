@@ -8,11 +8,11 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 
-import com.duongame.explorer.R;
+import com.duongame.R;
 import com.duongame.explorer.adapter.ExplorerItem;
 import com.duongame.explorer.bitmap.BitmapCache;
-import com.duongame.explorer.task.bitmap.LoadBitmapTask;
 import com.duongame.explorer.task.LoadGifTask;
+import com.duongame.explorer.task.bitmap.LoadBitmapTask;
 import com.duongame.explorer.task.bitmap.RemoveAndPreloadBitmapTask;
 import com.duongame.viewer.activity.PagerActivity;
 import com.felipecsl.gifimageview.library.GifImageView;

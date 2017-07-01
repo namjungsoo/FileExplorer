@@ -14,7 +14,7 @@ import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
-import com.duongame.explorer.R;
+import com.duongame.R;
 import com.duongame.explorer.bitmap.BitmapCache;
 
 /**

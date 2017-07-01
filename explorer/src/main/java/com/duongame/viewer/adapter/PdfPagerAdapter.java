@@ -15,7 +15,7 @@ import android.view.ViewTreeObserver;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 
-import com.duongame.explorer.R;
+import com.duongame.R;
 import com.duongame.explorer.adapter.ExplorerItem;
 
 /**

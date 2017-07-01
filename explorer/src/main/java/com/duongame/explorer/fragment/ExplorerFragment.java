@@ -27,8 +27,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.ViewSwitcher;
 
+import com.duongame.R;
 import com.duongame.comicz.db.BookDB;
-import com.duongame.explorer.R;
 import com.duongame.explorer.adapter.ExplorerAdapter;
 import com.duongame.explorer.adapter.ExplorerGridAdapter;
 import com.duongame.explorer.adapter.ExplorerItem;

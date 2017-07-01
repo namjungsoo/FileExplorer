@@ -6,7 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ViewSwitcher;
 
-import com.duongame.explorer.R;
+import com.duongame.R;
 import com.duongame.explorer.fragment.BaseFragment;
 
 /**

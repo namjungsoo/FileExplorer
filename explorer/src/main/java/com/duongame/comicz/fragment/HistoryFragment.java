@@ -10,9 +10,9 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ViewSwitcher;
 
+import com.duongame.R;
 import com.duongame.comicz.adapter.HistoryAdapter;
 import com.duongame.comicz.db.BookDB;
-import com.duongame.explorer.R;
 import com.duongame.explorer.fragment.BaseFragment;
 import com.duongame.viewer.activity.PdfActivity;
 import com.duongame.viewer.activity.ZipActivity;

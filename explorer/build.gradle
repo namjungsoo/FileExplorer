@@ -1,10 +1,12 @@
-apply plugin: 'com.android.library'
+apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 25
     buildToolsVersion '25.0.2'
 
     defaultConfig {
+        applicationId 'com.duongame'
+        buildConfigField "boolean", "SHOW_AD", "true"
         minSdkVersion 14
         targetSdkVersion 25
         versionCode 1
@@ -16,15 +18,49 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    flavorDimensions("project", "edition")
+
+    productFlavors {
+        main {
+            dimension "edition"
+        }
+
+        // 파일탐색기
+        file {
+            applicationIdSuffix '.file'
+            dimension "project"
+        }
+        // 코믹제트
+        comicz {
+            applicationIdSuffix '.comicz'
+            dimension "project"
+        }
+
+        // 유료
+        pro {
+            buildConfigField "boolean", "SHOW_AD", "false"
+            dimension "edition"
+        }
+        // 무료
+        free {
+            applicationIdSuffix '.free'
+            dimension "edition"
+        }
+
+    }
 }
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile 'com.android.support:appcompat-v7:25.3.0'
+    //tabmode
+    compile 'com.android.support:design:25.3.0'
     //zip
     compile 'net.lingala.zip4j:zip4j:1.2.4'
     //encoding
     compile 'com.googlecode.juniversalchardet:juniversalchardet:1.0.3'
+
+    //GIF
     //gifimageview
     compile 'com.felipecsl:gifimageview:2.1.0'
     //compile 'com.github.bumptech.glide:glide:3.7.0'

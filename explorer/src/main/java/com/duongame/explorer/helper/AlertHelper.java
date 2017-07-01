@@ -4,7 +4,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 
-import com.duongame.explorer.R;
+import com.duongame.R;
 
 /**
  * Created by namjungsoo on 2016-04-30.

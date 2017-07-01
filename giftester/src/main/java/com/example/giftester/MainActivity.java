@@ -18,7 +18,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        ImageView gif = (ImageView)findViewById(R.id.image_viewer);
+        ImageView gif = (ImageView) findViewById(R.id.image_viewer);
         GlideDrawableImageViewTarget imageViewTarget = new GlideDrawableImageViewTarget(gif);
 
         DataInputStream dis = null;

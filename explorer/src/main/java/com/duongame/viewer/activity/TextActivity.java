@@ -5,7 +5,7 @@ import android.os.Bundle;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-import com.duongame.explorer.R;
+import com.duongame.R;
 import com.duongame.explorer.task.LoadTextTask;
 import com.duongame.viewer.listener.TextOnTouchListener;
 

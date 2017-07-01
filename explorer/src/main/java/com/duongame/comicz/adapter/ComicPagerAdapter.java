@@ -7,11 +7,11 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.util.Log;
 import android.view.ViewGroup;
 
-import com.duongame.explorer.R;
-import com.duongame.explorer.fragment.BaseFragment;
-import com.duongame.explorer.fragment.ExplorerFragment;
+import com.duongame.R;
 import com.duongame.comicz.fragment.HistoryFragment;
 import com.duongame.comicz.fragment.SearchFragment;
+import com.duongame.explorer.fragment.BaseFragment;
+import com.duongame.explorer.fragment.ExplorerFragment;
 
 import java.util.HashMap;
 

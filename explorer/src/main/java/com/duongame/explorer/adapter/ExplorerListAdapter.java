@@ -6,7 +6,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.duongame.explorer.R;
+import com.duongame.R;
 import com.duongame.explorer.helper.FileHelper;
 import com.duongame.explorer.view.RoundedImageView;
 

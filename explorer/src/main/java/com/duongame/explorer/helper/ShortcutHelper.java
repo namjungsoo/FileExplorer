@@ -4,7 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Parcelable;
 
-import com.duongame.explorer.R;
+import com.duongame.R;
 
 /**
  * Created by 정수 on 2015-11-15.

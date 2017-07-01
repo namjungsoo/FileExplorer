@@ -5,7 +5,7 @@ import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.widget.SeekBar;
 
-import com.duongame.explorer.R;
+import com.duongame.R;
 import com.duongame.explorer.bitmap.BitmapCache;
 import com.duongame.viewer.adapter.ViewerPagerAdapter;
 import com.duongame.viewer.listener.PagerOnTouchListener;
