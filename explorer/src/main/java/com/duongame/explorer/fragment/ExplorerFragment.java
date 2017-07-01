@@ -8,7 +8,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.content.FileProvider;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
@@ -45,7 +44,6 @@ import com.duongame.viewer.activity.ZipActivity;
 import java.io.File;
 import java.util.ArrayList;
 
-import static android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION;
 import static com.duongame.explorer.helper.ExtSdCardHelper.getExternalSdCardPath;
 
 /**
@@ -354,10 +352,9 @@ public class ExplorerFragment extends BaseFragment {
             case APK: {
 //                backupPosition();
 
+                final Uri apkUri = Uri.fromFile(new File(item.path));
                 final Intent intent = new Intent(Intent.ACTION_VIEW);
-                final Uri apkURI = FileProvider.getUriForFile(getActivity(), getActivity().getApplicationContext().getPackageName() + ".provider", new File(item.path));
-                intent.setDataAndType(apkURI, "application/vnd.android.package-archive");
-                intent.addFlags(FLAG_GRANT_READ_URI_PERMISSION);
+                intent.setDataAndType(apkUri, "application/vnd.android.package-archive");
 
                 startActivity(intent);
             }
