@@ -5,14 +5,15 @@ import android.graphics.Canvas;
 import android.graphics.Path;
 import android.graphics.RectF;
 import android.util.AttributeSet;
-import android.widget.ImageView;
 
 import com.duongame.explorer.helper.UnitHelper;
 
 /**
  * Created by namjungsoo on 2016-06-19.
  */
-public class RoundedImageView extends ImageView {
+public class RoundedImageView extends android.support.v7.widget.AppCompatImageView {
+    Path clipPath;
+
     public RoundedImageView(Context context) {
         super(context);
     }
@@ -28,7 +29,10 @@ public class RoundedImageView extends ImageView {
     private int radiusDp = 0;
 
     public void setRadiusDp(int radius) {
-        this.radiusDp = radius;
+        if (this.radiusDp != radius) {
+            this.radiusDp = radius;
+            clipPath = null;
+        }
     }
 
     public int getRadiusDp() {
@@ -37,20 +41,27 @@ public class RoundedImageView extends ImageView {
 
     @Override
     protected void onDraw(Canvas canvas) {
-        final Path clipPath = new Path();
+        if (radiusDp == 0) {
+            super.onDraw(canvas);
+            return;
+        }
 
-        final float radius = UnitHelper.dpToPx(radiusDp);
-        final float padding = 0;
-        final int w = this.getWidth();
-        final int h = this.getHeight();
+        if (clipPath == null) {
+            clipPath = new Path();
 
-        clipPath.addRoundRect(new RectF(padding, padding, w - padding, h - padding), radius, radius, Path.Direction.CW);
+            final float radius = UnitHelper.dpToPx(radiusDp);
+            final float padding = 0;
+            final int w = this.getWidth();
+            final int h = this.getHeight();
+
+            clipPath.addRoundRect(new RectF(padding, padding, w - padding, h - padding), radius, radius, Path.Direction.CW);
+        }
+
         canvas.clipPath(clipPath);
 
         try {
             super.onDraw(canvas);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
         }
     }
 }
