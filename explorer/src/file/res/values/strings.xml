@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">File Explorer Free</string>
+    <string name="app_name_free">File Explorer</string>
+    <string name="app_name_pro">File Explorer Pro</string>
     <string name="action_clear_cache">Clear Cache</string>
     <string name="action_clear_history">Clear History</string>
 </resources>

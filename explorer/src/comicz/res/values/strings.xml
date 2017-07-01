@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">ComicZViewer Free</string>
+    <string name="app_name_free">ComicZViewer</string>
+    <string name="app_name_pro">ComicZViewer Pro</string>
     <string name="action_clear_cache">Clear Cache</string>
     <string name="action_clear_history">Clear History</string>
 </resources>
