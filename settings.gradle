@@ -1,1 +1,2 @@
-include ':explorer'
+include ':explorer', ':giftester'
+project(':giftester').projectDir = new File('giftester')

@@ -2,8 +2,6 @@ package com.duongame.explorer.task.bitmap;
 
 import android.graphics.Bitmap;
 import android.util.Log;
-import android.view.Gravity;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 
 import com.duongame.explorer.adapter.ExplorerItem;
@@ -66,13 +64,13 @@ public class LoadBitmapTask extends BitmapTask {
 
 //                Log.d(TAG, "width=" + width + " height=" + height);
 
-                final FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) imageView.getLayoutParams();
-                params.width = newWidth;
-                params.height = newHeight;
-                params.gravity = Gravity.CENTER;
-
-                imageView.setLayoutParams(params);
-                imageView.requestLayout();
+//                final FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) imageView.getLayoutParams();
+//                params.width = newWidth;
+//                params.height = newHeight;
+//                params.gravity = Gravity.CENTER;
+//
+//                imageView.setLayoutParams(params);
+//                imageView.requestLayout();
             }
         }
     }

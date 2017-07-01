@@ -11,11 +11,8 @@ import android.widget.ImageView;
 import com.duongame.R;
 import com.duongame.explorer.adapter.ExplorerItem;
 import com.duongame.explorer.bitmap.BitmapCache;
-import com.duongame.explorer.task.LoadGifTask;
 import com.duongame.explorer.task.bitmap.LoadBitmapTask;
 import com.duongame.explorer.task.bitmap.RemoveAndPreloadBitmapTask;
-import com.duongame.viewer.activity.PagerActivity;
-import com.felipecsl.gifimageview.library.GifImageView;
 
 import java.util.ArrayList;
 
@@ -136,44 +133,44 @@ public class PhotoPagerAdapter extends ViewerPagerAdapter {
 
             // GIF 이미지일 경우
             // 메모리에 사라졌다가 재 로딩일 경우에 애니메이션이 잘 안된다.
-            final ViewGroup rootView = (ViewGroup)object;
-
-            final PagerActivity pagerActivity = (PagerActivity) context;
-            final GifImageView imageView = (GifImageView) rootView.findViewById(R.id.image_viewer);
-            Log.w(TAG, "imageView tag=" + imageView.getTag());
-
-            if (imageList.get(position).path.toLowerCase().endsWith(".gif")) {
-                final LoadGifTask task = new LoadGifTask(new LoadGifTask.LoadGifListener() {
-                    @Override
-                    public void onSuccess(byte[] data) {
-                        Log.w(TAG, "onSuccess path=" + imageList.get(position).path);
-
-                        // 기존 GIF가 있으면 가져와서 stop해줌
-                        pagerActivity.stopGifAnimation();
-
-//                        imageView.stopAnimation();
-                        imageView.setBytes(data);
-                        imageView.startAnimation();
-
-                        // 성공이면 imageView를 저장해 놓음
-                        pagerActivity.setGifImageView(imageView);
-                    }
-
-                    @Override
-                    public void onFail() {
-                        Log.e(TAG, "onFail " + imageList.get(position).path);
-
-                        // 기존 GIF가 있으면 가져와서 stop해줌
-                        pagerActivity.stopGifAnimation();
-                        pagerActivity.setGifImageView(null);
-                    }
-                });
-                task.execute(imageList.get(position).path);
-            } else {// GIF가 아니면
-                // 기존 GIF가 있으면 가져와서 stop해줌
-                pagerActivity.stopGifAnimation();
-                pagerActivity.setGifImageView(null);
-            }
+//            final ViewGroup rootView = (ViewGroup)object;
+//
+//            final PagerActivity pagerActivity = (PagerActivity) context;
+//            final GifImageView imageView = (GifImageView) rootView.findViewById(R.id.image_viewer);
+//            Log.w(TAG, "imageView tag=" + imageView.getTag());
+//
+//            if (imageList.get(position).path.toLowerCase().endsWith(".gif")) {
+//                final LoadGifTask task = new LoadGifTask(new LoadGifTask.LoadGifListener() {
+//                    @Override
+//                    public void onSuccess(byte[] data) {
+//                        Log.w(TAG, "onSuccess path=" + imageList.get(position).path);
+//
+//                        // 기존 GIF가 있으면 가져와서 stop해줌
+//                        pagerActivity.stopGifAnimation();
+//
+////                        imageView.stopAnimation();
+//                        imageView.setBytes(data);
+//                        imageView.startAnimation();
+//
+//                        // 성공이면 imageView를 저장해 놓음
+//                        pagerActivity.setGifImageView(imageView);
+//                    }
+//
+//                    @Override
+//                    public void onFail() {
+//                        Log.e(TAG, "onFail " + imageList.get(position).path);
+//
+//                        // 기존 GIF가 있으면 가져와서 stop해줌
+//                        pagerActivity.stopGifAnimation();
+//                        pagerActivity.setGifImageView(null);
+//                    }
+//                });
+//                task.execute(imageList.get(position).path);
+//            } else {// GIF가 아니면
+//                // 기존 GIF가 있으면 가져와서 stop해줌
+//                pagerActivity.stopGifAnimation();
+//                pagerActivity.setGifImageView(null);
+//            }
         }
     }
 

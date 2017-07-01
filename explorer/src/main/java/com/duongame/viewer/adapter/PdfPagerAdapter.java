@@ -8,11 +8,9 @@ import android.graphics.drawable.Drawable;
 import android.graphics.pdf.PdfRenderer;
 import android.os.Build;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 
 import com.duongame.R;
@@ -107,15 +105,18 @@ public class PdfPagerAdapter extends ViewerPagerAdapter {
                     page.close();
 
                     imageView.setImageBitmap(bitmap);
+
+                    // 무조건 해주지 않으면 안된다. 알파로 처리되어 있기 때문이다. (RENDER_MODE_FOR_DISPLAY)
                     imageView.setBackgroundColor(Color.WHITE);
+                    //imageView.setBackgroundColor(context.getResources().getColor(R.color.colorGreyBackground));
 
-                    final FrameLayout.LayoutParams params = (FrameLayout.LayoutParams )imageView.getLayoutParams();
-                    params.width = newWidth;
-                    params.height = newHeight;
-                    params.gravity = Gravity.CENTER;
-
-                    imageView.setLayoutParams(params);
-                    imageView.requestLayout();
+//                    final FrameLayout.LayoutParams params = (FrameLayout.LayoutParams )imageView.getLayoutParams();
+//                    params.width = newWidth;
+//                    params.height = newHeight;
+//                    params.gravity = Gravity.CENTER;
+//
+//                    imageView.setLayoutParams(params);
+//                    imageView.requestLayout();
 
 //                    BitmapCache.setBitmap(item.path, bitmap);
                 }
