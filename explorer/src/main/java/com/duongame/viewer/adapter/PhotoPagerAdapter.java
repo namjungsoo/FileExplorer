@@ -16,6 +16,7 @@ import com.duongame.explorer.task.bitmap.RemoveAndPreloadBitmapTask;
 import com.duongame.viewer.activity.PagerActivity;
 import com.duongame.viewer.listener.PagerOnTouchListener;
 import com.felipecsl.gifimageview.library.GifImageView;
+import com.github.chrisbanes.photoview.PhotoViewAttacher;
 
 import java.util.ArrayList;
 
@@ -43,7 +44,7 @@ public class PhotoPagerAdapter extends ViewerPagerAdapter {
         final ViewGroup rootView = (ViewGroup) context.getLayoutInflater().inflate(R.layout.viewer_page, container, false);
         final ImageView imageView = (ImageView) rootView.findViewById(R.id.image_viewer);
 
-        rootView.setOnTouchListener(mPagerOnTouchListener);
+//        rootView.setOnTouchListener(mPagerOnTouchListener);
 
         container.addView(rootView);
 
@@ -81,6 +82,7 @@ public class PhotoPagerAdapter extends ViewerPagerAdapter {
 
         // viewer_page layout에 장착한다.
 //        imageView.setOnTouchListener(mPagerOnTouchListener);
+        item.attacher = new PhotoViewAttacher(imageView);
 
         taskList.add(task);
     }

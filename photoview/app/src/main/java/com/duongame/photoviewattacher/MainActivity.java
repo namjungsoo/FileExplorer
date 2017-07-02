@@ -17,6 +17,5 @@ public class MainActivity extends AppCompatActivity {
 
         ImageView imageView = (ImageView)findViewById(R.id.tekken);
         mAttacher = new PhotoViewAttacher(imageView);
-
     }
 }
