@@ -17,7 +17,8 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 
 public class BitmapCache {
-    private final static String TAG = "BitmapCache";
+    private final static String TAG = BitmapCache.class.getSimpleName();
+    private final static boolean DEBUG = false;
 
     // 썸네일 관련
     static ConcurrentHashMap<String, Bitmap> thumbnailCache = new ConcurrentHashMap<String, Bitmap>();
@@ -48,7 +49,9 @@ public class BitmapCache {
     // current_page
     public static void setPage(String key, Bitmap bitmap) {
         pageCache.putIfAbsent(key, bitmap);
-        Log.d(TAG, "setPage key=" + key + " pageCache size=" + pageCache.size());
+
+        if (DEBUG)
+            Log.d(TAG, "setPage key=" + key + " pageCache size=" + pageCache.size());
     }
 
     public static Bitmap getPage(String key) {
@@ -73,7 +76,8 @@ public class BitmapCache {
             }
         }
         pageCache.clear();
-        Log.d(TAG, "recyclePage");
+        if (DEBUG)
+            Log.d(TAG, "recyclePage");
     }
 
     // resource bitmap
@@ -102,7 +106,8 @@ public class BitmapCache {
     // image bitmap
     public static void setBitmap(String path, Bitmap bitmap) {
         bitmapCache.putIfAbsent(path, bitmap);
-        Log.d(TAG, "setBitmap path=" + path + " bitmapCache size=" + bitmapCache.size());
+        if (DEBUG)
+            Log.d(TAG, "setBitmap path=" + path + " bitmapCache size=" + bitmapCache.size());
     }
 
     public static Bitmap getBitmap(String path) {
@@ -115,7 +120,8 @@ public class BitmapCache {
             if (!bitmap.isRecycled())
                 bitmap.recycle();
             bitmapCache.remove(path);
-            Log.d(TAG, "removeBitmap removeBitmap=" + path + " size=" + bitmapCache.size());
+            if (DEBUG)
+                Log.d(TAG, "removeBitmap removeBitmap=" + path + " size=" + bitmapCache.size());
         }
     }
 
@@ -128,12 +134,14 @@ public class BitmapCache {
             }
         }
         bitmapCache.clear();
-        Log.d(TAG, "recycleBitmap");
+        if (DEBUG)
+            Log.d(TAG, "recycleBitmap");
     }
 
     // thumbnail
     public static void setThumbnail(String path, Bitmap bitmap, ImageView imageView) {
-        Log.d(TAG, "setThumbnail path=" + path);
+        if (DEBUG)
+            Log.d(TAG, "setThumbnail path=" + path);
         thumbnailCache.putIfAbsent(path, bitmap);
         thumbnailImageCache.putIfAbsent(path, imageView);
     }
@@ -173,7 +181,8 @@ public class BitmapCache {
             thumbnailCache.remove(key);
         }
         thumbnailCache.clear();
-        Log.d(TAG, "recycleThumbnail");
+        if(DEBUG)
+            Log.d(TAG, "recycleThumbnail");
     }
 
 }

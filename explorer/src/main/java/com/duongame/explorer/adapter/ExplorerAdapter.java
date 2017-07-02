@@ -5,7 +5,6 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
@@ -23,6 +22,7 @@ import com.duongame.explorer.bitmap.BitmapLoader;
 import com.duongame.explorer.bitmap.BitmapMsg;
 import com.duongame.explorer.view.RoundedImageView;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Queue;
@@ -37,9 +37,11 @@ import static com.duongame.explorer.bitmap.BitmapCache.getThumbnail;
 public abstract class ExplorerAdapter extends BaseAdapter implements AbsListView.OnScrollListener, View.OnTouchListener {
     private final static String TAG = "ExplorerAdapter";
     protected ArrayList<ExplorerItem> fileList;
+    protected HashMap<String, ExplorerItem> fileMap;
+
     protected Activity context;
 
-    protected HashMap<ImageView, AsyncTask> taskMap = new HashMap<ImageView, AsyncTask>();
+//    protected HashMap<ImageView, AsyncTask> taskMap = new HashMap<ImageView, AsyncTask>();
 
     private Handler mainHandler;
     private Thread thread;
@@ -107,6 +109,10 @@ public abstract class ExplorerAdapter extends BaseAdapter implements AbsListView
                 mPauseLock.notifyAll();
             }
         }
+
+        public boolean isPaused() {
+            return mPaused;
+        }
     }
 
 
@@ -142,7 +148,7 @@ public abstract class ExplorerAdapter extends BaseAdapter implements AbsListView
     }
 
     public boolean onTouch(View v, MotionEvent event) {
-        if(event.getAction() == MotionEvent.ACTION_DOWN) {
+        if (event.getAction() == MotionEvent.ACTION_DOWN) {
             loaderRunnable.onPause();
         }
         return false;
@@ -161,6 +167,15 @@ public abstract class ExplorerAdapter extends BaseAdapter implements AbsListView
                     return;
 
                 if (bitmapMsg.imageView == null)
+                    return;
+
+                // 여기서 파일리스트에서 찾아보자
+//                if(loaderRunnable.isPaused())
+//                    return;
+                if(!fileMap.containsKey(bitmapMsg.path))
+                    return;
+
+                if(fileMap.get(bitmapMsg.path).imageViewRef.get() != bitmapMsg.imageView)
                     return;
 
                 if (msg.arg1 == LOAD_BITMAP) {
@@ -279,8 +294,11 @@ public abstract class ExplorerAdapter extends BaseAdapter implements AbsListView
         }
 
         ExplorerItem item = fileList.get(position);
+        item.imageViewRef = new WeakReference<ImageView>(viewHolder.icon);
 
         setViewHolder(viewHolder, item);
+
+        setDefaultIcon(item.type, viewHolder.icon);
         setIcon(viewHolder, item, position);
 //        Log.d(TAG, "getView position="+position);
 
@@ -289,6 +307,10 @@ public abstract class ExplorerAdapter extends BaseAdapter implements AbsListView
 
     public void setFileList(ArrayList<ExplorerItem> fileList) {
         this.fileList = fileList;
+        fileMap = new HashMap<>();
+        for (ExplorerItem item : fileList) {
+            fileMap.put(item.path, item);
+        }
         loaderRunnable.onResume();
     }
 
@@ -422,6 +444,17 @@ public abstract class ExplorerAdapter extends BaseAdapter implements AbsListView
         return bitmap;
     }
 
+    void setDefaultIcon(ExplorerItem.FileType type, ImageView icon) {
+        switch (type) {
+            case DIRECTORY:
+                icon.setImageBitmap(BitmapCache.getResourceBitmap(context.getResources(), R.drawable.directory));
+                break;
+            default:
+                icon.setImageBitmap(BitmapCache.getResourceBitmap(context.getResources(), R.drawable.file));
+                break;
+        }
+    }
+
     void setTypeIcon(ExplorerItem.FileType type, ImageView icon) {
         switch (type) {
             case AUDIO:
@@ -440,10 +473,15 @@ public abstract class ExplorerAdapter extends BaseAdapter implements AbsListView
     }
 
     public void stopAllTasks() {
-        for (AsyncTask task : taskMap.values()) {
-            task.cancel(true);
-        }
-        taskMap.clear();
+        Log.d(TAG, "stopAllTasks");
+        loaderRunnable.onPause();
+        messageQueue.clear();
+        loaderRunnable.onResume();
+//        for (AsyncTask task : taskMap.values()) {
+//            task.cancel(true);
+//            Log.d(TAG, "task.cancel");
+//        }
+//        taskMap.clear();
     }
 
     public abstract void initViewHolder(ViewHolder viewHolder, View convertView);

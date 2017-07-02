@@ -1,5 +1,9 @@
 package com.duongame.explorer.adapter;
 
+import android.widget.ImageView;
+
+import java.lang.ref.WeakReference;
+
 import static com.duongame.explorer.adapter.ExplorerItem.Side.SIDE_ALL;
 
 /**
@@ -62,6 +66,7 @@ public class ExplorerItem implements Cloneable {
     public String path;
     public FileType type;
 
+    // 이미지 ZIP 데이터
     public Side side = SIDE_ALL;
     public int index;// 내자신의 인덱스
     public int orgIndex;// 원본의 인덱스(zip파일에 해당함)
@@ -72,6 +77,8 @@ public class ExplorerItem implements Cloneable {
 
     // 로딩큐 우선순위
     public int priority;// 0이면 최우선, 1이면 낮음
+
+    public WeakReference<ImageView> imageViewRef;
 
     public ExplorerItem(String path, String name, String date, long size, FileType type) {
         this.path = path;

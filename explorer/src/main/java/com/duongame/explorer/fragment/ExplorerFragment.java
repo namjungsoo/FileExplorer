@@ -261,8 +261,9 @@ public class ExplorerFragment extends BaseFragment {
 //        moveToSelection(ExplorerManager.getLastPath());
     }
 
+    // 새로운 파일이 추가 되었을때 스캔을 하라는 의미이다.
     void refreshThumbnail(String path) {
-        ArrayList<ExplorerItem> imageList = ExplorerManager.getImageList();
+        ArrayList<ExplorerItem> imageList = (ArrayList<ExplorerItem>)ExplorerManager.getImageList().clone();
         for (ExplorerItem item : imageList) {
             getActivity().sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse("file://" + item.path)));
         }
@@ -435,21 +436,24 @@ public class ExplorerFragment extends BaseFragment {
         });
     }
 
-    public void updateFileList(String path) {
+    public void updateFileList(final String path) {
         if (adapter == null)
             return;
         adapter.stopAllTasks();
 
+        // 썸네일이 꽉찼을때는 비워준다.
         if (BitmapCache.getThumbnailCount() > MAX_THUMBNAILS) {
             BitmapCache.recycleThumbnail();
         }
 
+        // 파일리스트를 받아옴
         fileList = ExplorerManager.search(path);
         if (fileList != null) {
             adapter.setFileList(fileList);
             adapter.notifyDataSetChanged();
         }
 
+        // 현재 패스를 세팅
         textPath.setText(ExplorerManager.getLastPath());
         textPath.requestLayout();
 
@@ -462,13 +466,21 @@ public class ExplorerFragment extends BaseFragment {
                         }
         );
 
+        // preference는 쓰레드로
         new Thread(new Runnable() {
             @Override
             public void run() {
                 PreferenceHelper.setLastPath(getActivity(), ExplorerManager.getLastPath());
             }
         }).start();
-        refreshThumbnail(path);
+
+        // 오래 걸림. 이것도 쓰레드로...
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                refreshThumbnail(path);
+            }
+        }).start();
     }
 
     @Override
