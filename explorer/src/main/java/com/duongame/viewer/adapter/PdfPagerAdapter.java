@@ -76,6 +76,7 @@ public class PdfPagerAdapter extends ViewerPagerAdapter {
             if (item == null)
                 return;
 
+            // 비트맵 캐쉬 사용 안함
 //            Bitmap bitmap = BitmapCacheManager.getBitmap(item.path);
 //            if (bitmap != null) {
 //                imageView.setImageBitmap(bitmap);
@@ -123,6 +124,7 @@ public class PdfPagerAdapter extends ViewerPagerAdapter {
 //                    imageView.setLayoutParams(params);
 //                    imageView.requestLayout();
 
+                    // 비트맵 캐쉬 사용 안함
 //                    BitmapCacheManager.setBitmap(item.path, bitmap);
                 }
             }

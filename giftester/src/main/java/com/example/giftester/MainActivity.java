@@ -104,8 +104,6 @@ public class MainActivity extends AppCompatActivity {
                 onPermissionAcquired();
             }
         }
-
-
     }
 
     @Override

@@ -199,8 +199,8 @@ public class ZipActivity extends PagerActivity {
 
             pager.setCurrentItem(page);
 
-            seekPage.setMax(imageList.size());
-            seekPage.setProgress(1);
+            updateScrollInfo(page);
+            updateName(page);
         }
     }
 

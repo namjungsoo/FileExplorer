@@ -60,7 +60,9 @@ public class PhotoActivity extends PagerActivity {
                 }
             }
             pager.setCurrentItem(item);
-            updateScrollInfo(pager.getCurrentItem());
+
+            updateName(item);
+            updateScrollInfo(item);
         }
     }
 }

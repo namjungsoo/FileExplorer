@@ -115,10 +115,11 @@ public class PdfActivity extends PagerActivity {
                     pagerAdapter.notifyDataSetChanged();
 
                     pager.setCurrentItem(page);
-                    updateName(page);
 
-                    seekPage.setMax(imageList.size()-1);
-                    seekPage.setProgress(0);
+                    updateName(page);
+                    updateScrollInfo(page);
+//                    seekPage.setMax(imageList.size()-1);
+//                    seekPage.setProgress(0);
                 } else {
                     finish();
                 }
