@@ -18,7 +18,6 @@ import android.os.Environment;
 import android.os.ParcelFileDescriptor;
 import android.provider.MediaStore;
 import android.util.Log;
-import android.widget.ImageView;
 
 import com.duongame.R;
 import com.duongame.explorer.adapter.ExplorerItem;
@@ -46,7 +45,7 @@ public class BitmapLoader {
     public static final int MICRO_KIND_SIZE = 96;
 
     public static Drawable loadApkThumbnailDrawable(Activity context, String path) {
-        Drawable drawable = BitmapCache.getDrawable(path);
+        Drawable drawable = BitmapCacheManager.getDrawable(path);
         if(drawable != null)
             return drawable;
 
@@ -59,7 +58,7 @@ public class BitmapLoader {
             drawable = pi.applicationInfo.loadIcon(pm);
 
             if (drawable != null) {
-                BitmapCache.setDrawable(path, drawable);
+                BitmapCacheManager.setDrawable(path, drawable);
                 return drawable;
             }
         }
@@ -67,37 +66,37 @@ public class BitmapLoader {
         return drawable;
     }
 
-    public static Bitmap loadImageThumbnailBitmap(Activity context, String path, ImageView imageView) {
-        Bitmap bitmap = BitmapCache.getThumbnail(path);
+    public static Bitmap loadImageThumbnailBitmap(Activity context, String path) {
+        Bitmap bitmap = BitmapCacheManager.getThumbnail(path);
         if(bitmap != null)
             return bitmap;
 
         // 시스템에서 찾은거
         bitmap = BitmapLoader.getThumbnail(context, path, true);
         if(bitmap != null) {
-            BitmapCache.setThumbnail(path, bitmap, imageView);
+            BitmapCacheManager.setThumbnail(path, bitmap);
             return bitmap;
         }
 
         // 직접 생성
         bitmap = BitmapLoader.decodeSquareThumbnailFromFile(path, MICRO_KIND_SIZE, true);
         if (bitmap != null) {
-            BitmapCache.setThumbnail(path, bitmap, imageView);
+            BitmapCacheManager.setThumbnail(path, bitmap);
             return bitmap;
         }
 
         return bitmap;
     }
 
-    public static Bitmap loadVideoThumbnailBitmap(Activity context, String path, ImageView imageView) {
-        Bitmap bitmap = BitmapCache.getThumbnail(path);
+    public static Bitmap loadVideoThumbnailBitmap(Activity context, String path) {
+        Bitmap bitmap = BitmapCacheManager.getThumbnail(path);
         if(bitmap != null)
             return bitmap;
 
         // 시스템에서 찾은거
         bitmap = ThumbnailUtils.createVideoThumbnail(path, MediaStore.Images.Thumbnails.MICRO_KIND);
         if(bitmap != null) {
-            BitmapCache.setThumbnail(path, bitmap, imageView);
+            BitmapCacheManager.setThumbnail(path, bitmap);
             return bitmap;
         }
 
@@ -105,23 +104,23 @@ public class BitmapLoader {
         return bitmap;
     }
 
-    public static Bitmap loadPdfThumbnailBitmap(Activity context, String path, ImageView imageView) {
-        Bitmap bitmap = BitmapCache.getThumbnail(path);
+    public static Bitmap loadPdfThumbnailBitmap(Activity context, String path) {
+        Bitmap bitmap = BitmapCacheManager.getThumbnail(path);
         if(bitmap != null)
             return bitmap;
 
         // 직접 생성
         bitmap = BitmapLoader.decodeSquareThumbnailFromPdfFile(path, MICRO_KIND_SIZE);
         if(bitmap != null) {
-            BitmapCache.setThumbnail(path, bitmap, imageView);
+            BitmapCacheManager.setThumbnail(path, bitmap);
             return bitmap;
         }
 
         return bitmap;
     }
 
-    public static Bitmap loadZipThumbnailBitmap(Activity context, String path, ImageView imageView) {
-        Bitmap bitmap = BitmapCache.getThumbnail(path);
+    public static Bitmap loadZipThumbnailBitmap(Activity context, String path) {
+        Bitmap bitmap = BitmapCacheManager.getThumbnail(path);
         if(bitmap != null)
             return bitmap;
 
@@ -141,14 +140,14 @@ public class BitmapLoader {
 
         // 못찾았을 경우에는 기본 ZIP 아이콘이 뜨게 한다.
         if (image == null) {
-            bitmap = BitmapCache.getResourceBitmap(context.getResources(), R.drawable.zip);
+            bitmap = BitmapCacheManager.getResourceBitmap(context.getResources(), R.drawable.zip);
             if (bitmap != null) {
-                BitmapCache.setThumbnail(path, bitmap, imageView);
+                BitmapCacheManager.setThumbnail(path, bitmap);
             }
         } else {
             bitmap = BitmapLoader.decodeSquareThumbnailFromFile(image, MICRO_KIND_SIZE, false);
             if (bitmap != null) {
-                BitmapCache.setThumbnail(path, bitmap, imageView);
+                BitmapCacheManager.setThumbnail(path, bitmap);
             }
         }
 
@@ -412,10 +411,10 @@ public class BitmapLoader {
         final String keyOther;
         final ExplorerItem itemOther = (ExplorerItem) item.clone();
         itemOther.side = item.side == LEFT ? RIGHT : LEFT;
-        key = BitmapCache.changePathToPage(item);
-        keyOther = BitmapCache.changePathToPage(itemOther);
+        key = BitmapCacheManager.changePathToPage(item);
+        keyOther = BitmapCacheManager.changePathToPage(itemOther);
 
-        Bitmap page = BitmapCache.getPage(key);
+        Bitmap page = BitmapCacheManager.getPage(key);
         if (page != null) {
             Log.d(TAG, "splitBitmapSide getPage=" + item.name);
             return page;
@@ -438,8 +437,8 @@ public class BitmapLoader {
         }
 
         if (page != null && pageOther != null) {
-            BitmapCache.setPage(key, page);
-            BitmapCache.setPage(keyOther, pageOther);
+            BitmapCacheManager.setPage(key, page);
+            BitmapCacheManager.setPage(keyOther, pageOther);
         } else {
             Log.e(TAG, "splitBitmapSide current_page or pageOther is null");
         }
@@ -447,7 +446,7 @@ public class BitmapLoader {
         // 잘리는 비트맵은 더이상 사용하지 않으므로 삭제한다.
         // 이거 때문에 recycled 에러가 발생한다.
         // remove를 하지 않으면 oom이 발생한다.
-        BitmapCache.removeBitmap(item.path);
+        BitmapCacheManager.removeBitmap(item.path);
 //        Log.d(TAG, "splitBitmapSide removeBitmap=" + item.name);
 
         return page;

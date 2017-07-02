@@ -17,9 +17,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.duongame.R;
-import com.duongame.explorer.bitmap.BitmapCache;
+import com.duongame.explorer.bitmap.BitmapCacheManager;
 import com.duongame.explorer.bitmap.BitmapLoader;
-import com.duongame.explorer.bitmap.BitmapMsg;
+import com.duongame.explorer.bitmap.BitmapMessage;
 import com.duongame.explorer.view.RoundedImageView;
 
 import java.lang.ref.WeakReference;
@@ -28,7 +28,10 @@ import java.util.HashMap;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-import static com.duongame.explorer.bitmap.BitmapCache.getThumbnail;
+import static com.duongame.explorer.adapter.ExplorerItem.FileType.APK;
+import static com.duongame.explorer.adapter.ExplorerItem.FileType.VIDEO;
+import static com.duongame.explorer.bitmap.BitmapCacheManager.getDrawable;
+import static com.duongame.explorer.bitmap.BitmapCacheManager.getThumbnail;
 
 /**
  * Created by namjungsoo on 2016-11-06.
@@ -46,15 +49,22 @@ public abstract class ExplorerAdapter extends BaseAdapter implements AbsListView
     private Handler mainHandler;
     private Thread thread;
 
-    private static int LOAD_BITMAP = 0;
-    private static int LOAD_DRAWABLE = 1;
+    private final static int LOAD_BITMAP = 0;
+    private final static int LOAD_DRAWABLE = 1;
 
-    private Queue<BitmapMsg> messageQueue = new ConcurrentLinkedQueue<>();
+    private Queue<BitmapMessage> messageQueue = new ConcurrentLinkedQueue<>();
 
     private int lastScrollState = SCROLL_STATE_IDLE;
     private LoaderRunnable loaderRunnable = new LoaderRunnable();
     private int firstVisibleItem;
     private int visibleItemCount;
+
+    private int idle_firstVisibleItem;
+    private int idle_visibleItemCount;
+
+    private final static int SCROLL_DIRECTION_NEXT = 0;
+    private final static int SCROLL_DIRECTION_PREV = 1;
+    private int scrollDirection = SCROLL_DIRECTION_NEXT;
 
     class LoaderRunnable implements Runnable {
         private Object mPauseLock;
@@ -82,10 +92,42 @@ public abstract class ExplorerAdapter extends BaseAdapter implements AbsListView
                 }
 
                 // 큐에 있는것을 꺼내자
-                BitmapMsg msg = messageQueue.poll();
+                BitmapMessage msg = messageQueue.poll();
 
-                // 꺼내서 로딩함
-                handleBitmapMsg(msg);
+                // msg가 null이면 읽을게 더이상 없다는 이야기므로 prev, next중에서 하나를 읽자
+                if (msg == null) {
+
+                    if (scrollDirection == SCROLL_DIRECTION_PREV) {
+                        if (firstVisibleItem >= 0) {// 다 읽지 않았을때 앞으로 가서 읽는다.
+                            for (int i = firstVisibleItem - 1; i >= 0; i--) {
+                                // 읽었는지 체크해보고 하나만 읽는다.
+                                final ExplorerItem item = fileList.get(i);
+
+                                // 없을 경우 로딩해준다.
+                                if (!checkBodInCache(item)) {
+                                    loadThumbnail(item.type, item.path);
+                                    break;
+                                }
+                            }
+                        }
+                    } else if (scrollDirection == SCROLL_DIRECTION_NEXT) {
+                        if (firstVisibleItem + visibleItemCount < fileList.size()) {// 다 읽지 않았을때 앞으로 가서 읽는다.
+                            for (int i = firstVisibleItem + visibleItemCount; i < fileList.size(); i++) {
+                                // 읽었는지 체크해보고 하나만 읽는다.
+                                final ExplorerItem item = fileList.get(i);
+
+                                // 없을 경우 로딩해준다.
+                                if (!checkBodInCache(item)) {
+                                    loadThumbnail(item.type, item.path);
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                } else {
+                    // 꺼내서 로딩함
+                    handleBitmapMessage(msg);
+                }
             }
         }
 
@@ -93,7 +135,7 @@ public abstract class ExplorerAdapter extends BaseAdapter implements AbsListView
          * Call this on pause.
          */
         public void onPause() {
-            Log.d(TAG, "onPause");
+//            Log.d(TAG, "onPause");
             synchronized (mPauseLock) {
                 mPaused = true;
             }
@@ -103,7 +145,7 @@ public abstract class ExplorerAdapter extends BaseAdapter implements AbsListView
          * Call this on resume.
          */
         public void onResume() {
-            Log.d(TAG, "onResume");
+//            Log.d(TAG, "onResume");
             synchronized (mPauseLock) {
                 mPaused = false;
                 mPauseLock.notifyAll();
@@ -115,16 +157,46 @@ public abstract class ExplorerAdapter extends BaseAdapter implements AbsListView
         }
     }
 
+    public boolean checkBodInCache(ExplorerItem item) {
+        if (item.type == APK) {
+            Drawable drawable = BitmapCacheManager.getDrawable(item.path);
+            if (drawable != null)
+                return true;
+        } else {
+            Bitmap bitmap = BitmapCacheManager.getBitmap(item.path);
+            if (bitmap != null)
+                return true;
+        }
+        return false;
+    }
 
     public void onScrollStateChanged(AbsListView view, int scrollState) {
         lastScrollState = scrollState;
 //        Log.d(TAG, "lastScrollState=" + lastScrollState);
 
+//        Log.d(TAG, "onScrollStateChanged first=" + firstVisibleItem + " count=" + visibleItemCount);
+
         // 지금 idle이면 queue에 있는것을 전부 handler로 밀어 넣는다.
         if (lastScrollState == SCROLL_STATE_IDLE) {
+//            Log.d(TAG, "SCROLL_STATE_IDLE first=" + firstVisibleItem + " count=" + visibleItemCount);
+
+            // 처음인 경우
+            if (idle_firstVisibleItem == 0 && idle_visibleItemCount == 0) {
+            } else {
+                Log.d(TAG, "first=" + firstVisibleItem + " idle_first=" + idle_firstVisibleItem);
+                if (idle_firstVisibleItem > firstVisibleItem) {
+                    scrollDirection = SCROLL_DIRECTION_PREV;
+                } else {
+                    scrollDirection = SCROLL_DIRECTION_NEXT;
+                }
+                Log.d(TAG, "scrollDirection=" + scrollDirection);
+            }
+            idle_firstVisibleItem = firstVisibleItem;
+            idle_visibleItemCount = visibleItemCount;
+
             // 대기 중인거 중에서 position 범위에 안맞는건 삭제하자
-            final ArrayList<BitmapMsg> removeList = new ArrayList<>();
-            for (BitmapMsg msg : messageQueue) {
+            final ArrayList<BitmapMessage> removeList = new ArrayList<>();
+            for (BitmapMessage msg : messageQueue) {
                 if (msg.position >= firstVisibleItem && msg.position < firstVisibleItem + visibleItemCount) {
 
                 } else {
@@ -132,7 +204,7 @@ public abstract class ExplorerAdapter extends BaseAdapter implements AbsListView
                 }
             }
 
-            for (BitmapMsg msg : removeList) {
+            for (BitmapMessage msg : removeList) {
                 messageQueue.remove(msg);
             }
 
@@ -143,6 +215,7 @@ public abstract class ExplorerAdapter extends BaseAdapter implements AbsListView
     }
 
     public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+//        Log.d(TAG, "onScroll first=" + firstVisibleItem + " count=" + visibleItemCount);
         this.firstVisibleItem = firstVisibleItem;
         this.visibleItemCount = visibleItemCount;
     }
@@ -162,32 +235,32 @@ public abstract class ExplorerAdapter extends BaseAdapter implements AbsListView
         mainHandler = new Handler() {
             @Override
             public void handleMessage(Message msg) {
-                final BitmapMsg bitmapMsg = (BitmapMsg) msg.obj;
-                if (bitmapMsg == null)
+                final BitmapMessage bitmapMessage = (BitmapMessage) msg.obj;
+                if (bitmapMessage == null)
                     return;
 
-                if (bitmapMsg.imageView == null)
+                if (bitmapMessage.imageView == null)
                     return;
 
                 // 여기서 파일리스트에서 찾아보자
 //                if(loaderRunnable.isPaused())
 //                    return;
-                if(!fileMap.containsKey(bitmapMsg.path))
+                if (!fileMap.containsKey(bitmapMessage.path))
                     return;
 
-                if(fileMap.get(bitmapMsg.path).imageViewRef.get() != bitmapMsg.imageView)
+                if (fileMap.get(bitmapMessage.path).imageViewRef.get() != bitmapMessage.imageView)
                     return;
 
                 if (msg.arg1 == LOAD_BITMAP) {
-                    if (bitmapMsg.bitmap == null)
+                    if (bitmapMessage.bitmap == null)
                         return;
 
-                    bitmapMsg.imageView.setImageBitmap(bitmapMsg.bitmap);
+                    bitmapMessage.imageView.setImageBitmap(bitmapMessage.bitmap);
                 } else if (msg.arg1 == LOAD_DRAWABLE) {
-                    if (bitmapMsg.drawable == null)
+                    if (bitmapMessage.drawable == null)
                         return;
 
-                    bitmapMsg.imageView.setImageDrawable(bitmapMsg.drawable);
+                    bitmapMessage.imageView.setImageDrawable(bitmapMessage.drawable);
                 }
             }
         };
@@ -198,57 +271,59 @@ public abstract class ExplorerAdapter extends BaseAdapter implements AbsListView
         Log.d(TAG, "Thread Start");
     }
 
-    private void handleBitmapMsg(BitmapMsg bitmapMsg) {
-        if (bitmapMsg == null)
+    class BitmapOrDrawable {
+        public Bitmap bitmap;
+        public Drawable drawable;
+    }
+
+    private BitmapOrDrawable loadThumbnail(ExplorerItem.FileType type, String path) {
+        BitmapOrDrawable bod = new BitmapOrDrawable();
+
+        switch (type) {
+            case APK:
+                bod.drawable = BitmapLoader.loadApkThumbnailDrawable(ExplorerAdapter.this.context, path);
+                break;
+            case PDF:
+                bod.bitmap = BitmapLoader.loadPdfThumbnailBitmap(ExplorerAdapter.this.context, path);
+                break;
+            case IMAGE:
+                bod.bitmap = BitmapLoader.loadImageThumbnailBitmap(ExplorerAdapter.this.context, path);
+                break;
+            case VIDEO:
+                bod.bitmap = BitmapLoader.loadVideoThumbnailBitmap(ExplorerAdapter.this.context, path);
+                break;
+            case ZIP:
+                bod.bitmap = BitmapLoader.loadZipThumbnailBitmap(ExplorerAdapter.this.context, path);
+                break;
+        }
+
+        return bod;
+    }
+
+    private void handleBitmapMessage(BitmapMessage bitmapMessage) {
+        if (bitmapMessage == null)
             return;
 
-        switch (bitmapMsg.type) {
+        Message mainMsg = new Message();
+        mainMsg.obj = bitmapMessage;
+        mainMsg.arg1 = LOAD_BITMAP;
+        BitmapOrDrawable bod = loadThumbnail(bitmapMessage.type, bitmapMessage.path);
+
+        switch (bitmapMessage.type) {
             case APK: {
-                Message mainMsg = new Message();
                 mainMsg.arg1 = LOAD_DRAWABLE;
-                mainMsg.obj = bitmapMsg;
-                bitmapMsg.drawable = BitmapLoader.loadApkThumbnailDrawable(ExplorerAdapter.this.context, bitmapMsg.path);
-
-                mainHandler.sendMessage(mainMsg);
+                bitmapMessage.drawable = bod.drawable;
             }
             break;
-            case PDF: {
-                Message mainMsg = new Message();
-                mainMsg.arg1 = LOAD_BITMAP;
-                mainMsg.obj = bitmapMsg;
-                bitmapMsg.bitmap = BitmapLoader.loadPdfThumbnailBitmap(ExplorerAdapter.this.context, bitmapMsg.path, bitmapMsg.imageView);
-
-                mainHandler.sendMessage(mainMsg);
-            }
-            break;
-            case IMAGE: {
-                Message mainMsg = new Message();
-                mainMsg.arg1 = LOAD_BITMAP;
-                mainMsg.obj = bitmapMsg;
-                bitmapMsg.bitmap = BitmapLoader.loadImageThumbnailBitmap(ExplorerAdapter.this.context, bitmapMsg.path, bitmapMsg.imageView);
-
-                mainHandler.sendMessage(mainMsg);
-            }
-            break;
-            case VIDEO: {
-                Message mainMsg = new Message();
-                mainMsg.arg1 = LOAD_BITMAP;
-                mainMsg.obj = bitmapMsg;
-                bitmapMsg.bitmap = BitmapLoader.loadVideoThumbnailBitmap(ExplorerAdapter.this.context, bitmapMsg.path, bitmapMsg.imageView);
-
-                mainHandler.sendMessage(mainMsg);
-            }
-            break;
-            case ZIP: {
-                Message mainMsg = new Message();
-                mainMsg.arg1 = LOAD_BITMAP;
-                mainMsg.obj = bitmapMsg;
-                bitmapMsg.bitmap = BitmapLoader.loadZipThumbnailBitmap(ExplorerAdapter.this.context, bitmapMsg.path, bitmapMsg.imageView);
-
-                mainHandler.sendMessage(mainMsg);
-            }
-            break;
+            case PDF:
+            case IMAGE:
+            case VIDEO:
+            case ZIP:
+                bitmapMessage.bitmap = bod.bitmap;
+                break;
         }
+
+        mainHandler.sendMessage(mainMsg);
     }
 
     @Override
@@ -319,13 +394,13 @@ public abstract class ExplorerAdapter extends BaseAdapter implements AbsListView
         if (bitmap == null) {
             viewHolder.icon.setImageResource(R.drawable.file);
 
-            BitmapMsg bitmapMsg = new BitmapMsg();
-            bitmapMsg.type = ExplorerItem.FileType.IMAGE;
-            bitmapMsg.path = item.path;
-            bitmapMsg.imageView = viewHolder.icon;
-            bitmapMsg.position = position;
+            BitmapMessage bitmapMessage = new BitmapMessage();
+            bitmapMessage.type = ExplorerItem.FileType.IMAGE;
+            bitmapMessage.path = item.path;
+            bitmapMessage.imageView = viewHolder.icon;
+            bitmapMessage.position = position;
 
-            messageQueue.add(bitmapMsg);
+            messageQueue.add(bitmapMessage);
         } else {
             viewHolder.icon.setImageBitmap(bitmap);
         }
@@ -336,13 +411,13 @@ public abstract class ExplorerAdapter extends BaseAdapter implements AbsListView
         if (bitmap == null) {
             viewHolder.icon.setImageResource(R.drawable.file);
 
-            BitmapMsg bitmapMsg = new BitmapMsg();
-            bitmapMsg.type = ExplorerItem.FileType.PDF;
-            bitmapMsg.path = item.path;
-            bitmapMsg.imageView = viewHolder.icon;
-            bitmapMsg.position = position;
+            BitmapMessage bitmapMessage = new BitmapMessage();
+            bitmapMessage.type = ExplorerItem.FileType.PDF;
+            bitmapMessage.path = item.path;
+            bitmapMessage.imageView = viewHolder.icon;
+            bitmapMessage.position = position;
 
-            messageQueue.add(bitmapMsg);
+            messageQueue.add(bitmapMessage);
         } else {// 로딩된 비트맵을 셋팅
             viewHolder.icon.setImageBitmap(bitmap);
         }
@@ -354,30 +429,30 @@ public abstract class ExplorerAdapter extends BaseAdapter implements AbsListView
         if (bitmap == null) {
             viewHolder.icon.setImageResource(R.drawable.file);
 
-            BitmapMsg bitmapMsg = new BitmapMsg();
-            bitmapMsg.type = ExplorerItem.FileType.ZIP;
-            bitmapMsg.path = item.path;
-            bitmapMsg.imageView = viewHolder.icon;
-            bitmapMsg.position = position;
+            BitmapMessage bitmapMessage = new BitmapMessage();
+            bitmapMessage.type = ExplorerItem.FileType.ZIP;
+            bitmapMessage.path = item.path;
+            bitmapMessage.imageView = viewHolder.icon;
+            bitmapMessage.position = position;
 
-            messageQueue.add(bitmapMsg);
+            messageQueue.add(bitmapMessage);
         } else {
             viewHolder.icon.setImageBitmap(bitmap);
         }
     }
 
     void setIconApk(final ViewHolder viewHolder, ExplorerItem item, int position) {
-        Drawable drawable = BitmapCache.getDrawable(item.path);
+        Drawable drawable = getDrawable(item.path);
         if (drawable == null) {
             viewHolder.icon.setImageResource(R.drawable.file);
 
-            BitmapMsg bitmapMsg = new BitmapMsg();
-            bitmapMsg.type = ExplorerItem.FileType.APK;
-            bitmapMsg.path = item.path;
-            bitmapMsg.imageView = viewHolder.icon;
-            bitmapMsg.position = position;
+            BitmapMessage bitmapMessage = new BitmapMessage();
+            bitmapMessage.type = ExplorerItem.FileType.APK;
+            bitmapMessage.path = item.path;
+            bitmapMessage.imageView = viewHolder.icon;
+            bitmapMessage.position = position;
 
-            messageQueue.add(bitmapMsg);
+            messageQueue.add(bitmapMessage);
         } else {
             viewHolder.icon.setImageDrawable(drawable);
         }
@@ -388,13 +463,13 @@ public abstract class ExplorerAdapter extends BaseAdapter implements AbsListView
         if (bitmap == null) {
             viewHolder.icon.setImageResource(R.drawable.file);
 
-            BitmapMsg bitmapMsg = new BitmapMsg();
-            bitmapMsg.type = ExplorerItem.FileType.VIDEO;
-            bitmapMsg.path = item.path;
-            bitmapMsg.imageView = viewHolder.icon;
-            bitmapMsg.position = position;
+            BitmapMessage bitmapMessage = new BitmapMessage();
+            bitmapMessage.type = VIDEO;
+            bitmapMessage.path = item.path;
+            bitmapMessage.imageView = viewHolder.icon;
+            bitmapMessage.position = position;
 
-            messageQueue.add(bitmapMsg);
+            messageQueue.add(bitmapMessage);
         } else {// 로딩된 비트맵을 셋팅
             viewHolder.icon.setImageBitmap(bitmap);
         }
@@ -403,7 +478,7 @@ public abstract class ExplorerAdapter extends BaseAdapter implements AbsListView
     void setIcon(final ViewHolder viewHolder, ExplorerItem item, int position) {
         if (item.type == ExplorerItem.FileType.IMAGE) {
             setIconImage(viewHolder, item, position);
-        } else if (item.type == ExplorerItem.FileType.VIDEO) {
+        } else if (item.type == VIDEO) {
             setIconVideo(viewHolder, item, position);
         } else if (item.type == ExplorerItem.FileType.ZIP) {
             setIconZip(viewHolder, item, position);
@@ -447,10 +522,10 @@ public abstract class ExplorerAdapter extends BaseAdapter implements AbsListView
     void setDefaultIcon(ExplorerItem.FileType type, ImageView icon) {
         switch (type) {
             case DIRECTORY:
-                icon.setImageBitmap(BitmapCache.getResourceBitmap(context.getResources(), R.drawable.directory));
+                icon.setImageBitmap(BitmapCacheManager.getResourceBitmap(context.getResources(), R.drawable.directory));
                 break;
             default:
-                icon.setImageBitmap(BitmapCache.getResourceBitmap(context.getResources(), R.drawable.file));
+                icon.setImageBitmap(BitmapCacheManager.getResourceBitmap(context.getResources(), R.drawable.file));
                 break;
         }
     }
@@ -459,13 +534,13 @@ public abstract class ExplorerAdapter extends BaseAdapter implements AbsListView
         switch (type) {
             case AUDIO:
             case FILE:
-                icon.setImageBitmap(BitmapCache.getResourceBitmap(context.getResources(), R.drawable.file));
+                icon.setImageBitmap(BitmapCacheManager.getResourceBitmap(context.getResources(), R.drawable.file));
                 break;
             case DIRECTORY:
-                icon.setImageBitmap(BitmapCache.getResourceBitmap(context.getResources(), R.drawable.directory));
+                icon.setImageBitmap(BitmapCacheManager.getResourceBitmap(context.getResources(), R.drawable.directory));
                 break;
             case TEXT:
-                icon.setImageBitmap(BitmapCache.getResourceBitmap(context.getResources(), R.drawable.text));
+                icon.setImageBitmap(BitmapCacheManager.getResourceBitmap(context.getResources(), R.drawable.text));
                 break;
             default:
                 return;
@@ -477,6 +552,9 @@ public abstract class ExplorerAdapter extends BaseAdapter implements AbsListView
         loaderRunnable.onPause();
         messageQueue.clear();
         loaderRunnable.onResume();
+
+        // 현재 태스크는 사용하고 있지 않음
+        // 1 쓰레드로 사용중
 //        for (AsyncTask task : taskMap.values()) {
 //            task.cancel(true);
 //            Log.d(TAG, "task.cancel");

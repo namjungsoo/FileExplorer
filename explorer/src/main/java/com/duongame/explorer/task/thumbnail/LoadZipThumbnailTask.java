@@ -8,7 +8,7 @@ import android.widget.ImageView;
 
 import com.duongame.R;
 import com.duongame.explorer.adapter.ExplorerItem;
-import com.duongame.explorer.bitmap.BitmapCache;
+import com.duongame.explorer.bitmap.BitmapCacheManager;
 import com.duongame.explorer.bitmap.BitmapLoader;
 import com.duongame.explorer.bitmap.ZipLoader;
 
@@ -39,7 +39,7 @@ public class LoadZipThumbnailTask extends AsyncTask<String, Void, Bitmap> {
         if (isCancelled())
             return null;
 
-        Bitmap bitmap = BitmapCache.getThumbnail(path);
+        Bitmap bitmap = BitmapCacheManager.getThumbnail(path);
         if (isCancelled())
             return bitmap;
 
@@ -61,15 +61,15 @@ public class LoadZipThumbnailTask extends AsyncTask<String, Void, Bitmap> {
                 return bitmap;
 
             if (image == null) {
-                bitmap = BitmapCache.getResourceBitmap(context.getResources(), R.drawable.zip);
+                bitmap = BitmapCacheManager.getResourceBitmap(context.getResources(), R.drawable.zip);
                 if (bitmap != null) {
-                    BitmapCache.setThumbnail(path, bitmap, imageView);
+                    BitmapCacheManager.setThumbnail(path, bitmap);
                 }
             } else {
                 //bitmap = BitmapLoader.decodeSampleBitmapFromFile(image, 96, 96, false);
                 bitmap = BitmapLoader.decodeSquareThumbnailFromFile(image, 96, false);
                 if (bitmap != null) {
-                    BitmapCache.setThumbnail(path, bitmap, imageView);
+                    BitmapCacheManager.setThumbnail(path, bitmap);
                 }
             }
         }

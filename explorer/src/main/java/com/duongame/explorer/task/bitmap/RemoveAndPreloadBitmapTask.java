@@ -4,7 +4,7 @@ import android.graphics.Bitmap;
 import android.util.Log;
 
 import com.duongame.explorer.adapter.ExplorerItem;
-import com.duongame.explorer.bitmap.BitmapCache;
+import com.duongame.explorer.bitmap.BitmapCacheManager;
 import com.duongame.explorer.helper.FileHelper;
 
 import static android.content.ContentValues.TAG;
@@ -36,10 +36,10 @@ public class RemoveAndPreloadBitmapTask extends BitmapTask {
 
                 if (item.side == ExplorerItem.Side.SIDE_ALL) {
                     Log.w(TAG, "RemoveAndPreloadBitmapTask REMOVE " + item.path);
-                    BitmapCache.removeBitmap(item.path);
+                    BitmapCacheManager.removeBitmap(item.path);
                 } else {
-                    String path = BitmapCache.changePathToPage(item);
-                    BitmapCache.removePage(path);
+                    String path = BitmapCacheManager.changePathToPage(item);
+                    BitmapCacheManager.removePage(path);
                 }
             }
         }

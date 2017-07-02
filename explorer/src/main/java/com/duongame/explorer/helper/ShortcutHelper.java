@@ -14,10 +14,15 @@ public class ShortcutHelper {
         initShortcut(context);
     }
 
-    private static void initShortcut(Context context) {
+    private static void initShortcut(final Context context) {
         // 바로가기 중복 생성 방지
         if (!PreferenceHelper.isShortcut(context)) {
-            addShortcut(context);
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    addShortcut(context);
+                }
+            }).start();
         }
     }
 

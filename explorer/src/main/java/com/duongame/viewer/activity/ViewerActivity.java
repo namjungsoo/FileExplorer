@@ -15,7 +15,7 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.duongame.R;
-import com.duongame.explorer.bitmap.BitmapCache;
+import com.duongame.explorer.bitmap.BitmapCacheManager;
 
 /**
  * Created by namjungsoo on 2016-11-16.
@@ -47,8 +47,8 @@ public class ViewerActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
 
-        BitmapCache.recycleBitmap();
-        BitmapCache.recyclePage();
+        BitmapCacheManager.recycleBitmap();
+        BitmapCacheManager.recyclePage();
     }
 
     private void initActionBar() {

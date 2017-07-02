@@ -13,7 +13,7 @@ import android.widget.TextView;
 import com.duongame.R;
 import com.duongame.comicz.db.BookDB;
 import com.duongame.explorer.adapter.ExplorerItem;
-import com.duongame.explorer.bitmap.BitmapCache;
+import com.duongame.explorer.bitmap.BitmapCacheManager;
 import com.duongame.explorer.bitmap.ZipLoader;
 import com.duongame.explorer.helper.AlertHelper;
 import com.duongame.viewer.adapter.PhotoPagerAdapter;
@@ -276,8 +276,8 @@ public class ZipActivity extends PagerActivity {
         // 초기화 하기전에 task를 전부 stop한다.
         pagerAdapter.stopAllTasks();
         pager.removeAllViews();
-        BitmapCache.recyclePage();
-        BitmapCache.recycleBitmap();
+        BitmapCacheManager.recyclePage();
+        BitmapCacheManager.recycleBitmap();
 
         // 데이터를 업데이트 하자.
         // 좌우를 변경한다.

@@ -6,7 +6,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.duongame.explorer.adapter.ExplorerItem;
-import com.duongame.explorer.bitmap.BitmapCache;
+import com.duongame.explorer.bitmap.BitmapCacheManager;
 import com.duongame.explorer.bitmap.BitmapLoader;
 
 import static android.content.ContentValues.TAG;
@@ -39,8 +39,8 @@ public class BitmapTask extends AsyncTask<ExplorerItem, Void, Bitmap> {
         // split일 경우에는 무조건 없다
         Bitmap bitmap = null;
         if (item.side != ExplorerItem.Side.SIDE_ALL) {
-            final String page = BitmapCache.changePathToPage(item);
-            bitmap = BitmapCache.getPage(page);
+            final String page = BitmapCacheManager.changePathToPage(item);
+            bitmap = BitmapCacheManager.getPage(page);
 
             if (bitmap != null) {
                 Log.d(this.getClass().getSimpleName(), "loadBitmap found cached current_page="+item.path);
@@ -48,7 +48,7 @@ public class BitmapTask extends AsyncTask<ExplorerItem, Void, Bitmap> {
             }
         }
 
-        bitmap = BitmapCache.getBitmap(item.path);
+        bitmap = BitmapCacheManager.getBitmap(item.path);
         if (bitmap == null) {
             final BitmapFactory.Options options = BitmapLoader.decodeBounds(item.path);
 
@@ -82,7 +82,7 @@ public class BitmapTask extends AsyncTask<ExplorerItem, Void, Bitmap> {
                 } else {
                     if (item.side == ExplorerItem.Side.SIDE_ALL) {
                         Log.w(this.getClass().getSimpleName(), "loadBitmap setBitmap="+item.path);
-                        BitmapCache.setBitmap(item.path, bitmap);
+                        BitmapCacheManager.setBitmap(item.path, bitmap);
                     }
                     else {
                         // 비트맵을 로딩했으면 이제 자르자

@@ -4,7 +4,7 @@ import android.graphics.Bitmap;
 import android.os.AsyncTask;
 
 import com.duongame.explorer.adapter.ExplorerItem;
-import com.duongame.explorer.bitmap.BitmapCache;
+import com.duongame.explorer.bitmap.BitmapCacheManager;
 
 /**
  * Created by namjungsoo on 2016-12-17.
@@ -17,10 +17,10 @@ public class RemoveBitmapTask extends AsyncTask<ExplorerItem, Void, Bitmap> {
             final ExplorerItem item = params[i];
 
             if (item.side == ExplorerItem.Side.SIDE_ALL)
-                BitmapCache.removeBitmap(item.path);
+                BitmapCacheManager.removeBitmap(item.path);
             else {
-                String path = BitmapCache.changePathToPage(item);
-                BitmapCache.removePage(path);
+                String path = BitmapCacheManager.changePathToPage(item);
+                BitmapCacheManager.removePage(path);
             }
         }
         return null;

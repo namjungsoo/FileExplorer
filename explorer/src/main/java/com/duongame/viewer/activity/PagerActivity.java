@@ -6,7 +6,7 @@ import android.util.Log;
 import android.widget.SeekBar;
 
 import com.duongame.R;
-import com.duongame.explorer.bitmap.BitmapCache;
+import com.duongame.explorer.bitmap.BitmapCacheManager;
 import com.duongame.viewer.adapter.ViewerPagerAdapter;
 import com.duongame.viewer.listener.PagerOnTouchListener;
 
@@ -75,8 +75,8 @@ public class PagerActivity extends ViewerActivity {
                 if (Math.abs(current - page) > 2) {
                     // 모든 로딩 중인 태스크를 정리하고 비트맵을 리사이클을 한다.
                     pagerAdapter.stopAllTasks();
-                    BitmapCache.recyclePage();
-                    BitmapCache.recycleBitmap();
+                    BitmapCacheManager.recyclePage();
+                    BitmapCacheManager.recycleBitmap();
                     Log.d(TAG, "onStopTrackingTouch recycle");
                 }
 

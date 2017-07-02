@@ -10,7 +10,7 @@ import com.duongame.explorer.adapter.ExplorerItem;
  * Created by namjungsoo on 2017-04-06.
  */
 
-public class BitmapMsg {
+public class BitmapMessage {
     public int position;
     public ExplorerItem.FileType type;
     public ImageView imageView;

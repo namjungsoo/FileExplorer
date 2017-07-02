@@ -5,7 +5,7 @@ import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.widget.ImageView;
 
-import com.duongame.explorer.bitmap.BitmapCache;
+import com.duongame.explorer.bitmap.BitmapCacheManager;
 import com.duongame.explorer.bitmap.BitmapLoader;
 
 /**
@@ -30,7 +30,7 @@ public class LoadPdfThumbnailTask extends AsyncTask<String, Void, Bitmap> {
         if (isCancelled())
             return null;
 
-        Bitmap bitmap = BitmapCache.getThumbnail(path);
+        Bitmap bitmap = BitmapCacheManager.getThumbnail(path);
         if (isCancelled())
             return bitmap;
 
@@ -39,7 +39,7 @@ public class LoadPdfThumbnailTask extends AsyncTask<String, Void, Bitmap> {
             bitmap = BitmapLoader.decodeSquareThumbnailFromPdfFile(path, 96);
         }
         if (bitmap != null) {
-            BitmapCache.setThumbnail(path, bitmap, imageView);
+            BitmapCacheManager.setThumbnail(path, bitmap);
         }
 
         return bitmap;

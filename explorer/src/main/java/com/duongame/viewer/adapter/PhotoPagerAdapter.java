@@ -9,7 +9,7 @@ import android.widget.ImageView;
 
 import com.duongame.R;
 import com.duongame.explorer.adapter.ExplorerItem;
-import com.duongame.explorer.bitmap.BitmapCache;
+import com.duongame.explorer.bitmap.BitmapCacheManager;
 import com.duongame.explorer.task.bitmap.LoadBitmapTask;
 import com.duongame.explorer.task.bitmap.RemoveAndPreloadBitmapTask;
 import com.duongame.viewer.activity.PagerActivity;
@@ -101,9 +101,9 @@ public class PhotoPagerAdapter extends ViewerPagerAdapter {
     // 캐쉬에 비트맵이나 페이지가 있는지를 리턴
     private boolean checkCacheExistBitmapOrPage(ExplorerItem item) {
         if (item.side == ExplorerItem.Side.SIDE_ALL) {
-            return BitmapCache.getBitmap(item.path) == null ? false : true;
+            return BitmapCacheManager.getBitmap(item.path) == null ? false : true;
         } else {
-            return BitmapCache.getPage(BitmapCache.changePathToPage(item)) == null ? false : true;
+            return BitmapCacheManager.getPage(BitmapCacheManager.changePathToPage(item)) == null ? false : true;
         }
     }
 

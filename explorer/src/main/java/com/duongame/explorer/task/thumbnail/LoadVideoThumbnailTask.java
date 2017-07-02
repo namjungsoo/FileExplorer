@@ -7,7 +7,7 @@ import android.os.AsyncTask;
 import android.provider.MediaStore;
 import android.widget.ImageView;
 
-import com.duongame.explorer.bitmap.BitmapCache;
+import com.duongame.explorer.bitmap.BitmapCacheManager;
 
 /**
  * Created by namjungsoo on 2017-04-05.
@@ -31,7 +31,7 @@ public class LoadVideoThumbnailTask extends AsyncTask<String, Void, Bitmap> {
         if (isCancelled())
             return null;
 
-        Bitmap bitmap = BitmapCache.getThumbnail(path);
+        Bitmap bitmap = BitmapCacheManager.getThumbnail(path);
         if (isCancelled())
             return bitmap;
 
@@ -43,7 +43,7 @@ public class LoadVideoThumbnailTask extends AsyncTask<String, Void, Bitmap> {
 
         // 찾았으면 캐시에 추가
         if (bitmap != null) {
-            BitmapCache.setThumbnail(path, bitmap, imageView);
+            BitmapCacheManager.setThumbnail(path, bitmap);
         }
 
         return bitmap;

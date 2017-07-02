@@ -76,7 +76,7 @@ public class PdfPagerAdapter extends ViewerPagerAdapter {
             if (item == null)
                 return;
 
-//            Bitmap bitmap = BitmapCache.getBitmap(item.path);
+//            Bitmap bitmap = BitmapCacheManager.getBitmap(item.path);
 //            if (bitmap != null) {
 //                imageView.setImageBitmap(bitmap);
 //                imageView.setBackgroundColor(Color.WHITE);
@@ -123,7 +123,7 @@ public class PdfPagerAdapter extends ViewerPagerAdapter {
 //                    imageView.setLayoutParams(params);
 //                    imageView.requestLayout();
 
-//                    BitmapCache.setBitmap(item.path, bitmap);
+//                    BitmapCacheManager.setBitmap(item.path, bitmap);
                 }
             }
         } else {
@@ -152,7 +152,7 @@ public class PdfPagerAdapter extends ViewerPagerAdapter {
         }
 
         imageView.setImageBitmap(null);
-//        BitmapCache.removeBitmap(item.path);
+//        BitmapCacheManager.removeBitmap(item.path);
     }
 
     @Override

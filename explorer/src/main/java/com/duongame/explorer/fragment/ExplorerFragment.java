@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -32,7 +33,7 @@ import com.duongame.explorer.adapter.ExplorerAdapter;
 import com.duongame.explorer.adapter.ExplorerGridAdapter;
 import com.duongame.explorer.adapter.ExplorerItem;
 import com.duongame.explorer.adapter.ExplorerListAdapter;
-import com.duongame.explorer.bitmap.BitmapCache;
+import com.duongame.explorer.bitmap.BitmapCacheManager;
 import com.duongame.explorer.helper.PreferenceHelper;
 import com.duongame.explorer.manager.ExplorerManager;
 import com.duongame.explorer.manager.PositionManager;
@@ -85,8 +86,8 @@ public class ExplorerFragment extends BaseFragment {
         checkStoragePermissions();
 
         extSdCard = getExternalSdCardPath();
-        if(extSdCard != null) {
-            if(sdcard != null) {
+        if (extSdCard != null) {
+            if (sdcard != null) {
                 sdcard.setVisibility(View.VISIBLE);
             }
         }
@@ -166,14 +167,14 @@ public class ExplorerFragment extends BaseFragment {
         sdcard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(extSdCard != null) {
+                if (extSdCard != null) {
                     updateFileList(extSdCard);
                 }
             }
         });
 
-        final Button permission = (Button)rootView.findViewById(R.id.btn_permission);
-        if(permission != null) {
+        final Button permission = (Button) rootView.findViewById(R.id.btn_permission);
+        if (permission != null) {
             permission.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -263,7 +264,7 @@ public class ExplorerFragment extends BaseFragment {
 
     // 새로운 파일이 추가 되었을때 스캔을 하라는 의미이다.
     void refreshThumbnail(String path) {
-        ArrayList<ExplorerItem> imageList = (ArrayList<ExplorerItem>)ExplorerManager.getImageList().clone();
+        ArrayList<ExplorerItem> imageList = (ArrayList<ExplorerItem>) ExplorerManager.getImageList().clone();
         for (ExplorerItem item : imageList) {
             getActivity().sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse("file://" + item.path)));
         }
@@ -327,7 +328,7 @@ public class ExplorerFragment extends BaseFragment {
 
                 final BookDB.Book book = BookDB.getBook(getActivity(), item.path);
 
-                if(book == null) {
+                if (book == null) {
                     final Intent intent = new Intent(getActivity(), ZipActivity.class);
                     intent.putExtra("path", item.path);
                     intent.putExtra("name", item.name);
@@ -374,7 +375,7 @@ public class ExplorerFragment extends BaseFragment {
         // 이부분은 물어보고 셋팅하자.
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity())
                 .setTitle("알림")
-                .setMessage(String.format("마지막에 읽던 페이지가 있습니다.\n(페이지: %d)\n계속 읽으시겠습니까?", book.current_page+1))
+                .setMessage(String.format("마지막에 읽던 페이지가 있습니다.\n(페이지: %d)\n계속 읽으시겠습니까?", book.current_page + 1))
                 .setIcon(R.drawable.comicz)
                 .setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
                     @Override
@@ -386,7 +387,7 @@ public class ExplorerFragment extends BaseFragment {
                 .setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        if(cancelToRead) {
+                        if (cancelToRead) {
                             intent.putExtra("current_page", 0);
                             startActivity(intent);
                         }
@@ -401,6 +402,7 @@ public class ExplorerFragment extends BaseFragment {
 
         builder.show();
     }
+
     void backupPosition() {
         PositionManager.setPosition(ExplorerManager.getLastPath(), currentView.getFirstVisiblePosition());
         PositionManager.setTop(ExplorerManager.getLastPath(), getCurrentViewScrollTop());
@@ -436,26 +438,54 @@ public class ExplorerFragment extends BaseFragment {
         });
     }
 
+    class SearchTask extends AsyncTask<String, Void, Void> {
+
+        @Override
+        protected Void doInBackground(String... params) {
+            fileList = ExplorerManager.search(params[0]);
+            adapter.setFileList(fileList);
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void result) {
+            adapter.notifyDataSetChanged();
+            textPath.setText(ExplorerManager.getLastPath());
+            textPath.requestLayout();
+
+            if (switcherContents != null) {
+                if (fileList == null || fileList.size() <= 0) {
+                    switcherContents.setDisplayedChild(1);
+                } else {
+                    switcherContents.setDisplayedChild(0);
+                }
+            }
+        }
+    }
+
     public void updateFileList(final String path) {
         if (adapter == null)
             return;
         adapter.stopAllTasks();
 
         // 썸네일이 꽉찼을때는 비워준다.
-        if (BitmapCache.getThumbnailCount() > MAX_THUMBNAILS) {
-            BitmapCache.recycleThumbnail();
+        if (BitmapCacheManager.getThumbnailCount() > MAX_THUMBNAILS) {
+            BitmapCacheManager.recycleThumbnail();
         }
 
-        // 파일리스트를 받아옴
-        fileList = ExplorerManager.search(path);
-        if (fileList != null) {
-            adapter.setFileList(fileList);
-            adapter.notifyDataSetChanged();
-        }
+        SearchTask task = new SearchTask();
+        task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, path);
 
-        // 현재 패스를 세팅
-        textPath.setText(ExplorerManager.getLastPath());
-        textPath.requestLayout();
+//        // 파일리스트를 받아옴
+//        fileList = ExplorerManager.search(path);
+//        if (fileList != null) {
+//            adapter.setFileList(fileList);
+//            adapter.notifyDataSetChanged();
+//        }
+//
+//        // 현재 패스를 세팅
+//        textPath.setText(ExplorerManager.getLastPath());
+//        textPath.requestLayout();
 
         // 가장 오른쪽으로 스크롤
         scrollPath.post(new Runnable() {
@@ -486,15 +516,6 @@ public class ExplorerFragment extends BaseFragment {
     @Override
     public void onRefresh() {
         updateFileList(ExplorerManager.getLastPath());
-
-        if(switcherContents != null) {
-            if(fileList == null || fileList.size() <= 0) {
-                switcherContents.setDisplayedChild(1);
-            }
-            else {
-                switcherContents.setDisplayedChild(0);
-            }
-        }
     }
 
     @Override

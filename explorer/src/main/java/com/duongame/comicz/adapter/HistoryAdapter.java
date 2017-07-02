@@ -27,7 +27,7 @@ import com.duongame.explorer.view.RoundedImageView;
 
 import java.util.ArrayList;
 
-import static com.duongame.explorer.bitmap.BitmapCache.getThumbnail;
+import static com.duongame.explorer.bitmap.BitmapCacheManager.getThumbnail;
 
 /**
  * Created by namjungsoo on 2017-01-02.

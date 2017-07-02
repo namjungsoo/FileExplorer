@@ -5,7 +5,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
-import android.widget.ImageView;
 
 import com.duongame.explorer.adapter.ExplorerItem;
 
@@ -16,13 +15,13 @@ import java.util.concurrent.ConcurrentHashMap;
  * Created by namjungsoo on 2016-11-16.
  */
 
-public class BitmapCache {
-    private final static String TAG = BitmapCache.class.getSimpleName();
+public class BitmapCacheManager {
+    private final static String TAG = BitmapCacheManager.class.getSimpleName();
     private final static boolean DEBUG = false;
 
     // 썸네일 관련
     static ConcurrentHashMap<String, Bitmap> thumbnailCache = new ConcurrentHashMap<String, Bitmap>();
-    static ConcurrentHashMap<String, ImageView> thumbnailImageCache = new ConcurrentHashMap<>();
+//    static ConcurrentHashMap<String, ImageView> thumbnailImageCache = new ConcurrentHashMap<>();
 
     // 일반 이미지 관련
     static ConcurrentHashMap<String, Bitmap> bitmapCache = new ConcurrentHashMap<>();
@@ -139,11 +138,14 @@ public class BitmapCache {
     }
 
     // thumbnail
-    public static void setThumbnail(String path, Bitmap bitmap, ImageView imageView) {
+    public static void setThumbnail(String path, Bitmap bitmap) {
         if (DEBUG)
             Log.d(TAG, "setThumbnail path=" + path);
         thumbnailCache.putIfAbsent(path, bitmap);
-        thumbnailImageCache.putIfAbsent(path, imageView);
+
+        // 사용안함
+//        if(imageView != null)
+//            thumbnailImageCache.putIfAbsent(path, imageView);
     }
 
     public static Bitmap getThumbnail(String path) {
@@ -156,13 +158,15 @@ public class BitmapCache {
 
     public static void recycleThumbnail() {
         // 이미지를 먼저 null로 하고 => try/catch로 처리함
-        for (String key : thumbnailImageCache.keySet()) {
-            final ImageView imageView = thumbnailImageCache.get(key);
-            if (imageView != null) {
-                imageView.setImageResource(android.R.color.transparent);
-            }
-        }
-        thumbnailImageCache.clear();
+        // adapter 자체적으로 file, directory 이미지로 처리하게 변경됨
+        // 사용안함
+//        for (String key : thumbnailImageCache.keySet()) {
+//            final ImageView imageView = thumbnailImageCache.get(key);
+//            if (imageView != null) {
+//                imageView.setImageResource(android.R.color.transparent);
+//            }
+//        }
+//        thumbnailImageCache.clear();
 
         final ArrayList<String> recycleList = new ArrayList<>();
         for (String key : thumbnailCache.keySet()) {

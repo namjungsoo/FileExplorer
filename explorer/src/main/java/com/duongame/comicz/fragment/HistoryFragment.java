@@ -1,6 +1,7 @@
 package com.duongame.comicz.fragment;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -34,9 +35,13 @@ public class HistoryFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        Log.d(TAG, "onCreateView");
+
         rootView = (ViewGroup) inflater.inflate(R.layout.fragment_history, container, false);
         listView = (ListView) rootView.findViewById(R.id.list_history);
+
         adapter = new HistoryAdapter(getActivity(), this, null);
+
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -63,31 +68,47 @@ public class HistoryFragment extends BaseFragment {
                 }
             }
         });
+
         switcherContents = (ViewSwitcher) rootView.findViewById(R.id.switcher_contents);
 
-        onRefresh();
+//        onRefresh();
         return rootView;
+    }
+
+    class RefreshTask extends AsyncTask<Void, Void, Void> {
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            bookList = BookDB.getBooks(getActivity());
+            if (adapter != null) {
+                adapter.setBookList(bookList);
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void result) {
+            if(bookList.size() > 0) {
+                adapter.notifyDataSetChanged();
+
+                // 결과가 있을때 없을때를 구분해서 SWICTH 함
+                if (bookList != null && bookList.size() > 0) {
+                    if (switcherContents != null) {
+                        switcherContents.setDisplayedChild(0);
+                    }
+                } else {
+                    if (switcherContents != null) {
+                        switcherContents.setDisplayedChild(1);
+                    }
+                }
+            }
+        }
     }
 
     @Override
     public void onRefresh() {
-        bookList = BookDB.getBooks(getActivity());
-        if (adapter != null) {
-            adapter.setBookList(bookList);
-            adapter.notifyDataSetChanged();
-        }
-
-        // 결과가 있을때 없을때를 구분해서 SWICTH 함
-        if(bookList != null && bookList.size() > 0) {
-            if(switcherContents != null) {
-                switcherContents.setDisplayedChild(0);
-            }
-        }
-        else {
-            if(switcherContents != null) {
-                switcherContents.setDisplayedChild(1);
-            }
-        }
+        RefreshTask task = new RefreshTask();
+        task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     @Override
