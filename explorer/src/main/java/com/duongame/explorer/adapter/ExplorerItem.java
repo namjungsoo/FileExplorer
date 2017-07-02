@@ -17,7 +17,7 @@ public class ExplorerItem implements Cloneable {
         VIDEO(2),
         AUDIO(3),
         ZIP(4),
-        RAR(5),
+//        RAR(5),
         PDF(6),
         TEXT(7),
         FILE(8),

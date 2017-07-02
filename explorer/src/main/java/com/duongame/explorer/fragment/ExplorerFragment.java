@@ -449,7 +449,10 @@ public class ExplorerFragment extends BaseFragment {
 
         @Override
         protected void onPostExecute(Void result) {
+            // SearchTask가 resume
             adapter.notifyDataSetChanged();
+            adapter.resumeThread();
+
             textPath.setText(ExplorerManager.getLastPath());
             textPath.requestLayout();
 
@@ -466,7 +469,7 @@ public class ExplorerFragment extends BaseFragment {
     public void updateFileList(final String path) {
         if (adapter == null)
             return;
-        adapter.stopAllTasks();
+        adapter.pauseThread();
 
         // 썸네일이 꽉찼을때는 비워준다.
         if (BitmapCacheManager.getThumbnailCount() > MAX_THUMBNAILS) {

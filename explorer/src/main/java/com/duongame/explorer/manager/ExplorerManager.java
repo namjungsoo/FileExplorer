@@ -103,8 +103,8 @@ public class ExplorerManager {
         }
         else if (lower.endsWith(".zip"))
             type = ExplorerItem.FileType.ZIP;
-        else if (lower.endsWith(".rar"))
-            type = ExplorerItem.FileType.RAR;
+//        else if (lower.endsWith(".rar"))
+//            type = ExplorerItem.FileType.RAR;
         else if (lower.endsWith(".pdf"))
             type = ExplorerItem.FileType.PDF;
         else if (lower.endsWith(".mp4") || lower.endsWith(".avi") || lower.endsWith(".3gp") || lower.endsWith(".mkv"))

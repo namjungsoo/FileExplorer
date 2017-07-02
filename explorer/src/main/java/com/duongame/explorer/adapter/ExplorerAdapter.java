@@ -98,6 +98,8 @@ public abstract class ExplorerAdapter extends BaseAdapter implements AbsListView
                 if (msg == null) {
 
                     if (scrollDirection == SCROLL_DIRECTION_PREV) {
+//                        Log.w(TAG, "SCROLL_DIRECTION_PREV");
+
                         if (firstVisibleItem >= 0) {// 다 읽지 않았을때 앞으로 가서 읽는다.
                             for (int i = firstVisibleItem - 1; i >= 0; i--) {
                                 // 읽었는지 체크해보고 하나만 읽는다.
@@ -105,12 +107,15 @@ public abstract class ExplorerAdapter extends BaseAdapter implements AbsListView
 
                                 // 없을 경우 로딩해준다.
                                 if (!checkBodInCache(item)) {
+//                                    Log.d(TAG, "SCROLL_DIRECTION_PREV loadThumbnail i=" + i + " " + item.path);
                                     loadThumbnail(item.type, item.path);
                                     break;
                                 }
                             }
                         }
                     } else if (scrollDirection == SCROLL_DIRECTION_NEXT) {
+//                        Log.w(TAG, "SCROLL_DIRECTION_NEXT");
+
                         if (firstVisibleItem + visibleItemCount < fileList.size()) {// 다 읽지 않았을때 앞으로 가서 읽는다.
                             for (int i = firstVisibleItem + visibleItemCount; i < fileList.size(); i++) {
                                 // 읽었는지 체크해보고 하나만 읽는다.
@@ -118,6 +123,7 @@ public abstract class ExplorerAdapter extends BaseAdapter implements AbsListView
 
                                 // 없을 경우 로딩해준다.
                                 if (!checkBodInCache(item)) {
+//                                    Log.d(TAG, "SCROLL_DIRECTION_NEXT loadThumbnail i=" + i + " " + item.path);
                                     loadThumbnail(item.type, item.path);
                                     break;
                                 }
@@ -157,15 +163,33 @@ public abstract class ExplorerAdapter extends BaseAdapter implements AbsListView
         }
     }
 
-    public boolean checkBodInCache(ExplorerItem item) {
+    // 썸네일이 있는 파일만 true
+    private boolean hasThumbnail(ExplorerItem item) {
+        switch (item.type) {
+            case APK:
+            case ZIP:
+            case PDF:
+            case IMAGE:
+            case VIDEO:
+                return true;
+            default:
+                return false;
+        }
+    }
+
+    private boolean checkBodInCache(ExplorerItem item) {
         if (item.type == APK) {
             Drawable drawable = BitmapCacheManager.getDrawable(item.path);
             if (drawable != null)
                 return true;
         } else {
-            Bitmap bitmap = BitmapCacheManager.getBitmap(item.path);
-            if (bitmap != null)
+            if (hasThumbnail(item)) {
+                Bitmap bitmap = BitmapCacheManager.getThumbnail(item.path);
+                if (bitmap != null)
+                    return true;
+            } else {
                 return true;
+            }
         }
         return false;
     }
@@ -183,13 +207,13 @@ public abstract class ExplorerAdapter extends BaseAdapter implements AbsListView
             // 처음인 경우
             if (idle_firstVisibleItem == 0 && idle_visibleItemCount == 0) {
             } else {
-                Log.d(TAG, "first=" + firstVisibleItem + " idle_first=" + idle_firstVisibleItem);
+//                Log.d(TAG, "first=" + firstVisibleItem + " idle_first=" + idle_firstVisibleItem);
                 if (idle_firstVisibleItem > firstVisibleItem) {
                     scrollDirection = SCROLL_DIRECTION_PREV;
                 } else {
                     scrollDirection = SCROLL_DIRECTION_NEXT;
                 }
-                Log.d(TAG, "scrollDirection=" + scrollDirection);
+//                Log.d(TAG, "scrollDirection=" + scrollDirection);
             }
             idle_firstVisibleItem = firstVisibleItem;
             idle_visibleItemCount = visibleItemCount;
@@ -386,7 +410,9 @@ public abstract class ExplorerAdapter extends BaseAdapter implements AbsListView
         for (ExplorerItem item : fileList) {
             fileMap.put(item.path, item);
         }
-        loaderRunnable.onResume();
+
+        // SearchTask가 resume
+//        loaderRunnable.onResume();
     }
 
     void setIconImage(final ViewHolder viewHolder, ExplorerItem item, int position) {
@@ -547,11 +573,17 @@ public abstract class ExplorerAdapter extends BaseAdapter implements AbsListView
         }
     }
 
-    public void stopAllTasks() {
-        Log.d(TAG, "stopAllTasks");
+    public void resumeThread() {
+        loaderRunnable.onResume();
+    }
+
+    public void pauseThread() {
+        Log.d(TAG, "pauseThread");
         loaderRunnable.onPause();
         messageQueue.clear();
-        loaderRunnable.onResume();
+
+        // SearchTask가 resume
+//        loaderRunnable.onResume();
 
         // 현재 태스크는 사용하고 있지 않음
         // 1 쓰레드로 사용중
