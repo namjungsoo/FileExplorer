@@ -9,6 +9,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
@@ -265,8 +266,12 @@ public class ExplorerFragment extends BaseFragment {
     // 새로운 파일이 추가 되었을때 스캔을 하라는 의미이다.
     void refreshThumbnail(String path) {
         ArrayList<ExplorerItem> imageList = (ArrayList<ExplorerItem>) ExplorerManager.getImageList().clone();
+
+        FragmentActivity activity = getActivity();
         for (ExplorerItem item : imageList) {
-            getActivity().sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse("file://" + item.path)));
+            if (activity == null)
+                break;
+            activity.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse("file://" + item.path)));
         }
     }
 

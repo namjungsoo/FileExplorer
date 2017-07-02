@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.felipecsl.gifimageview.library.GifImageView;
+import com.github.chrisbanes.photoview.PhotoViewAttacher;
 
 import java.io.DataInputStream;
 import java.io.File;
@@ -62,6 +63,7 @@ public class MainActivity extends AppCompatActivity {
         Glide.with(this).load(new File("/storage/emulated/0/Download/박기량.gif")).into(gif);
     }
 
+    PhotoViewAttacher attacher;
     void loadGifOld() {
         GifImageView gif = (GifImageView) findViewById(R.id.image_viewer);
 
@@ -73,6 +75,7 @@ public class MainActivity extends AppCompatActivity {
             gif.setBytes(data);
             gif.startAnimation();
 
+            attacher = new PhotoViewAttacher(gif);
         } catch (IOException e) {
             e.printStackTrace();
         }

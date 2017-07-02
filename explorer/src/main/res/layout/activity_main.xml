@@ -4,14 +4,12 @@
     android:id="@+id/activity_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    >
+    android:orientation="vertical">
 
     <fragment
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
         android:id="@+id/fragment_explorer"
-        android:name="com.duongame.explorer.fragment.ExplorerFragment">
-    </fragment>
+        android:name="com.duongame.explorer.fragment.ExplorerFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"></fragment>
 
 </LinearLayout>

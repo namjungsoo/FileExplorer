@@ -1,37 +1,39 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="90dp"
     android:layout_height="106dp">
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_margin="6dp"
-        android:orientation="vertical"
-        >
+        android:orientation="vertical">
+
         <FrameLayout
             android:layout_width="78dp"
             android:layout_height="78dp">
+
             <com.duongame.explorer.view.RoundedImageView
                 android:id="@+id/file_icon"
                 android:layout_width="78dp"
                 android:layout_height="78dp"
-                android:layout_gravity="center_horizontal"
-                />
+                android:layout_gravity="center_horizontal" />
+
             <ImageView
                 android:id="@+id/file_small_icon"
-                android:visibility="invisible"
                 android:layout_width="28dp"
                 android:layout_height="28dp"
                 android:layout_gravity="bottom|right"
-                />
+                android:visibility="invisible" />
         </FrameLayout>
+
         <TextView
+            android:id="@+id/text_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:ellipsize="middle"
             android:gravity="center_horizontal"
-            android:id="@+id/text_name"
             android:maxLines="1"
-            android:textSize="12sp"
             android:textColor="#000000"
-            android:ellipsize="middle"/>
+            android:textSize="12sp" />
     </LinearLayout>
 </LinearLayout>

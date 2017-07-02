@@ -3,32 +3,37 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
+
     <View
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
         android:background="@color/colorDivider" />
 
     <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
         android:layout_marginLeft="9dp"
         android:layout_marginRight="9dp"
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="40dp">
+        android:orientation="horizontal">
+
         <Spinner
             android:layout_width="100dp"
             android:layout_height="match_parent"
-            android:entries="@array/search_file"
             android:dropDownWidth="wrap_content"
-            android:spinnerMode="dropdown"/>
+            android:entries="@array/search_file"
+            android:spinnerMode="dropdown" />
+
         <EditText
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1" />
+
         <Button
             android:layout_width="60dp"
             android:layout_height="match_parent"
-            android:text="@string/search"/>
+            android:text="@string/search" />
     </LinearLayout>
+
     <ViewSwitcher
         android:id="@+id/switcher_contents"
         android:layout_width="match_parent"
@@ -37,17 +42,18 @@
         <ListView
             android:id="@+id/list_search"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:gravity="center"
-                android:text="@string/no_contents"/>
+                android:text="@string/no_contents" />
         </LinearLayout>
 
     </ViewSwitcher>

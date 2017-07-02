@@ -5,11 +5,8 @@ import android.graphics.Bitmap;
 import android.util.Log;
 import android.widget.ImageView;
 
-import com.bumptech.glide.Glide;
 import com.duongame.explorer.adapter.ExplorerItem;
 import com.duongame.explorer.helper.FileHelper;
-
-import java.io.File;
 
 /**
  * Created by namjungsoo on 2016-12-16.
@@ -35,6 +32,8 @@ public class LoadBitmapTask extends BitmapTask {
             return null;
 
         item = params[0];
+
+        // GIF는 여기서 읽지 않는다.
         if (FileHelper.isGifImage(item.path)) {
 //            Glide.with(context).load(new File(item.path)).into(imageView);
             return null;
@@ -87,7 +86,8 @@ public class LoadBitmapTask extends BitmapTask {
 //                imageView.setLayoutParams(params);
 //                imageView.requestLayout();
             } else {
-                Glide.with(context).load(new File(item.path)).into(imageView);
+                // 사용안함
+//                Glide.with(context).load(new File(item.path)).into(imageView);
             }
         }
     }

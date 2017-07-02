@@ -8,6 +8,7 @@
 
     <com.felipecsl.gifimageview.library.GifImageView
         android:id="@+id/image_viewer"
+        android:scaleType="matrix"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
          />

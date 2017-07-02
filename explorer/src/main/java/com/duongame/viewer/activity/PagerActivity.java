@@ -9,6 +9,7 @@ import com.duongame.R;
 import com.duongame.explorer.bitmap.BitmapCacheManager;
 import com.duongame.viewer.adapter.ViewerPagerAdapter;
 import com.duongame.viewer.listener.PagerOnTouchListener;
+import com.felipecsl.gifimageview.library.GifImageView;
 
 /**
  * Created by namjungsoo on 2016-11-19.
@@ -31,7 +32,7 @@ public class PagerActivity extends ViewerActivity {
     protected ViewerPagerAdapter pagerAdapter;
     protected boolean isPagerIdle = true;
 
-//    private GifImageView gifImageView;
+    private GifImageView gifImageView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -170,23 +171,23 @@ public class PagerActivity extends ViewerActivity {
         textName.setText(pagerAdapter.getImageList().get(i).name);
     }
 
-//    // startAnimation은 외부에서 수행함
-//    public void setGifImageView(GifImageView gifImageView) {
-////        if(this.gifImageView != null)
-////            this.gifImageView.stopAnimation();
-//        this.gifImageView = gifImageView;
-//    }
-//
-//    public GifImageView getGifImageView() {
-//        return gifImageView;
-//    }
-//
-//    public void stopGifAnimation() {
-//        if (gifImageView != null) {
-//            Log.w(TAG, "stopGifAnimation");
-//            gifImageView.stopAnimation();
-//        }
-//    }
+    // startAnimation은 외부에서 수행함
+    public void setGifImageView(GifImageView gifImageView) {
+//        if(this.gifImageView != null)
+//            this.gifImageView.stopAnimation();
+        this.gifImageView = gifImageView;
+    }
+
+    public GifImageView getGifImageView() {
+        return gifImageView;
+    }
+
+    public void stopGifAnimation() {
+        if (gifImageView != null) {
+            Log.w(TAG, "stopGifAnimation");
+            gifImageView.stopAnimation();
+        }
+    }
 
     @Override
     public void onStop() {

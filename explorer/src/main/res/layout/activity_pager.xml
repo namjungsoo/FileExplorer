@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/activity_main"
+    android:id="@+id/activity_pager"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorBlackBackground"
@@ -10,21 +10,20 @@
     <android.support.v4.view.ViewPager
         android:id="@+id/pager"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        />
+        android:layout_height="match_parent" />
 
     <!--<TextView-->
-        <!--android:layout_gravity="center_horizontal"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:id="@+id/text_path"-->
-        <!--android:textColor="@android:color/holo_orange_dark"-->
-        <!--android:textSize="12sp"-->
-        <!--android:visibility="invisible"-->
-        <!--android:ellipsize="start"/>-->
+    <!--android:layout_gravity="center_horizontal"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:id="@+id/text_path"-->
+    <!--android:textColor="@android:color/holo_orange_dark"-->
+    <!--android:textSize="12sp"-->
+    <!--android:visibility="invisible"-->
+    <!--android:ellipsize="start"/>-->
 
-    <include layout="@layout/panel_top"/>
+    <include layout="@layout/panel_top" />
 
-    <include layout="@layout/panel_bottom"/>
+    <include layout="@layout/panel_bottom" />
 
 </FrameLayout>
