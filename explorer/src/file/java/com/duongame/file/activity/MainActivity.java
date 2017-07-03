@@ -8,10 +8,11 @@ import android.view.MenuItem;
 
 import com.duongame.R;
 import com.duongame.comicz.db.BookDB;
-import com.duongame.explorer.bitmap.BitmapCache;
+import com.duongame.explorer.bitmap.BitmapCacheManager;
 import com.duongame.explorer.fragment.BaseFragment;
 import com.duongame.explorer.helper.ToastHelper;
 import com.duongame.explorer.manager.ExplorerManager;
+import com.google.firebase.crash.FirebaseCrash;
 
 import java.io.File;
 
@@ -22,6 +23,10 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        //TEST
+        FirebaseCrash.report(new Exception("My first Android non-fatal error"));
+
     }
 
     @Override
@@ -95,9 +100,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     void clearCache() {
-        BitmapCache.recycleThumbnail();
-        BitmapCache.recyclePage();
-        BitmapCache.recycleBitmap();
+        BitmapCacheManager.recycleThumbnail();
+        BitmapCacheManager.recyclePage();
+        BitmapCacheManager.recycleBitmap();
 
         final File file = getFilesDir();
         deleteRecursive(file);
