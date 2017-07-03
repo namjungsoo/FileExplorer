@@ -411,8 +411,17 @@ public abstract class ExplorerAdapter extends BaseAdapter implements AbsListView
             fileMap.put(item.path, item);
         }
 
+        initVisibleInfo();
+
         // SearchTask가 resume
 //        loaderRunnable.onResume();
+    }
+
+    private void initVisibleInfo() {
+        firstVisibleItem = 0;
+        visibleItemCount = 0;
+        idle_firstVisibleItem = 0;
+        idle_visibleItemCount = 0;
     }
 
     void setIconImage(final ViewHolder viewHolder, ExplorerItem item, int position) {
