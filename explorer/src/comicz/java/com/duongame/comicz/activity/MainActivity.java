@@ -15,7 +15,6 @@ import com.duongame.explorer.bitmap.BitmapCacheManager;
 import com.duongame.explorer.fragment.BaseFragment;
 import com.duongame.explorer.helper.ShortcutHelper;
 import com.duongame.explorer.helper.ToastHelper;
-import com.google.firebase.crash.FirebaseCrash;
 
 import java.io.File;
 
@@ -38,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
         getSupportActionBar().setElevation(0.0f);
 
         //TEST
-        FirebaseCrash.report(new Exception("My first Android non-fatal error"));
+//        FirebaseCrash.report(new Exception("My first Android non-fatal error"));
     }
 
     private void initTabs() {
