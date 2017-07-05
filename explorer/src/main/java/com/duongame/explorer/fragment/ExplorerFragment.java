@@ -527,7 +527,13 @@ public class ExplorerFragment extends BaseFragment {
 
     @Override
     public void onRefresh() {
-        updateFileList(ExplorerManager.getLastPath());
+        //updateFileList(ExplorerManager.getLastPath());
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                updateFileList(PreferenceHelper.getLastPath(getContext()));
+            }
+        }).start();
     }
 
     @Override
