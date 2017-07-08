@@ -40,6 +40,8 @@ import static com.duongame.explorer.bitmap.BitmapCacheManager.getThumbnail;
 public abstract class ExplorerAdapter extends BaseAdapter implements AbsListView.OnScrollListener, View.OnTouchListener {
     private final static String TAG = "ExplorerAdapter";
     protected ArrayList<ExplorerItem> fileList;
+
+    // file path와 file item을 묶어 놓음
     protected HashMap<String, ExplorerItem> fileMap;
 
     protected Activity context;
@@ -269,7 +271,13 @@ public abstract class ExplorerAdapter extends BaseAdapter implements AbsListView
                 // 여기서 파일리스트에서 찾아보자
 //                if(loaderRunnable.isPaused())
 //                    return;
+                if(fileMap == null)
+                    return;
+
                 if (!fileMap.containsKey(bitmapMessage.path))
+                    return;
+
+                if(fileMap.get(bitmapMessage.path).imageViewRef == null)
                     return;
 
                 if (fileMap.get(bitmapMessage.path).imageViewRef.get() != bitmapMessage.imageView)
