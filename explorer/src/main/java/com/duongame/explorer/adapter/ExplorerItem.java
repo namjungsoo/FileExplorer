@@ -2,7 +2,7 @@ package com.duongame.explorer.adapter;
 
 import android.widget.ImageView;
 
-import com.github.chrisbanes.photoview.PhotoViewAttacher;
+import com.duongame.viewer.attacher.ImageViewAttacher;
 
 import java.lang.ref.WeakReference;
 
@@ -81,7 +81,7 @@ public class ExplorerItem implements Cloneable {
     public int priority;// 0이면 최우선, 1이면 낮음
 
     public WeakReference<ImageView> imageViewRef;
-    public PhotoViewAttacher attacher;
+    public ImageViewAttacher attacher;
 
     public ExplorerItem(String path, String name, String date, long size, FileType type) {
         this.path = path;

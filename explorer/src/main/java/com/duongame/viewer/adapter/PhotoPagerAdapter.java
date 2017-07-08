@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 
 import com.duongame.R;
@@ -14,9 +15,9 @@ import com.duongame.explorer.task.LoadGifTask;
 import com.duongame.explorer.task.bitmap.LoadBitmapTask;
 import com.duongame.explorer.task.bitmap.RemoveAndPreloadBitmapTask;
 import com.duongame.viewer.activity.PagerActivity;
+import com.duongame.viewer.attacher.ImageViewAttacher;
 import com.duongame.viewer.listener.PagerOnTouchListener;
 import com.felipecsl.gifimageview.library.GifImageView;
-import com.github.chrisbanes.photoview.PhotoViewAttacher;
 
 import java.util.ArrayList;
 
@@ -41,10 +42,10 @@ public class PhotoPagerAdapter extends ViewerPagerAdapter {
     public Object instantiateItem(final ViewGroup container, final int position) {
         Log.w(TAG, "instantiateItem position=" + position);
 
-        final ViewGroup rootView = (ViewGroup) context.getLayoutInflater().inflate(R.layout.viewer_page, container, false);
+        final FrameLayout rootView = (FrameLayout) context.getLayoutInflater().inflate(R.layout.viewer_page, container, false);
         final ImageView imageView = (ImageView) rootView.findViewById(R.id.image_viewer);
 
-//        rootView.setOnTouchListener(mPagerOnTouchListener);
+//        rootView.setBaseOnTouchListener(mPagerOnTouchListener);
 
         container.addView(rootView);
 
@@ -82,8 +83,8 @@ public class PhotoPagerAdapter extends ViewerPagerAdapter {
 
         // viewer_page layout에 장착한다.
 //        imageView.setOnTouchListener(mPagerOnTouchListener);
-        item.attacher = new PhotoViewAttacher(imageView);
-
+        item.attacher = new ImageViewAttacher(imageView);
+        item.attacher.setActivity(context);
         taskList.add(task);
     }
 
