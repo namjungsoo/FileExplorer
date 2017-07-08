@@ -2,6 +2,7 @@ package com.duongame.viewer.listener;
 
 import android.app.Activity;
 import android.graphics.PointF;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
 import android.view.View;
@@ -17,6 +18,8 @@ import static com.duongame.viewer.listener.BaseOnTouchListener.Axis.AXIS_Y;
 
 // Base OnTouchListener
 public abstract class BaseOnTouchListener implements View.OnTouchListener {
+    private final static String TAG = BaseOnTouchListener.class.getSimpleName();
+
     protected enum Axis {
         AXIS_X,
         AXIS_Y,
@@ -61,10 +64,7 @@ public abstract class BaseOnTouchListener implements View.OnTouchListener {
         touchSlop = configuration.getScaledTouchSlop() >> 1;
     }
 
-    @Override
-    public boolean onTouch(View v, MotionEvent ev) {
-//                Log.d(TAG, "onTouch");
-
+    public boolean handleTouch(View v, MotionEvent ev) {
         if (velocityTracker == null) {
             velocityTracker = VelocityTracker.obtain();
         }
@@ -72,17 +72,24 @@ public abstract class BaseOnTouchListener implements View.OnTouchListener {
 
         switch (ev.getAction()) {
             case MotionEvent.ACTION_DOWN: {
+                Log.d(TAG,"MotionEvent.ACTION_DOWN");
                 lastMotionPt.x = initialMotionPt.x = ev.getX(0);
                 lastMotionPt.y = initialMotionPt.y = ev.getY(0);
-                break;
+                return true;
+                //break;
             }
 
             case MotionEvent.ACTION_MOVE: {
+                Log.d(TAG,"MotionEvent.ACTION_MOVE");
                 if (!isBeingDragged) {
-                    if(touchAxis == AXIS_X)
+                    if (touchAxis == AXIS_X) {
+                        Log.d(TAG,"MotionEvent.ACTION_MOVE startDragXIfNeeded");
                         startDragXIfNeeded(ev);
-                    else if(touchAxis == AXIS_Y)
+                    }
+                    else if (touchAxis == AXIS_Y) {
+                        Log.d(TAG,"MotionEvent.ACTION_MOVE startDragYIfNeeded");
                         startDragYIfNeeded(ev);
+                    }
                 }
                 final float x = ev.getX(0);
                 final float y = ev.getY(0);
@@ -93,16 +100,29 @@ public abstract class BaseOnTouchListener implements View.OnTouchListener {
 
             case MotionEvent.ACTION_CANCEL:
             case MotionEvent.ACTION_UP: {
+                Log.d(TAG,"MotionEvent.ACTION_UP");
                 if (velocityTracker != null) {
                     velocityTracker.recycle();
                     velocityTracker = null;
                 }
-                if(handleActionUp())
+
+                // 내가 캡쳐 했으면 true
+                if (handleActionUp()) {
+                    Log.d(TAG,"MotionEvent.ACTION_UP handleActionUp true");
                     return true;
+                }
                 break;
             }
         }
+
+        // 하위 뷰에게 전달하려면 false
         return false;
+    }
+
+    @Override
+    public boolean onTouch(View v, MotionEvent ev) {
+//                Log.d(TAG, "onTouch");
+        return handleTouch(v, ev);
     }
 
     protected abstract boolean handleActionUp();
