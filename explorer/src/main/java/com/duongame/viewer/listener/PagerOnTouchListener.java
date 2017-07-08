@@ -1,17 +1,96 @@
 package com.duongame.viewer.listener;
 
+import android.os.AsyncTask;
+import android.view.MotionEvent;
+import android.view.View;
+
 import com.duongame.viewer.activity.PagerActivity;
+
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Created by namjungsoo on 2017-01-22.
  */
 
 public class PagerOnTouchListener extends BaseOnTouchListener {
+    private final static String TAG = PagerOnTouchListener.class.getSimpleName();
+    private final static int DOUBLE_TAP_INTERVAL_MS = 150;
+
     PagerActivity activity;
+    long actionUpTime;
+    long actionDownTime;
+    AtomicBoolean isTaskRunning = new AtomicBoolean(false);
 
     public PagerOnTouchListener(PagerActivity activity) {
         super(activity);
         this.activity = activity;
+    }
+
+    class PagingTask extends AsyncTask<Void, Void, Void> {
+        int page;
+
+        public PagingTask(int page) {
+            this.page = page;
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            try {
+                Thread.sleep(DOUBLE_TAP_INTERVAL_MS);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void result) {
+            if (actionDownTime < actionUpTime) {
+                activity.getPager().setCurrentItem(page, true);
+            }
+
+            isTaskRunning.set(false);
+        }
+    }
+
+    class FullscreenTask extends AsyncTask<Void, Void, Void> {
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            try {
+                Thread.sleep(DOUBLE_TAP_INTERVAL_MS);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void result) {
+//            Log.d(TAG, "actionDownTime=" + actionDownTime + " actionUpTime=" + actionUpTime);
+//            Log.d(TAG, "actionDownTime > actionUpTime=" + (actionDownTime > actionUpTime) + " delta=" + (actionDownTime - actionUpTime));
+            if (actionDownTime < actionUpTime) {
+                activity.setFullscreen(!activity.getFullscreen());
+            }
+
+            isTaskRunning.set(false);
+        }
+    }
+
+    @Override
+    public boolean handleTouch(View v, MotionEvent ev) {
+        boolean ret = super.handleTouch(v, ev);
+        switch (ev.getAction()) {
+            case MotionEvent.ACTION_DOWN: {
+                actionDownTime = System.currentTimeMillis();
+                break;
+            }
+            case MotionEvent.ACTION_UP: {
+                break;
+            }
+        }
+        return ret;
     }
 
     @Override
@@ -28,16 +107,30 @@ public class PagerOnTouchListener extends BaseOnTouchListener {
 
             if (lastMotionPt.x < left) {
                 int page = activity.getPager().getCurrentItem();
-                if (page > 0)
-                    activity.getPager().setCurrentItem(page - 1, true);
+                if (page > 0) {
+                    if (!isTaskRunning.getAndSet(true)) {
+                        actionUpTime = System.currentTimeMillis();
+                        PagingTask task = new PagingTask(page - 1);
+                        task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                    }
+                }
             } else if (lastMotionPt.x > right) {
                 //int total_file = pager.getChildCount();
                 int count = activity.getPagerAdapter().getCount();
                 int page = activity.getPager().getCurrentItem();
-                if (page < count + 1)
-                    activity.getPager().setCurrentItem(page + 1, true);
+                if (page < count + 1) {
+                    if (!isTaskRunning.getAndSet(true)) {
+                        actionUpTime = System.currentTimeMillis();
+                        PagingTask task = new PagingTask(page + 1);
+                        task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                    }
+                }
             } else {
-                activity.setFullscreen(!activity.getFullscreen());
+                if (!isTaskRunning.getAndSet(true)) {
+                    actionUpTime = System.currentTimeMillis();
+                    FullscreenTask task = new FullscreenTask();
+                    task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                }
             }
             return true;
         } else {
