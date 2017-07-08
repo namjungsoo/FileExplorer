@@ -49,6 +49,7 @@ import java.util.ArrayList;
 
 import static android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION;
 import static com.duongame.explorer.helper.ExtSdCardHelper.getExternalSdCardPath;
+import static com.duongame.explorer.helper.PreferenceHelper.getLastPath;
 
 /**
  * Created by namjungsoo on 2016-11-23.
@@ -449,6 +450,11 @@ public class ExplorerFragment extends BaseFragment {
 
     class SearchTask extends AsyncTask<String, Void, Void> {
 
+        boolean pathChanged;
+        public SearchTask(boolean pathChanged)  {
+            this.pathChanged = pathChanged;
+        }
+
         @Override
         protected Void doInBackground(String... params) {
             fileList = ExplorerManager.search(params[0]);
@@ -460,6 +466,20 @@ public class ExplorerFragment extends BaseFragment {
         protected void onPostExecute(Void result) {
             // SearchTask가 resume
             adapter.notifyDataSetChanged();
+            if(pathChanged) {
+                listView.setSelection(0);
+                listView.invalidate();
+            }
+
+//            if(pathChanged) {
+//                listView.post(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        listView.setSelection(0);
+//                    }
+//                });
+//            }
+
             adapter.resumeThread();
 
             textPath.setText(ExplorerManager.getLastPath());
@@ -478,6 +498,7 @@ public class ExplorerFragment extends BaseFragment {
     public void updateFileList(final String path) {
         if (adapter == null)
             return;
+
         adapter.pauseThread();
 
         // 썸네일이 꽉찼을때는 비워준다.
@@ -485,7 +506,7 @@ public class ExplorerFragment extends BaseFragment {
             BitmapCacheManager.recycleThumbnail();
         }
 
-        SearchTask task = new SearchTask();
+        SearchTask task = new SearchTask(isPathChanged(path));
         task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, path);
 
 //        // 파일리스트를 받아옴
@@ -525,13 +546,23 @@ public class ExplorerFragment extends BaseFragment {
         }).start();
     }
 
+    private boolean isPathChanged(String path) {
+//        Log.d(TAG, "path="+path);
+        String currentPath = PreferenceHelper.getLastPath(getContext());
+//        Log.d(TAG, "getLastPath="+ currentPath);
+
+        boolean pathChanged = !currentPath.equals(path);
+//        Log.d(TAG, "path="+pathChanged);
+        return pathChanged;
+    }
+
     @Override
     public void onRefresh() {
         //updateFileList(ExplorerManager.getLastPath());
         new Thread(new Runnable() {
             @Override
             public void run() {
-                updateFileList(PreferenceHelper.getLastPath(getContext()));
+                updateFileList(getLastPath(getContext()));
             }
         }).start();
     }
