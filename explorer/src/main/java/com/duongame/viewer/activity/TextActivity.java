@@ -6,6 +6,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.duongame.R;
+import com.duongame.explorer.manager.FontManager;
 import com.duongame.explorer.task.LoadTextTask;
 import com.duongame.viewer.listener.TextOnTouchListener;
 
@@ -36,6 +37,7 @@ public class TextActivity extends ViewerActivity {
 
         scrollText = (ScrollView) findViewById(R.id.scroll_text);
         textContent = (TextView) findViewById(R.id.text_content);
+        textContent.setTypeface(FontManager.getTypeFaceNanumMeyongjo(this));
 
         scrollText.setOnTouchListener(new TextOnTouchListener(this));
         processIntent();
