@@ -36,6 +36,7 @@ import com.duongame.explorer.adapter.ExplorerGridAdapter;
 import com.duongame.explorer.adapter.ExplorerItem;
 import com.duongame.explorer.adapter.ExplorerListAdapter;
 import com.duongame.explorer.bitmap.BitmapCacheManager;
+import com.duongame.explorer.helper.ExtSdCardHelper;
 import com.duongame.explorer.helper.PreferenceHelper;
 import com.duongame.explorer.manager.ExplorerManager;
 import com.duongame.explorer.manager.PositionManager;
@@ -48,8 +49,6 @@ import java.io.File;
 import java.util.ArrayList;
 
 import static android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION;
-import static com.duongame.explorer.helper.ExtSdCardHelper.getExternalSdCardPath;
-import static com.duongame.explorer.helper.PreferenceHelper.getLastPath;
 
 /**
  * Created by namjungsoo on 2016-11-23.
@@ -89,7 +88,7 @@ public class ExplorerFragment extends BaseFragment {
         initViewType();
         checkStoragePermissions();
 
-        extSdCard = getExternalSdCardPath();
+        extSdCard = ExtSdCardHelper.getExternalSdCardPath();
         if (extSdCard != null) {
             if (sdcard != null) {
                 sdcard.setVisibility(View.VISIBLE);
@@ -198,7 +197,6 @@ public class ExplorerFragment extends BaseFragment {
         return true;
     }
 
-
     void initViewType() {
         int viewType = PreferenceHelper.getViewType(getActivity());
         switch (viewType) {
@@ -267,7 +265,7 @@ public class ExplorerFragment extends BaseFragment {
     }
 
     // 새로운 파일이 추가 되었을때 스캔을 하라는 의미이다.
-    void refreshThumbnail(String path) {
+    void refreshThumbnail() {
         ArrayList<ExplorerItem> imageList = (ArrayList<ExplorerItem>) ExplorerManager.getImageList().clone();
 
         FragmentActivity activity = getActivity();
@@ -451,7 +449,8 @@ public class ExplorerFragment extends BaseFragment {
     class SearchTask extends AsyncTask<String, Void, Void> {
 
         boolean pathChanged;
-        public SearchTask(boolean pathChanged)  {
+
+        public SearchTask(boolean pathChanged) {
             this.pathChanged = pathChanged;
         }
 
@@ -466,19 +465,10 @@ public class ExplorerFragment extends BaseFragment {
         protected void onPostExecute(Void result) {
             // SearchTask가 resume
             adapter.notifyDataSetChanged();
-            if(pathChanged) {
+            if (pathChanged) {
                 listView.setSelection(0);
                 listView.invalidate();
             }
-
-//            if(pathChanged) {
-//                listView.post(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        listView.setSelection(0);
-//                    }
-//                });
-//            }
 
             adapter.resumeThread();
 
@@ -496,8 +486,11 @@ public class ExplorerFragment extends BaseFragment {
     }
 
     public void updateFileList(final String path) {
-        if (adapter == null)
+        Log.w(TAG, "updateFileList path=" + path);
+        if (adapter == null) {
+            Log.w(TAG, "updateFileList adapter==null");
             return;
+        }
 
         adapter.pauseThread();
 
@@ -509,17 +502,6 @@ public class ExplorerFragment extends BaseFragment {
         SearchTask task = new SearchTask(isPathChanged(path));
         task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, path);
 
-//        // 파일리스트를 받아옴
-//        fileList = ExplorerManager.search(path);
-//        if (fileList != null) {
-//            adapter.setFileList(fileList);
-//            adapter.notifyDataSetChanged();
-//        }
-//
-//        // 현재 패스를 세팅
-//        textPath.setText(ExplorerManager.getLastPath());
-//        textPath.requestLayout();
-
         // 가장 오른쪽으로 스크롤
         scrollPath.post(new Runnable() {
                             @Override
@@ -529,42 +511,29 @@ public class ExplorerFragment extends BaseFragment {
                         }
         );
 
-        // preference는 쓰레드로
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                PreferenceHelper.setLastPath(getActivity(), ExplorerManager.getLastPath());
-            }
-        }).start();
+        // preference는 쓰레드로 사용하지 않기로 함
+        // 현재 패스를 저장
+        PreferenceHelper.setLastPath(getActivity(), path);
 
         // 오래 걸림. 이것도 쓰레드로...
         new Thread(new Runnable() {
             @Override
             public void run() {
-                refreshThumbnail(path);
+                refreshThumbnail();
             }
         }).start();
     }
 
     private boolean isPathChanged(String path) {
-//        Log.d(TAG, "path="+path);
         String currentPath = PreferenceHelper.getLastPath(getContext());
-//        Log.d(TAG, "getLastPath="+ currentPath);
-
         boolean pathChanged = !currentPath.equals(path);
-//        Log.d(TAG, "path="+pathChanged);
         return pathChanged;
     }
 
     @Override
     public void onRefresh() {
-        //updateFileList(ExplorerManager.getLastPath());
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                updateFileList(getLastPath(getContext()));
-            }
-        }).start();
+        // 외부 resume시에 들어올수도 있으므로 pref에서 읽는다.
+        updateFileList(PreferenceHelper.getLastPath(getContext()));
     }
 
     @Override

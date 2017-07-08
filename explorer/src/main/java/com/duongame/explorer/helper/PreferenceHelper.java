@@ -87,6 +87,8 @@ public class PreferenceHelper {
     public static String getLastPath(Context context) {
         checkPrefManager(context);
         final String lastPath = pref.getString(LAST_PATH, Environment.getExternalStorageDirectory().getAbsolutePath());
+
+        Log.w(TAG, "getLastPath="+lastPath);
         return lastPath;
     }
 
@@ -95,6 +97,8 @@ public class PreferenceHelper {
         final SharedPreferences.Editor editor = pref.edit();
         editor.putString(LAST_PATH, lastPath);
         editor.commit();
+
+        Log.w(TAG, "setLastPath="+lastPath);
     }
 
     public static int getLastPosition(Context context) {
