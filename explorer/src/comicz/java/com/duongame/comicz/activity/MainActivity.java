@@ -1,9 +1,11 @@
 package com.duongame.comicz.activity;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -34,10 +36,17 @@ public class MainActivity extends AppCompatActivity {
         ShortcutHelper.checkShortcut(this);
         initTabs();
 
-        getSupportActionBar().setElevation(0.0f);
+        initToolbar();
+//        getSupportActionBar().setElevation(0.0f);
 
         //TEST
 //        FirebaseCrash.report(new Exception("My first Android non-fatal error"));
+    }
+
+    private void initToolbar() {
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        toolbar.setTitleTextColor(Color.WHITE);
     }
 
     private void initTabs() {

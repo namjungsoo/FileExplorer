@@ -7,7 +7,7 @@
         android:icon="@drawable/explorer"
         android:label="@string/app_name"
         android:largeHeap="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/ExplorerTheme">
 
         <activity android:name=".file.activity.MainActivity">
             <intent-filter>
