@@ -6,13 +6,13 @@ import android.widget.ImageView;
 
 import com.duongame.viewer.activity.PagerActivity;
 import com.duongame.viewer.listener.PagerOnTouchListener;
-import com.github.chrisbanes.photoview.PhotoViewAttacherEx;
+import com.github.chrisbanes.photoview.PhotoViewAttacher;
 
 /**
  * Created by js296 on 2017-07-05.
  */
 
-public class ImageViewAttacher extends PhotoViewAttacherEx {
+public class ImageViewAttacher extends PhotoViewAttacher {
     private final static String TAG = ImageViewAttacher.class.getSimpleName();
     PagerOnTouchListener mPagerOnTouchListener;
     ImageView imageView;

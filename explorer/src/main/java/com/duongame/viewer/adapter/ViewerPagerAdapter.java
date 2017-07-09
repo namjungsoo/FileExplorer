@@ -12,6 +12,7 @@ import java.util.ArrayList;
  * Created by namjungsoo on 2016-11-17.
  */
 //TODO: Zip파일 양면 읽기용으로 상속받아야 함. Pdf 파일 버전으로 따로 만들어야 함.
+//TODO: 나중에 FragmentStatePagerAdapter로 변경해야 함
 public abstract class ViewerPagerAdapter extends PagerAdapter {
     private static final String TAG = "ViewerPagerAdapter";
 
