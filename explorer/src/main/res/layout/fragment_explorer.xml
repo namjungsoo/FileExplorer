@@ -167,7 +167,6 @@
         android:layout_below="@id/panel_top"
         android:layout_weight="1">
 
-
         <ViewSwitcher
             android:id="@+id/switcher"
             android:layout_width="match_parent"
@@ -199,7 +198,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:text="@string/permissions"
-                android:visibility="gone"/>
+                android:visibility="gone" />
 
             <TextView
                 android:id="@+id/text_no_files"
@@ -207,7 +206,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:text="@string/no_files"
-                android:visibility="gone"/>
+                android:visibility="gone" />
         </FrameLayout>
 
     </ViewSwitcher>
