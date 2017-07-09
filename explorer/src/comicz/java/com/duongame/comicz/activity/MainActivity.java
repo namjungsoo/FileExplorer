@@ -1,6 +1,5 @@
 package com.duongame.comicz.activity;
 
-import android.Manifest;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
@@ -15,6 +14,7 @@ import com.duongame.explorer.bitmap.BitmapCacheManager;
 import com.duongame.explorer.fragment.BaseFragment;
 import com.duongame.explorer.helper.ShortcutHelper;
 import com.duongame.explorer.helper.ToastHelper;
+import com.duongame.explorer.manager.PermissionManager;
 
 import java.io.File;
 
@@ -56,23 +56,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-
-        final String read = Manifest.permission.READ_EXTERNAL_STORAGE;
-        final String write = Manifest.permission.WRITE_EXTERNAL_STORAGE;
-
-        boolean readEnable = false;
-        boolean writeEnable = false;
-
-        for (int i = 0; i < permissions.length; i++) {
-            if (read.equals(permissions[i]) && grantResults[i] == 0)
-                readEnable = true;
-            if (write.equals(permissions[i]) && grantResults[i] == 0)
-                writeEnable = true;
-        }
-
-        if (readEnable && writeEnable) {
-            // 최초 이므로 무조건 null
-        }
+        PermissionManager.onRequestStoragePermissionsResult(requestCode, permissions, grantResults);
     }
 
     @Override

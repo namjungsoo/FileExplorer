@@ -1,9 +1,7 @@
 package com.duongame.explorer.fragment;
 
-import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -39,6 +37,7 @@ import com.duongame.explorer.bitmap.BitmapCacheManager;
 import com.duongame.explorer.helper.ExtSdCardHelper;
 import com.duongame.explorer.helper.PreferenceHelper;
 import com.duongame.explorer.manager.ExplorerManager;
+import com.duongame.explorer.manager.PermissionManager;
 import com.duongame.explorer.manager.PositionManager;
 import com.duongame.viewer.activity.PdfActivity;
 import com.duongame.viewer.activity.PhotoActivity;
@@ -49,6 +48,7 @@ import java.io.File;
 import java.util.ArrayList;
 
 import static android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION;
+import static android.view.View.GONE;
 
 /**
  * Created by namjungsoo on 2016-11-23.
@@ -56,7 +56,6 @@ import static android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION;
 
 public class ExplorerFragment extends BaseFragment {
     private final static String TAG = "ExplorerFragment";
-    private final static int PERMISSION_STORAGE = 1;
 
     private final static int MAX_THUMBNAILS = 100;
     private final static int SWITCH_LIST = 0;
@@ -64,17 +63,27 @@ public class ExplorerFragment extends BaseFragment {
 
     private int viewType = SWITCH_LIST;
 
+    // 파일 관련
     private ExplorerAdapter adapter;
     private ArrayList<ExplorerItem> fileList;
+
+    // 패스 관련
     private TextView textPath;
     private HorizontalScrollView scrollPath;
+
+    // 컨텐츠 관련
     private GridView gridView;
     private ListView listView;
     private AbsListView currentView;
-    private ViewSwitcher switcherViewType;
     private View rootView;
-    private ViewSwitcher switcherContents;
 
+    // 뷰 스위처
+    private ViewSwitcher switcherViewType;
+    private ViewSwitcher switcherContents;
+    private Button permButton;
+    private TextView textNoFiles;
+
+    // 기타
     private ImageButton sdcard = null;
     private String extSdCard = null;
 
@@ -86,7 +95,7 @@ public class ExplorerFragment extends BaseFragment {
 
         initUI();
         initViewType();
-        checkStoragePermissions();
+        PermissionManager.checkStoragePermissions(getActivity());
 
         extSdCard = ExtSdCardHelper.getExternalSdCardPath();
         if (extSdCard != null) {
@@ -176,25 +185,16 @@ public class ExplorerFragment extends BaseFragment {
             }
         });
 
-        final Button permission = (Button) rootView.findViewById(R.id.btn_permission);
-        if (permission != null) {
-            permission.setOnClickListener(new View.OnClickListener() {
+        textNoFiles = (TextView) rootView.findViewById(R.id.text_no_files);
+        permButton = (Button) rootView.findViewById(R.id.btn_permission);
+        if (permButton != null) {
+            permButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    checkStoragePermissions();
+                    PermissionManager.checkStoragePermissions(getActivity());
                 }
             });
         }
-    }
-
-    private boolean checkStoragePermissions() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (getActivity().checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED || getActivity().checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, PERMISSION_STORAGE);
-                return false;
-            }
-        }
-        return true;
     }
 
     void initViewType() {
@@ -478,6 +478,15 @@ public class ExplorerFragment extends BaseFragment {
             if (switcherContents != null) {
                 if (fileList == null || fileList.size() <= 0) {
                     switcherContents.setDisplayedChild(1);
+
+                    // 퍼미션이 있으면 퍼미션 버튼을 보이지 않게 함
+                    if (PermissionManager.checkStoragePermissions()) {
+                        permButton.setVisibility(GONE);
+                        textNoFiles.setVisibility(View.VISIBLE);
+                    } else {
+                        permButton.setVisibility(View.VISIBLE);
+                        textNoFiles.setVisibility(GONE);
+                    }
                 } else {
                     switcherContents.setDisplayedChild(0);
                 }

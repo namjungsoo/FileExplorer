@@ -21,4 +21,5 @@
         <item>PDF</item>
     </string-array>
     <string name="permissions">권한 요청</string>
+    <string name="no_files">파일이 없습니다.</string>
 </resources>
