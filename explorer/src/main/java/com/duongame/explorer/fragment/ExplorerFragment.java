@@ -11,19 +11,18 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.FileProvider;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
-import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.GridView;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.ViewSwitcher;
 
@@ -33,6 +32,7 @@ import com.duongame.explorer.adapter.ExplorerAdapter;
 import com.duongame.explorer.adapter.ExplorerGridAdapter;
 import com.duongame.explorer.adapter.ExplorerItem;
 import com.duongame.explorer.adapter.ExplorerListAdapter;
+import com.duongame.explorer.adapter.ExplorerScrollListener;
 import com.duongame.explorer.bitmap.BitmapCacheManager;
 import com.duongame.explorer.helper.ExtSdCardHelper;
 import com.duongame.explorer.helper.PreferenceHelper;
@@ -54,7 +54,7 @@ import static android.view.View.GONE;
  * Created by namjungsoo on 2016-11-23.
  */
 
-public class ExplorerFragment extends BaseFragment {
+public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.OnItemClickListener {
     private final static String TAG = "ExplorerFragment";
 
     private final static int MAX_THUMBNAILS = 100;
@@ -72,9 +72,9 @@ public class ExplorerFragment extends BaseFragment {
     private HorizontalScrollView scrollPath;
 
     // 컨텐츠 관련
-    private GridView gridView;
-    private ListView listView;
-    private AbsListView currentView;
+    private RecyclerView gridView;
+    private RecyclerView listView;
+    private RecyclerView currentView;
     private View rootView;
 
     // 뷰 스위처
@@ -127,7 +127,9 @@ public class ExplorerFragment extends BaseFragment {
     public void onPause() {
         super.onPause();
 
-        final int position = currentView.getFirstVisiblePosition();
+        //TODO: 스크롤 위치 복구해줘야함
+        final int position = 0;
+//        final int position = currentView.getFirstVisiblePosition();
         final int top = getCurrentViewScrollTop();
         new Thread(new Runnable() {
             @Override
@@ -215,17 +217,20 @@ public class ExplorerFragment extends BaseFragment {
 
         adapter = new ExplorerListAdapter(getActivity(), fileList);
 
-        listView = (ListView) rootView.findViewById(R.id.list_explorer);
+        listView = (RecyclerView) rootView.findViewById(R.id.list_explorer);
         listView.setAdapter(adapter);
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                onAdapterItemClick(position);
-            }
-        });
-        listView.setOnScrollListener(adapter);
-        listView.setOnTouchListener(adapter);
-
+        listView.addOnScrollListener(new ExplorerScrollListener());
+        listView.addOnItemTouchListener(adapter);
+        adapter.setOnItemClickListener(this);
+//        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                onAdapterItemClick(position);
+//            }
+//        });
+//        listView.setOnScrollListener(adapter);
+//        listView.setOnTouchListener(adapter);
+        listView.setLayoutManager(new LinearLayoutManager(getActivity()));
         final Button view = (Button) rootView.findViewById(R.id.btn_view);
         view.setText(getResources().getString(R.string.grid));
         final ImageView image = (ImageView) rootView.findViewById(R.id.image_view);
@@ -242,16 +247,20 @@ public class ExplorerFragment extends BaseFragment {
 
         adapter = new ExplorerGridAdapter(getActivity(), fileList);
 
-        gridView = (GridView) rootView.findViewById(R.id.grid_explorer);
+        gridView = (RecyclerView) rootView.findViewById(R.id.grid_explorer);
         gridView.setAdapter(adapter);
-        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                onAdapterItemClick(position);
-            }
-        });
-        gridView.setOnScrollListener(adapter);
-        gridView.setOnTouchListener(adapter);
+        gridView.addOnScrollListener(new ExplorerScrollListener());
+        gridView.addOnItemTouchListener(adapter);
+        gridView.setLayoutManager(new GridLayoutManager(getActivity(), 4));
+        adapter.setOnItemClickListener(this);
+//        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                onAdapterItemClick(position);
+//            }
+//        });
+//        gridView.setOnScrollListener(adapter);
+//        gridView.setOnTouchListener(adapter);
 
         final Button view = (Button) rootView.findViewById(R.id.btn_view);
         view.setText(getResources().getString(R.string.list));
@@ -412,8 +421,8 @@ public class ExplorerFragment extends BaseFragment {
     }
 
     void backupPosition() {
-        PositionManager.setPosition(ExplorerManager.getLastPath(), currentView.getFirstVisiblePosition());
-        PositionManager.setTop(ExplorerManager.getLastPath(), getCurrentViewScrollTop());
+//        PositionManager.setPosition(ExplorerManager.getLastPath(), currentView.getFirstVisiblePosition());
+//        PositionManager.setTop(ExplorerManager.getLastPath(), getCurrentViewScrollTop());
     }
 
     int getCurrentViewScrollTop() {
@@ -436,14 +445,19 @@ public class ExplorerFragment extends BaseFragment {
 
                 if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                     // only for gingerbread and newer versions
-                    currentView.setSelectionFromTop(position, top);
+                    currentView.scrollToPosition(position);
                 } else {
-                    currentView.setSelection(position);
+                    currentView.scrollToPosition(position);
                 }
 
                 currentView.clearFocus();
             }
         });
+    }
+
+    @Override
+    public void onItemClick(int position) {
+        onAdapterItemClick(position);
     }
 
     class SearchTask extends AsyncTask<String, Void, Void> {
@@ -466,8 +480,8 @@ public class ExplorerFragment extends BaseFragment {
             // SearchTask가 resume
             adapter.notifyDataSetChanged();
             if (pathChanged) {
-                listView.setSelection(0);
-                listView.invalidate();
+                currentView.scrollToPosition(0);
+                currentView.invalidate();
             }
 
             adapter.resumeThread();

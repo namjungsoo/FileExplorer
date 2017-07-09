@@ -2,17 +2,14 @@ package com.duongame.explorer.adapter;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
-import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -22,12 +19,12 @@ import com.duongame.explorer.bitmap.BitmapLoader;
 import com.duongame.explorer.bitmap.BitmapMessage;
 import com.duongame.explorer.view.RoundedImageView;
 
-import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
+import static android.support.v7.widget.RecyclerView.SCROLL_STATE_IDLE;
 import static com.duongame.explorer.adapter.ExplorerItem.FileType.APK;
 import static com.duongame.explorer.adapter.ExplorerItem.FileType.VIDEO;
 import static com.duongame.explorer.bitmap.BitmapCacheManager.getDrawable;
@@ -37,7 +34,8 @@ import static com.duongame.explorer.bitmap.BitmapCacheManager.getThumbnail;
  * Created by namjungsoo on 2016-11-06.
  */
 
-public abstract class ExplorerAdapter extends BaseAdapter implements AbsListView.OnScrollListener, View.OnTouchListener {
+//public abstract class ExplorerAdapter extends BaseAdapter implements AbsListView.OnScrollListener, View.OnTouchListener {
+public class ExplorerAdapter extends RecyclerView.Adapter<ExplorerAdapter.ExplorerViewHolder> implements RecyclerView.OnItemTouchListener {
     private final static String TAG = "ExplorerAdapter";
     protected ArrayList<ExplorerItem> fileList;
 
@@ -68,6 +66,33 @@ public abstract class ExplorerAdapter extends BaseAdapter implements AbsListView
     private final static int SCROLL_DIRECTION_PREV = 1;
     private int scrollDirection = SCROLL_DIRECTION_NEXT;
 
+    OnItemClickListener onItemClickListener;
+
+    public interface OnItemClickListener {
+        void onItemClick(int position);
+    }
+
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        onItemClickListener = listener;
+    }
+
+    @Override
+    public boolean onInterceptTouchEvent(RecyclerView rv, MotionEvent e) {
+        if (e.getAction() == MotionEvent.ACTION_DOWN) {
+            loaderRunnable.onPause();
+        }
+        return false;
+    }
+
+    @Override
+    public void onTouchEvent(RecyclerView rv, MotionEvent e) {
+    }
+
+    @Override
+    public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
+
+    }
+
     class LoaderRunnable implements Runnable {
         private Object mPauseLock;
         private boolean mPaused;
@@ -83,6 +108,7 @@ public abstract class ExplorerAdapter extends BaseAdapter implements AbsListView
         public void run() {
             while (!mFinished) {
                 // Do stuff.
+//                Log.d(TAG, "run");
 
                 synchronized (mPauseLock) {
                     while (mPaused) {
@@ -143,7 +169,7 @@ public abstract class ExplorerAdapter extends BaseAdapter implements AbsListView
          * Call this on pause.
          */
         public void onPause() {
-//            Log.d(TAG, "onPause");
+            Log.d(TAG, "onPause");
             synchronized (mPauseLock) {
                 mPaused = true;
             }
@@ -153,7 +179,7 @@ public abstract class ExplorerAdapter extends BaseAdapter implements AbsListView
          * Call this on resume.
          */
         public void onResume() {
-//            Log.d(TAG, "onResume");
+            Log.d(TAG, "onResume");
             synchronized (mPauseLock) {
                 mPaused = false;
                 mPauseLock.notifyAll();
@@ -196,8 +222,13 @@ public abstract class ExplorerAdapter extends BaseAdapter implements AbsListView
         return false;
     }
 
-    public void onScrollStateChanged(AbsListView view, int scrollState) {
+    public void scrollStateChanged(RecyclerView recyclerView, int scrollState) {
         lastScrollState = scrollState;
+        firstVisibleItem = getFirstVisibleItem(recyclerView);
+        visibleItemCount = getVisibleItemCount(recyclerView);
+        Log.d("TAG", "scrollStateChanged lastScrollState=" + lastScrollState + " firstVisibleItem=" + firstVisibleItem + " visibleItemCount=" + visibleItemCount);
+
+
 //        Log.d(TAG, "lastScrollState=" + lastScrollState);
 
 //        Log.d(TAG, "onScrollStateChanged first=" + firstVisibleItem + " count=" + visibleItemCount);
@@ -240,18 +271,18 @@ public abstract class ExplorerAdapter extends BaseAdapter implements AbsListView
         }
     }
 
-    public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-//        Log.d(TAG, "onScroll first=" + firstVisibleItem + " count=" + visibleItemCount);
-        this.firstVisibleItem = firstVisibleItem;
-        this.visibleItemCount = visibleItemCount;
-    }
+//    public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+////        Log.d(TAG, "onScroll first=" + firstVisibleItem + " count=" + visibleItemCount);
+//        this.firstVisibleItem = firstVisibleItem;
+//        this.visibleItemCount = visibleItemCount;
+//    }
 
-    public boolean onTouch(View v, MotionEvent event) {
-        if (event.getAction() == MotionEvent.ACTION_DOWN) {
-            loaderRunnable.onPause();
-        }
-        return false;
-    }
+//    public boolean onTouch(View v, MotionEvent event) {
+//        if (event.getAction() == MotionEvent.ACTION_DOWN) {
+//            loaderRunnable.onPause();
+//        }
+//        return false;
+//    }
 
     public ExplorerAdapter(Activity context, ArrayList<ExplorerItem> fileList) {
         this.context = context;
@@ -271,13 +302,13 @@ public abstract class ExplorerAdapter extends BaseAdapter implements AbsListView
                 // 여기서 파일리스트에서 찾아보자
 //                if(loaderRunnable.isPaused())
 //                    return;
-                if(fileMap == null)
+                if (fileMap == null)
                     return;
 
                 if (!fileMap.containsKey(bitmapMessage.path))
                     return;
 
-                if(fileMap.get(bitmapMessage.path).imageViewRef == null)
+                if (fileMap.get(bitmapMessage.path).imageViewRef == null)
                     return;
 
                 if (fileMap.get(bitmapMessage.path).imageViewRef.get() != bitmapMessage.imageView)
@@ -358,59 +389,99 @@ public abstract class ExplorerAdapter extends BaseAdapter implements AbsListView
         mainHandler.sendMessage(mainMsg);
     }
 
+//    @Override
+//    public int getCount() {
+//        if (fileList == null)
+//            return 0;
+//
+//        return fileList.size();
+//    }
+//
+//    @Override
+//    public Object getItem(int position) {
+//        return null;
+//    }
+//
+//    @Override
+//    public long getItemId(int position) {
+//        return 0;
+//    }
+
+    protected static class ExplorerViewHolder extends RecyclerView.ViewHolder {
+        public ImageView iconSmall;
+        public RoundedImageView icon;
+        public TextView name;
+        public TextView date;
+        public TextView size;
+        public ExplorerItem.FileType type;
+        public int position;
+
+        public ExplorerViewHolder(View itemView) {
+            super(itemView);
+            icon = (RoundedImageView) itemView.findViewById(R.id.file_icon);
+            name = (TextView) itemView.findViewById(R.id.text_name);
+            date = (TextView) itemView.findViewById(R.id.text_date);
+            size = (TextView) itemView.findViewById(R.id.text_size);
+            iconSmall = (ImageView) itemView.findViewById(R.id.file_small_icon);
+        }
+    }
+
     @Override
-    public int getCount() {
+    public ExplorerViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View v = inflateLayout(parent);
+        ExplorerViewHolder holder = new ExplorerViewHolder(v);
+        return holder;
+    }
+
+    @Override
+    public void onBindViewHolder(final ExplorerViewHolder holder, int position) {
+        Log.d("TAG", "onBindViewHolder " + position);
+        //holder.mTextView.setText(String.valueOf(item[position]));
+        bindViewHolderExplorer(holder, position);
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(onItemClickListener != null) {
+                    onItemClickListener.onItemClick(holder.position);
+                }
+            }
+        });
+    }
+
+    @Override
+    public int getItemCount() {
         if (fileList == null)
             return 0;
 
         return fileList.size();
     }
 
-    @Override
-    public Object getItem(int position) {
-        return null;
-    }
-
-    @Override
-    public long getItemId(int position) {
-        return 0;
-    }
-
-    protected static class ViewHolder {
-        public ImageView small_icon;
-        public RoundedImageView icon;
-        public TextView name;
-        public TextView date;
-        public TextView size;
-        public ExplorerItem.FileType type;
-    }
-
-    @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        ViewHolder viewHolder;
-
-        if (convertView == null) {
-            convertView = inflateLayout(parent);
-
-            viewHolder = new ViewHolder();
-            initViewHolder(viewHolder, convertView);
-
-            convertView.setTag(viewHolder);
-        } else {
-            viewHolder = (ViewHolder) convertView.getTag();
-        }
-
-        ExplorerItem item = fileList.get(position);
-        item.imageViewRef = new WeakReference<ImageView>(viewHolder.icon);
-
-        setViewHolder(viewHolder, item);
-
-        setDefaultIcon(item.type, viewHolder.icon);
-        setIcon(viewHolder, item, position);
-//        Log.d(TAG, "getView position="+position);
-
-        return convertView;
-    }
+//    @Override
+//    public View getView(int position, View convertView, ViewGroup parent) {
+//        ExplorerViewHolder viewHolder;
+//
+//        if (convertView == null) {
+//            convertView = inflateLayout(parent);
+//
+//            viewHolder = new ExplorerViewHolder();
+//            initViewHolder(viewHolder, convertView);
+//
+//            convertView.setTag(viewHolder);
+//        } else {
+//            viewHolder = (ExplorerViewHolder) convertView.getTag();
+//        }
+//
+//        ExplorerItem item = fileList.get(position);
+//        item.imageViewRef = new WeakReference<ImageView>(viewHolder.icon);
+//
+//        setViewHolder(viewHolder, item);
+//
+//        setDefaultIcon(item.type, viewHolder.icon);
+//        setIcon(viewHolder, item, position);
+////        Log.d(TAG, "getView position="+position);
+//
+//        return convertView;
+//    }
 
     public void setFileList(ArrayList<ExplorerItem> fileList) {
         this.fileList = fileList;
@@ -432,135 +503,135 @@ public abstract class ExplorerAdapter extends BaseAdapter implements AbsListView
         idle_visibleItemCount = 0;
     }
 
-    void setIconImage(final ViewHolder viewHolder, ExplorerItem item, int position) {
+    void setIconImage(final ExplorerViewHolder explorerViewHolder, ExplorerItem item, int position) {
         final Bitmap bitmap = getThumbnail(item.path);
         if (bitmap == null) {
-            viewHolder.icon.setImageResource(R.drawable.file);
+            explorerViewHolder.icon.setImageResource(R.drawable.file);
 
             BitmapMessage bitmapMessage = new BitmapMessage();
             bitmapMessage.type = ExplorerItem.FileType.IMAGE;
             bitmapMessage.path = item.path;
-            bitmapMessage.imageView = viewHolder.icon;
+            bitmapMessage.imageView = explorerViewHolder.icon;
             bitmapMessage.position = position;
 
             messageQueue.add(bitmapMessage);
         } else {
-            viewHolder.icon.setImageBitmap(bitmap);
+            explorerViewHolder.icon.setImageBitmap(bitmap);
         }
     }
 
-    void setIconPdf(final ViewHolder viewHolder, ExplorerItem item, int position) {
+    void setIconPdf(final ExplorerViewHolder explorerViewHolder, ExplorerItem item, int position) {
         final Bitmap bitmap = getThumbnail(item.path);
         if (bitmap == null) {
-            viewHolder.icon.setImageResource(R.drawable.file);
+            explorerViewHolder.icon.setImageResource(R.drawable.file);
 
             BitmapMessage bitmapMessage = new BitmapMessage();
             bitmapMessage.type = ExplorerItem.FileType.PDF;
             bitmapMessage.path = item.path;
-            bitmapMessage.imageView = viewHolder.icon;
+            bitmapMessage.imageView = explorerViewHolder.icon;
             bitmapMessage.position = position;
 
             messageQueue.add(bitmapMessage);
         } else {// 로딩된 비트맵을 셋팅
-            viewHolder.icon.setImageBitmap(bitmap);
+            explorerViewHolder.icon.setImageBitmap(bitmap);
         }
 
     }
 
-    void setIconZip(final ViewHolder viewHolder, ExplorerItem item, int position) {
+    void setIconZip(final ExplorerViewHolder explorerViewHolder, ExplorerItem item, int position) {
         final Bitmap bitmap = getThumbnail(item.path);
         if (bitmap == null) {
-            viewHolder.icon.setImageResource(R.drawable.file);
+            explorerViewHolder.icon.setImageResource(R.drawable.file);
 
             BitmapMessage bitmapMessage = new BitmapMessage();
             bitmapMessage.type = ExplorerItem.FileType.ZIP;
             bitmapMessage.path = item.path;
-            bitmapMessage.imageView = viewHolder.icon;
+            bitmapMessage.imageView = explorerViewHolder.icon;
             bitmapMessage.position = position;
 
             messageQueue.add(bitmapMessage);
         } else {
-            viewHolder.icon.setImageBitmap(bitmap);
+            explorerViewHolder.icon.setImageBitmap(bitmap);
         }
     }
 
-    void setIconApk(final ViewHolder viewHolder, ExplorerItem item, int position) {
+    void setIconApk(final ExplorerViewHolder explorerViewHolder, ExplorerItem item, int position) {
         Drawable drawable = getDrawable(item.path);
         if (drawable == null) {
-            viewHolder.icon.setImageResource(R.drawable.file);
+            explorerViewHolder.icon.setImageResource(R.drawable.file);
 
             BitmapMessage bitmapMessage = new BitmapMessage();
             bitmapMessage.type = ExplorerItem.FileType.APK;
             bitmapMessage.path = item.path;
-            bitmapMessage.imageView = viewHolder.icon;
+            bitmapMessage.imageView = explorerViewHolder.icon;
             bitmapMessage.position = position;
 
             messageQueue.add(bitmapMessage);
         } else {
-            viewHolder.icon.setImageDrawable(drawable);
+            explorerViewHolder.icon.setImageDrawable(drawable);
         }
     }
 
-    void setIconVideo(final ViewHolder viewHolder, ExplorerItem item, int position) {
+    void setIconVideo(final ExplorerViewHolder explorerViewHolder, ExplorerItem item, int position) {
         final Bitmap bitmap = getThumbnail(item.path);
         if (bitmap == null) {
-            viewHolder.icon.setImageResource(R.drawable.file);
+            explorerViewHolder.icon.setImageResource(R.drawable.file);
 
             BitmapMessage bitmapMessage = new BitmapMessage();
             bitmapMessage.type = VIDEO;
             bitmapMessage.path = item.path;
-            bitmapMessage.imageView = viewHolder.icon;
+            bitmapMessage.imageView = explorerViewHolder.icon;
             bitmapMessage.position = position;
 
             messageQueue.add(bitmapMessage);
         } else {// 로딩된 비트맵을 셋팅
-            viewHolder.icon.setImageBitmap(bitmap);
+            explorerViewHolder.icon.setImageBitmap(bitmap);
         }
     }
 
-    void setIcon(final ViewHolder viewHolder, ExplorerItem item, int position) {
+    void setIcon(final ExplorerViewHolder explorerViewHolder, ExplorerItem item, int position) {
         if (item.type == ExplorerItem.FileType.IMAGE) {
-            setIconImage(viewHolder, item, position);
+            setIconImage(explorerViewHolder, item, position);
         } else if (item.type == VIDEO) {
-            setIconVideo(viewHolder, item, position);
+            setIconVideo(explorerViewHolder, item, position);
         } else if (item.type == ExplorerItem.FileType.ZIP) {
-            setIconZip(viewHolder, item, position);
+            setIconZip(explorerViewHolder, item, position);
         } else if (item.type == ExplorerItem.FileType.PDF) {
-            setIconPdf(viewHolder, item, position);
+            setIconPdf(explorerViewHolder, item, position);
         } else if (item.type == ExplorerItem.FileType.APK) {
-            setIconApk(viewHolder, item, position);
+            setIconApk(explorerViewHolder, item, position);
         } else {
             // 이전 타입과 다르게 새 타입이 들어왔다면 업데이트 한다.
-            //if (viewHolder.type != item.type) {
-            setTypeIcon(item.type, viewHolder.icon);
+            //if (explorerViewHolder.type != item.type) {
+            setTypeIcon(item.type, explorerViewHolder.icon);
             //}
         }
 
-        viewHolder.type = item.type;
+        explorerViewHolder.type = item.type;
     }
 
-
-    public static Bitmap drawableToBitmap(Drawable drawable) {
-        Bitmap bitmap = null;
-
-        if (drawable instanceof BitmapDrawable) {
-            BitmapDrawable bitmapDrawable = (BitmapDrawable) drawable;
-            if (bitmapDrawable.getBitmap() != null) {
-                return bitmapDrawable.getBitmap();
-            }
-        }
-
-        if (drawable.getIntrinsicWidth() <= 0 || drawable.getIntrinsicHeight() <= 0) {
-            bitmap = Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888); // Single color bitmap will be created of 1x1 pixel
-        } else {
-            bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
-        }
-
-        final Canvas canvas = new Canvas(bitmap);
-        drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
-        drawable.draw(canvas);
-        return bitmap;
-    }
+    // 비용이 많이 드는 작업임
+//    public static Bitmap drawableToBitmap(Drawable drawable) {
+//        Bitmap bitmap = null;
+//
+//        if (drawable instanceof BitmapDrawable) {
+//            BitmapDrawable bitmapDrawable = (BitmapDrawable) drawable;
+//            if (bitmapDrawable.getBitmap() != null) {
+//                return bitmapDrawable.getBitmap();
+//            }
+//        }
+//
+//        if (drawable.getIntrinsicWidth() <= 0 || drawable.getIntrinsicHeight() <= 0) {
+//            bitmap = Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888); // Single color bitmap will be created of 1x1 pixel
+//        } else {
+//            bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+//        }
+//
+//        final Canvas canvas = new Canvas(bitmap);
+//        drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+//        drawable.draw(canvas);
+//        return bitmap;
+//    }
 
     void setDefaultIcon(ExplorerItem.FileType type, ImageView icon) {
         switch (type) {
@@ -611,9 +682,22 @@ public abstract class ExplorerAdapter extends BaseAdapter implements AbsListView
 //        taskMap.clear();
     }
 
-    public abstract void initViewHolder(ViewHolder viewHolder, View convertView);
+//    public abstract void initViewHolder(ExplorerViewHolder viewHolder, View convertView);
 
-    public abstract void setViewHolder(ViewHolder viewHolder, ExplorerItem item);
+//    public abstract void setViewHolder(ExplorerViewHolder viewHolder, ExplorerItem item);
 
-    public abstract View inflateLayout(ViewGroup parent);
+    public void bindViewHolderExplorer(ExplorerViewHolder viewHolder, int position) {
+    }
+
+    public View inflateLayout(ViewGroup parent) {
+        return null;
+    }
+
+    public int getFirstVisibleItem(RecyclerView recyclerView) {
+        return 0;
+    }
+
+    public int getVisibleItemCount(RecyclerView recyclerView) {
+        return 0;
+    }
 }
