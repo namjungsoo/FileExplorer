@@ -5,10 +5,12 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import com.duongame.R;
 import com.duongame.explorer.helper.FileHelper;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
 /**
@@ -29,6 +31,7 @@ public class ExplorerListAdapter extends ExplorerAdapter {
         viewHolder.iconSmall.setVisibility(View.INVISIBLE);
         viewHolder.position = position;
 
+        item.imageViewRef = new WeakReference<ImageView>(viewHolder.icon);
         setDefaultIcon(item.type, viewHolder.icon);
         setIcon(viewHolder, item, position);
     }

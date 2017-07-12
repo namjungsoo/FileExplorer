@@ -89,6 +89,7 @@
             android:background="@color/colorDivider" />
     </LinearLayout>
 
+    <!-- 하단 툴박스 -->
     <LinearLayout
         android:id="@+id/panel_bottom"
         android:layout_width="match_parent"
@@ -159,6 +160,7 @@
         </LinearLayout>
     </LinearLayout>
 
+    <!-- 컨텐츠를 담는 그릇 -->
     <ViewSwitcher
         android:id="@+id/switcher_contents"
         android:layout_width="match_parent"
@@ -167,6 +169,7 @@
         android:layout_below="@id/panel_top"
         android:layout_weight="1">
 
+        <!-- Grid와 List 중에서 스위치 -->
         <ViewSwitcher
             android:id="@+id/switcher"
             android:layout_width="match_parent"
@@ -188,6 +191,7 @@
 
         </ViewSwitcher>
 
+        <!-- 파일이 없거나 권한이 없거나 -->
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">

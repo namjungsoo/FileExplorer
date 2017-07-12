@@ -293,35 +293,51 @@ public class ExplorerAdapter extends RecyclerView.Adapter<ExplorerAdapter.Explor
             @Override
             public void handleMessage(Message msg) {
                 final BitmapMessage bitmapMessage = (BitmapMessage) msg.obj;
-                if (bitmapMessage == null)
+                if (bitmapMessage == null) {
+                    Log.e(TAG, "bitmapMessage == null");
                     return;
+                }
 
-                if (bitmapMessage.imageView == null)
+                if (bitmapMessage.imageView == null) {
+                    Log.e(TAG, "bitmapMessage.imageView == null");
                     return;
+                }
 
                 // 여기서 파일리스트에서 찾아보자
 //                if(loaderRunnable.isPaused())
 //                    return;
-                if (fileMap == null)
+                if (fileMap == null) {
+                    Log.e(TAG, "fileMap == null");
                     return;
+                }
 
-                if (!fileMap.containsKey(bitmapMessage.path))
+                if (!fileMap.containsKey(bitmapMessage.path)) {
+                    Log.e(TAG, "!fileMap.containsKey(bitmapMessage.path)");
                     return;
+                }
 
-                if (fileMap.get(bitmapMessage.path).imageViewRef == null)
+                if (fileMap.get(bitmapMessage.path).imageViewRef == null) {
+                    Log.e(TAG, "imageViewRef == null");
                     return;
+                }
 
-                if (fileMap.get(bitmapMessage.path).imageViewRef.get() != bitmapMessage.imageView)
+                if (fileMap.get(bitmapMessage.path).imageViewRef.get() != bitmapMessage.imageView) {
+                    Log.e(TAG, "imageViewRef.get() != bitmapMessage.imageView");
                     return;
+                }
 
                 if (msg.arg1 == LOAD_BITMAP) {
-                    if (bitmapMessage.bitmap == null)
+                    if (bitmapMessage.bitmap == null) {
+                        Log.e(TAG, "bitmap == null");
                         return;
+                    }
 
                     bitmapMessage.imageView.setImageBitmap(bitmapMessage.bitmap);
                 } else if (msg.arg1 == LOAD_DRAWABLE) {
-                    if (bitmapMessage.drawable == null)
+                    if (bitmapMessage.drawable == null) {
+                        Log.e(TAG, "drawable == null");
                         return;
+                    }
 
                     bitmapMessage.imageView.setImageDrawable(bitmapMessage.drawable);
                 }
@@ -435,7 +451,7 @@ public class ExplorerAdapter extends RecyclerView.Adapter<ExplorerAdapter.Explor
 
     @Override
     public void onBindViewHolder(final ExplorerViewHolder holder, int position) {
-        Log.d("TAG", "onBindViewHolder " + position);
+        Log.e("TAG", "onBindViewHolder " + position);
         //holder.mTextView.setText(String.valueOf(item[position]));
         bindViewHolderExplorer(holder, position);
         holder.itemView.setOnClickListener(new View.OnClickListener() {
