@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Parcelable;
 
+import com.duongame.BuildConfig;
 import com.duongame.R;
 
 /**
@@ -37,7 +38,14 @@ public class ShortcutHelper {
 
         final Intent intent = new Intent();
         intent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, shortcutIntent);
-        intent.putExtra(Intent.EXTRA_SHORTCUT_NAME, context.getResources().getString(R.string.app_name));
+
+        int resId = 0;
+        if(BuildConfig.SHOW_AD) {
+            resId = R.string.app_name_free;
+        } else {
+            resId = R.string.app_name_pro;
+        }
+        intent.putExtra(Intent.EXTRA_SHORTCUT_NAME, context.getResources().getString(resId));
         intent.putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE, iconResource);
         intent.putExtra("duplicate", false);
         intent.setAction("com.android.launcher.action.INSTALL_SHORTCUT");

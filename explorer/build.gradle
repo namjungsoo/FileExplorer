@@ -39,13 +39,15 @@ android {
         // 유료
         pro {
             buildConfigField "boolean", "SHOW_AD", "false"
-            resValue "string", "app_name", "@string/app_name_pro"
+            //resValue "string", "app_name", "@string/app_name_pro"
+            addManifestPlaceholders([APP_NAME: "@string/app_name_pro"])
             dimension "edition"
         }
         // 무료
         free {
             applicationIdSuffix '.free'
-            resValue "string", "app_name", "@string/app_name_free"
+            //resValue "string", "app_name", "@string/app_name_free"
+            addManifestPlaceholders([APP_NAME: "@string/app_name_free"])
             dimension "edition"
         }
 

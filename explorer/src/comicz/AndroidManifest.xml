@@ -4,9 +4,9 @@
 
     <application
         android:allowBackup="true"
+        android:largeHeap="true"
         android:icon="@drawable/comicz"
-        android:label="@string/app_name"
-        android:supportsRtl="true"
+        android:label="${APP_NAME}"
         android:theme="@style/ExplorerTheme">
         <activity android:name=".comicz.activity.MainActivity">
             <intent-filter>

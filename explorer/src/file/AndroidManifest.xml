@@ -4,9 +4,9 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@drawable/explorer"
-        android:label="@string/app_name"
         android:largeHeap="true"
+        android:icon="@drawable/explorer"
+        android:label="${APP_NAME}"
         android:theme="@style/ExplorerTheme">
 
         <activity android:name=".file.activity.MainActivity">
@@ -18,18 +18,19 @@
 
         </activity>
 
-        <activity android:name="com.duongame.viewer.activity.PhotoActivity"
-            android:theme="@style/ComicViewerTheme"
-            />
-        <activity android:name="com.duongame.viewer.activity.ZipActivity"
-            android:theme="@style/ComicViewerTheme"
-            />
-        <activity android:name="com.duongame.viewer.activity.TextActivity"
-            android:theme="@style/ComicViewerTheme"
-            />
-        <activity android:name="com.duongame.viewer.activity.PdfActivity"
-            android:theme="@style/ComicViewerTheme"
-            />
+        <activity
+            android:name="com.duongame.viewer.activity.PhotoActivity"
+            android:theme="@style/ComicViewerTheme" />
+        <activity
+            android:name="com.duongame.viewer.activity.ZipActivity"
+            android:theme="@style/ComicViewerTheme" />
+        <activity
+            android:name="com.duongame.viewer.activity.TextActivity"
+            android:theme="@style/ComicViewerTheme" />
+        <activity
+            android:name="com.duongame.viewer.activity.PdfActivity"
+            android:theme="@style/ComicViewerTheme" />
+
         <provider
             android:name="android.support.v4.content.FileProvider"
             android:authorities="${applicationId}.provider"
@@ -43,6 +44,7 @@
     </application>
 
     <protected-broadcast android:name="android.intent.action.MEDIA_MOUNTED" />
+
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
