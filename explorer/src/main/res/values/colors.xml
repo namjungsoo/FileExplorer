@@ -7,4 +7,6 @@
     <color name="colorDivider">#d3d3d3</color>
     <color name="colorBlackBackground">#FF000000</color>
     <color name="colorGreyBackground">#FF2A2A2A</color>
+    <color name="colorText">#FFFFFFFF</color>
+    <color name="colorTextSecondary">#CCFFFFFF</color>
 </resources>
