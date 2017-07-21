@@ -267,7 +267,7 @@ public class ExplorerAdapter extends RecyclerView.Adapter<ExplorerAdapter.Explor
 
             loaderRunnable.onResume();
         } else {
-            loaderRunnable.onPause();
+//            loaderRunnable.onPause();
         }
     }
 
@@ -451,7 +451,7 @@ public class ExplorerAdapter extends RecyclerView.Adapter<ExplorerAdapter.Explor
 
     @Override
     public void onBindViewHolder(final ExplorerViewHolder holder, int position) {
-        Log.e("TAG", "onBindViewHolder " + position);
+//        Log.e("TAG", "onBindViewHolder " + position);
         //holder.mTextView.setText(String.valueOf(item[position]));
         bindViewHolderExplorer(holder, position);
         holder.itemView.setOnClickListener(new View.OnClickListener() {
