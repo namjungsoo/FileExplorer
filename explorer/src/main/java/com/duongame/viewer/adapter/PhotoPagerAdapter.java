@@ -149,6 +149,8 @@ public class PhotoPagerAdapter extends ViewerPagerAdapter {
             // GIF 이미지일 경우
             // 메모리에 사라졌다가 재 로딩일 경우에 애니메이션이 잘 안된다.
             final ViewGroup rootView = (ViewGroup)object;
+            if(rootView == null)
+                return;
 
             final PagerActivity pagerActivity = (PagerActivity) context;
             final GifImageView imageView = (GifImageView) rootView.findViewById(R.id.image_viewer);
