@@ -9,10 +9,10 @@ import android.util.Log;
  * Created by 정수 on 2015-11-15.
  */
 public class PreferenceHelper {
-    private static final String TAG="PreferenceHelper";
+    private final static boolean DEBUG = false;
 
+    private static final String TAG = "PreferenceHelper";
     private static final String PREF_NAME = "FileExplorer";
-
     private static final String IS_SHORTCUT = "is_shortcut";
 //    private static final String PREF_IS_EXPLORER_HELP = "is_explorer_help";
 
@@ -35,7 +35,8 @@ public class PreferenceHelper {
         final boolean prefIsShortcut = pref.getBoolean(IS_SHORTCUT, false);
         return prefIsShortcut;
     }
-//
+
+    //
 //    public static boolean isExplorerHelp(Context context) {
 //        checkPrefManager(context);
 //        final boolean prefIsExplorerHelp = pref.getBoolean(PREF_IS_EXPLORER_HELP, true);
@@ -63,7 +64,8 @@ public class PreferenceHelper {
     }
 
     public static void setStartCount(Context context, int count) {
-        Log.e(TAG, "setStartCount total_file="+count);
+        if (DEBUG)
+            Log.e(TAG, "setStartCount total_file=" + count);
 
         checkPrefManager(context);
         final SharedPreferences.Editor editor = pref.edit();
@@ -88,7 +90,8 @@ public class PreferenceHelper {
         checkPrefManager(context);
         final String lastPath = pref.getString(LAST_PATH, Environment.getExternalStorageDirectory().getAbsolutePath());
 
-        Log.w(TAG, "getLastPath="+lastPath);
+        if (DEBUG)
+            Log.w(TAG, "getLastPath=" + lastPath);
         return lastPath;
     }
 
@@ -98,7 +101,8 @@ public class PreferenceHelper {
         editor.putString(LAST_PATH, lastPath);
         editor.commit();
 
-        Log.w(TAG, "setLastPath="+lastPath);
+        if (DEBUG)
+            Log.w(TAG, "setLastPath=" + lastPath);
     }
 
     public static int getLastPosition(Context context) {
@@ -126,5 +130,4 @@ public class PreferenceHelper {
         editor.putInt(LAST_TOP, lastTop);
         editor.commit();
     }
-
 }

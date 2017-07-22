@@ -56,6 +56,7 @@ import static android.view.View.GONE;
 
 public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.OnItemClickListener {
     private final static String TAG = "ExplorerFragment";
+    private final static boolean DEBUG = false;
 
     private final static int MAX_THUMBNAILS = 100;
     private final static int SWITCH_LIST = 0;
@@ -90,7 +91,9 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
     @Nullable
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
                              Bundle savedInstanceState) {
-        Log.d(TAG, "onCreateView");
+        if(DEBUG)
+            Log.d(TAG, "onCreateView");
+
         rootView = inflater.inflate(R.layout.fragment_explorer, container, false);
 
         initUI();
@@ -222,6 +225,8 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
         listView.addOnScrollListener(new ExplorerScrollListener());
         listView.addOnItemTouchListener(adapter);
         adapter.setOnItemClickListener(this);
+
+        // listview 폐지
 //        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 //            @Override
 //            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -253,6 +258,8 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
         gridView.addOnItemTouchListener(adapter);
         gridView.setLayoutManager(new GridLayoutManager(getActivity(), 4));
         adapter.setOnItemClickListener(this);
+
+        // listview 폐지
 //        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 //            @Override
 //            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -509,9 +516,12 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
     }
 
     public void updateFileList(final String path) {
-        Log.w(TAG, "updateFileList path=" + path);
+        if(DEBUG)
+            Log.w(TAG, "updateFileList path=" + path);
+
         if (adapter == null) {
-            Log.w(TAG, "updateFileList adapter==null");
+            if(DEBUG)
+                Log.w(TAG, "updateFileList adapter==null");
             return;
         }
 

@@ -26,6 +26,8 @@ import java.util.ArrayList;
 
 public class HistoryFragment extends BaseFragment {
     private final static String TAG = "HistoryFragment";
+    private final static boolean DEBUG = false;
+
     private ViewGroup rootView;
     private ListView listView;
     private HistoryAdapter adapter;
@@ -35,7 +37,8 @@ public class HistoryFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        Log.d(TAG, "onCreateView");
+        if(DEBUG)
+            Log.d(TAG, "onCreateView");
 
         rootView = (ViewGroup) inflater.inflate(R.layout.fragment_history, container, false);
         listView = (ListView) rootView.findViewById(R.id.list_history);
@@ -114,13 +117,15 @@ public class HistoryFragment extends BaseFragment {
     @Override
     public void onPause() {
         super.onPause();
-        Log.d(TAG, "onPause");
+        if(DEBUG)
+            Log.d(TAG, "onPause");
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        Log.i(TAG, "onResume");
+        if(DEBUG)
+            Log.i(TAG, "onResume");
         onRefresh();
     }
 }

@@ -20,6 +20,7 @@ import java.util.HashMap;
  */
 
 public class ComicPagerAdapter extends FragmentPagerAdapter {
+    private final static boolean DEBUG = false;
     private final static String TAG = "ComicPagerAdapter";
     private final int PAGE_COUNT = 3;
 
@@ -41,7 +42,10 @@ public class ComicPagerAdapter extends FragmentPagerAdapter {
     @Override
     public Fragment getItem(int position) {
         BaseFragment fragment = null;
-        Log.d(TAG, "getItem=" + position);
+
+        if(DEBUG)
+            Log.d(TAG, "getItem=" + position);
+
         fragment = fragmentMap.get(position);
         if (fragment == null) {
             switch (position) {
@@ -80,7 +84,9 @@ public class ComicPagerAdapter extends FragmentPagerAdapter {
     public void setPrimaryItem(ViewGroup container, int position, Object object) {
         super.setPrimaryItem(container, position, object);
 
-//        Log.d(TAG, "setPrimaryItem=" + position);
+        if(DEBUG)
+            Log.d(TAG, "setPrimaryItem=" + position);
+
         if(position != lastPosition) {
             lastPosition = position;
             if (fragmentMap.containsKey(position)) {

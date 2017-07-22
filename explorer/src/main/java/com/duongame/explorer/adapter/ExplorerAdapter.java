@@ -37,6 +37,8 @@ import static com.duongame.explorer.bitmap.BitmapCacheManager.getThumbnail;
 //public abstract class ExplorerAdapter extends BaseAdapter implements AbsListView.OnScrollListener, View.OnTouchListener {
 public class ExplorerAdapter extends RecyclerView.Adapter<ExplorerAdapter.ExplorerViewHolder> implements RecyclerView.OnItemTouchListener {
     private final static String TAG = "ExplorerAdapter";
+    private final static boolean DEBUG = false;
+
     protected ArrayList<ExplorerItem> fileList;
 
     // file path와 file item을 묶어 놓음
@@ -226,7 +228,7 @@ public class ExplorerAdapter extends RecyclerView.Adapter<ExplorerAdapter.Explor
         lastScrollState = scrollState;
         firstVisibleItem = getFirstVisibleItem(recyclerView);
         visibleItemCount = getVisibleItemCount(recyclerView);
-        Log.d("TAG", "scrollStateChanged lastScrollState=" + lastScrollState + " firstVisibleItem=" + firstVisibleItem + " visibleItemCount=" + visibleItemCount);
+//        Log.d("TAG", "scrollStateChanged lastScrollState=" + lastScrollState + " firstVisibleItem=" + firstVisibleItem + " visibleItemCount=" + visibleItemCount);
 
 
 //        Log.d(TAG, "lastScrollState=" + lastScrollState);
@@ -457,7 +459,7 @@ public class ExplorerAdapter extends RecyclerView.Adapter<ExplorerAdapter.Explor
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(onItemClickListener != null) {
+                if (onItemClickListener != null) {
                     onItemClickListener.onItemClick(holder.position);
                 }
             }
