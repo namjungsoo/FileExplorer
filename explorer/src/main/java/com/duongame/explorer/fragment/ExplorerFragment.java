@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.FileProvider;
-import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -21,8 +20,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.ViewSwitcher;
 
@@ -150,19 +147,19 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
         scrollPath = (HorizontalScrollView) rootView.findViewById(R.id.scroll_path);
         fileList = new ArrayList<>();
 
-        final LinearLayout view = (LinearLayout) rootView.findViewById(R.id.layout_view);
-        view.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (viewType == SWITCH_LIST) {
-                    switchToGrid();
-                    PreferenceHelper.setViewType(getActivity(), SWITCH_GRID);
-                } else {
-                    switchToList();
-                    PreferenceHelper.setViewType(getActivity(), SWITCH_LIST);
-                }
-            }
-        });
+//        final LinearLayout view = (LinearLayout) rootView.findViewById(R.id.layout_view);
+//        view.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                if (viewType == SWITCH_LIST) {
+//                    switchToGrid();
+//                    PreferenceHelper.setViewType(getActivity(), SWITCH_GRID);
+//                } else {
+//                    switchToList();
+//                    PreferenceHelper.setViewType(getActivity(), SWITCH_LIST);
+//                }
+//            }
+//        });
 
         final ImageButton home = (ImageButton) rootView.findViewById(R.id.btn_home);
         home.setOnClickListener(new View.OnClickListener() {
@@ -225,6 +222,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
         listView.addOnScrollListener(new ExplorerScrollListener());
         listView.addOnItemTouchListener(adapter);
         adapter.setOnItemClickListener(this);
+        listView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         // listview 폐지
 //        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -235,11 +233,12 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
 //        });
 //        listView.setOnScrollListener(adapter);
 //        listView.setOnTouchListener(adapter);
-        listView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        final Button view = (Button) rootView.findViewById(R.id.btn_view);
-        view.setText(getResources().getString(R.string.grid));
-        final ImageView image = (ImageView) rootView.findViewById(R.id.image_view);
-        image.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.grid, null));
+
+        // view type 아이콘 변경
+//        final Button view = (Button) rootView.findViewById(R.id.btn_view);
+//        view.setText(getResources().getString(R.string.grid));
+//        final ImageView image = (ImageView) rootView.findViewById(R.id.image_view);
+//        image.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.grid, null));
 
         viewType = SWITCH_LIST;
         currentView = listView;
@@ -269,10 +268,11 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
 //        gridView.setOnScrollListener(adapter);
 //        gridView.setOnTouchListener(adapter);
 
-        final Button view = (Button) rootView.findViewById(R.id.btn_view);
-        view.setText(getResources().getString(R.string.list));
-        final ImageView image = (ImageView) rootView.findViewById(R.id.image_view);
-        image.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.list, null));
+        // view type 아이콘 변경
+//        final Button view = (Button) rootView.findViewById(R.id.btn_view);
+//        view.setText(getResources().getString(R.string.list));
+//        final ImageView image = (ImageView) rootView.findViewById(R.id.image_view);
+//        image.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.list, null));
 
         viewType = SWITCH_GRID;
         currentView = gridView;
