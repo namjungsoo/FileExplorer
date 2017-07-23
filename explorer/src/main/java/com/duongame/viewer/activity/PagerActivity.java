@@ -110,10 +110,19 @@ public class PagerActivity extends ViewerActivity {
 
     protected void updateScrollInfo(int position) {
         Log.d(TAG, "updateScrollInfo=" + position);
-        textPage.setText((position + 1) + "/" + pagerAdapter.getCount());
+        final int count = pagerAdapter.getCount();
+        textPage.setText((position + 1) + "/" + count);
 
-        seekPage.setMax(pagerAdapter.getCount() - 1);
-        seekPage.setProgress(position);
+        seekPage.setMax(count - 1);
+
+        // 이미지가 1개일 경우 처리
+        if(position == 0 && count == 1) {
+            seekPage.setProgress(count);
+            seekPage.setEnabled(false);
+        } else {
+            seekPage.setProgress(position);
+            seekPage.setEnabled(true);
+        }
     }
 
     protected void initPagerListeners() {

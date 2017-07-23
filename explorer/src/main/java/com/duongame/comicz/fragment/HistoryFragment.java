@@ -91,7 +91,7 @@ public class HistoryFragment extends BaseFragment {
 
         @Override
         protected void onPostExecute(Void result) {
-            if (adapter != null) 
+            if (adapter != null)
                 adapter.notifyDataSetChanged();
 
             // 결과가 있을때 없을때를 구분해서 SWICTH 함
