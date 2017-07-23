@@ -91,18 +91,17 @@ public class HistoryFragment extends BaseFragment {
 
         @Override
         protected void onPostExecute(Void result) {
-            if(bookList.size() > 0) {
+            if (adapter != null) 
                 adapter.notifyDataSetChanged();
 
-                // 결과가 있을때 없을때를 구분해서 SWICTH 함
-                if (bookList != null && bookList.size() > 0) {
-                    if (switcherContents != null) {
-                        switcherContents.setDisplayedChild(0);
-                    }
-                } else {
-                    if (switcherContents != null) {
-                        switcherContents.setDisplayedChild(1);
-                    }
+            // 결과가 있을때 없을때를 구분해서 SWICTH 함
+            if (bookList != null && bookList.size() > 0) {
+                if (switcherContents != null) {
+                    switcherContents.setDisplayedChild(0);
+                }
+            } else {
+                if (switcherContents != null) {
+                    switcherContents.setDisplayedChild(1);
                 }
             }
         }
