@@ -89,101 +89,29 @@
             android:background="@color/colorDivider" />
     </LinearLayout>
 
-    <!-- 하단 툴박스 -->
-    <LinearLayout
-        android:id="@+id/panel_bottom"
-        android:layout_width="match_parent"
-        android:layout_height="45dp"
-        android:layout_alignParentBottom="true"
-        android:orientation="vertical">
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:background="@color/colorDivider" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <LinearLayout
-                android:id="@+id/layout_view"
-                android:layout_width="0dp"
-                android:layout_height="45dp"
-                android:layout_weight="1"
-                android:orientation="vertical">
-
-                <ImageView
-                    android:id="@+id/image_view"
-                    android:layout_width="match_parent"
-                    android:layout_height="33dp"
-                    android:scaleType="fitCenter"
-                    android:src="@drawable/list"
-                    android:tint="@color/colorPrimary" />
-
-                <Button
-                    android:id="@+id/btn_view"
-                    style="@style/ExplorerButton"
-                    android:layout_width="match_parent"
-                    android:layout_height="12dp"
-                    android:layout_marginTop="-3dp"
-                    android:gravity="center_horizontal"
-                    android:text="@string/list" />
-            </LinearLayout>
-
-            <Button
-                android:id="@+id/btn_all"
-                style="@style/ExplorerButton"
-                android:layout_width="0dp"
-                android:layout_height="45dp"
-                android:layout_weight="1"
-                android:enabled="false"
-                android:text="All" />
-
-            <Button
-                android:id="@+id/btn_del"
-                style="@style/ExplorerButton"
-                android:layout_width="0dp"
-                android:layout_height="45dp"
-                android:layout_weight="1"
-                android:enabled="false"
-                android:text="Del" />
-
-            <Button
-                android:id="@+id/btn_create"
-                style="@style/ExplorerButton"
-                android:layout_width="0dp"
-                android:layout_height="45dp"
-                android:layout_weight="1"
-                android:text=" + " />
-        </LinearLayout>
-    </LinearLayout>
 
     <!-- 컨텐츠를 담는 그릇 -->
     <ViewSwitcher
         android:id="@+id/switcher_contents"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@id/panel_bottom"
-        android:layout_below="@id/panel_top"
-        android:layout_weight="1">
+        android:layout_height="match_parent"
+        android:layout_below="@id/panel_top">
 
         <!-- Grid와 List 중에서 스위치 -->
         <ViewSwitcher
             android:id="@+id/switcher"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="match_parent">
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/list_explorer"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="match_parent" />
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/grid_explorer"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:columnWidth="90dp"
                 android:gravity="center"
                 android:numColumns="auto_fit"
