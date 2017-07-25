@@ -15,6 +15,7 @@ import android.widget.ImageView;
 import com.duongame.R;
 import com.duongame.explorer.adapter.ExplorerItem;
 import com.duongame.viewer.activity.PagerActivity;
+import com.duongame.viewer.attacher.ImageViewAttacher;
 import com.duongame.viewer.listener.PagerOnTouchListener;
 
 /**
@@ -113,7 +114,13 @@ public class PdfPagerAdapter extends ViewerPagerAdapter {
                     // 무조건 해주지 않으면 안된다. 알파로 처리되어 있기 때문이다. (RENDER_MODE_FOR_DISPLAY)
                     imageView.setBackgroundColor(Color.WHITE);
 
-                    imageView.setOnTouchListener(mPagerOnTouchListener);
+                    // 이미지 확대 축소
+                    // 및 matrix을 사용하여 화면 가운데 정렬
+                    item.attacher = new ImageViewAttacher(imageView);
+                    item.attacher.setActivity(context);
+
+//                    imageView.setOnTouchListener(mPagerOnTouchListener);
+
                     //imageView.setBackgroundColor(context.getResources().getColor(R.color.colorGreyBackground));
 
 //                    final FrameLayout.LayoutParams params = (FrameLayout.LayoutParams )imageView.getLayoutParams();

@@ -101,6 +101,7 @@ public class BookDB extends SQLiteOpenHelper {
                 ");";
         Log.d(TAG, "onCreate sql=" + sql);
         db.execSQL(sql);
+        db.close();
     }
 
     @Override
