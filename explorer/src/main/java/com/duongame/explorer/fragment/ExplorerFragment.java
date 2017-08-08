@@ -88,7 +88,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
     @Nullable
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
                              Bundle savedInstanceState) {
-        if(DEBUG)
+        if (DEBUG)
             Log.d(TAG, "onCreateView");
 
         rootView = inflater.inflate(R.layout.fragment_explorer, container, false);
@@ -376,13 +376,18 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
             case APK: {
 //                backupPosition();
 
-                final Intent intent = new Intent(Intent.ACTION_VIEW);
-                final String providerName = getContext().getPackageName() + ".provider";
-                final Uri apkUri = FileProvider.getUriForFile(getContext(), providerName, new File(item.path));
-                intent.setDataAndType(apkUri, "application/vnd.android.package-archive");
-                intent.addFlags(FLAG_GRANT_READ_URI_PERMISSION);
-
-                startActivity(intent);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    final Intent intent = new Intent(Intent.ACTION_VIEW);
+                    final String providerName = getContext().getPackageName() + ".provider";
+                    final Uri apkUri = FileProvider.getUriForFile(getContext(), providerName, new File(item.path));
+                    intent.setDataAndType(apkUri, "application/vnd.android.package-archive");
+                    intent.addFlags(FLAG_GRANT_READ_URI_PERMISSION);
+                    startActivity(intent);
+                } else {
+                    final Intent intent = new Intent(Intent.ACTION_VIEW);
+                    intent.setDataAndType(Uri.parse("file://" + item.path), "application/vnd.android.package-archive");
+                    startActivity(intent);
+                }
             }
             break;
         }
@@ -516,11 +521,11 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
     }
 
     public void updateFileList(final String path) {
-        if(DEBUG)
+        if (DEBUG)
             Log.w(TAG, "updateFileList path=" + path);
 
         if (adapter == null) {
-            if(DEBUG)
+            if (DEBUG)
                 Log.w(TAG, "updateFileList adapter==null");
             return;
         }
