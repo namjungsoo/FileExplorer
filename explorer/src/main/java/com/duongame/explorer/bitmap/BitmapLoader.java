@@ -44,6 +44,35 @@ public class BitmapLoader {
     public static final String TAG = "BitmapLoader";
     public static final int MICRO_KIND_SIZE = 96;
 
+    public static class BitmapOrDrawable {
+        public Bitmap bitmap;
+        public Drawable drawable;
+    }
+
+    public static BitmapOrDrawable loadThumbnail(Activity context, ExplorerItem.FileType type, String path) {
+        BitmapOrDrawable bod = new BitmapOrDrawable();
+
+        switch (type) {
+            case APK:
+                bod.drawable = BitmapLoader.loadApkThumbnailDrawable(context, path);
+                break;
+            case PDF:
+                bod.bitmap = BitmapLoader.loadPdfThumbnailBitmap(context, path);
+                break;
+            case IMAGE:
+                bod.bitmap = BitmapLoader.loadImageThumbnailBitmap(context, path);
+                break;
+            case VIDEO:
+                bod.bitmap = BitmapLoader.loadVideoThumbnailBitmap(context, path);
+                break;
+            case ZIP:
+                bod.bitmap = BitmapLoader.loadZipThumbnailBitmap(context, path);
+                break;
+        }
+
+        return bod;
+    }
+
     public static Drawable loadApkThumbnailDrawable(Activity context, String path) {
         Drawable drawable = BitmapCacheManager.getDrawable(path);
         if(drawable != null)

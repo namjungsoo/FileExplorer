@@ -507,7 +507,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
                 currentView.invalidate();
             }
 
-            adapter.resumeThread();
+//            adapter.resumeThread();
 
             textPath.setText(ExplorerManager.getLastPath());
             textPath.requestLayout();
@@ -541,7 +541,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
             return;
         }
 
-        adapter.pauseThread();
+//        adapter.pauseThread();
 
         // 썸네일이 꽉찼을때는 비워준다.
         if (BitmapCacheManager.getThumbnailCount() > MAX_THUMBNAILS) {

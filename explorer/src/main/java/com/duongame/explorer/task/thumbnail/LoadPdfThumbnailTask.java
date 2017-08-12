@@ -5,8 +5,10 @@ import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.widget.ImageView;
 
-import com.duongame.explorer.bitmap.BitmapCacheManager;
 import com.duongame.explorer.bitmap.BitmapLoader;
+
+import static com.duongame.explorer.adapter.ExplorerItem.FileType.PDF;
+import static com.duongame.explorer.bitmap.BitmapLoader.loadThumbnail;
 
 /**
  * Created by namjungsoo on 2017-02-19.
@@ -24,25 +26,8 @@ public class LoadPdfThumbnailTask extends AsyncTask<String, Void, Bitmap> {
 
     @Override
     protected Bitmap doInBackground(String... params) {
-        Thread.currentThread().setPriority(Thread.MIN_PRIORITY);
-
-        path = params[0];
-        if (isCancelled())
-            return null;
-
-        Bitmap bitmap = BitmapCacheManager.getThumbnail(path);
-        if (isCancelled())
-            return bitmap;
-
-        // 이제 PDF에서 파일을 읽어서 렌더링 하자.
-        if (bitmap == null) {
-            bitmap = BitmapLoader.decodeSquareThumbnailFromPdfFile(path, 96);
-        }
-        if (bitmap != null) {
-            BitmapCacheManager.setThumbnail(path, bitmap);
-        }
-
-        return bitmap;
+        BitmapLoader.BitmapOrDrawable bod = loadThumbnail(context, PDF, params[0]);
+        return bod.bitmap;
     }
 
     @Override
@@ -54,5 +39,4 @@ public class LoadPdfThumbnailTask extends AsyncTask<String, Void, Bitmap> {
             }
         }
     }
-
 }
