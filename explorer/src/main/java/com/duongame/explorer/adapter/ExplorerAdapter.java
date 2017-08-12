@@ -546,8 +546,8 @@ public class ExplorerAdapter extends RecyclerView.Adapter<ExplorerAdapter.Explor
                 // 값이 0임
 //                int width = explorerViewHolder.icon.getWidth();
 //                int height = explorerViewHolder.icon.getHeight();
+                //.override(explorerViewHolder.icon.getWidth(), explorerViewHolder.icon.getHeight())
                 Glide.with(context).load(new File(item.path))
-                        //.override(explorerViewHolder.icon.getWidth(), explorerViewHolder.icon.getHeight())
                         .centerCrop().into(explorerViewHolder.icon);
             }
         } else {
@@ -579,13 +579,22 @@ public class ExplorerAdapter extends RecyclerView.Adapter<ExplorerAdapter.Explor
         if (bitmap == null) {
             explorerViewHolder.icon.setImageResource(R.drawable.file);
 
-            BitmapMessage bitmapMessage = new BitmapMessage();
-            bitmapMessage.type = ExplorerItem.FileType.ZIP;
-            bitmapMessage.path = item.path;
-            bitmapMessage.imageView = explorerViewHolder.icon;
-            bitmapMessage.position = position;
+            if(USE_THREAD) {
+                BitmapMessage bitmapMessage = new BitmapMessage();
+                bitmapMessage.type = ExplorerItem.FileType.ZIP;
+                bitmapMessage.path = item.path;
+                bitmapMessage.imageView = explorerViewHolder.icon;
+                bitmapMessage.position = position;
 
-            messageQueue.add(bitmapMessage);
+                messageQueue.add(bitmapMessage);
+            }
+            else {
+                final String image = BitmapLoader.getZipThumbnailFileName(context, item.path);
+                if(image != null) {
+                    Glide.with(context).load(new File(image))
+                            .centerCrop().into(explorerViewHolder.icon);
+                }
+            }
         } else {
             explorerViewHolder.icon.setImageBitmap(bitmap);
         }

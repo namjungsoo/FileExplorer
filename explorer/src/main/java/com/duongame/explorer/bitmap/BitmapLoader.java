@@ -119,11 +119,7 @@ public class BitmapLoader {
         return bitmap;
     }
 
-    public static Bitmap loadZipThumbnailBitmap(Activity context, String path) {
-        Bitmap bitmap = BitmapCacheManager.getThumbnail(path);
-        if(bitmap != null)
-            return bitmap;
-
+    public static String getZipThumbnailFileName(Activity context, String path) {
         // ZIP파일 안에 있는 이미지 파일을 찾자.
         String image = null;
         try {
@@ -135,8 +131,17 @@ public class BitmapLoader {
                 image = imageList.get(0).path;
             }
         } catch (ZipException e) {
-            e.printStackTrace();
+            return null;
         }
+        return image;
+    }
+
+    public static Bitmap loadZipThumbnailBitmap(Activity context, String path) {
+        Bitmap bitmap = BitmapCacheManager.getThumbnail(path);
+        if(bitmap != null)
+            return bitmap;
+
+        final String image = getZipThumbnailFileName(context, path);
 
         // 못찾았을 경우에는 기본 ZIP 아이콘이 뜨게 한다.
         if (image == null) {

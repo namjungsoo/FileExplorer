@@ -101,7 +101,7 @@ public class BookDB extends SQLiteOpenHelper {
                 ");";
         Log.d(TAG, "onCreate sql=" + sql);
         db.execSQL(sql);
-        db.close();
+//        db.close();
     }
 
     @Override
@@ -143,14 +143,14 @@ public class BookDB extends SQLiteOpenHelper {
         final SQLiteDatabase db = getInstance(context).getWritableDatabase();
         final String sql = "DELETE FROM book WHERE path='"+path+"'";
         db.execSQL(sql);
-        db.close();
+//        db.close();
     }
 
     public static void clearBooks(Context context) {
         final SQLiteDatabase db = getInstance(context).getWritableDatabase();
         final String sql = "DELETE FROM book";
         db.execSQL(sql);
-        db.close();
+//        db.close();
     }
 
     public static Book getBook(Context context, String path) {
@@ -163,7 +163,7 @@ public class BookDB extends SQLiteOpenHelper {
             break;
         }
         cursor.close();
-        db.close();
+//        db.close();
         return book;
     }
 
@@ -183,7 +183,7 @@ public class BookDB extends SQLiteOpenHelper {
             Log.i(TAG, "getBooks " + book.toString());
         }
         cursor.close();
-        db.close();
+//        db.close();
         return bookList;
     }
 
@@ -201,7 +201,7 @@ public class BookDB extends SQLiteOpenHelper {
             Log.d(TAG, "getLastBook " + book.toString());
         }
         cursor.close();
-        db.close();
+//        db.close();
         return book;
     }
 
@@ -254,6 +254,6 @@ public class BookDB extends SQLiteOpenHelper {
             Log.i(TAG, "setLastBook=" + sql2);
             db.execSQL(sql2);
         }
-        db.close();
+//        db.close();
     }
 }
