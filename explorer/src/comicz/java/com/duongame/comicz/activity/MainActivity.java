@@ -55,6 +55,7 @@ public class MainActivity extends AppCompatActivity {
         pager = (ViewPager) findViewById(R.id.pager);
         adapter = new ComicPagerAdapter(getSupportFragmentManager(), this);
         pager.setAdapter(adapter);
+        pager.setOffscreenPageLimit(3);
         tab = (TabLayout) findViewById(R.id.tab);
         tab.setupWithViewPager(pager);
     }
