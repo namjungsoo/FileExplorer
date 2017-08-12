@@ -1,91 +1,44 @@
 package com.duongame.explorer.task.thumbnail;
 
-import android.content.Context;
-import android.graphics.Bitmap;
+import android.app.Activity;
 import android.os.AsyncTask;
-import android.util.Log;
 import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
 import com.duongame.R;
-import com.duongame.explorer.adapter.ExplorerItem;
-import com.duongame.explorer.bitmap.BitmapCacheManager;
 import com.duongame.explorer.bitmap.BitmapLoader;
-import com.duongame.explorer.bitmap.ZipLoader;
 
-import net.lingala.zip4j.exception.ZipException;
-
-import java.util.ArrayList;
+import java.io.File;
 
 /**
  * Created by namjungsoo on 2016-12-16.
  */
 
-public class LoadZipThumbnailTask extends AsyncTask<String, Void, Bitmap> {
+public class LoadZipThumbnailTask extends AsyncTask<String, Void, String> {
     private final ImageView imageView;
-    private final Context context;
+    private final Activity context;
     private String path;
 
-    public LoadZipThumbnailTask(Context context, ImageView imageView) {
+    public LoadZipThumbnailTask(Activity context, ImageView imageView) {
         this.imageView = imageView;
         this.context = context;
     }
 
     @Override
-    protected Bitmap doInBackground(String... params) {
-        Thread.currentThread().setPriority(Thread.MIN_PRIORITY);
-
-        path = params[0];
-
-        if (isCancelled())
-            return null;
-
-        Bitmap bitmap = BitmapCacheManager.getThumbnail(path);
-        if (isCancelled())
-            return bitmap;
-
-        if (bitmap == null) {
-            String image = null;
-            try {
-                //image = ZipLoader.getFirstImage(context, path);
-                final ZipLoader loader = new ZipLoader();
-                final ArrayList<ExplorerItem> imageList = loader.load(context, path, null, 0, ExplorerItem.Side.LEFT, true);
-
-                if (imageList != null && imageList.size() > 0) {
-                    image = imageList.get(0).path;
-                }
-            } catch (ZipException e) {
-                e.printStackTrace();
-            }
-
-            if (isCancelled())
-                return bitmap;
-
-            if (image == null) {
-                bitmap = BitmapCacheManager.getResourceBitmap(context.getResources(), R.drawable.zip);
-                if (bitmap != null) {
-                    BitmapCacheManager.setThumbnail(path, bitmap);
-                }
-            } else {
-                //bitmap = BitmapLoader.decodeSampleBitmapFromFile(image, 96, 96, false);
-                bitmap = BitmapLoader.decodeSquareThumbnailFromFile(image, 96, false);
-                if (bitmap != null) {
-                    BitmapCacheManager.setThumbnail(path, bitmap);
-                }
-            }
-        }
-
-        return bitmap;
+    protected String doInBackground(String... params) {
+        final String image = BitmapLoader.getZipThumbnailFileName(context, params[0]);
+        return image;
     }
 
     @Override
-    protected void onPostExecute(Bitmap bitmap) {
-        super.onPostExecute(bitmap);
-        if (imageView != null && bitmap != null) {
-            if (imageView != null) {
-                imageView.setImageBitmap(bitmap);
-            }
-        } else {
-            Log.e("LoadZipThumbnailTask", "onPostExecute imageView=" + imageView + " bitmap=" + bitmap);
+    protected void onPostExecute(String param) {
+        super.onPostExecute(param);
+        if (param != null) {
+            Glide.with(context)
+                    .load(new File(param))
+                    .placeholder(R.drawable.zip)
+                    .centerCrop()
+                    .into(imageView);
         }
     }
 }

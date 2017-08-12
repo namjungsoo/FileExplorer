@@ -109,10 +109,13 @@ public class ZipLoader {
 
         Collections.sort(imageList, new FileHelper.FileNameAscendingComparator());
 
+        // 처음 이미지만 풀 경우에는 처음 이미지 파일 한개만 풀고 끝낸다.
         if (firstImageOnly) {
             if (imageList.size() > 0) {
                 // 이미지 로딩후 확인해보고 좌우를 나눠야 되면 나누어 주자
-                zipFile.extractFile(imageList.get(0).name, extractPath);
+                if(!(new File(extractPath).exists()))
+                    zipFile.extractFile(imageList.get(0).name, extractPath);
+
                 final BitmapFactory.Options options = BitmapLoader.decodeBounds(imageList.get(0).path);
 
                 //DEBUG

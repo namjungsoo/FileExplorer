@@ -22,6 +22,7 @@ import com.duongame.explorer.bitmap.BitmapMessage;
 import com.duongame.explorer.task.thumbnail.LoadApkThumbnailTask;
 import com.duongame.explorer.task.thumbnail.LoadPdfThumbnailTask;
 import com.duongame.explorer.task.thumbnail.LoadVideoThumbnailTask;
+import com.duongame.explorer.task.thumbnail.LoadZipThumbnailTask;
 import com.duongame.explorer.view.RoundedImageView;
 
 import java.io.File;
@@ -495,14 +496,17 @@ public class ExplorerAdapter extends RecyclerView.Adapter<ExplorerAdapter.Explor
 
                 messageQueue.add(bitmapMessage);
             } else {
-                final String image = BitmapLoader.getZipThumbnailFileName(context, item.path);
-                if (image != null) {
-                    Glide.with(context)
-                            .load(new File(image))
-                            .placeholder(R.drawable.zip)
-                            .centerCrop()
-                            .into(explorerViewHolder.icon);
-                }
+                LoadZipThumbnailTask task = new LoadZipThumbnailTask(context, explorerViewHolder.icon);
+                task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, item.path);
+
+//                final String image = BitmapLoader.getZipThumbnailFileName(context, item.path);
+//                if (image != null) {
+//                    Glide.with(context)
+//                            .load(new File(image))
+//                            .placeholder(R.drawable.zip)
+//                            .centerCrop()
+//                            .into(explorerViewHolder.icon);
+//                }
             }
         } else {
             explorerViewHolder.icon.setImageBitmap(bitmap);
