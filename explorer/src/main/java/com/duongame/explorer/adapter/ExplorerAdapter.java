@@ -13,12 +13,14 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.duongame.R;
 import com.duongame.explorer.bitmap.BitmapCacheManager;
 import com.duongame.explorer.bitmap.BitmapLoader;
 import com.duongame.explorer.bitmap.BitmapMessage;
 import com.duongame.explorer.view.RoundedImageView;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Queue;
@@ -38,6 +40,7 @@ import static com.duongame.explorer.bitmap.BitmapCacheManager.getThumbnail;
 public class ExplorerAdapter extends RecyclerView.Adapter<ExplorerAdapter.ExplorerViewHolder> implements RecyclerView.OnItemTouchListener {
     private final static String TAG = "ExplorerAdapter";
     private final static boolean DEBUG = false;
+    private final static boolean USE_THREAD = false;
 
     protected ArrayList<ExplorerItem> fileList;
 
@@ -81,7 +84,8 @@ public class ExplorerAdapter extends RecyclerView.Adapter<ExplorerAdapter.Explor
     @Override
     public boolean onInterceptTouchEvent(RecyclerView rv, MotionEvent e) {
         if (e.getAction() == MotionEvent.ACTION_DOWN) {
-            loaderRunnable.onPause();
+            if (USE_THREAD)
+                loaderRunnable.onPause();
         }
         return false;
     }
@@ -267,7 +271,8 @@ public class ExplorerAdapter extends RecyclerView.Adapter<ExplorerAdapter.Explor
                 messageQueue.remove(msg);
             }
 
-            loaderRunnable.onResume();
+            if (USE_THREAD)
+                loaderRunnable.onResume();
         } else {
 //            loaderRunnable.onPause();
         }
@@ -346,8 +351,10 @@ public class ExplorerAdapter extends RecyclerView.Adapter<ExplorerAdapter.Explor
             }
         };
 
-        thread = new Thread(loaderRunnable);
-        thread.start();
+        if (USE_THREAD) {
+            thread = new Thread(loaderRunnable);
+            thread.start();
+        }
 
         Log.d(TAG, "Thread Start");
     }
@@ -526,16 +533,27 @@ public class ExplorerAdapter extends RecyclerView.Adapter<ExplorerAdapter.Explor
         if (bitmap == null) {
             explorerViewHolder.icon.setImageResource(R.drawable.file);
 
-            BitmapMessage bitmapMessage = new BitmapMessage();
-            bitmapMessage.type = ExplorerItem.FileType.IMAGE;
-            bitmapMessage.path = item.path;
-            bitmapMessage.imageView = explorerViewHolder.icon;
-            bitmapMessage.position = position;
+            if (USE_THREAD) {
 
-            messageQueue.add(bitmapMessage);
+                BitmapMessage bitmapMessage = new BitmapMessage();
+                bitmapMessage.type = ExplorerItem.FileType.IMAGE;
+                bitmapMessage.path = item.path;
+                bitmapMessage.imageView = explorerViewHolder.icon;
+                bitmapMessage.position = position;
+
+                messageQueue.add(bitmapMessage);
+            } else {
+                // Glide로 읽자
+                int width = explorerViewHolder.icon.getWidth();
+                int height = explorerViewHolder.icon.getHeight();
+                Glide.with(context).load(new File(item.path))
+                        //.override(explorerViewHolder.icon.getWidth(), explorerViewHolder.icon.getHeight())
+                        .centerCrop().into(explorerViewHolder.icon);
+            }
         } else {
             explorerViewHolder.icon.setImageBitmap(bitmap);
         }
+
     }
 
     void setIconPdf(final ExplorerViewHolder explorerViewHolder, ExplorerItem item, int position) {
@@ -680,12 +698,14 @@ public class ExplorerAdapter extends RecyclerView.Adapter<ExplorerAdapter.Explor
     }
 
     public void resumeThread() {
-        loaderRunnable.onResume();
+        if (USE_THREAD)
+            loaderRunnable.onResume();
     }
 
     public void pauseThread() {
         Log.d(TAG, "pauseThread");
-        loaderRunnable.onPause();
+        if (USE_THREAD)
+            loaderRunnable.onPause();
         messageQueue.clear();
 
         // SearchTask가 resume
