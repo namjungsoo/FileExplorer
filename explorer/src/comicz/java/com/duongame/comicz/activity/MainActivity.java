@@ -15,6 +15,7 @@ import com.duongame.comicz.adapter.ComicPagerAdapter;
 import com.duongame.comicz.db.BookDB;
 import com.duongame.explorer.bitmap.BitmapCacheManager;
 import com.duongame.explorer.fragment.BaseFragment;
+import com.duongame.explorer.fragment.ExplorerFragment;
 import com.duongame.explorer.helper.ShortcutHelper;
 import com.duongame.explorer.helper.ToastHelper;
 import com.duongame.explorer.manager.PermissionManager;
@@ -96,6 +97,18 @@ public class MainActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
+        if (id == R.id.action_view_type) {
+            ExplorerFragment fragment = (ExplorerFragment) getSupportFragmentManager().getFragments().get(0);
+            if(fragment != null) {
+                if(fragment.getViewType() == ExplorerFragment.SWITCH_GRID)
+                    fragment.switchToList();
+                else if (fragment.getViewType() == ExplorerFragment.SWITCH_LIST)
+                    fragment.switchToGrid();
+                return true;
+            }
+            return false;
+        }
+
         if (id == R.id.action_settings) {
             return true;
         }

@@ -534,7 +534,6 @@ public class ExplorerAdapter extends RecyclerView.Adapter<ExplorerAdapter.Explor
             explorerViewHolder.icon.setImageResource(R.drawable.file);
 
             if (USE_THREAD) {
-
                 BitmapMessage bitmapMessage = new BitmapMessage();
                 bitmapMessage.type = ExplorerItem.FileType.IMAGE;
                 bitmapMessage.path = item.path;
@@ -544,8 +543,9 @@ public class ExplorerAdapter extends RecyclerView.Adapter<ExplorerAdapter.Explor
                 messageQueue.add(bitmapMessage);
             } else {
                 // Glide로 읽자
-                int width = explorerViewHolder.icon.getWidth();
-                int height = explorerViewHolder.icon.getHeight();
+                // 값이 0임
+//                int width = explorerViewHolder.icon.getWidth();
+//                int height = explorerViewHolder.icon.getHeight();
                 Glide.with(context).load(new File(item.path))
                         //.override(explorerViewHolder.icon.getWidth(), explorerViewHolder.icon.getHeight())
                         .centerCrop().into(explorerViewHolder.icon);
@@ -596,13 +596,27 @@ public class ExplorerAdapter extends RecyclerView.Adapter<ExplorerAdapter.Explor
         if (drawable == null) {
             explorerViewHolder.icon.setImageResource(R.drawable.file);
 
-            BitmapMessage bitmapMessage = new BitmapMessage();
-            bitmapMessage.type = ExplorerItem.FileType.APK;
-            bitmapMessage.path = item.path;
-            bitmapMessage.imageView = explorerViewHolder.icon;
-            bitmapMessage.position = position;
+            if(USE_THREAD) {
+                BitmapMessage bitmapMessage = new BitmapMessage();
+                bitmapMessage.type = ExplorerItem.FileType.APK;
+                bitmapMessage.path = item.path;
+                bitmapMessage.imageView = explorerViewHolder.icon;
+                bitmapMessage.position = position;
 
-            messageQueue.add(bitmapMessage);
+                messageQueue.add(bitmapMessage);
+            } else {
+                BitmapOrDrawable bod = loadThumbnail(item.type, item.path);
+                explorerViewHolder.icon.setImageDrawable(bod.drawable);
+
+//                Glide.with(context)
+//                        .using(new PassThroughModelLoader<PackageInfo>(), PackageInfo.class)
+//                        .from(PackageInfo.class)
+//                        .as(Drawable.class)
+//                        .decoder(new ApplicationIconDecoder(context))
+//                        .diskCacheStrategy(DiskCacheStrategy.NONE) // cannot disk cache ApplicationInfo, nor Drawables
+//                        .load(context.getPackageManager().getPackageArchiveInfo(item.path, 0))
+//                        .into(explorerViewHolder.icon);
+            }
         } else {
             explorerViewHolder.icon.setImageDrawable(drawable);
         }
@@ -738,4 +752,36 @@ public class ExplorerAdapter extends RecyclerView.Adapter<ExplorerAdapter.Explor
     public int getVisibleItemCount(RecyclerView recyclerView) {
         return 0;
     }
+
+
+//    class PassThroughModelLoader<T> implements ModelLoader<T, T> {
+//        @Override public DataFetcher<T> getResourceFetcher(final T model, int width, int height) {
+//            return new DataFetcher<T>() {
+//                @Override public T loadData(Priority priority) throws Exception { return model; }
+//                @Override public void cleanup() { }
+//                @Override public String getId() { return "PassThroughDataFetcher"; }
+//                @Override public void cancel() { }
+//            };
+//        }
+//    }
+//
+//    class ApplicationIconDecoder implements ResourceDecoder<PackageInfo, Drawable> {
+//        private final Context context;
+//        public ApplicationIconDecoder(Context context) { this.context = context; }
+//        @Override public Resource<Drawable> decode(PackageInfo source, int width, int height) throws IOException {
+//            //Drawable icon = context.getPackageManager().getApplicationIcon(source);
+//            Drawable icon = source.applicationInfo.loadIcon(context.getPackageManager());
+//            return new DrawableResource<Drawable>(icon) {
+//                @Override public int getSize() { // best effort
+//                    if (drawable instanceof BitmapDrawable) {
+//                        return Util.getBitmapByteSize(((BitmapDrawable)drawable).getBitmap());
+//                    } else {
+//                        return 1;
+//                    }
+//                }
+//                @Override public void recycle() { /* not from our pool */ }
+//            };
+//        }
+//        @Override public String getId() { return "ApplicationInfoToDrawable"; }
+//    }
 }

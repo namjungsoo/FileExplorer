@@ -46,6 +46,7 @@ import java.util.ArrayList;
 
 import static android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION;
 import static android.view.View.GONE;
+import static com.duongame.explorer.ExplorerConfig.MAX_THUMBNAILS;
 
 /**
  * Created by namjungsoo on 2016-11-23.
@@ -55,11 +56,8 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
     private final static String TAG = "ExplorerFragment";
     private final static boolean DEBUG = false;
 
-    private final static int MAX_THUMBNAILS = 100;
-    private final static int SWITCH_LIST = 0;
-    private final static int SWITCH_GRID = 1;
-
-    private int viewType = SWITCH_LIST;
+    public final static int SWITCH_LIST = 0;
+    public final static int SWITCH_GRID = 1;
 
     // 파일 관련
     private ExplorerAdapter adapter;
@@ -80,6 +78,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
     private ViewSwitcher switcherContents;
     private Button permButton;
     private TextView textNoFiles;
+    private int viewType = SWITCH_LIST;
 
     // 기타
     private ImageButton sdcard = null;
@@ -200,7 +199,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
     }
 
     void initViewType() {
-        int viewType = PreferenceHelper.getViewType(getActivity());
+        viewType = PreferenceHelper.getViewType(getActivity());
         switch (viewType) {
             case SWITCH_LIST:
                 switchToList();
@@ -212,7 +211,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
         }
     }
 
-    void switchToList() {
+    public void switchToList() {
         switcherViewType.setDisplayedChild(SWITCH_LIST);
 
         adapter = new ExplorerListAdapter(getActivity(), fileList);
@@ -244,9 +243,15 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
         currentView = listView;
 
 //        moveToSelection(ExplorerManager.getLastPath());
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                PreferenceHelper.setViewType(getContext(), viewType);
+            }
+        });
     }
 
-    void switchToGrid() {
+    public void switchToGrid() {
         switcherViewType.setDisplayedChild(SWITCH_GRID);
 
         adapter = new ExplorerGridAdapter(getActivity(), fileList);
@@ -277,6 +282,12 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
         viewType = SWITCH_GRID;
         currentView = gridView;
 
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                PreferenceHelper.setViewType(getContext(), viewType);
+            }
+        });
 //        moveToSelection(ExplorerManager.getLastPath());
     }
 
@@ -581,5 +592,9 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
         } else {
             super.onBackPressed();
         }
+    }
+
+    public int getViewType() {
+        return viewType;
     }
 }
