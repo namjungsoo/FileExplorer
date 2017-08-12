@@ -9,7 +9,8 @@
         android:largeHeap="true"
         android:screenOrientation="portrait"
         android:theme="@style/ExplorerTheme">
-        <activity android:name="com.duongame.comicz.activity.MainActivity">
+        <activity android:name="com.duongame.comicz.activity.MainActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -18,16 +19,20 @@
         </activity>
         <activity
             android:name="com.duongame.viewer.activity.PhotoActivity"
-            android:theme="@style/ComicViewerTheme" />
+            android:theme="@style/ComicViewerTheme"
+            android:screenOrientation="portrait"/>
         <activity
             android:name="com.duongame.viewer.activity.ZipActivity"
-            android:theme="@style/ComicViewerTheme" />
+            android:theme="@style/ComicViewerTheme"
+            android:screenOrientation="portrait"/>
         <activity
             android:name="com.duongame.viewer.activity.TextActivity"
-            android:theme="@style/ComicViewerTheme" />
+            android:theme="@style/ComicViewerTheme"
+            android:screenOrientation="portrait"/>
         <activity
             android:name="com.duongame.viewer.activity.PdfActivity"
-            android:theme="@style/ComicViewerTheme" />
+            android:theme="@style/ComicViewerTheme"
+            android:screenOrientation="portrait"/>
 
         <provider
             android:name="android.support.v4.content.FileProvider"
