@@ -18,7 +18,8 @@
         android:maxLines="1"
         android:singleLine="true"
         android:textColor="@android:color/holo_orange_light"
-        android:textSize="12sp" />
+        android:textStyle="bold"
+        android:textSize="12dp" />
 
     <ViewSwitcher
         android:id="@+id/switcher_info"
@@ -75,7 +76,7 @@
                     android:gravity="center_horizontal"
                     android:text="@string/left"
                     android:textColor="@android:color/white"
-                    android:textSize="8sp" />
+                    android:textSize="8dp" />
             </LinearLayout>
 
             <LinearLayout
@@ -99,7 +100,7 @@
                     android:gravity="center_horizontal"
                     android:text="@string/right"
                     android:textColor="@android:color/white"
-                    android:textSize="8sp" />
+                    android:textSize="8dp" />
             </LinearLayout>
 
             <LinearLayout
@@ -122,7 +123,7 @@
                     android:gravity="center_horizontal"
                     android:text="@string/both"
                     android:textColor="@android:color/white"
-                    android:textSize="8sp" />
+                    android:textSize="8dp" />
             </LinearLayout>
 
         </LinearLayout>

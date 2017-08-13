@@ -18,7 +18,7 @@
     <!--android:layout_height="wrap_content"-->
     <!--android:id="@+id/text_path"-->
     <!--android:textColor="@android:color/holo_orange_dark"-->
-    <!--android:textSize="12sp"-->
+    <!--android:textSize="12dp"-->
     <!--android:visibility="invisible"-->
     <!--android:ellipsize="start"/>-->
 

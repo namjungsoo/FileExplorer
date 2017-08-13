@@ -94,6 +94,10 @@ public class PdfActivity extends PagerActivity {
             final int page = extras.getInt("current_page");
             path = extras.getString("path");
             name = extras.getString("name");
+            size = extras.getLong("size");
+
+            textSize.setText(FileHelper.getMinimizedSize(size));
+
 
             pager.setAdapter(pagerAdapter);
 
@@ -116,6 +120,7 @@ public class PdfActivity extends PagerActivity {
 
                     pager.setCurrentItem(page);
 
+                    textInfo.setText(""+renderer.getPageCount() + " pages");
                     updateName(page);
                     updateScrollInfo(page);
                 } else {
