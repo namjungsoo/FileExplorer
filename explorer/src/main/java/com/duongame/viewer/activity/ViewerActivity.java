@@ -31,9 +31,14 @@ public class ViewerActivity extends AppCompatActivity {
     // bottom panel
     protected TextView textName;
     //    protected TextView textPath;
+
     protected LinearLayout bottomPanel;
     protected LinearLayout topPanel;
+
     protected TextView textPage;
+    protected TextView textInfo;
+    protected TextView textSize;
+
     protected SeekBar seekPage;
 
     @Override
@@ -77,6 +82,9 @@ public class ViewerActivity extends AppCompatActivity {
 //        textPath = (TextView)findViewById(R.id.text_path);
         textName = (TextView) findViewById(R.id.text_name);
 //        textName.setY(getStatusBarHeight());
+
+        textInfo = (TextView)findViewById(R.id.text_info);
+        textSize = (TextView)findViewById(R.id.text_size);
 
         topPanel = (LinearLayout) findViewById(R.id.panel_top);
         topPanel.setY(getStatusBarHeight());

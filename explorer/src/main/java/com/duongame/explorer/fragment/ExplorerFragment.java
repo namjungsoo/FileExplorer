@@ -338,6 +338,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
                 // 풀패스에서 폴더만 떼옴
                 intent.putExtra("path", item.path.substring(0, item.path.lastIndexOf('/')));
                 intent.putExtra("name", item.name);
+                intent.putExtra("size", item.size);
 
                 startActivity(intent);
             }
@@ -380,6 +381,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
                 final Intent intent = new Intent(getActivity(), TextActivity.class);
                 intent.putExtra("path", item.path);
                 intent.putExtra("name", item.name);
+                intent.putExtra("size", item.size);
 
                 startActivity(intent);
             }

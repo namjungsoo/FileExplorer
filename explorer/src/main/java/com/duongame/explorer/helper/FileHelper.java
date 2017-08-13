@@ -39,7 +39,7 @@ public class FileHelper {
             double newsize = (double) size / KILO;
             return formatter.format(newsize) + " KB";
         } else {
-            return formatter.format(size);
+            return formatter.format(size) + " B";
         }
     }
 

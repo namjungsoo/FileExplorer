@@ -6,6 +6,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.duongame.R;
+import com.duongame.explorer.helper.FileHelper;
 import com.duongame.explorer.manager.FontManager;
 import com.duongame.explorer.task.LoadTextTask;
 import com.duongame.viewer.listener.TextOnTouchListener;
@@ -22,10 +23,14 @@ public class TextActivity extends ViewerActivity {
 
     private ScrollView scrollText;
     private TextView textContent;
+
     private String path;
+    private String name;
+    private long size;
+
     private int page;
     private int scroll;
-    private int textSize = 20;
+    private int fontSize = 20;
     private ArrayList<String> lineList = new ArrayList<>();
 
     @Override
@@ -52,12 +57,16 @@ public class TextActivity extends ViewerActivity {
 
         if (extras != null) {
             path = extras.getString("path");
+            name = extras.getString("name");
+            size = extras.getLong("size");
+
             page = extras.getInt("page");
             scroll = extras.getInt("scroll");
 
-            textName.setText(path);
+            textSize.setText(FileHelper.getMinimizedSize(size));
+            textName.setText(name);
 
-            final LoadTextTask task = new LoadTextTask(textContent, lineList, page, textSize, scroll);
+            final LoadTextTask task = new LoadTextTask(textContent, textInfo, lineList, page, fontSize, scroll);
             task.execute(path);
         }
     }

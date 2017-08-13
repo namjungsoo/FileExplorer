@@ -50,8 +50,8 @@ public class PhotoActivity extends PagerActivity {
         if (extras != null) {
             name = extras.getString("name");
             path = extras.getString("path");
+
             textName.setText(name);
-//            textPath.setText(path);
 
             int item = 0;
             for (int i = 0; i < imageList.size(); i++) {

@@ -5,7 +5,6 @@ import android.os.AsyncTask;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
-import com.duongame.R;
 import com.duongame.explorer.bitmap.BitmapLoader;
 
 import java.io.File;
@@ -36,7 +35,7 @@ public class LoadZipThumbnailTask extends AsyncTask<String, Void, String> {
         if (param != null) {
             Glide.with(context)
                     .load(new File(param))
-                    .placeholder(R.drawable.zip)
+//                    .placeholder(R.drawable.zip)
                     .centerCrop()
                     .into(imageView);
         }

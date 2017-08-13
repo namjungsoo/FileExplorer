@@ -13,7 +13,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
-import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
 /**
@@ -21,17 +20,22 @@ import java.util.ArrayList;
  */
 
 public class LoadTextTask extends AsyncTask<String, Integer, Void> {
-    WeakReference<TextView> weakReferenceText;
+    TextView textContent;
+    TextView textInfo;
+
     int page;
-    int textSize;
+    int fontSize;
     int scroll;
+
     ArrayList<String> lineList;
 
-    public LoadTextTask(TextView textView, ArrayList<String> lineList, int page, int textSize, int scroll) {
-        weakReferenceText = new WeakReference<TextView>(textView);
+    public LoadTextTask(TextView textContent, TextView textInfo, ArrayList<String> lineList, int page, int textSize, int scroll) {
+        this.textContent = textContent;
+        this.textInfo = textInfo;
+
         this.lineList = lineList;
         this.page = page;
-        this.textSize = textSize;
+        this.fontSize = textSize;
         this.scroll = scroll;
     }
 
@@ -113,12 +117,18 @@ public class LoadTextTask extends AsyncTask<String, Integer, Void> {
             builder.append(lineList.get(i));
             builder.append("\n");
         }
+
         final String text = builder.toString();
-        final TextView textContent = weakReferenceText.get();
         textContent.setText(text);
-        textContent.setTextSize(textSize);
+        textContent.setTextSize(fontSize);
         textContent.setLineSpacing(0, 1.5f);
         textContent.setTextColor(Color.BLACK);
     }
 
+    @Override
+    protected void onPostExecute(Void result) {
+        super.onPostExecute(result);
+
+        textInfo.setText("" + lineList.size() + " lines");
+    }
 }

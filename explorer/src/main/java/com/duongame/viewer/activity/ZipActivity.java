@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.ViewSwitcher;
 
 import com.duongame.R;
 import com.duongame.comicz.db.BookDB;
@@ -102,6 +103,10 @@ public class ZipActivity extends PagerActivity {
         super.onCreate(savedInstanceState);
 
         pagerAdapter.setExifRotation(false);
+
+        // 정보를 표기하는 대신에 페이지 변경 아이콘을 표시
+        ViewSwitcher switcher = (ViewSwitcher)findViewById(R.id.switcher_info);
+        switcher.setDisplayedChild(1);
 
         try {
             processIntent();
