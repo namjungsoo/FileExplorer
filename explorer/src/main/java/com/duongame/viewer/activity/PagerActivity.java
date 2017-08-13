@@ -37,8 +37,8 @@ public class PagerActivity extends ViewerActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        contentViewResId = R.layout.activity_pager;
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_pager);
 
         initToolBox();
 

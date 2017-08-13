@@ -43,6 +43,18 @@ public class MainActivity extends AppCompatActivity {
 
         AdBannerManager.init(this);
 
+        initContentView();
+
+        initTabs();
+        initToolbar();
+
+        ShortcutHelper.checkShortcut(this);
+
+        //TEST
+//        FirebaseCrash.report(new Exception("My first Android non-fatal error"));
+    }
+
+    private void initContentView() {
         if (BuildConfig.SHOW_AD) {
             final LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             mainView = inflater.inflate(R.layout.activity_main, null, true);
@@ -50,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
             final RelativeLayout layout = new RelativeLayout(this);
             layout.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT));
 
-            final AdView adView = AdBannerManager.getAdBannerView();
+            final AdView adView = AdBannerManager.getAdBannerView(0);
 
             // adview layout params
             RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
@@ -69,19 +81,6 @@ public class MainActivity extends AppCompatActivity {
         } else {
             setContentView(R.layout.activity_main);
         }
-
-        initAds();
-        initTabs();
-        initToolbar();
-
-        ShortcutHelper.checkShortcut(this);
-
-        //TEST
-//        FirebaseCrash.report(new Exception("My first Android non-fatal error"));
-    }
-
-    private void initAds() {
-
     }
 
     private void initToolbar() {

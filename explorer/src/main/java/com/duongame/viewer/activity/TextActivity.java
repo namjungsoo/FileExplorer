@@ -35,8 +35,8 @@ public class TextActivity extends ViewerActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        contentViewResId = R.layout.activity_text;
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_text);
 
         initToolBox();
 

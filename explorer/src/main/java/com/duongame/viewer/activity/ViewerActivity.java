@@ -1,5 +1,6 @@
 package com.duongame.viewer.activity;
 
+import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
@@ -7,15 +8,21 @@ import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import com.duongame.BuildConfig;
 import com.duongame.R;
 import com.duongame.explorer.bitmap.BitmapCacheManager;
+import com.duongame.explorer.manager.AdBannerManager;
+import com.google.android.gms.ads.AdView;
 
 /**
  * Created by namjungsoo on 2016-11-16.
@@ -30,7 +37,6 @@ public class ViewerActivity extends AppCompatActivity {
 
     // bottom panel
     protected TextView textName;
-    //    protected TextView textPath;
 
     protected LinearLayout bottomPanel;
     protected LinearLayout topPanel;
@@ -40,18 +46,55 @@ public class ViewerActivity extends AppCompatActivity {
     protected TextView textSize;
 
     protected SeekBar seekPage;
+    protected int contentViewResId;
+
+    private View mainView;
+    private AdView adView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        initContentView();
+
         initActionBar();
+    }
+
+    protected void initContentView() {
+        if(BuildConfig.SHOW_AD) {
+            final LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            mainView = inflater.inflate(contentViewResId, null, true);
+
+            final RelativeLayout layout = new RelativeLayout(this);
+            layout.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT));
+
+            adView = AdBannerManager.getAdBannerView(1);
+
+            // adview layout params
+            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+            params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+            adView.setLayoutParams(params);
+
+            // mainview layout params
+            params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
+            params.addRule(RelativeLayout.ABOVE, adView.getId());
+            mainView.setLayoutParams(params);
+
+            layout.addView(adView);
+            layout.addView(mainView);
+
+            setContentView(layout);
+
+        } else {
+            setContentView(contentViewResId);
+        }
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
 
+        ((ViewGroup)adView.getParent()).removeView(adView);
         BitmapCacheManager.recycleBitmap();
         BitmapCacheManager.recyclePage();
     }
@@ -79,9 +122,7 @@ public class ViewerActivity extends AppCompatActivity {
     }
 
     protected void initToolBox() {
-//        textPath = (TextView)findViewById(R.id.text_path);
         textName = (TextView) findViewById(R.id.text_name);
-//        textName.setY(getStatusBarHeight());
 
         textInfo = (TextView)findViewById(R.id.text_info);
         textSize = (TextView)findViewById(R.id.text_size);
@@ -130,11 +171,9 @@ public class ViewerActivity extends AppCompatActivity {
             //TEST
             bottomPanel.setVisibility(View.VISIBLE);
             topPanel.setVisibility(View.VISIBLE);
-//            textPath.setVisibility(View.VISIBLE);
         } else {
             bottomPanel.setVisibility(View.INVISIBLE);
             topPanel.setVisibility(View.INVISIBLE);
-//            textPath.setVisibility(View.INVISIBLE);
         }
     }
 
