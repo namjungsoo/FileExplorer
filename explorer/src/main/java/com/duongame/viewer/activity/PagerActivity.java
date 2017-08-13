@@ -27,6 +27,7 @@ public class PagerActivity extends ViewerActivity {
     // 파일의 정보
     protected String path;
     protected String name;
+    protected long size;// zip 파일의 용량
 
     protected ViewPager pager;
     protected ViewerPagerAdapter pagerAdapter;
@@ -125,6 +126,10 @@ public class PagerActivity extends ViewerActivity {
         }
     }
 
+    public void updateInfo(int position) {
+
+    }
+
     protected void initPagerListeners() {
         pager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -139,6 +144,7 @@ public class PagerActivity extends ViewerActivity {
 
                 updateScrollInfo(position);
                 updateName(position);
+                updateInfo(position);
             }
 
             @Override

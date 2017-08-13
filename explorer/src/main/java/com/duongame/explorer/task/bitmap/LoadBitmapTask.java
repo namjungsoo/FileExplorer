@@ -1,12 +1,12 @@
 package com.duongame.explorer.task.bitmap;
 
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.util.Log;
 import android.widget.ImageView;
 
 import com.duongame.explorer.adapter.ExplorerItem;
 import com.duongame.explorer.helper.FileHelper;
+import com.duongame.viewer.activity.PagerActivity;
 
 /**
  * Created by namjungsoo on 2016-12-16.
@@ -15,13 +15,15 @@ import com.duongame.explorer.helper.FileHelper;
 public class LoadBitmapTask extends BitmapTask {
     private final ImageView imageView;
     private ExplorerItem item;
-    private Context context;
+    private PagerActivity context;
+    int position;
 
-    public LoadBitmapTask(Context context, ImageView imageView, int width, int height, boolean exif) {
+    public LoadBitmapTask(PagerActivity context, ImageView imageView, int width, int height, boolean exif, int position) {
         super(width, height, exif);
 
         this.context = context;
         this.imageView = imageView;
+        this.position = position;
     }
 
     @Override
@@ -56,28 +58,31 @@ public class LoadBitmapTask extends BitmapTask {
                 imageView.setImageBitmap(bitmap);
                 imageView.setTag(item.path);
 
+                context.updateInfo(position);
+
                 // 종횡비 체크
-                final int bmWidth = bitmap.getWidth();
-                final int bmHeight = bitmap.getHeight();
-                final float bmRatio = (float) bmHeight / (float) bmWidth;
+//                final int bmWidth = bitmap.getWidth();
+//                final int bmHeight = bitmap.getHeight();
+//                final float bmRatio = (float) bmHeight / (float) bmWidth;
+//
+//                // 화면비 체크
+//                final int width = imageView.getWidth();
+//                final int height = imageView.getHeight();
+//                final float imageRatio = (float) height / (float) width;
+//
+//                int newWidth;
+//                int newHeight;
+//                if (bmRatio > imageRatio) {
+//                    newWidth = (int) (height / bmRatio);
+//                    newHeight = height;
+//                } else {
+//                    newWidth = width;
+//                    newHeight = (int) (width * bmRatio);
+//                }
 
-                // 화면비 체크
-                final int width = imageView.getWidth();
-                final int height = imageView.getHeight();
-                final float imageRatio = (float) height / (float) width;
-
-                int newWidth;
-                int newHeight;
-                if (bmRatio > imageRatio) {
-                    newWidth = (int) (height / bmRatio);
-                    newHeight = height;
-                } else {
-                    newWidth = width;
-                    newHeight = (int) (width * bmRatio);
-                }
-
+                //TODO: 이게 왜 현재 사용이 안되지?
+                //PhotoView 때문인가
 //                Log.d(TAG, "width=" + width + " height=" + height);
-
 //                final FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) imageView.getLayoutParams();
 //                params.width = newWidth;
 //                params.height = newHeight;

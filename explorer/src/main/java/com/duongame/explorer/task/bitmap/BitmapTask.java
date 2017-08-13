@@ -56,6 +56,9 @@ public class BitmapTask extends AsyncTask<ExplorerItem, Void, Bitmap> {
             if (item.side != ExplorerItem.Side.SIDE_ALL) {
                 options.outWidth >>= 1;
             }
+            item.width = options.outWidth;
+            item.height = options.outHeight;
+
             float bitmapRatio = (float) options.outHeight / (float) options.outWidth;
             float screenRatio = (float) height / (float) width;
 

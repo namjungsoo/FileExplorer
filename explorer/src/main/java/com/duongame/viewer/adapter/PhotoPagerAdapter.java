@@ -77,7 +77,7 @@ public class PhotoPagerAdapter extends ViewerPagerAdapter {
 
     private void loadCurrentBitmap(int position, ImageView imageView, int width, int height) {
         final ExplorerItem item = imageList.get(position);
-        final LoadBitmapTask task = new LoadBitmapTask(context, imageView, width, height, exifRotation);
+        final LoadBitmapTask task = new LoadBitmapTask(context, imageView, width, height, exifRotation, position);
 
         task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, item);
 
@@ -171,6 +171,13 @@ public class PhotoPagerAdapter extends ViewerPagerAdapter {
 
                         // 성공이면 imageView를 저장해 놓음
                         pagerActivity.setGifImageView(imageView);
+
+                        ExplorerItem item = getImageList().get(position);
+                        if(item != null) {
+                            item.width = imageView.getGifWidth();
+                            item.height = imageView.getGifHeight();
+                        }
+                        context.updateInfo(position);
                     }
 
                     @Override
