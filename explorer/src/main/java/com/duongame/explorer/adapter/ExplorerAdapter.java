@@ -483,8 +483,8 @@ public class ExplorerAdapter extends RecyclerView.Adapter<ExplorerAdapter.Explor
     }
 
     void setIconZip(final ExplorerViewHolder explorerViewHolder, ExplorerItem item, int position) {
-        final Bitmap bitmap = getThumbnail(item.path);
-        if (bitmap == null) {
+        final Drawable drawable = getDrawable(item.path);
+        if (drawable == null) {
             explorerViewHolder.icon.setImageResource(R.drawable.zip);
 
             if (USE_THREAD) {
@@ -509,7 +509,8 @@ public class ExplorerAdapter extends RecyclerView.Adapter<ExplorerAdapter.Explor
 //                }
             }
         } else {
-            explorerViewHolder.icon.setImageBitmap(bitmap);
+            Log.d(TAG, "setIconZip cache found");
+            explorerViewHolder.icon.setImageDrawable(drawable);
         }
     }
 
