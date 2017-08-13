@@ -8,7 +8,6 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -42,7 +41,7 @@ import static com.duongame.explorer.bitmap.BitmapLoader.loadThumbnail;
  * Created by namjungsoo on 2016-11-06.
  */
 
-public class ExplorerAdapter extends RecyclerView.Adapter<ExplorerAdapter.ExplorerViewHolder> implements RecyclerView.OnItemTouchListener {
+public class ExplorerAdapter extends RecyclerView.Adapter<ExplorerAdapter.ExplorerViewHolder> {
     private final static String TAG = "ExplorerAdapter";
     private final static boolean DEBUG = false;
     private final static boolean USE_THREAD = false;
@@ -81,24 +80,6 @@ public class ExplorerAdapter extends RecyclerView.Adapter<ExplorerAdapter.Explor
 
     public void setOnItemClickListener(OnItemClickListener listener) {
         onItemClickListener = listener;
-    }
-
-    @Override
-    public boolean onInterceptTouchEvent(RecyclerView rv, MotionEvent e) {
-        if (e.getAction() == MotionEvent.ACTION_DOWN) {
-//            if (USE_THREAD)
-//                loaderRunnable.onPause();
-        }
-        return false;
-    }
-
-    @Override
-    public void onTouchEvent(RecyclerView rv, MotionEvent e) {
-    }
-
-    @Override
-    public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
-
     }
 
 //    class LoaderRunnable implements Runnable {
@@ -230,6 +211,7 @@ public class ExplorerAdapter extends RecyclerView.Adapter<ExplorerAdapter.Explor
         return false;
     }
 
+    // 현재 사용안함
     public void scrollStateChanged(RecyclerView recyclerView, int scrollState) {
         lastScrollState = scrollState;
         firstVisibleItem = getFirstVisibleItem(recyclerView);
@@ -498,15 +480,6 @@ public class ExplorerAdapter extends RecyclerView.Adapter<ExplorerAdapter.Explor
             } else {
                 LoadZipThumbnailTask task = new LoadZipThumbnailTask(context, explorerViewHolder.icon);
                 task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, item.path);
-
-//                final String image = BitmapLoader.getZipThumbnailFileName(context, item.path);
-//                if (image != null) {
-//                    Glide.with(context)
-//                            .load(new File(image))
-//                            .placeholder(R.drawable.zip)
-//                            .centerCrop()
-//                            .into(explorerViewHolder.icon);
-//                }
             }
         } else {
             Log.d(TAG, "setIconZip cache found");

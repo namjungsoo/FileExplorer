@@ -3,16 +3,17 @@ package com.duongame.comicz.fragment;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ListView;
 import android.widget.ViewSwitcher;
 
 import com.duongame.R;
 import com.duongame.comicz.adapter.HistoryAdapter;
+import com.duongame.comicz.adapter.HistoryRecyclerAdapter;
 import com.duongame.comicz.db.BookDB;
 import com.duongame.explorer.fragment.BaseFragment;
 import com.duongame.viewer.activity.PdfActivity;
@@ -29,10 +30,13 @@ public class HistoryFragment extends BaseFragment {
     private final static boolean DEBUG = false;
 
     private ViewGroup rootView;
-    private ListView listView;
-    private HistoryAdapter adapter;
-    private ArrayList<BookDB.Book> bookList;
+
+    private RecyclerView recyclerView;
     private ViewSwitcher switcherContents;
+
+    private HistoryAdapter adapter;
+    private HistoryRecyclerAdapter recyclerAdapter;
+    private ArrayList<BookDB.Book> bookList;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -41,14 +45,14 @@ public class HistoryFragment extends BaseFragment {
             Log.d(TAG, "onCreateView");
 
         rootView = (ViewGroup) inflater.inflate(R.layout.fragment_history, container, false);
-        listView = (ListView) rootView.findViewById(R.id.list_history);
+        //listView = (ListView) rootView.findViewById(R.id.list_history);
+        recyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_history);
 
         adapter = new HistoryAdapter(getActivity(), this, null);
-
-        listView.setAdapter(adapter);
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        recyclerAdapter = new HistoryRecyclerAdapter(getActivity(), this, null);
+        recyclerAdapter.setOnItemClickListener(new HistoryRecyclerAdapter.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            public void onItemClick(int position) {
                 if (bookList != null) {
                     final BookDB.Book book = bookList.get(position);
                     Class<?> cls = null;
@@ -71,10 +75,11 @@ public class HistoryFragment extends BaseFragment {
                 }
             }
         });
+        recyclerView.setAdapter(recyclerAdapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         switcherContents = (ViewSwitcher) rootView.findViewById(R.id.switcher_contents);
 
-//        onRefresh();
         return rootView;
     }
 
@@ -83,16 +88,16 @@ public class HistoryFragment extends BaseFragment {
         @Override
         protected Void doInBackground(Void... params) {
             bookList = BookDB.getBooks(getActivity());
-            if (adapter != null) {
-                adapter.setBookList(bookList);
+            if (recyclerAdapter != null) {
+                recyclerAdapter.setBookList(bookList);
             }
             return null;
         }
 
         @Override
         protected void onPostExecute(Void result) {
-            if (adapter != null)
-                adapter.notifyDataSetChanged();
+            if (recyclerAdapter != null)
+                recyclerAdapter.notifyDataSetChanged();
 
             // 결과가 있을때 없을때를 구분해서 SWICTH 함
             if (bookList != null && bookList.size() > 0) {

@@ -219,9 +219,8 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
         listView = (RecyclerView) rootView.findViewById(R.id.list_explorer);
         listView.setAdapter(adapter);
         listView.addOnScrollListener(new ExplorerScrollListener());
-        listView.addOnItemTouchListener(adapter);
-        adapter.setOnItemClickListener(this);
         listView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        adapter.setOnItemClickListener(this);
 
         // listview 폐지
 //        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -259,7 +258,6 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
         gridView = (RecyclerView) rootView.findViewById(R.id.grid_explorer);
         gridView.setAdapter(adapter);
         gridView.addOnScrollListener(new ExplorerScrollListener());
-        gridView.addOnItemTouchListener(adapter);
         gridView.setLayoutManager(new GridLayoutManager(getActivity(), 4));
         adapter.setOnItemClickListener(this);
 
