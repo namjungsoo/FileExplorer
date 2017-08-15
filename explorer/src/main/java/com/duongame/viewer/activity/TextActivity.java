@@ -1,7 +1,10 @@
 package com.duongame.viewer.activity;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.KeyEvent;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
@@ -30,8 +33,17 @@ public class TextActivity extends ViewerActivity {
 
     private int page;
     private int scroll;
+
     private int fontSize = 20;
+    private int fontIndex = 4;
+
     private ArrayList<String> lineList = new ArrayList<>();
+    static int MAX_FONT_SIZE_INDEX = 16;
+
+    private int[] fontSizeArray = new int[] { 12, 14, 16, 18, 20,
+            24, 28, 32, 36, 40,
+            44, 48, 54, 60, 66,
+            72 };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,8 +53,12 @@ public class TextActivity extends ViewerActivity {
         initToolBox();
 
         scrollText = (ScrollView) findViewById(R.id.scroll_text);
+
         textContent = (TextView) findViewById(R.id.text_content);
         textContent.setTypeface(FontManager.getTypeFaceNanumMeyongjo(this));
+        textContent.setTextSize(fontSize);
+        textContent.setLineSpacing(0, 1.5f);
+        textContent.setTextColor(Color.BLACK);
 
         scrollText.setOnTouchListener(new TextOnTouchListener(this));
         processIntent();
@@ -65,10 +81,35 @@ public class TextActivity extends ViewerActivity {
 
             textSize.setText(FileHelper.getMinimizedSize(size));
             textName.setText(name);
-
+            
             final LoadTextTask task = new LoadTextTask(textContent, textInfo, lineList, page, fontSize, scroll);
             task.execute(path);
         }
     }
 
+    void updateFontSize() {
+        fontSize = fontSizeArray[fontIndex];
+        textContent.setTextSize(fontSize);
+        Log.d(TAG, "fontSize=" + fontSize);
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        switch(keyCode) {
+            case KeyEvent.KEYCODE_VOLUME_DOWN:
+                if(fontIndex + 1 < MAX_FONT_SIZE_INDEX) {
+                    fontIndex++;
+                    updateFontSize();
+                }
+                return true;
+            case KeyEvent.KEYCODE_VOLUME_UP:
+                if(fontIndex - 1 >= 0) {
+                    fontIndex--;
+                    updateFontSize();
+                }
+                return true;
+            default:
+                return super.onKeyDown(keyCode, event);
+        }
+    }
 }

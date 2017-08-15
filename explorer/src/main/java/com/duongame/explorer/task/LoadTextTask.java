@@ -1,6 +1,5 @@
 package com.duongame.explorer.task;
 
-import android.graphics.Color;
 import android.os.AsyncTask;
 import android.widget.TextView;
 
@@ -120,9 +119,6 @@ public class LoadTextTask extends AsyncTask<String, Integer, Void> {
 
         final String text = builder.toString();
         textContent.setText(text);
-        textContent.setTextSize(fontSize);
-        textContent.setLineSpacing(0, 1.5f);
-        textContent.setTextColor(Color.BLACK);
     }
 
     @Override
