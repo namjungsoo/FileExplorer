@@ -63,6 +63,8 @@ public class SearchFragment extends BaseFragment {
             if (result.booleanValue()) {
                 recyclerView.setAdapter(adapter);
                 switcherContents.setDisplayedChild(0);
+            } else {
+                switcherContents.setDisplayedChild(1);
             }
             progressBar.setVisibility(View.GONE);
         }
@@ -105,7 +107,11 @@ public class SearchFragment extends BaseFragment {
     public void onRefresh() {
         // 현재는 무조건 결과 없음을 리턴함
         if (switcherContents != null) {
-            switcherContents.setDisplayedChild(1);
+            if (recyclerView.getAdapter() != null && recyclerView.getAdapter().getItemCount() > 0) {
+                switcherContents.setDisplayedChild(0);
+            } else {
+                switcherContents.setDisplayedChild(1);
+            }
         }
     }
 }
