@@ -43,7 +43,6 @@ import static com.duongame.explorer.bitmap.BitmapLoader.loadThumbnail;
 public class ExplorerAdapter extends RecyclerView.Adapter<ExplorerAdapter.ExplorerViewHolder> {
     private final static String TAG = "ExplorerAdapter";
     private final static boolean DEBUG = false;
-    private final static boolean USE_THREAD = false;
 
     protected ArrayList<ExplorerItem> fileList;
 
@@ -246,22 +245,12 @@ public class ExplorerAdapter extends RecyclerView.Adapter<ExplorerAdapter.Explor
         if (bitmap == null) {
             explorerViewHolder.icon.setImageResource(R.drawable.file);
 
-            if (USE_THREAD) {
-                BitmapMessage bitmapMessage = new BitmapMessage();
-                bitmapMessage.type = ExplorerItem.FileType.IMAGE;
-                bitmapMessage.path = item.path;
-                bitmapMessage.imageView = explorerViewHolder.icon;
-                bitmapMessage.position = position;
-
-                messageQueue.add(bitmapMessage);
-            } else {
-                // Glide로 읽자
-                Glide.with(context)
-                        .load(new File(item.path))
-                        .placeholder(R.drawable.file)
-                        .centerCrop()
-                        .into(explorerViewHolder.icon);
-            }
+            // Glide로 읽자
+            Glide.with(context)
+                    .load(new File(item.path))
+                    .placeholder(R.drawable.file)
+                    .centerCrop()
+                    .into(explorerViewHolder.icon);
         } else {
             explorerViewHolder.icon.setImageBitmap(bitmap);
         }
@@ -273,18 +262,8 @@ public class ExplorerAdapter extends RecyclerView.Adapter<ExplorerAdapter.Explor
         if (bitmap == null) {
             explorerViewHolder.icon.setImageResource(R.drawable.file);
 
-            if (USE_THREAD) {
-                BitmapMessage bitmapMessage = new BitmapMessage();
-                bitmapMessage.type = ExplorerItem.FileType.PDF;
-                bitmapMessage.path = item.path;
-                bitmapMessage.imageView = explorerViewHolder.icon;
-                bitmapMessage.position = position;
-
-                messageQueue.add(bitmapMessage);
-            } else {
-                LoadPdfThumbnailTask task = new LoadPdfThumbnailTask(context, explorerViewHolder.icon);
-                task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, item.path);
-            }
+            LoadPdfThumbnailTask task = new LoadPdfThumbnailTask(context, explorerViewHolder.icon);
+            task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, item.path);
         } else {// 로딩된 비트맵을 셋팅
             explorerViewHolder.icon.setImageBitmap(bitmap);
         }
@@ -296,18 +275,8 @@ public class ExplorerAdapter extends RecyclerView.Adapter<ExplorerAdapter.Explor
         if (drawable == null) {
             explorerViewHolder.icon.setImageResource(R.drawable.zip);
 
-            if (USE_THREAD) {
-                BitmapMessage bitmapMessage = new BitmapMessage();
-                bitmapMessage.type = ExplorerItem.FileType.ZIP;
-                bitmapMessage.path = item.path;
-                bitmapMessage.imageView = explorerViewHolder.icon;
-                bitmapMessage.position = position;
-
-                messageQueue.add(bitmapMessage);
-            } else {
-                LoadZipThumbnailTask task = new LoadZipThumbnailTask(context, explorerViewHolder.icon);
-                task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, item.path);
-            }
+            LoadZipThumbnailTask task = new LoadZipThumbnailTask(context, explorerViewHolder.icon);
+            task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, item.path);
         } else {
             Log.d(TAG, "setIconZip cache found");
             explorerViewHolder.icon.setImageDrawable(drawable);
@@ -319,18 +288,8 @@ public class ExplorerAdapter extends RecyclerView.Adapter<ExplorerAdapter.Explor
         if (drawable == null) {
             explorerViewHolder.icon.setImageResource(R.drawable.file);
 
-            if (USE_THREAD) {
-                BitmapMessage bitmapMessage = new BitmapMessage();
-                bitmapMessage.type = ExplorerItem.FileType.APK;
-                bitmapMessage.path = item.path;
-                bitmapMessage.imageView = explorerViewHolder.icon;
-                bitmapMessage.position = position;
-
-                messageQueue.add(bitmapMessage);
-            } else {
-                LoadApkThumbnailTask task = new LoadApkThumbnailTask(context, explorerViewHolder.icon);
-                task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, item.path);
-            }
+            LoadApkThumbnailTask task = new LoadApkThumbnailTask(context, explorerViewHolder.icon);
+            task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, item.path);
         } else {
             explorerViewHolder.icon.setImageDrawable(drawable);
         }
@@ -341,18 +300,8 @@ public class ExplorerAdapter extends RecyclerView.Adapter<ExplorerAdapter.Explor
         if (bitmap == null) {
             explorerViewHolder.icon.setImageResource(R.drawable.file);
 
-            if (USE_THREAD) {
-                BitmapMessage bitmapMessage = new BitmapMessage();
-                bitmapMessage.type = VIDEO;
-                bitmapMessage.path = item.path;
-                bitmapMessage.imageView = explorerViewHolder.icon;
-                bitmapMessage.position = position;
-
-                messageQueue.add(bitmapMessage);
-            } else {
-                LoadVideoThumbnailTask task = new LoadVideoThumbnailTask(context, explorerViewHolder.icon);
-                task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, item.path);
-            }
+            LoadVideoThumbnailTask task = new LoadVideoThumbnailTask(context, explorerViewHolder.icon);
+            task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, item.path);
         } else {// 로딩된 비트맵을 셋팅
             explorerViewHolder.icon.setImageBitmap(bitmap);
         }
