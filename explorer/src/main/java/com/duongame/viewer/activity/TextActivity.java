@@ -81,7 +81,7 @@ public class TextActivity extends ViewerActivity {
 
             textSize.setText(FileHelper.getMinimizedSize(size));
             textName.setText(name);
-            
+
             final LoadTextTask task = new LoadTextTask(textContent, textInfo, lineList, page, fontSize, scroll);
             task.execute(path);
         }

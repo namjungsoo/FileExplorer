@@ -16,6 +16,7 @@ import android.widget.RelativeLayout;
 
 import com.duongame.BuildConfig;
 import com.duongame.R;
+import com.duongame.comicz.AnalyticsApplication;
 import com.duongame.comicz.adapter.ComicPagerAdapter;
 import com.duongame.comicz.db.BookDB;
 import com.duongame.explorer.bitmap.BitmapCacheManager;
@@ -26,11 +27,16 @@ import com.duongame.explorer.helper.ToastHelper;
 import com.duongame.explorer.manager.AdBannerManager;
 import com.duongame.explorer.manager.PermissionManager;
 import com.google.android.gms.ads.AdView;
+import com.google.android.gms.analytics.Tracker;
+import com.google.firebase.analytics.FirebaseAnalytics;
 
 import java.io.File;
 
 public class MainActivity extends AppCompatActivity {
     private final static String TAG = "MainActivity";
+
+    private FirebaseAnalytics mFirebaseAnalytics;
+    private Tracker mTracker;
 
     private ViewPager pager;
     private ComicPagerAdapter adapter;
@@ -49,6 +55,11 @@ public class MainActivity extends AppCompatActivity {
         initToolbar();
 
         ShortcutHelper.checkShortcut(this);
+
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
+
+        AnalyticsApplication application = (AnalyticsApplication) getApplication();
+        mTracker = application.getDefaultTracker();
 
         //TEST
 //        FirebaseCrash.report(new Exception("My first Android non-fatal error"));

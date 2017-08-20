@@ -20,9 +20,12 @@ import android.widget.TextView;
 
 import com.duongame.BuildConfig;
 import com.duongame.R;
+import com.duongame.comicz.AnalyticsApplication;
 import com.duongame.explorer.bitmap.BitmapCacheManager;
 import com.duongame.explorer.manager.AdBannerManager;
 import com.google.android.gms.ads.AdView;
+import com.google.android.gms.analytics.Tracker;
+import com.google.firebase.analytics.FirebaseAnalytics;
 
 /**
  * Created by namjungsoo on 2016-11-16.
@@ -31,6 +34,9 @@ import com.google.android.gms.ads.AdView;
 // 전체 화면을 지원한다.
 public class ViewerActivity extends AppCompatActivity {
     private static final String TAG = "ComicViewerActivity";
+
+    private FirebaseAnalytics mFirebaseAnalytics;
+    private Tracker mTracker;
 
     protected boolean isFullscreen = true;
     protected ActionBar actionBar;
@@ -58,6 +64,12 @@ public class ViewerActivity extends AppCompatActivity {
         initContentView();
 
         initActionBar();
+
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
+
+        AnalyticsApplication application = (AnalyticsApplication) getApplication();
+        mTracker = application.getDefaultTracker();
+
     }
 
     protected void initContentView() {

@@ -3,6 +3,7 @@
     package="com.duongame">
 
     <application
+        android:name=".comicz.AnalyticsApplication"
         android:allowBackup="true"
         android:icon="@drawable/comicz"
         android:label="${APP_NAME}"
