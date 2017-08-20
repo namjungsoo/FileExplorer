@@ -30,7 +30,6 @@ import java.util.HashMap;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-import static android.support.v7.widget.RecyclerView.SCROLL_STATE_IDLE;
 import static com.duongame.explorer.adapter.ExplorerItem.FileType.APK;
 import static com.duongame.explorer.adapter.ExplorerItem.FileType.VIDEO;
 import static com.duongame.explorer.bitmap.BitmapCacheManager.getDrawable;
@@ -54,23 +53,11 @@ public class ExplorerAdapter extends RecyclerView.Adapter<ExplorerAdapter.Explor
     protected Activity context;
 
     private Handler mainHandler;
-    private Thread thread;
 
     private final static int LOAD_BITMAP = 0;
     private final static int LOAD_DRAWABLE = 1;
 
     private Queue<BitmapMessage> messageQueue = new ConcurrentLinkedQueue<>();
-
-    private int lastScrollState = SCROLL_STATE_IDLE;
-    private int firstVisibleItem;
-    private int visibleItemCount;
-
-    private int idle_firstVisibleItem;
-    private int idle_visibleItemCount;
-
-    private final static int SCROLL_DIRECTION_NEXT = 0;
-    private final static int SCROLL_DIRECTION_PREV = 1;
-    private int scrollDirection = SCROLL_DIRECTION_NEXT;
 
     OnItemClickListener onItemClickListener;
 
@@ -81,104 +68,6 @@ public class ExplorerAdapter extends RecyclerView.Adapter<ExplorerAdapter.Explor
     public void setOnItemClickListener(OnItemClickListener listener) {
         onItemClickListener = listener;
     }
-
-//    class LoaderRunnable implements Runnable {
-//        private Object mPauseLock;
-//        private boolean mPaused;
-//        private boolean mFinished;
-//
-//        public LoaderRunnable() {
-//            mPauseLock = new Object();
-//            mPaused = false;
-//            mFinished = false;
-//        }
-//
-//        @Override
-//        public void run() {
-//            while (!mFinished) {
-//                // Do stuff.
-////                Log.d(TAG, "run");
-//
-//                synchronized (mPauseLock) {
-//                    while (mPaused) {
-//                        try {
-//                            mPauseLock.wait();
-//                        } catch (InterruptedException e) {
-//                        }
-//                    }
-//                }
-//
-//                // 큐에 있는것을 꺼내자
-//                BitmapMessage msg = messageQueue.poll();
-//
-//                // msg가 null이면 읽을게 더이상 없다는 이야기므로 prev, next중에서 하나를 읽자
-//                if (msg == null) {
-//
-//                    if (scrollDirection == SCROLL_DIRECTION_PREV) {
-////                        Log.w(TAG, "SCROLL_DIRECTION_PREV");
-//
-//                        if (firstVisibleItem >= 0) {// 다 읽지 않았을때 앞으로 가서 읽는다.
-//                            for (int i = firstVisibleItem - 1; i >= 0; i--) {
-//                                // 읽었는지 체크해보고 하나만 읽는다.
-//                                final ExplorerItem item = fileList.get(i);
-//
-//                                // 없을 경우 로딩해준다.
-//                                if (!checkBodInCache(item)) {
-////                                    Log.d(TAG, "SCROLL_DIRECTION_PREV loadThumbnail i=" + i + " " + item.path);
-//                                    loadThumbnail(context, item.type, item.path);
-//                                    break;
-//                                }
-//                            }
-//                        }
-//                    } else if (scrollDirection == SCROLL_DIRECTION_NEXT) {
-////                        Log.w(TAG, "SCROLL_DIRECTION_NEXT");
-//
-//                        if (firstVisibleItem + visibleItemCount < fileList.size()) {// 다 읽지 않았을때 앞으로 가서 읽는다.
-//                            for (int i = firstVisibleItem + visibleItemCount; i < fileList.size(); i++) {
-//                                // 읽었는지 체크해보고 하나만 읽는다.
-//                                final ExplorerItem item = fileList.get(i);
-//
-//                                // 없을 경우 로딩해준다.
-//                                if (!checkBodInCache(item)) {
-////                                    Log.d(TAG, "SCROLL_DIRECTION_NEXT loadThumbnail i=" + i + " " + item.path);
-//                                    loadThumbnail(context, item.type, item.path);
-//                                    break;
-//                                }
-//                            }
-//                        }
-//                    }
-//                } else {
-//                    // 꺼내서 로딩함
-//                    handleBitmapMessage(msg);
-//                }
-//            }
-//        }
-//
-//        /**
-//         * Call this on pause.
-//         */
-//        public void onPause() {
-//            Log.d(TAG, "onPause");
-//            synchronized (mPauseLock) {
-//                mPaused = true;
-//            }
-//        }
-//
-//        /**
-//         * Call this on resume.
-//         */
-//        public void onResume() {
-//            Log.d(TAG, "onResume");
-//            synchronized (mPauseLock) {
-//                mPaused = false;
-//                mPauseLock.notifyAll();
-//            }
-//        }
-//
-//        public boolean isPaused() {
-//            return mPaused;
-//        }
-//    }
 
     // 썸네일이 있는 파일만 true
     private boolean hasThumbnail(ExplorerItem item) {
@@ -211,47 +100,6 @@ public class ExplorerAdapter extends RecyclerView.Adapter<ExplorerAdapter.Explor
         return false;
     }
 
-    // 현재 사용안함
-    public void scrollStateChanged(RecyclerView recyclerView, int scrollState) {
-        lastScrollState = scrollState;
-        firstVisibleItem = getFirstVisibleItem(recyclerView);
-        visibleItemCount = getVisibleItemCount(recyclerView);
-
-        // 지금 idle이면 queue에 있는것을 전부 handler로 밀어 넣는다.
-        if (lastScrollState == SCROLL_STATE_IDLE) {
-            // 처음인 경우
-            if (idle_firstVisibleItem == 0 && idle_visibleItemCount == 0) {
-            } else {
-                if (idle_firstVisibleItem > firstVisibleItem) {
-                    scrollDirection = SCROLL_DIRECTION_PREV;
-                } else {
-                    scrollDirection = SCROLL_DIRECTION_NEXT;
-                }
-            }
-            idle_firstVisibleItem = firstVisibleItem;
-            idle_visibleItemCount = visibleItemCount;
-
-            // 대기 중인거 중에서 position 범위에 안맞는건 삭제하자
-            final ArrayList<BitmapMessage> removeList = new ArrayList<>();
-            for (BitmapMessage msg : messageQueue) {
-                if (msg.position >= firstVisibleItem && msg.position < firstVisibleItem + visibleItemCount) {
-
-                } else {
-                    removeList.add(msg);
-                }
-            }
-
-            for (BitmapMessage msg : removeList) {
-                messageQueue.remove(msg);
-            }
-
-//            if (USE_THREAD)
-//                loaderRunnable.onResume();
-        } else {
-//            loaderRunnable.onPause();
-        }
-    }
-
     public ExplorerAdapter(Activity context, ArrayList<ExplorerItem> fileList) {
         this.context = context;
         this.fileList = fileList;
@@ -270,10 +118,6 @@ public class ExplorerAdapter extends RecyclerView.Adapter<ExplorerAdapter.Explor
                     Log.e(TAG, "bitmapMessage.imageView == null");
                     return;
                 }
-
-                // 여기서 파일리스트에서 찾아보자
-//                if(loaderRunnable.isPaused())
-//                    return;
 
                 if (fileMap == null) {
                     Log.e(TAG, "fileMap == null");
@@ -313,11 +157,6 @@ public class ExplorerAdapter extends RecyclerView.Adapter<ExplorerAdapter.Explor
             }
         };
 
-//        if (USE_THREAD) {
-//            thread = new Thread(loaderRunnable);
-//            thread.start();
-//        }
-
         Log.d(TAG, "Thread Start");
     }
 
@@ -348,7 +187,7 @@ public class ExplorerAdapter extends RecyclerView.Adapter<ExplorerAdapter.Explor
     }
 
     protected static class ExplorerViewHolder extends RecyclerView.ViewHolder {
-        public ImageView iconSmall;
+        public ImageView iconSmall;// 현재 사용안함. 작은 아이콘을 위해서 남겨둠
         public RoundedImageView icon;
         public TextView name;
         public TextView date;
@@ -400,18 +239,6 @@ public class ExplorerAdapter extends RecyclerView.Adapter<ExplorerAdapter.Explor
         for (ExplorerItem item : fileList) {
             fileMap.put(item.path, item);
         }
-
-        initVisibleInfo();
-
-        // SearchTask가 resume
-//        loaderRunnable.onResume();
-    }
-
-    private void initVisibleInfo() {
-        firstVisibleItem = 0;
-        visibleItemCount = 0;
-        idle_firstVisibleItem = 0;
-        idle_visibleItemCount = 0;
     }
 
     void setIconImage(final ExplorerViewHolder explorerViewHolder, ExplorerItem item, int position) {
@@ -579,18 +406,6 @@ public class ExplorerAdapter extends RecyclerView.Adapter<ExplorerAdapter.Explor
                 return;
         }
     }
-
-//    public void resumeThread() {
-//        if (USE_THREAD)
-//            loaderRunnable.onResume();
-//    }
-
-//    public void pauseThread() {
-//        Log.d(TAG, "pauseThread");
-//        if (USE_THREAD)
-//            loaderRunnable.onPause();
-//        messageQueue.clear();
-//    }
 
     public void bindViewHolderExplorer(ExplorerViewHolder viewHolder, int position) {
     }

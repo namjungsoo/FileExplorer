@@ -56,22 +56,4 @@ public class ExplorerListAdapter extends ExplorerAdapter {
 
         return last - first + 1;
     }
-
-//    @Override
-//    public void initViewHolder(ExplorerViewHolder viewHolder, View convertView) {
-//        viewHolder.icon = (RoundedImageView) convertView.findViewById(R.id.file_icon);
-//        viewHolder.name = (TextView) convertView.findViewById(R.id.text_name);
-//        viewHolder.date = (TextView) convertView.findViewById(R.id.text_date);
-//        viewHolder.size = (TextView) convertView.findViewById(R.id.text_size);
-//        viewHolder.iconSmall = (ImageView) convertView.findViewById(R.id.file_small_icon);
-//    }
-//
-//    @Override
-//    public void setViewHolder(ExplorerViewHolder viewHolder, ExplorerItem item) {
-//        viewHolder.name.setText(item.name);
-//        viewHolder.date.setText(item.date);
-//        viewHolder.size.setText(FileHelper.getMinimizedSize(item.size));
-//        viewHolder.icon.setRadiusDp(5);
-//        viewHolder.iconSmall.setVisibility(View.INVISIBLE);
-//    }
 }

@@ -9,9 +9,6 @@ import android.support.v7.widget.RecyclerView;
 public class ExplorerScrollListener extends RecyclerView.OnScrollListener {
     @Override
     public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-//        Log.d("TAG", "onScrollStateChanged");
-        ExplorerAdapter adapter = (ExplorerAdapter) recyclerView.getAdapter();
-        adapter.scrollStateChanged(recyclerView, newState);
     }
 
     @Override

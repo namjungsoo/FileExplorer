@@ -146,20 +146,6 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
         scrollPath = (HorizontalScrollView) rootView.findViewById(R.id.scroll_path);
         fileList = new ArrayList<>();
 
-//        final LinearLayout view = (LinearLayout) rootView.findViewById(R.id.layout_view);
-//        view.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                if (viewType == SWITCH_LIST) {
-//                    switchToGrid();
-//                    PreferenceHelper.setViewType(getActivity(), SWITCH_GRID);
-//                } else {
-//                    switchToList();
-//                    PreferenceHelper.setViewType(getActivity(), SWITCH_LIST);
-//                }
-//            }
-//        });
-
         final ImageButton home = (ImageButton) rootView.findViewById(R.id.btn_home);
         home.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -222,22 +208,6 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
         listView.setLayoutManager(new LinearLayoutManager(getActivity()));
         adapter.setOnItemClickListener(this);
 
-        // listview 폐지
-//        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                onAdapterItemClick(position);
-//            }
-//        });
-//        listView.setOnScrollListener(adapter);
-//        listView.setOnTouchListener(adapter);
-
-        // view type 아이콘 변경
-//        final Button view = (Button) rootView.findViewById(R.id.btn_view);
-//        view.setText(getResources().getString(R.string.grid));
-//        final ImageView image = (ImageView) rootView.findViewById(R.id.image_view);
-//        image.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.grid, null));
-
         viewType = SWITCH_LIST;
         currentView = listView;
 
@@ -260,22 +230,6 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
         gridView.addOnScrollListener(new ExplorerScrollListener());
         gridView.setLayoutManager(new GridLayoutManager(getActivity(), 4));
         adapter.setOnItemClickListener(this);
-
-        // listview 폐지
-//        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                onAdapterItemClick(position);
-//            }
-//        });
-//        gridView.setOnScrollListener(adapter);
-//        gridView.setOnTouchListener(adapter);
-
-        // view type 아이콘 변경
-//        final Button view = (Button) rootView.findViewById(R.id.btn_view);
-//        view.setText(getResources().getString(R.string.list));
-//        final ImageView image = (ImageView) rootView.findViewById(R.id.image_view);
-//        image.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.list, null));
 
         viewType = SWITCH_GRID;
         currentView = gridView;
@@ -507,8 +461,6 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
                 currentView.invalidate();
             }
 
-//            adapter.resumeThread();
-
             textPath.setText(ExplorerManager.getLastPath());
             textPath.requestLayout();
 
@@ -540,8 +492,6 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
                 Log.w(TAG, "updateFileList adapter==null");
             return;
         }
-
-//        adapter.pauseThread();
 
         // 썸네일이 꽉찼을때는 비워준다.
         if (BitmapCacheManager.getThumbnailCount() > MAX_THUMBNAILS) {
