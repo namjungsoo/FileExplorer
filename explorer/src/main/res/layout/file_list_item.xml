@@ -29,12 +29,14 @@
                 android:visibility="invisible" />
         </FrameLayout>
 
+        <!-- 전체 높이 60dp -->
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="60dp"
             android:layout_weight="1"
             android:orientation="vertical">
 
+            <!-- 체크박스 구성을 위해서 Relative를 사용함 -->
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="40dp">
@@ -55,6 +57,16 @@
                     android:textColor="#000000"
                     android:textSize="14dp" />
             </RelativeLayout>
+
+            <TextView
+                android:id="@+id/text_path"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:textSize="13dp"
+                android:singleLine="true"
+                android:maxLines="1"
+                android:visibility="gone"
+                />
 
             <LinearLayout
                 android:layout_width="match_parent"

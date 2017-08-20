@@ -20,6 +20,10 @@ public class ExplorerManager {
     private static final String initialPath = Environment.getExternalStorageDirectory().getAbsolutePath();
     private static ArrayList<ExplorerItem> imageList = new ArrayList<>();
 
+    public static String getInitialPath() {
+        return initialPath;
+    }
+
     public static String getLastPath() {
         return lastPath;
     }
@@ -28,7 +32,7 @@ public class ExplorerManager {
         return lastPath.equals(initialPath);
     }
 
-    public static ArrayList<ExplorerItem> search(String path) {
+    public static ArrayList<ExplorerItem> search(String path, String keyword, String ext, boolean excludeDirectory, boolean recursiveDirectory) {
         if (path == null) {
             path = initialPath;
         }
@@ -51,7 +55,7 @@ public class ExplorerManager {
         for (int i = 0; i < files.length; i++) {
             File eachFile = files[i];
             //if (eachFile.getName().equals(".") || eachFile.getName().equals("..")) {// .으로 시작되면 패스 함
-            if (eachFile.getName().startsWith(".")) {// .으로 시작되면 패스 함
+            if (eachFile.getName().startsWith(".")) {// .으로 시작되면 패스 함 (숨김파일임)
                 continue;
             }
 
@@ -64,12 +68,38 @@ public class ExplorerManager {
 
             ExplorerItem.FileType type = getFileType(eachFile);
 
-            ExplorerItem item = new ExplorerItem(FileHelper.getFullPath(path, name), name, date, size, type);
+            String fullPath = FileHelper.getFullPath(path, name);
+            ExplorerItem item = new ExplorerItem(fullPath, name, date, size, type);
+
             if (type == ExplorerItem.FileType.DIRECTORY) {
-                item.size = -1;
-                directoryList.add(item);
+                if (excludeDirectory == false) {
+                    item.size = -1;
+                    directoryList.add(item);
+                }
+
+                if (recursiveDirectory) {
+                    ArrayList<ExplorerItem> subFileList = search(fullPath, keyword, ext, excludeDirectory, recursiveDirectory);
+
+                    for (ExplorerItem subItem : subFileList) {
+                        if (subItem.type == ExplorerItem.FileType.DIRECTORY) {
+                            directoryList.add(subItem);
+                        } else {
+                            normalList.add(subItem);
+                        }
+                    }
+                }
             } else {
-                normalList.add(item);
+                boolean willAdd = true;
+                if (ext != null) {
+                    willAdd = item.name.toLowerCase().endsWith(ext);
+                }
+
+                if (keyword != null && willAdd) {
+                    willAdd = item.name.toLowerCase().contains(keyword);
+                }
+
+                if (willAdd)
+                    normalList.add(item);
             }
 //            Log.d("TAG", item.toString());
         }
@@ -90,6 +120,10 @@ public class ExplorerManager {
         return fileList;
     }
 
+    public static ArrayList<ExplorerItem> search(String path) {
+        return search(path, null, null, false, false);
+    }
+
     public static ArrayList<ExplorerItem> getImageList() {
         return imageList;
     }
@@ -100,8 +134,7 @@ public class ExplorerManager {
 
         if (FileHelper.isImage(eachFile.getName())) {
             type = ExplorerItem.FileType.IMAGE;
-        }
-        else if (lower.endsWith(".zip"))
+        } else if (lower.endsWith(".zip"))
             type = ExplorerItem.FileType.ZIP;
 //        else if (lower.endsWith(".rar"))
 //            type = ExplorerItem.FileType.RAR;

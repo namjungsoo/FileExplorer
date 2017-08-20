@@ -240,7 +240,7 @@ public class ExplorerAdapter extends RecyclerView.Adapter<ExplorerAdapter.Explor
         }
     }
 
-    void setIconImage(final ExplorerViewHolder explorerViewHolder, ExplorerItem item, int position) {
+    void setIconImage(final ExplorerViewHolder explorerViewHolder, ExplorerItem item) {
         final Bitmap bitmap = getThumbnail(item.path);
         if (bitmap == null) {
             explorerViewHolder.icon.setImageResource(R.drawable.file);
@@ -257,7 +257,7 @@ public class ExplorerAdapter extends RecyclerView.Adapter<ExplorerAdapter.Explor
 
     }
 
-    void setIconPdf(final ExplorerViewHolder explorerViewHolder, ExplorerItem item, int position) {
+    void setIconPdf(final ExplorerViewHolder explorerViewHolder, ExplorerItem item) {
         final Bitmap bitmap = getThumbnail(item.path);
         if (bitmap == null) {
             explorerViewHolder.icon.setImageResource(R.drawable.file);
@@ -267,10 +267,9 @@ public class ExplorerAdapter extends RecyclerView.Adapter<ExplorerAdapter.Explor
         } else {// 로딩된 비트맵을 셋팅
             explorerViewHolder.icon.setImageBitmap(bitmap);
         }
-
     }
 
-    void setIconZip(final ExplorerViewHolder explorerViewHolder, ExplorerItem item, int position) {
+    void setIconZip(final ExplorerViewHolder explorerViewHolder, ExplorerItem item) {
         final Drawable drawable = getDrawable(item.path);
         if (drawable == null) {
             explorerViewHolder.icon.setImageResource(R.drawable.zip);
@@ -283,7 +282,7 @@ public class ExplorerAdapter extends RecyclerView.Adapter<ExplorerAdapter.Explor
         }
     }
 
-    void setIconApk(final ExplorerViewHolder explorerViewHolder, ExplorerItem item, int position) {
+    void setIconApk(final ExplorerViewHolder explorerViewHolder, ExplorerItem item) {
         Drawable drawable = getDrawable(item.path);
         if (drawable == null) {
             explorerViewHolder.icon.setImageResource(R.drawable.file);
@@ -295,7 +294,7 @@ public class ExplorerAdapter extends RecyclerView.Adapter<ExplorerAdapter.Explor
         }
     }
 
-    void setIconVideo(final ExplorerViewHolder explorerViewHolder, ExplorerItem item, int position) {
+    void setIconVideo(final ExplorerViewHolder explorerViewHolder, ExplorerItem item) {
         final Bitmap bitmap = getThumbnail(item.path);
         if (bitmap == null) {
             explorerViewHolder.icon.setImageResource(R.drawable.file);
@@ -307,17 +306,17 @@ public class ExplorerAdapter extends RecyclerView.Adapter<ExplorerAdapter.Explor
         }
     }
 
-    void setIcon(final ExplorerViewHolder explorerViewHolder, ExplorerItem item, int position) {
+    void setIcon(final ExplorerViewHolder explorerViewHolder, ExplorerItem item) {
         if (item.type == ExplorerItem.FileType.IMAGE) {
-            setIconImage(explorerViewHolder, item, position);
+            setIconImage(explorerViewHolder, item);
         } else if (item.type == VIDEO) {
-            setIconVideo(explorerViewHolder, item, position);
+            setIconVideo(explorerViewHolder, item);
         } else if (item.type == ExplorerItem.FileType.ZIP) {
-            setIconZip(explorerViewHolder, item, position);
+            setIconZip(explorerViewHolder, item);
         } else if (item.type == ExplorerItem.FileType.PDF) {
-            setIconPdf(explorerViewHolder, item, position);
+            setIconPdf(explorerViewHolder, item);
         } else if (item.type == ExplorerItem.FileType.APK) {
-            setIconApk(explorerViewHolder, item, position);
+            setIconApk(explorerViewHolder, item);
         } else {
             // 이전 타입과 다르게 새 타입이 들어왔다면 업데이트 한다.
             //if (explorerViewHolder.type != item.type) {

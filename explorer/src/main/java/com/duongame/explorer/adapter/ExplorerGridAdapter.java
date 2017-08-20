@@ -30,7 +30,7 @@ public class ExplorerGridAdapter extends ExplorerAdapter {
 
         item.imageViewRef = new WeakReference<ImageView>(viewHolder.icon);
         setDefaultIcon(item.type, viewHolder.icon);
-        setIcon(viewHolder, item, position);
+        setIcon(viewHolder, item);
     }
 
     @Override
