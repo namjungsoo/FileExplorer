@@ -1,13 +1,17 @@
 package com.duongame.comicz.fragment;
 
+import android.content.Context;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.ViewSwitcher;
 
@@ -31,6 +35,38 @@ public class SearchFragment extends BaseFragment {
     Spinner spinnerType;
     Button buttonSearch;
     EditText editKeyword;
+    ProgressBar progressBar;
+
+    class SearchTask extends AsyncTask<Void, Void, Boolean> {
+        String keyword;
+        String ext;
+        ArrayList<ExplorerItem> fileList;
+        SearchRecyclerAdapter adapter;
+
+        public SearchTask(String keyword, String ext) {
+            this.keyword = keyword;
+            this.ext = ext;
+        }
+
+        @Override
+        protected Boolean doInBackground(Void... params) {
+            fileList = ExplorerManager.search(ExplorerManager.getInitialPath(), keyword, ext, true, true);
+            if (fileList.size() > 0) {
+                adapter = new SearchRecyclerAdapter(getActivity(), fileList);
+                return true;
+            }
+            return false;
+        }
+
+        @Override
+        protected void onPostExecute(Boolean result) {
+            if (result.booleanValue()) {
+                recyclerView.setAdapter(adapter);
+                switcherContents.setDisplayedChild(0);
+            }
+            progressBar.setVisibility(View.GONE);
+        }
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -43,18 +79,22 @@ public class SearchFragment extends BaseFragment {
 
         spinnerType = (Spinner) rootView.findViewById(R.id.spinner_type);
         editKeyword = (EditText) rootView.findViewById(R.id.edit_keyword);
+        progressBar = (ProgressBar) rootView.findViewById(R.id.progress_search);
 
         buttonSearch = (Button) rootView.findViewById(R.id.btn_search);
         buttonSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(editKeyword.getWindowToken(), 0);
+
                 String type = "." + spinnerType.getSelectedItem().toString().toLowerCase();
                 String keyword = editKeyword.getText().toString();
 
-                ArrayList<ExplorerItem> fileList = ExplorerManager.search(ExplorerManager.getInitialPath(), keyword, type, true, true);
-                SearchRecyclerAdapter adapter = new SearchRecyclerAdapter(getActivity(), fileList);
-                recyclerView.setAdapter(adapter);
-                switcherContents.setDisplayedChild(0);
+                SearchTask task = new SearchTask(keyword, type);
+                task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+
+                progressBar.setVisibility(View.VISIBLE);
             }
         });
 

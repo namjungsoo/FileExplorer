@@ -37,27 +37,38 @@
             android:text="@string/search" />
     </LinearLayout>
 
-    <ViewSwitcher
-        android:id="@+id/switcher_contents"
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/recycler_search"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-
-        <LinearLayout
+        <ViewSwitcher
+            android:id="@+id/switcher_contents"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <TextView
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recycler_search"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:gravity="center"
-                android:text="@string/no_contents" />
-        </LinearLayout>
+                android:layout_height="match_parent" />
 
-    </ViewSwitcher>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:text="@string/no_contents" />
+            </LinearLayout>
+
+        </ViewSwitcher>
+
+        <ProgressBar
+            android:id="@+id/progress_search"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:visibility="gone"/>
+    </FrameLayout>
 </LinearLayout>
