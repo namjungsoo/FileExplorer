@@ -146,8 +146,8 @@ public class ViewerActivity extends AppCompatActivity {
         textPage = (TextView) findViewById(R.id.text_page);
         seekPage = (SeekBar) findViewById(R.id.seek_page);
 
-        int height = getNavigationBarHeight();
-        bottomPanel.setY(bottomPanel.getY() - height);
+//        int height = getNavigationBarHeight();
+//        bottomPanel.setY(bottomPanel.getY() - height);
     }
 
     public boolean getFullscreen() {
