@@ -15,6 +15,7 @@ import com.duongame.R;
 import com.duongame.explorer.adapter.ExplorerItem;
 import com.duongame.explorer.bitmap.BitmapCacheManager;
 import com.duongame.explorer.helper.FileHelper;
+import com.duongame.explorer.helper.UnitHelper;
 import com.duongame.explorer.task.thumbnail.LoadPdfThumbnailTask;
 import com.duongame.explorer.task.thumbnail.LoadZipThumbnailTask;
 import com.duongame.explorer.view.RoundedImageView;
@@ -35,6 +36,16 @@ public class SearchRecyclerAdapter extends RecyclerView.Adapter<SearchRecyclerAd
     Activity context;
     ArrayList<ExplorerItem> fileList;
 
+    OnItemClickListener onItemClickListener;
+
+    public interface OnItemClickListener {
+        void onItemClick(int position);
+    }
+
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        onItemClickListener = listener;
+    }
+
     public SearchRecyclerAdapter(Activity context, ArrayList<ExplorerItem> fileList) {
         this.context = context;
         this.fileList = fileList;
@@ -47,7 +58,7 @@ public class SearchRecyclerAdapter extends RecyclerView.Adapter<SearchRecyclerAd
     }
 
     @Override
-    public void onBindViewHolder(SearchViewHolder searchViewHolder, int i) {
+    public void onBindViewHolder(SearchViewHolder searchViewHolder, final int i) {
         ExplorerItem item = fileList.get(i);
         String parentPath = new File(item.path).getParent();
 
@@ -71,6 +82,15 @@ public class SearchRecyclerAdapter extends RecyclerView.Adapter<SearchRecyclerAd
                 setIconText(searchViewHolder, item);
                 break;
         }
+
+        searchViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(onItemClickListener != null) {
+                    onItemClickListener.onItemClick(i);
+                }
+            }
+        });
     }
 
     @Override
@@ -125,7 +145,10 @@ public class SearchRecyclerAdapter extends RecyclerView.Adapter<SearchRecyclerAd
             size = (TextView) itemView.findViewById(R.id.text_size);
             iconSmall = (ImageView) itemView.findViewById(R.id.file_small_icon);
 
+            name.getLayoutParams().height = UnitHelper.dpToPx(20);
             path = (TextView) itemView.findViewById(R.id.text_path);
+            path.setVisibility(View.VISIBLE);
+            path.getLayoutParams().height = UnitHelper.dpToPx(20);
 
             name.setMaxLines(1);
             name.setSingleLine(true);

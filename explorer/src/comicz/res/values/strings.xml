@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name_free">ComicZViewer</string>
-    <string name="app_name_pro">ComicZViewer Pro</string>
+    <string name="app_name_free">ComicViewer</string>
+    <string name="app_name_pro">ComicViewer Pro</string>
     <string name="action_clear_cache">Clear Cache</string>
     <string name="action_clear_history">Clear History</string>
+    <string name="msg_last_book">Would you like to open the last book you read?</string>
+    <string name="msg_last_page">Would you like to open the last page you read?</string>
+    <string name="msg_no_image_in_zip">There is no image in the compressed (ZIP) file.</string>
 </resources>

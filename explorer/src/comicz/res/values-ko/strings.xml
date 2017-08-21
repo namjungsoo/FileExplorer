@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name_free">코믹z뷰어</string>
-    <string name="app_name_pro">코믹z뷰어 Pro</string>
+    <string name="app_name_free">코믹뷰어</string>
+    <string name="app_name_pro">코믹뷰어 Pro</string>
     <string name="action_clear_cache">캐쉬 삭제</string>
     <string name="action_clear_history">최근파일 삭제</string>
+    <string name="msg_last_book">마지막으로 읽던 책을 여시겠습니까?</string>
+    <string name="msg_last_page">마지막으로 읽던 페이지를 여시겠습니까?</string>
+    <string name="msg_no_image_in_zip">압축(ZIP) 파일에 이미지가 없습니다.</string>
 </resources>

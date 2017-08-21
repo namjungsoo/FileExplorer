@@ -1,6 +1,5 @@
 package com.duongame.comicz.fragment;
 
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -15,9 +14,8 @@ import com.duongame.R;
 import com.duongame.comicz.adapter.HistoryAdapter;
 import com.duongame.comicz.adapter.HistoryRecyclerAdapter;
 import com.duongame.comicz.db.BookDB;
+import com.duongame.comicz.db.BookLoader;
 import com.duongame.explorer.fragment.BaseFragment;
-import com.duongame.viewer.activity.PdfActivity;
-import com.duongame.viewer.activity.ZipActivity;
 
 import java.util.ArrayList;
 
@@ -39,7 +37,7 @@ public class HistoryFragment extends BaseFragment {
     private ArrayList<BookDB.Book> bookList;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(LayoutInflater inflater, final ViewGroup container,
                              Bundle savedInstanceState) {
         if(DEBUG)
             Log.d(TAG, "onCreateView");
@@ -55,23 +53,7 @@ public class HistoryFragment extends BaseFragment {
             public void onItemClick(int position) {
                 if (bookList != null) {
                     final BookDB.Book book = bookList.get(position);
-                    Class<?> cls = null;
-                    if (book.path.toLowerCase().endsWith(".zip")) {
-                        cls = ZipActivity.class;
-                    } else if (book.path.toLowerCase().endsWith(".pdf")) {
-                        cls = PdfActivity.class;
-                    }
-
-                    if (cls != null) {
-                        final Intent intent = new Intent(getActivity(), cls);
-                        intent.putExtra("path", book.path);
-                        intent.putExtra("name", book.name);
-                        intent.putExtra("current_page", book.current_page);
-                        intent.putExtra("size", book.size);
-                        intent.putExtra("extract_file", book.extract_file);
-                        intent.putExtra("side", book.side.getValue());
-                        startActivity(intent);
-                    }
+                    BookLoader.load(getActivity(), book);
                 }
             }
         });

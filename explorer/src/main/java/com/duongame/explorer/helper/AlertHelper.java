@@ -10,7 +10,7 @@ import com.duongame.R;
  * Created by namjungsoo on 2016-04-30.
  */
 public class AlertHelper {
-    private static final String TAG="AlertHelper";
+    private static final String TAG = "AlertHelper";
 
 //    public static void showAlertExit(final Activity context) {
 //        AlertHelper.showAlert(context, context.getResources().getString(R.string.app_name), context.getString(R.string.exit_message), new DialogInterface.OnClickListener() {
@@ -38,6 +38,18 @@ public class AlertHelper {
 //        AdBannerManager.initPopupAd(context);// 항상 초기화 해주어야 함
 //    }
 
+    public static void showAlert(Activity context, String title, String message, DialogInterface.OnClickListener posListener, DialogInterface.OnClickListener negListener, DialogInterface.OnKeyListener keyListener) {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(context)
+                .setTitle(title)
+                .setMessage(message)
+                .setIcon(R.drawable.comicz)
+                .setOnKeyListener(keyListener)
+                .setPositiveButton(context.getString(R.string.ok), posListener)
+                .setNegativeButton(context.getString(R.string.cancel), negListener);
+
+        builder.show();
+    }
+
 
     public static void showAlert(Activity context, String title, String message, DialogInterface.OnClickListener posListener, DialogInterface.OnKeyListener keyListener, boolean okOnly) {
         final AlertDialog.Builder builder = new AlertDialog.Builder(context)
@@ -47,7 +59,7 @@ public class AlertHelper {
                 .setOnKeyListener(keyListener)
                 .setPositiveButton(context.getString(R.string.ok), posListener);
 
-        if(!okOnly) {
+        if (!okOnly) {
             builder.setNegativeButton(context.getString(R.string.cancel), new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {

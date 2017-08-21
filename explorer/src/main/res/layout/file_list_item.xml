@@ -39,7 +39,7 @@
             <!-- 체크박스 구성을 위해서 Relative를 사용함 -->
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="40dp">
+                android:layout_height="wrap_content">
 
                 <CheckBox
                     android:id="@+id/check_file"

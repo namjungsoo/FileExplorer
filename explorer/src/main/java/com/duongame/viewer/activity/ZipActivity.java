@@ -192,7 +192,7 @@ public class ZipActivity extends PagerActivity {
             // zip 파일을 로딩한다.
             final ArrayList<ExplorerItem> imageList = zipLoader.load(this, path, listener, extractFileCount, side, false);
             if (imageList.size() <= 0) {
-                AlertHelper.showAlert(this, "알림", "압축(ZIP) 파일에 이미지가 없습니다.", new DialogInterface.OnClickListener() {
+                AlertHelper.showAlert(this, getString(R.string.app_name_free), getString(R.string.msg_no_image_in_zip), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         finish();

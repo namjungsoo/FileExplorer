@@ -17,6 +17,7 @@ import android.widget.ViewSwitcher;
 
 import com.duongame.R;
 import com.duongame.comicz.adapter.SearchRecyclerAdapter;
+import com.duongame.comicz.db.BookLoader;
 import com.duongame.explorer.adapter.ExplorerItem;
 import com.duongame.explorer.fragment.BaseFragment;
 import com.duongame.explorer.manager.ExplorerManager;
@@ -36,12 +37,12 @@ public class SearchFragment extends BaseFragment {
     Button buttonSearch;
     EditText editKeyword;
     ProgressBar progressBar;
+    ArrayList<ExplorerItem> fileList;
+    SearchRecyclerAdapter adapter;
 
     class SearchTask extends AsyncTask<Void, Void, Boolean> {
         String keyword;
         String ext;
-        ArrayList<ExplorerItem> fileList;
-        SearchRecyclerAdapter adapter;
 
         public SearchTask(String keyword, String ext) {
             this.keyword = keyword;
@@ -61,7 +62,17 @@ public class SearchFragment extends BaseFragment {
         @Override
         protected void onPostExecute(Boolean result) {
             if (result.booleanValue()) {
+                adapter.setOnItemClickListener(new SearchRecyclerAdapter.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(int position) {
+                        if(fileList != null) {
+                            ExplorerItem item = fileList.get(position);
+                            BookLoader.load(getActivity(), item);
+                        }
+                    }
+                });
                 recyclerView.setAdapter(adapter);
+
                 switcherContents.setDisplayedChild(0);
             } else {
                 switcherContents.setDisplayedChild(1);
