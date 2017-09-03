@@ -4,11 +4,14 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.os.Build;
 import android.util.Log;
 
 import com.duongame.explorer.adapter.ExplorerItem;
 
 import java.util.ArrayList;
+
+import static com.duongame.comicz.db.BookDB.TextBook.LINES_PER_PAGE;
 
 /**
  * Created by namjungsoo on 2017-01-02.
@@ -21,6 +24,76 @@ public class BookDB extends SQLiteOpenHelper {
         super(context, name, factory, version);
     }
 
+    public static class TextBook {
+        public static int LINES_PER_PAGE = 1000;
+        public int lineCount;// 전체 라인 갯수. 1000라인별로 페이지가 분할되어 슬라이더 이동됨
+        public int currentPage;// 1000으로 나눈 몫
+        public int currentPercent;// 현재 페이지의 퍼센트
+        public int currentLine;// 전체중에 몇번째 라인인지
+        public int totalPercent;
+
+        // 현재라인(추정)=lineCount*totalPercent / lineCount
+        public String getPageText() {
+            return "" + (lineCount * totalPercent / LINES_PER_PAGE) + "/" + lineCount;
+        }
+    }
+
+    public static TextBook getTextBook(Book book) {
+        TextBook text = new TextBook();
+        text.lineCount = book.total_page;
+        text.currentPage = book.current_page / LINES_PER_PAGE;
+        text.currentPercent = book.current_page - text.currentPage * LINES_PER_PAGE;
+
+        // 마지막 페이지이면, 1000라인 이하일수 있다. 전체가 1000라인 이하인 것도 마찬가지다.
+        if (text.currentPage == (text.lineCount / LINES_PER_PAGE)) {// 읽기 완료된 파일이다.
+            text.currentLine = text.lineCount;
+            text.totalPercent = LINES_PER_PAGE;
+        } else {
+            int currentPageLine = 0;
+            int prevTotalPageLineCount = 0;
+            int currentTotalPageLineCount = 0;
+            prevTotalPageLineCount = text.currentPage * LINES_PER_PAGE;
+
+            currentPageLine = currentTotalPageLineCount * text.currentPercent / LINES_PER_PAGE;
+            if (text.currentPage == ((text.lineCount / LINES_PER_PAGE) - 1)) {// 마지막 페이지이다.
+                // 남은 라인을 먼저 계산
+                currentTotalPageLineCount = text.lineCount - prevTotalPageLineCount;
+            } else {// 가운데 페이지이다.
+                currentTotalPageLineCount = LINES_PER_PAGE;
+            }
+
+            text.currentLine = prevTotalPageLineCount + currentPageLine;
+            text.totalPercent = text.currentLine * LINES_PER_PAGE / text.lineCount;
+        }
+
+        return text;
+    }
+
+    // setLastBook에 저장될 Book을 만듬
+    public static Book buildTextBook(String path, String name, long size, int percent, int page, int lineCount) {
+        // 현재 라인을 book에 저장하자.
+        final BookDB.Book book = new BookDB.Book();
+        // 고정적인 내용 5개
+        book.path = path;
+        book.name = name;
+        book.type = ExplorerItem.FileType.TEXT;
+        book.size = size;
+        book.total_file = 0;// 파일의 갯수이다.
+
+        // 동적인 내용 6개
+        book.current_page = page * LINES_PER_PAGE + percent;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            book.total_page = lineCount;
+        }
+
+        // zip아 아니면 사용하지 않는 부분
+        book.current_file = 0;
+        book.extract_file = 0;
+        book.side = ExplorerItem.Side.SIDE_ALL;
+
+        return book;
+    }
+
     public static class Book {
         // 변하지 않음
         public String path;// 패스
@@ -30,8 +103,8 @@ public class BookDB extends SQLiteOpenHelper {
         public int total_file;// 최대 파일 수
 
         // 동적으로 변함
-        public int current_page;// 현재 페이지 인덱스
-        public int total_page;// 최대 페이지 수. 전체를 다 로딩하지 않으면 알수 없음
+        public int current_page;// 현재 페이지 인덱스. 텍스트의 경우 현재 페이지*1000 + 0~99.9%
+        public int total_page;// 최대 페이지 수. 전체를 다 로딩하지 않으면 알수 없음. 텍스트의 경우 전체 라인수
 
         public int current_file;// 현재 파일 인덱스
         public int extract_file;// 압축 풀린 파일수. zip에만 해당함. total_file == extract_file이면 로딩이 완료된것
@@ -64,11 +137,11 @@ public class BookDB extends SQLiteOpenHelper {
                     " date=" + date +
                     " last_file=" + last_file +
 
-                    " percent=" + percent;
+                    " currentPercent=" + percent;
         }
 
         public void updatePercent() {
-            if(total_page > 0) {
+            if (total_page > 0) {
                 percent = ((current_page + 1) * 100) / total_page;
             } else if (total_file > 0) {
                 percent = ((current_file + 1) * 100) / total_file;
@@ -141,7 +214,7 @@ public class BookDB extends SQLiteOpenHelper {
 
     public static void clearBook(Context context, String path) {
         final SQLiteDatabase db = getInstance(context).getWritableDatabase();
-        final String sql = "DELETE FROM book WHERE path='"+path+"'";
+        final String sql = "DELETE FROM book WHERE path='" + path + "'";
         db.execSQL(sql);
 //        db.close();
     }
@@ -155,10 +228,10 @@ public class BookDB extends SQLiteOpenHelper {
 
     public static Book getBook(Context context, String path) {
         final SQLiteDatabase db = getInstance(context).getReadableDatabase();
-        final String sql = "SELECT * FROM book WHERE path='"+path+"'";
+        final String sql = "SELECT * FROM book WHERE path='" + path + "'";
         final Cursor cursor = db.rawQuery(sql, null);
         Book book = null;
-        while(cursor.moveToNext()) {
+        while (cursor.moveToNext()) {
             book = newBook(cursor);
             break;
         }
@@ -229,7 +302,7 @@ public class BookDB extends SQLiteOpenHelper {
                     + ",extract_file=" + book.extract_file
                     + ",side=" + book.side.getValue()
                     + ",date=datetime('now','localtime')"
-                    + ",last_file='"+book.last_file + "'"
+                    + ",last_file='" + book.last_file + "'"
                     + " WHERE path='" + book.path + "'";
             Log.i(TAG, "setLastBook=" + sql2);
             db.execSQL(sql2);
@@ -249,7 +322,7 @@ public class BookDB extends SQLiteOpenHelper {
                     + "," + book.side.getValue()
 
                     + ",datetime('now','localtime')"
-                    + ",'"+book.last_file + "'"
+                    + ",'" + book.last_file + "'"
                     + ")";
             Log.i(TAG, "setLastBook=" + sql2);
             db.execSQL(sql2);

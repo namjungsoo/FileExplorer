@@ -18,6 +18,8 @@ import android.widget.TextView;
 
 import com.duongame.R;
 import com.duongame.comicz.db.BookDB;
+import com.duongame.explorer.adapter.ExplorerItem;
+import com.duongame.explorer.bitmap.BitmapCacheManager;
 import com.duongame.explorer.fragment.BaseFragment;
 import com.duongame.explorer.helper.DateHelper;
 import com.duongame.explorer.helper.FileHelper;
@@ -82,10 +84,9 @@ public class HistoryRecyclerAdapter extends RecyclerView.Adapter<HistoryRecycler
             holder.percent.setText(getPercentText(book));
             holder.progressBar.setMax(100);
             holder.progressBar.setProgress(book.percent);
-            if(book.percent == 100) {
+            if (book.percent == 100) {
                 holder.progressBar.getProgressDrawable().setColorFilter(Color.YELLOW, android.graphics.PorterDuff.Mode.SRC_IN);
-            }
-            else {
+            } else {
                 holder.progressBar.getProgressDrawable().setColorFilter(
                         ContextCompat.getColor(context, R.color.colorAccent),
                         android.graphics.PorterDuff.Mode.SRC_IN);
@@ -100,12 +101,12 @@ public class HistoryRecyclerAdapter extends RecyclerView.Adapter<HistoryRecycler
                     popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                         @Override
                         public boolean onMenuItemClick(MenuItem item) {
-                            if(v.getTag() != null) {
-                                String path = (String)v.getTag();
+                            if (v.getTag() != null) {
+                                String path = (String) v.getTag();
                                 BookDB.clearBook(context, path);
 
                                 // 삭제한 이후에는 리프레시를 해주어야 한다.
-                                if(fragment != null)
+                                if (fragment != null)
                                     fragment.onRefresh();
                                 return true;
                             }
@@ -140,8 +141,15 @@ public class HistoryRecyclerAdapter extends RecyclerView.Adapter<HistoryRecycler
 
     private String getPageText(BookDB.Book book) {
         // 압축이 다 풀렸으면, 페이지를 기준으로 한다.
-        if(book.extract_file == book.total_file) {
-            return (book.current_page + 1) + "/" + book.total_page;
+        // 압축파일이 아니라면 둘다 0이다.
+        if (book.extract_file == book.total_file) {
+            // 텍스트가 아닐경우에는 PDF나 ZIP이다.
+            if (book.type != ExplorerItem.FileType.TEXT)
+                return (book.current_page + 1) + "/" + book.total_page;
+            else {
+                BookDB.TextBook textBook = BookDB.getTextBook(book);
+                return textBook.getPageText();
+            }
         } else {
             return (book.current_file + 1) + "/" + book.total_file;
         }
@@ -155,13 +163,17 @@ public class HistoryRecyclerAdapter extends RecyclerView.Adapter<HistoryRecycler
         Log.d(TAG, "loadBitmap " + thumb.getWidth() + " " + thumb.getHeight());
 
         // zip 파일의 썸네일을 읽자
+        if (path.toLowerCase().endsWith(".txt")) {
+            thumb.setImageBitmap(BitmapCacheManager.getResourceBitmap(context.getResources(), R.drawable.text));
+            return;
+        }
+
         final Bitmap bitmap = getThumbnail(path);
         if (bitmap == null) {
-            if(path.toLowerCase().endsWith(".zip")) {
+            if (path.toLowerCase().endsWith(".zip")) {
                 final LoadZipThumbnailTask task = new LoadZipThumbnailTask(context, thumb);
                 task.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, path);
-
-            } else if(path.toLowerCase().endsWith(".pdf")) {
+            } else if (path.toLowerCase().endsWith(".pdf")) {
                 final LoadPdfThumbnailTask task = new LoadPdfThumbnailTask(context, thumb);
                 task.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, path);
             }

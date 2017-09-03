@@ -9,12 +9,15 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.duongame.R;
+import com.duongame.comicz.db.BookDB;
 import com.duongame.explorer.helper.FileHelper;
 import com.duongame.explorer.manager.FontManager;
 import com.duongame.explorer.task.LoadTextTask;
 import com.duongame.viewer.listener.TextOnTouchListener;
 
 import java.util.ArrayList;
+
+import static com.duongame.comicz.db.BookDB.TextBook.LINES_PER_PAGE;
 
 /**
  * Created by namjungsoo on 2016-11-18.
@@ -29,10 +32,10 @@ public class TextActivity extends ViewerActivity {
 
     private String path;
     private String name;
-    private long size;
+    private long size = 0;
 
-    private int page;
-    private int scroll;
+    private int page = 0;
+    private int scroll = 0;
 
     private int fontSize = 20;
     private int fontIndex = 4;
@@ -40,10 +43,10 @@ public class TextActivity extends ViewerActivity {
     private ArrayList<String> lineList = new ArrayList<>();
     static int MAX_FONT_SIZE_INDEX = 16;
 
-    private int[] fontSizeArray = new int[] { 12, 14, 16, 18, 20,
+    private int[] fontSizeArray = new int[]{12, 14, 16, 18, 20,
             24, 28, 32, 36, 40,
             44, 48, 54, 60, 66,
-            72 };
+            72};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,13 +79,14 @@ public class TextActivity extends ViewerActivity {
             name = extras.getString("name");
             size = extras.getLong("size");
 
-            page = extras.getInt("page");
-            scroll = extras.getInt("scroll");
+            int current_page = extras.getInt("current_page");
+            page = current_page / LINES_PER_PAGE;
+            scroll = current_page - LINES_PER_PAGE * page;
 
             textSize.setText(FileHelper.getMinimizedSize(size));
             textName.setText(name);
 
-            final LoadTextTask task = new LoadTextTask(textContent, textInfo, lineList, page, fontSize, scroll);
+            final LoadTextTask task = new LoadTextTask(scrollText, textContent, textInfo, lineList, page, fontSize, scroll);
             task.execute(path);
         }
     }
@@ -94,16 +98,35 @@ public class TextActivity extends ViewerActivity {
     }
 
     @Override
+    public void onPause() {
+        super.onPause();
+
+        // 현재 스크롤 위치를 얻어보자
+        int maxScroll = scrollText.getChildAt(0).getHeight() - scrollText.getHeight();
+        int scrollY = scrollText.getScrollY();
+
+        Log.d(TAG, "maxScroll=" + maxScroll + " scrollY=" + scrollY);
+
+        int percent = scrollY * LINES_PER_PAGE / maxScroll;
+        if (percent >= LINES_PER_PAGE) {
+            percent = LINES_PER_PAGE - 1;
+        }
+
+        BookDB.Book book = BookDB.buildTextBook(path, name, size, percent, page, lineList.size());
+        BookDB.setLastBook(this, book);
+    }
+
+    @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        switch(keyCode) {
+        switch (keyCode) {
             case KeyEvent.KEYCODE_VOLUME_DOWN:
-                if(fontIndex + 1 < MAX_FONT_SIZE_INDEX) {
+                if (fontIndex + 1 < MAX_FONT_SIZE_INDEX) {
                     fontIndex++;
                     updateFontSize();
                 }
                 return true;
             case KeyEvent.KEYCODE_VOLUME_UP:
-                if(fontIndex - 1 >= 0) {
+                if (fontIndex - 1 >= 0) {
                     fontIndex--;
                     updateFontSize();
                 }

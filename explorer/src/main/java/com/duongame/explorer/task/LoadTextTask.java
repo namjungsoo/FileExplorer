@@ -1,6 +1,7 @@
 package com.duongame.explorer.task;
 
 import android.os.AsyncTask;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import org.mozilla.universalchardet.UniversalDetector;
@@ -14,11 +15,14 @@ import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 
+import static com.duongame.comicz.db.BookDB.TextBook.LINES_PER_PAGE;
+
 /**
  * Created by namjungsoo on 2017. 1. 22..
  */
 
 public class LoadTextTask extends AsyncTask<String, Integer, Void> {
+    ScrollView scrollText;
     TextView textContent;
     TextView textInfo;
 
@@ -28,7 +32,8 @@ public class LoadTextTask extends AsyncTask<String, Integer, Void> {
 
     ArrayList<String> lineList;
 
-    public LoadTextTask(TextView textContent, TextView textInfo, ArrayList<String> lineList, int page, int textSize, int scroll) {
+    public LoadTextTask(ScrollView scrollText, TextView textContent, TextView textInfo, ArrayList<String> lineList, int page, int textSize, int scroll) {
+        this.scrollText = scrollText;
         this.textContent = textContent;
         this.textInfo = textInfo;
 
@@ -84,14 +89,14 @@ public class LoadTextTask extends AsyncTask<String, Integer, Void> {
             while ((line = bufferedReader.readLine()) != null) {
                 lineList.add(line);
 
-                if (lineList.size() == (page + 1) * 1000) {
+                if (lineList.size() == (page + 1) * LINES_PER_PAGE) {
                     publishProgress(page);
                 }
             }
 
             // 남은 자료가 마지막것보다 작지만 나머지를 보내야 할때는
             final int size = lineList.size();
-            if (size > page * 1000 && size < (page + 1) * 1000) {
+            if (size > page * LINES_PER_PAGE && size < (page + 1) * LINES_PER_PAGE) {
                 publishProgress(page);
             }
         } catch (FileNotFoundException e) {
@@ -108,11 +113,11 @@ public class LoadTextTask extends AsyncTask<String, Integer, Void> {
     protected void onProgressUpdate(Integer... progress) {
         final StringBuilder builder = new StringBuilder();
         final int size = lineList.size();
-        if (size < page * 1000)
+        if (size < page * LINES_PER_PAGE)
             return;
 
-        int max = Math.min(size, (page + 1) * 1000);
-        for (int i = page * 1000; i < max; i++) {
+        int max = Math.min(size, (page + 1) * LINES_PER_PAGE);
+        for (int i = page * LINES_PER_PAGE; i < max; i++) {
             builder.append(lineList.get(i));
             builder.append("\n");
         }
@@ -126,5 +131,15 @@ public class LoadTextTask extends AsyncTask<String, Integer, Void> {
         super.onPostExecute(result);
 
         textInfo.setText("" + lineList.size() + " lines");
+
+        scrollText.post(new Runnable() {
+            @Override
+            public void run() {
+                // 스크롤에 따라서 움직여 줘야 함
+                int maxScroll = scrollText.getChildAt(0).getHeight() - scrollText.getHeight();
+                int scrollY = maxScroll * scroll / LINES_PER_PAGE;
+                scrollText.setScrollY(scrollY);
+            }
+        });
     }
 }

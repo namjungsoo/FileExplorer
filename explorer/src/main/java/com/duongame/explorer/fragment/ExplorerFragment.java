@@ -333,6 +333,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
                 final Intent intent = new Intent(getActivity(), TextActivity.class);
                 intent.putExtra("path", item.path);
                 intent.putExtra("name", item.name);
+                intent.putExtra("current_page", 0);
                 intent.putExtra("size", item.size);
 
                 startActivity(intent);
