@@ -2,6 +2,7 @@ package com.duongame.viewer.activity;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -12,9 +13,17 @@ import com.duongame.R;
 import com.duongame.comicz.db.BookDB;
 import com.duongame.explorer.helper.FileHelper;
 import com.duongame.explorer.manager.FontManager;
-import com.duongame.explorer.task.LoadTextTask;
 import com.duongame.viewer.listener.TextOnTouchListener;
 
+import org.mozilla.universalchardet.UniversalDetector;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 
 import static com.duongame.comicz.db.BookDB.TextBook.LINES_PER_PAGE;
@@ -32,8 +41,8 @@ public class TextActivity extends ViewerActivity {
 
     private String path;
     private String name;
-    private long size = 0;
 
+    private long size = 0;
     private int page = 0;
     private int scroll = 0;
 
@@ -86,7 +95,7 @@ public class TextActivity extends ViewerActivity {
             textSize.setText(FileHelper.getMinimizedSize(size));
             textName.setText(name);
 
-            final LoadTextTask task = new LoadTextTask(scrollText, textContent, textInfo, lineList, page, fontSize, scroll);
+            final LoadTextTask task = new LoadTextTask();
             task.execute(path);
         }
     }
@@ -135,4 +144,124 @@ public class TextActivity extends ViewerActivity {
                 return super.onKeyDown(keyCode, event);
         }
     }
+
+    protected void updateScrollInfo(int position) {
+        Log.d(TAG, "updateScrollInfo=" + position);
+        final int count = lineList.size() / LINES_PER_PAGE;
+        textPage.setText((position + 1) + "/" + count);
+        seekPage.setMax(count - 1);
+
+        // 이미지가 1개일 경우 처리
+        if (position == 0 && count == 1) {
+            seekPage.setProgress(count);
+            seekPage.setEnabled(false);
+        } else {
+            seekPage.setProgress(position);
+            seekPage.setEnabled(true);
+        }
+    }
+
+    public class LoadTextTask extends AsyncTask<String, Integer, Void> {
+        private String checkEncoding(String fileName) {
+            byte[] buf = new byte[4096];
+            final FileInputStream fileInputStream;
+            try {
+                fileInputStream = new FileInputStream(fileName);
+
+                // (1)
+                final UniversalDetector detector = new UniversalDetector(null);
+
+                // (2)
+                int nread;
+                while ((nread = fileInputStream.read(buf)) > 0 && !detector.isDone()) {
+                    detector.handleData(buf, 0, nread);
+                }
+                // (3)
+                detector.dataEnd();
+
+                // (4)
+                final String encoding = detector.getDetectedCharset();
+
+                // (5)
+                detector.reset();
+                fileInputStream.close();
+                return encoding;
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected Void doInBackground(String... params) {
+            final String path = params[0];
+
+            final String encoding = checkEncoding(path);
+
+            final File file = new File(path);
+            try {
+                final FileInputStream fis = new FileInputStream(file);
+                final InputStreamReader reader = new InputStreamReader(fis, encoding);
+                final BufferedReader bufferedReader = new BufferedReader(reader);
+
+                String line;
+                while ((line = bufferedReader.readLine()) != null) {
+                    lineList.add(line);
+
+                    if (lineList.size() == (page + 1) * LINES_PER_PAGE) {
+                        publishProgress(page);
+                    }
+                }
+
+                // 남은 자료가 마지막것보다 작지만 나머지를 보내야 할때는
+                final int size = lineList.size();
+                if (size > page * LINES_PER_PAGE && size < (page + 1) * LINES_PER_PAGE) {
+                    publishProgress(page);
+                }
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onProgressUpdate(Integer... progress) {
+            final StringBuilder builder = new StringBuilder();
+            final int size = lineList.size();
+            if (size < page * LINES_PER_PAGE)
+                return;
+
+            int max = Math.min(size, (page + 1) * LINES_PER_PAGE);
+            for (int i = page * LINES_PER_PAGE; i < max; i++) {
+                builder.append(lineList.get(i));
+                builder.append("\n");
+            }
+
+            final String text = builder.toString();
+            textContent.setText(text);
+        }
+
+        @Override
+        protected void onPostExecute(Void result) {
+            super.onPostExecute(result);
+
+            textInfo.setText("" + lineList.size() + " lines");
+            updateScrollInfo(page);
+
+            scrollText.post(new Runnable() {
+                @Override
+                public void run() {
+                    // 스크롤에 따라서 움직여 줘야 함
+                    int maxScroll = scrollText.getChildAt(0).getHeight() - scrollText.getHeight();
+                    int scrollY = maxScroll * scroll / LINES_PER_PAGE;
+                    scrollText.setScrollY(scrollY);
+                }
+            });
+        }
+    }
+
 }

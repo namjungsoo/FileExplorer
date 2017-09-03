@@ -117,7 +117,7 @@ public class PagerActivity extends ViewerActivity {
         seekPage.setMax(count - 1);
 
         // 이미지가 1개일 경우 처리
-        if(position == 0 && count == 1) {
+        if (position == 0 && count == 1) {
             seekPage.setProgress(count);
             seekPage.setEnabled(false);
         } else {
