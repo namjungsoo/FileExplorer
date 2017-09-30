@@ -106,17 +106,22 @@ public class TextActivity extends ViewerActivity {
         Log.d(TAG, "fontSize=" + fontSize);
     }
 
-    @Override
-    public void onPause() {
-        super.onPause();
-
+    int getPercent() {
         // 현재 스크롤 위치를 얻어보자
         int maxScroll = scrollText.getChildAt(0).getHeight() - scrollText.getHeight();
         int scrollY = scrollText.getScrollY();
 
-        Log.d(TAG, "maxScroll=" + maxScroll + " scrollY=" + scrollY);
+//        Log.d(TAG, "maxScroll=" + maxScroll + " scrollY=" + scrollY);
 
         int percent = scrollY * LINES_PER_PAGE / maxScroll;
+        return percent;
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        int percent = getPercent();
         if (percent >= LINES_PER_PAGE) {
             percent = LINES_PER_PAGE - 1;
         }

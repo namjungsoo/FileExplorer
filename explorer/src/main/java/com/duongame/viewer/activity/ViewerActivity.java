@@ -73,7 +73,7 @@ public class ViewerActivity extends AppCompatActivity {
     }
 
     protected void initContentView() {
-        if(BuildConfig.SHOW_AD) {
+        if (BuildConfig.SHOW_AD) {
             final LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             mainView = inflater.inflate(contentViewResId, null, true);
 
@@ -106,7 +106,7 @@ public class ViewerActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
 
-        ((ViewGroup)adView.getParent()).removeView(adView);
+        ((ViewGroup) adView.getParent()).removeView(adView);
         BitmapCacheManager.recycleBitmap();
         BitmapCacheManager.recyclePage();
     }
@@ -136,8 +136,8 @@ public class ViewerActivity extends AppCompatActivity {
     protected void initToolBox() {
         textName = (TextView) findViewById(R.id.text_name);
 
-        textInfo = (TextView)findViewById(R.id.text_info);
-        textSize = (TextView)findViewById(R.id.text_size);
+        textInfo = (TextView) findViewById(R.id.text_info);
+        textSize = (TextView) findViewById(R.id.text_size);
 
         topPanel = (LinearLayout) findViewById(R.id.panel_top);
         topPanel.setY(getStatusBarHeight());
@@ -145,6 +145,23 @@ public class ViewerActivity extends AppCompatActivity {
         bottomPanel = (LinearLayout) findViewById(R.id.panel_bottom);
         textPage = (TextView) findViewById(R.id.text_page);
         seekPage = (SeekBar) findViewById(R.id.seek_page);
+
+        seekPage.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
 
 //        int height = getNavigationBarHeight();
 //        bottomPanel.setY(bottomPanel.getY() - height);
