@@ -211,13 +211,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
         viewType = SWITCH_LIST;
         currentView = listView;
 
-//        moveToSelection(ExplorerManager.getLastPath());
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                PreferenceHelper.setViewType(getContext(), viewType);
-            }
-        });
+        PreferenceHelper.setViewType(getContext(), viewType);
     }
 
     public void switchToGrid() {
@@ -234,13 +228,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
         viewType = SWITCH_GRID;
         currentView = gridView;
 
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                PreferenceHelper.setViewType(getContext(), viewType);
-            }
-        });
-//        moveToSelection(ExplorerManager.getLastPath());
+        PreferenceHelper.setViewType(getContext(), viewType);
     }
 
     // 새로운 파일이 추가 되었을때 스캔을 하라는 의미이다.
@@ -456,8 +444,8 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
         @Override
         protected void onPostExecute(Void result) {
             // SearchTask가 resume
-            adapter.notifyDataSetChanged();
             if (pathChanged) {
+                adapter.notifyDataSetChanged();
                 currentView.scrollToPosition(0);
                 currentView.invalidate();
             }
@@ -547,5 +535,17 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
 
     public int getViewType() {
         return viewType;
+    }
+
+    public void visibleTest() {
+        if(viewType == SWITCH_GRID) {
+            GridLayoutManager manager = (GridLayoutManager)gridView.getLayoutManager();
+            if(manager != null) {
+                int first = manager.findFirstVisibleItemPosition();
+                int last = manager.findLastVisibleItemPosition();
+
+                Log.e(TAG, "first="+ first + " last="+last);
+            }
+        }
     }
 }

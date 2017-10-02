@@ -21,7 +21,6 @@ import com.duongame.explorer.task.thumbnail.LoadZipThumbnailTask;
 import com.duongame.explorer.view.RoundedImageView;
 
 import java.io.File;
-import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
 import static com.duongame.explorer.bitmap.BitmapCacheManager.getDrawable;
@@ -70,7 +69,7 @@ public class SearchRecyclerAdapter extends RecyclerView.Adapter<SearchRecyclerAd
         searchViewHolder.icon.setRadiusDp(5);
         searchViewHolder.iconSmall.setVisibility(View.INVISIBLE);
 
-        item.imageViewRef = new WeakReference<ImageView>(searchViewHolder.icon);
+//        item.imageViewRef = new WeakReference<ImageView>(searchViewHolder.icon);
         switch(item.type) {
             case ZIP:
                 setIconZip(searchViewHolder, item);

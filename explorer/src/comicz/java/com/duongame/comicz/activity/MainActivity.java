@@ -159,6 +159,14 @@ public class MainActivity extends AppCompatActivity {
             return false;
         }
 
+        if(id == R.id.action_visible_test) {
+            ExplorerFragment fragment = (ExplorerFragment) getSupportFragmentManager().getFragments().get(0);
+            if (fragment != null) {
+                fragment.visibleTest();
+            }
+            return true;
+        }
+
         if (id == R.id.action_settings) {
             return true;
         }
