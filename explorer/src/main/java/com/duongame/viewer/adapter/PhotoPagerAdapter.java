@@ -30,12 +30,14 @@ public class PhotoPagerAdapter extends ViewerPagerAdapter {
 
     private ArrayList<AsyncTask> taskList = new ArrayList<>();
     private int lastPosition = -1;
+    private boolean useGifAni = false;
 
     PagerOnTouchListener mPagerOnTouchListener;
 
-    public PhotoPagerAdapter(PagerActivity context) {
+    public PhotoPagerAdapter(PagerActivity context, boolean useGifAni) {
         super(context);
         mPagerOnTouchListener = new PagerOnTouchListener(context);
+        this.useGifAni = useGifAni;
     }
 
     @Override
@@ -77,7 +79,7 @@ public class PhotoPagerAdapter extends ViewerPagerAdapter {
 
     private void loadCurrentBitmap(int position, ImageView imageView, int width, int height) {
         final ExplorerItem item = imageList.get(position);
-        final LoadBitmapTask task = new LoadBitmapTask(context, imageView, width, height, exifRotation, position);
+        final LoadBitmapTask task = new LoadBitmapTask(context, imageView, width, height, exifRotation, useGifAni, position);
 
         task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, item);
 
@@ -155,6 +157,9 @@ public class PhotoPagerAdapter extends ViewerPagerAdapter {
             final PagerActivity pagerActivity = (PagerActivity) context;
             final GifImageView imageView = (GifImageView) rootView.findViewById(R.id.image_viewer);
             Log.w(TAG, "imageView tag=" + imageView.getTag());
+
+            if(!useGifAni)
+                return;
 
             if (imageList.get(position).path.toLowerCase().endsWith(".gif")) {
                 final LoadGifTask task = new LoadGifTask(new LoadGifTask.LoadGifListener() {

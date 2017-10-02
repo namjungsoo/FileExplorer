@@ -33,7 +33,7 @@ public class PhotoActivity extends PagerActivity {
 
     @Override
     protected ViewerPagerAdapter createPagerAdapter() {
-        return new PhotoPagerAdapter(this);
+        return new PhotoPagerAdapter(this, true);
     }
 
     private void initPagerAdapter() {

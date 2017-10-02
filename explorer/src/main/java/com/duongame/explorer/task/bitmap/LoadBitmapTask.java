@@ -16,14 +16,16 @@ public class LoadBitmapTask extends BitmapTask {
     private final ImageView imageView;
     private ExplorerItem item;
     private PagerActivity context;
+    private boolean useGifAni;
     int position;
 
-    public LoadBitmapTask(PagerActivity context, ImageView imageView, int width, int height, boolean exif, int position) {
+    public LoadBitmapTask(PagerActivity context, ImageView imageView, int width, int height, boolean exif, boolean useGifAni, int position) {
         super(width, height, exif);
 
         this.context = context;
         this.imageView = imageView;
         this.position = position;
+        this.useGifAni = useGifAni;
     }
 
     @Override
@@ -36,7 +38,7 @@ public class LoadBitmapTask extends BitmapTask {
         item = params[0];
 
         // GIF는 여기서 읽지 않는다.
-        if (FileHelper.isGifImage(item.path)) {
+        if (useGifAni && FileHelper.isGifImage(item.path)) {
 //            Glide.with(context).load(new File(item.path)).into(imageView);
             return null;
         }

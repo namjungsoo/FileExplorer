@@ -31,7 +31,7 @@ public class ExplorerListAdapter extends ExplorerAdapter {
         item.position = position;
 
 //        item.imageViewRef = new WeakReference<ImageView>(viewHolder.icon);
-        setIconDefault(viewHolder, item);
+//        setIconDefault(viewHolder, item);
         setIcon(viewHolder, item);
     }
 

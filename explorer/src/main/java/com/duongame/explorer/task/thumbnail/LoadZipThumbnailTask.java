@@ -1,14 +1,18 @@
 package com.duongame.explorer.task.thumbnail;
 
 import android.app.Activity;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
-import android.util.Log;
+import android.support.annotation.Nullable;
 import android.widget.ImageView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
+import com.duongame.GlideApp;
+import com.duongame.R;
 import com.duongame.explorer.bitmap.BitmapCacheManager;
 import com.duongame.explorer.bitmap.BitmapLoader;
 
@@ -40,23 +44,24 @@ public class LoadZipThumbnailTask extends AsyncTask<String, Void, String> {
     protected void onPostExecute(String param) {
         super.onPostExecute(param);
         if (param != null) {
-            Glide.with(context)
+            GlideApp.with(context)
                     .load(new File(param))
-                    .listener(new RequestListener<File, GlideDrawable>() {
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .placeholder(R.drawable.zip)
+                    .centerCrop()
+                    .listener(new RequestListener<Drawable>() {
                         @Override
-                        public boolean onException(Exception e, File model, Target<GlideDrawable> target, boolean isFirstResource) {
-                            Log.e(TAG, e.getMessage());
+                        public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
                             return false;
                         }
 
                         @Override
-                        public boolean onResourceReady(GlideDrawable resource, File model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
+                        public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
                             BitmapCacheManager.setDrawable(path, resource);
-                            return false;
+                            return true;
+//                            return false;
                         }
                     })
-//                    .placeholder(R.drawable.zip)
-                    .centerCrop()
                     .into(imageView);
         }
     }

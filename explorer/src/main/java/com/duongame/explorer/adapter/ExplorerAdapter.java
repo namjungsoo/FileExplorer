@@ -11,7 +11,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.duongame.GlideApp;
 import com.duongame.R;
 import com.duongame.explorer.bitmap.BitmapCacheManager;
 import com.duongame.explorer.task.thumbnail.LoadApkThumbnailTask;
@@ -234,14 +235,13 @@ public class ExplorerAdapter extends RecyclerView.Adapter<ExplorerAdapter.Explor
     }
 
     void setIconImage(final ExplorerViewHolder viewHolder, ExplorerItem item) {
-        Log.e(TAG, "setIconImage " + item.position + " " + viewHolder.icon.hashCode());
+        Log.e(TAG, "setIconImage " + item.path + " " + viewHolder.icon.hashCode());
         final Bitmap bitmap = getThumbnail(item.path);
         if (bitmap == null) {
-            viewHolder.icon.setImageResource(R.drawable.file);
-
             // Glide로 읽자
-            Glide.with(context)
+            GlideApp.with(context)
                     .load(new File(item.path))
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .placeholder(R.drawable.file)
                     .centerCrop()
                     .into(viewHolder.icon);
@@ -265,11 +265,8 @@ public class ExplorerAdapter extends RecyclerView.Adapter<ExplorerAdapter.Explor
     }
 
     void setIconZip(final ExplorerViewHolder viewHolder, ExplorerItem item) {
-        Log.e(TAG, "setIconZip " + item.position + " " + viewHolder.icon.hashCode());
         final Drawable drawable = getDrawable(item.path);
         if (drawable == null) {
-            viewHolder.icon.setImageResource(R.drawable.zip);
-
             LoadZipThumbnailTask task = new LoadZipThumbnailTask(context, viewHolder.icon);
             task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, item.path);
         } else {
@@ -279,7 +276,7 @@ public class ExplorerAdapter extends RecyclerView.Adapter<ExplorerAdapter.Explor
     }
 
     void setIconApk(final ExplorerViewHolder viewHolder, ExplorerItem item) {
-        Drawable drawable = getDrawable(item.path);
+        final Drawable drawable = getDrawable(item.path);
         if (drawable == null) {
             viewHolder.icon.setImageResource(R.drawable.file);
 
@@ -324,7 +321,6 @@ public class ExplorerAdapter extends RecyclerView.Adapter<ExplorerAdapter.Explor
     }
 
     void setIconDefault(final ExplorerViewHolder viewHolder, ExplorerItem item) {
-        Log.e(TAG, "setIconDefault " + item.position + " " + viewHolder.icon.hashCode());
         switch (item.type) {
             case DIRECTORY:
                 viewHolder.icon.setImageBitmap(BitmapCacheManager.getResourceBitmap(context.getResources(), R.drawable.directory));
@@ -336,7 +332,6 @@ public class ExplorerAdapter extends RecyclerView.Adapter<ExplorerAdapter.Explor
     }
 
     void setIconTypeDefault(final ExplorerViewHolder viewHolder, ExplorerItem item) {
-        Log.e(TAG, "setIconTypeDefault " + item.position + " " + viewHolder.icon.hashCode());
         switch (item.type) {
             case AUDIO:
             case FILE:

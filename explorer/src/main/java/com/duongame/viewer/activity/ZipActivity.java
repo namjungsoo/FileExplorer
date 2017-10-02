@@ -164,7 +164,7 @@ public class ZipActivity extends PagerActivity {
 
     @Override
     protected ViewerPagerAdapter createPagerAdapter() {
-        return new PhotoPagerAdapter(this);
+        return new PhotoPagerAdapter(this, false);
     }
 
     @Override
