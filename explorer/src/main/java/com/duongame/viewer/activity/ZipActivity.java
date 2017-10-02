@@ -49,6 +49,7 @@ public class ZipActivity extends PagerActivity {
         this.side = side;
     }
 
+    // 퍼센트를 기록함
     @Override
     protected void updateScrollInfo(int position) {
 //        Log.d(TAG, "updateScrollInfo="+position);

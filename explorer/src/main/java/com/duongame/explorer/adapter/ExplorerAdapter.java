@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
@@ -12,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.target.ImageViewTarget;
 import com.duongame.GlideApp;
 import com.duongame.R;
 import com.duongame.explorer.bitmap.BitmapCacheManager;
@@ -96,90 +98,9 @@ public class ExplorerAdapter extends RecyclerView.Adapter<ExplorerAdapter.Explor
     public ExplorerAdapter(Activity context, ArrayList<ExplorerItem> fileList) {
         this.context = context;
         this.fileList = fileList;
-
-        // 받은 메세지로 imageview에 bitmap을 셋팅
-//        mainHandler = new Handler() {
-//            @Override
-//            public void handleMessage(Message msg) {
-//                final BitmapMessage bitmapMessage = (BitmapMessage) msg.obj;
-//                if (bitmapMessage == null) {
-//                    Log.e(TAG, "bitmapMessage == null");
-//                    return;
-//                }
-//
-//                if (bitmapMessage.imageView == null) {
-//                    Log.e(TAG, "bitmapMessage.imageView == null");
-//                    return;
-//                }
-//
-//                if (fileMap == null) {
-//                    Log.e(TAG, "fileMap == null");
-//                    return;
-//                }
-//
-//                if (!fileMap.containsKey(bitmapMessage.path)) {
-//                    Log.e(TAG, "!fileMap.containsKey(bitmapMessage.path)");
-//                    return;
-//                }
-//
-//                if (fileMap.get(bitmapMessage.path).imageViewRef == null) {
-//                    Log.e(TAG, "imageViewRef == null");
-//                    return;
-//                }
-//
-//                if (fileMap.get(bitmapMessage.path).imageViewRef.get() != bitmapMessage.imageView) {
-//                    Log.e(TAG, "imageViewRef.get() != bitmapMessage.imageView");
-//                    return;
-//                }
-//
-//                if (msg.arg1 == LOAD_BITMAP) {
-//                    if (bitmapMessage.bitmap == null) {
-//                        Log.e(TAG, "bitmap == null");
-//                        return;
-//                    }
-//
-//                    bitmapMessage.imageView.setImageBitmap(bitmapMessage.bitmap);
-//                } else if (msg.arg1 == LOAD_DRAWABLE) {
-//                    if (bitmapMessage.drawable == null) {
-//                        Log.e(TAG, "drawable == null");
-//                        return;
-//                    }
-//
-//                    bitmapMessage.imageView.setImageDrawable(bitmapMessage.drawable);
-//                }
-//            }
-//        };
-//
-//        Log.d(TAG, "Thread Start");
     }
 
-//    private void handleBitmapMessage(BitmapMessage bitmapMessage) {
-//        if (bitmapMessage == null)
-//            return;
-//
-//        Message mainMsg = new Message();
-//        mainMsg.obj = bitmapMessage;
-//        mainMsg.arg1 = LOAD_BITMAP;
-//        BitmapLoader.BitmapOrDrawable bod = loadThumbnail(context, bitmapMessage.type, bitmapMessage.path);
-//
-//        switch (bitmapMessage.type) {
-//            case APK: {
-//                mainMsg.arg1 = LOAD_DRAWABLE;
-//                bitmapMessage.drawable = bod.drawable;
-//            }
-//            break;
-//            case PDF:
-//            case IMAGE:
-//            case VIDEO:
-//            case ZIP:
-//                bitmapMessage.bitmap = bod.bitmap;
-//                break;
-//        }
-//
-//        mainHandler.sendMessage(mainMsg);
-//    }
-
-    protected static class ExplorerViewHolder extends RecyclerView.ViewHolder {
+    public static class ExplorerViewHolder extends RecyclerView.ViewHolder {
         public ImageView iconSmall;// 현재 사용안함. 작은 아이콘을 위해서 남겨둠
         public RoundedImageView icon;
         public TextView name;
@@ -234,17 +155,26 @@ public class ExplorerAdapter extends RecyclerView.Adapter<ExplorerAdapter.Explor
         }
     }
 
-    void setIconImage(final ExplorerViewHolder viewHolder, ExplorerItem item) {
+    void setIconImage(final ExplorerViewHolder viewHolder, final ExplorerItem item) {
         Log.e(TAG, "setIconImage " + item.path + " " + viewHolder.icon.hashCode());
         final Bitmap bitmap = getThumbnail(item.path);
         if (bitmap == null) {
+            viewHolder.icon.setImageResource(R.drawable.file);
+
             // Glide로 읽자
             GlideApp.with(context)
                     .load(new File(item.path))
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .placeholder(R.drawable.file)
                     .centerCrop()
-                    .into(viewHolder.icon);
+                    .into(new ImageViewTarget<Drawable>(viewHolder.icon) {
+                        @Override
+                        protected void setResource(@Nullable Drawable resource) {
+                            if(viewHolder.iconSmall.getTag() == item.path) {
+                                getView().setImageDrawable(resource);
+                            }
+                        }
+                    });
         } else {
             Log.e(TAG, "setIconImage existing " + item.position);
             viewHolder.icon.setImageBitmap(bitmap);
@@ -257,7 +187,7 @@ public class ExplorerAdapter extends RecyclerView.Adapter<ExplorerAdapter.Explor
         if (bitmap == null) {
             viewHolder.icon.setImageResource(R.drawable.file);
 
-            LoadPdfThumbnailTask task = new LoadPdfThumbnailTask(context, viewHolder.icon);
+            LoadPdfThumbnailTask task = new LoadPdfThumbnailTask(context, viewHolder.icon, viewHolder.iconSmall);
             task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, item.path);
         } else {// 로딩된 비트맵을 셋팅
             viewHolder.icon.setImageBitmap(bitmap);
@@ -267,7 +197,9 @@ public class ExplorerAdapter extends RecyclerView.Adapter<ExplorerAdapter.Explor
     void setIconZip(final ExplorerViewHolder viewHolder, ExplorerItem item) {
         final Drawable drawable = getDrawable(item.path);
         if (drawable == null) {
-            LoadZipThumbnailTask task = new LoadZipThumbnailTask(context, viewHolder.icon);
+            viewHolder.icon.setImageResource(R.drawable.zip);
+
+            LoadZipThumbnailTask task = new LoadZipThumbnailTask(context, viewHolder.icon, viewHolder.iconSmall);
             task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, item.path);
         } else {
             Log.d(TAG, "setIconZip cache found");
@@ -280,7 +212,7 @@ public class ExplorerAdapter extends RecyclerView.Adapter<ExplorerAdapter.Explor
         if (drawable == null) {
             viewHolder.icon.setImageResource(R.drawable.file);
 
-            LoadApkThumbnailTask task = new LoadApkThumbnailTask(context, viewHolder.icon);
+            LoadApkThumbnailTask task = new LoadApkThumbnailTask(context, viewHolder.icon, viewHolder.iconSmall);
             task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, item.path);
         } else {
             viewHolder.icon.setImageDrawable(drawable);
@@ -292,7 +224,7 @@ public class ExplorerAdapter extends RecyclerView.Adapter<ExplorerAdapter.Explor
         if (bitmap == null) {
             viewHolder.icon.setImageResource(R.drawable.file);
 
-            LoadVideoThumbnailTask task = new LoadVideoThumbnailTask(context, viewHolder.icon);
+            LoadVideoThumbnailTask task = new LoadVideoThumbnailTask(context, viewHolder.icon, viewHolder.iconSmall);
             task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, item.path);
         } else {// 로딩된 비트맵을 셋팅
             viewHolder.icon.setImageBitmap(bitmap);
@@ -300,6 +232,11 @@ public class ExplorerAdapter extends RecyclerView.Adapter<ExplorerAdapter.Explor
     }
 
     void setIcon(final ExplorerViewHolder viewHolder, ExplorerItem item) {
+        //iconSmall을 icon대신에 tag용으로 사용한다.
+        //icon의 tag는 glide가 사용한다.
+        viewHolder.iconSmall.setTag(item.path);
+        viewHolder.type = item.type;
+
         if (item.type == ExplorerItem.FileType.IMAGE) {
             setIconImage(viewHolder, item);
         } else if (item.type == VIDEO) {
@@ -311,13 +248,9 @@ public class ExplorerAdapter extends RecyclerView.Adapter<ExplorerAdapter.Explor
         } else if (item.type == ExplorerItem.FileType.APK) {
             setIconApk(viewHolder, item);
         } else {
-            // 이전 타입과 다르게 새 타입이 들어왔다면 업데이트 한다.
-            //if (explorerViewHolder.type != item.type) {
+            viewHolder.iconSmall.setTag(null);
             setIconTypeDefault(viewHolder, item);
-            //}
         }
-
-        viewHolder.type = item.type;
     }
 
     void setIconDefault(final ExplorerViewHolder viewHolder, ExplorerItem item) {

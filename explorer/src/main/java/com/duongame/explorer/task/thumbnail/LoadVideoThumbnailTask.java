@@ -16,28 +16,35 @@ import static com.duongame.explorer.bitmap.BitmapLoader.loadThumbnail;
 
 public class LoadVideoThumbnailTask extends AsyncTask<String, Void, Bitmap> {
     private final Activity context;
-    private final ImageView imageView;
+
+    private ImageView icon, iconSmall;
     private String path;
 
-    public LoadVideoThumbnailTask(Activity context, ImageView imageView) {
+    public LoadVideoThumbnailTask(Activity context, ImageView icon, ImageView iconSmall) {
         this.context = context;
-        this.imageView = imageView;
+        this.icon = icon;
+        this.iconSmall = iconSmall;
     }
 
     @Override
     protected Bitmap doInBackground(String... params) {
-        BitmapLoader.BitmapOrDrawable bod = loadThumbnail(context, VIDEO, params[0]);
+        path = params[0];
+        BitmapLoader.BitmapOrDrawable bod = loadThumbnail(context, VIDEO, path);
         return bod.bitmap;
     }
 
     @Override
     protected void onPostExecute(Bitmap bitmap) {
         super.onPostExecute(bitmap);
-        if (imageView != null && bitmap != null) {
-            if (imageView != null) {
-                imageView.setImageBitmap(bitmap);
-            }
-        }
+        if (bitmap == null)
+            return;
+        if (icon == null)
+            return;
+        if (path == null)
+            return;
+        if (iconSmall.getTag() == null)
+            return;
+        if (path.equals(iconSmall.getTag()))
+            icon.setImageBitmap(bitmap);
     }
-
 }

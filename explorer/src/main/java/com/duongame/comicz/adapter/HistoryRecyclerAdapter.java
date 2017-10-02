@@ -127,7 +127,7 @@ public class HistoryRecyclerAdapter extends RecyclerView.Adapter<HistoryRecycler
                 }
             });
 
-            loadBitmap(holder.thumb, book.path);
+            loadBitmap(holder, book.path);
         }
     }
 
@@ -159,26 +159,26 @@ public class HistoryRecyclerAdapter extends RecyclerView.Adapter<HistoryRecycler
         return String.valueOf(book.percent) + "%";
     }
 
-    private void loadBitmap(ImageView thumb, String path) {
-        Log.d(TAG, "loadBitmap " + thumb.getWidth() + " " + thumb.getHeight());
+    private void loadBitmap(HistoryViewHolder holder, String path) {
+        Log.d(TAG, "loadBitmap " + holder.thumb.getWidth() + " " + holder.thumb.getHeight());
 
         // zip 파일의 썸네일을 읽자
         if (path.toLowerCase().endsWith(".txt")) {
-            thumb.setImageBitmap(BitmapCacheManager.getResourceBitmap(context.getResources(), R.drawable.text));
+            holder.thumb.setImageBitmap(BitmapCacheManager.getResourceBitmap(context.getResources(), R.drawable.text));
             return;
         }
 
         final Bitmap bitmap = getThumbnail(path);
         if (bitmap == null) {
             if (path.toLowerCase().endsWith(".zip")) {
-                final LoadZipThumbnailTask task = new LoadZipThumbnailTask(context, thumb);
+                final LoadZipThumbnailTask task = new LoadZipThumbnailTask(context, holder.thumb, holder.more);
                 task.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, path);
             } else if (path.toLowerCase().endsWith(".pdf")) {
-                final LoadPdfThumbnailTask task = new LoadPdfThumbnailTask(context, thumb);
+                final LoadPdfThumbnailTask task = new LoadPdfThumbnailTask(context, holder.thumb, holder.more);
                 task.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, path);
             }
         } else {
-            thumb.setImageBitmap(bitmap);
+            holder.thumb.setImageBitmap(bitmap);
         }
     }
 
@@ -191,7 +191,7 @@ public class HistoryRecyclerAdapter extends RecyclerView.Adapter<HistoryRecycler
         TextView page;
         TextView percent;
         ProgressBar progressBar;
-        ImageView more;
+        ImageView more;// tag사용중
         int position;
 
         public HistoryViewHolder(View itemView) {

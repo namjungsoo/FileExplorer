@@ -16,16 +16,19 @@ import static com.duongame.explorer.bitmap.BitmapLoader.loadThumbnail;
 
 public class LoadApkThumbnailTask extends AsyncTask<String, Void, Drawable> {
     private final Activity context;
-    private final ImageView imageView;
+
+    private ImageView icon, iconSmall;
     private String path;
 
-    public LoadApkThumbnailTask(Activity context, ImageView imageView) {
+    public LoadApkThumbnailTask(Activity context, ImageView icon, ImageView iconSmall) {
         this.context = context;
-        this.imageView = imageView;
+        this.icon = icon;
+        this.iconSmall = iconSmall;
     }
 
     @Override
     protected Drawable doInBackground(String... params) {
+        path = params[0];
         BitmapLoader.BitmapOrDrawable bod = loadThumbnail(context, APK, params[0]);
         return bod.drawable;
     }
@@ -33,11 +36,16 @@ public class LoadApkThumbnailTask extends AsyncTask<String, Void, Drawable> {
     @Override
     protected void onPostExecute(Drawable drawable) {
         super.onPostExecute(drawable);
-        if (imageView != null && drawable != null) {
-            if (imageView != null) {
-                imageView.setImageDrawable(drawable);
-            }
-        }
+        if (drawable == null)
+            return;
+        if (icon == null)
+            return;
+        if (path == null)
+            return;
+        if (iconSmall.getTag() == null)
+            return;
+        if (path.equals(iconSmall.getTag()))
+            icon.setImageDrawable(drawable);
     }
 
 }

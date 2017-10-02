@@ -6,6 +6,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.ViewTreeObserver;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
@@ -73,6 +74,12 @@ public class TextActivity extends ViewerActivity {
         textContent.setTextColor(Color.BLACK);
 
         scrollText.setOnTouchListener(new TextOnTouchListener(this));
+        scrollText.getViewTreeObserver().addOnScrollChangedListener(new ViewTreeObserver.OnScrollChangedListener() {
+            @Override
+            public void onScrollChanged() {
+                updateScrollInfo(page);
+            }
+        });
         processIntent();
 
         // 전체 화면으로 들어감
@@ -150,10 +157,10 @@ public class TextActivity extends ViewerActivity {
         }
     }
 
-    protected void updateScrollInfo(int position) {
+    public void updateScrollInfo(int position) {
         Log.d(TAG, "updateScrollInfo=" + position);
         final int count = lineList.size() / LINES_PER_PAGE;
-        textPage.setText((position + 1) + "/" + count);
+        textPage.setText((position + 1) + "/" + count + String.format(" (%02d%%)", getPercent()/10));
         seekPage.setMax(count - 1);
 
         // 이미지가 1개일 경우 처리

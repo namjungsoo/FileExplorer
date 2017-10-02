@@ -57,32 +57,33 @@ public class SearchRecyclerAdapter extends RecyclerView.Adapter<SearchRecyclerAd
     }
 
     @Override
-    public void onBindViewHolder(SearchViewHolder searchViewHolder, final int i) {
+    public void onBindViewHolder(SearchViewHolder holder, final int i) {
         ExplorerItem item = fileList.get(i);
         String parentPath = new File(item.path).getParent();
 
-        searchViewHolder.position = i;
-        searchViewHolder.name.setText(item.name);
-        searchViewHolder.path.setText(parentPath);
-        searchViewHolder.date.setText(item.date);
-        searchViewHolder.size.setText(FileHelper.getMinimizedSize(item.size));
-        searchViewHolder.icon.setRadiusDp(5);
-        searchViewHolder.iconSmall.setVisibility(View.INVISIBLE);
+        holder.position = i;
+        holder.name.setText(item.name);
+        holder.path.setText(parentPath);
+        holder.date.setText(item.date);
+        holder.size.setText(FileHelper.getMinimizedSize(item.size));
+        holder.icon.setRadiusDp(5);
+        holder.iconSmall.setVisibility(View.INVISIBLE);
+        holder.iconSmall.setTag(item.path);
 
 //        item.imageViewRef = new WeakReference<ImageView>(searchViewHolder.icon);
         switch(item.type) {
             case ZIP:
-                setIconZip(searchViewHolder, item);
+                setIconZip(holder, item);
                 break;
             case PDF:
-                setIconPdf(searchViewHolder, item);
+                setIconPdf(holder, item);
                 break;
             case TEXT:
-                setIconText(searchViewHolder, item);
+                setIconText(holder, item);
                 break;
         }
 
-        searchViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(onItemClickListener != null) {
@@ -97,27 +98,27 @@ public class SearchRecyclerAdapter extends RecyclerView.Adapter<SearchRecyclerAd
         return fileList.size();
     }
 
-    void setIconZip(SearchViewHolder searchViewHolder, ExplorerItem item) {
+    void setIconZip(SearchViewHolder holder, ExplorerItem item) {
         final Drawable drawable = getDrawable(item.path);
         if (drawable == null) {
-            searchViewHolder.icon.setImageResource(R.drawable.zip);
+            holder.icon.setImageResource(R.drawable.zip);
 
-            LoadZipThumbnailTask task = new LoadZipThumbnailTask(context, searchViewHolder.icon);
+            LoadZipThumbnailTask task = new LoadZipThumbnailTask(context, holder.icon, holder.iconSmall);
             task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, item.path);
         } else {
-            searchViewHolder.icon.setImageDrawable(drawable);
+            holder.icon.setImageDrawable(drawable);
         }
     }
 
-    void setIconPdf(SearchViewHolder searchViewHolder, ExplorerItem item) {
+    void setIconPdf(SearchViewHolder holder, ExplorerItem item) {
         final Bitmap bitmap = getThumbnail(item.path);
         if (bitmap == null) {
-            searchViewHolder.icon.setImageResource(R.drawable.file);
+            holder.icon.setImageResource(R.drawable.file);
 
-            LoadPdfThumbnailTask task = new LoadPdfThumbnailTask(context, searchViewHolder.icon);
+            LoadPdfThumbnailTask task = new LoadPdfThumbnailTask(context, holder.icon, holder.iconSmall);
             task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, item.path);
         } else {// 로딩된 비트맵을 셋팅
-            searchViewHolder.icon.setImageBitmap(bitmap);
+            holder.icon.setImageBitmap(bitmap);
         }
     }
 

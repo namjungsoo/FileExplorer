@@ -16,16 +16,19 @@ import static com.duongame.explorer.bitmap.BitmapLoader.loadThumbnail;
 
 public class LoadPdfThumbnailTask extends AsyncTask<String, Void, Bitmap> {
     private final Activity context;
-    private final ImageView imageView;
+
+    private ImageView icon, iconSmall;
     private String path;
 
-    public LoadPdfThumbnailTask(Activity context, ImageView imageView) {
+    public LoadPdfThumbnailTask(Activity context, ImageView icon, ImageView iconSmall) {
         this.context = context;
-        this.imageView = imageView;
+        this.icon = icon;
+        this.iconSmall = iconSmall;
     }
 
     @Override
     protected Bitmap doInBackground(String... params) {
+        path = params[0];
         BitmapLoader.BitmapOrDrawable bod = loadThumbnail(context, PDF, params[0]);
         return bod.bitmap;
     }
@@ -33,10 +36,15 @@ public class LoadPdfThumbnailTask extends AsyncTask<String, Void, Bitmap> {
     @Override
     protected void onPostExecute(Bitmap bitmap) {
         super.onPostExecute(bitmap);
-        if (imageView != null && bitmap != null) {
-            if (imageView != null) {
-                imageView.setImageBitmap(bitmap);
-            }
-        }
+        if (bitmap == null)
+            return;
+        if (icon == null)
+            return;
+        if (path == null)
+            return;
+        if (iconSmall.getTag() == null)
+            return;
+        if (path.equals(iconSmall.getTag()))
+            icon.setImageBitmap(bitmap);
     }
 }
