@@ -2,6 +2,7 @@ package com.duongame.explorer.task.thumbnail;
 
 import android.app.Activity;
 import android.os.AsyncTask;
+import android.util.Log;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
@@ -18,6 +19,7 @@ import java.io.File;
  */
 
 public class LoadZipThumbnailTask extends AsyncTask<String, Void, String> {
+    private final String TAG = LoadZipThumbnailTask.class.getSimpleName();
     private final ImageView imageView;
     private final Activity context;
     private String path;
@@ -43,6 +45,7 @@ public class LoadZipThumbnailTask extends AsyncTask<String, Void, String> {
                     .listener(new RequestListener<File, GlideDrawable>() {
                         @Override
                         public boolean onException(Exception e, File model, Target<GlideDrawable> target, boolean isFirstResource) {
+                            Log.e(TAG, e.getMessage());
                             return false;
                         }
 
