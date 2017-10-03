@@ -178,6 +178,7 @@ public class TextActivity extends ViewerActivity {
                     page = seekBar.getProgress();
                     scroll = 0;
                     updateTextView();
+                    updateScrollInfo(page);
                 }
             }
 
@@ -289,6 +290,7 @@ public class TextActivity extends ViewerActivity {
 
             textInfo.setText("" + lineList.size() + " lines");
             scrollText.getViewTreeObserver().addOnGlobalLayoutListener(onGlobalLayoutListener);
+            updateScrollInfo(page);
         }
     }
 
