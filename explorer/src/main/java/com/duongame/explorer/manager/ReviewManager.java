@@ -46,11 +46,12 @@ public class ReviewManager {
                                 }
                             }, null);
                     AdBannerManager.initPopupAd(context);// 항상 초기화 해주어야 함
-                    return true;
+                    break;
                 }
             }
 
             PreferenceHelper.setReviewCount(context, reviewCount);
+            return true;
         }
         return false;
     }
