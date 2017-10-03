@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name_free">漫画ビューア</string>
+    <string name="app_name_pro">漫画ビューア Pro</string>
+
+    <string name="action_clear_cache">キャッシュの削除</string>
+    <string name="action_clear_history">最近のファイルの削除</string>
+    <string name="action_open_lastbook">最後読んだ本を展開</string>
+
+    <string name="msg_last_book">最後に読んだ本を開きますか？</string>
+    <string name="msg_last_page">最後に読んだページがあります。（ページ：%d）\n続行読みたいですか？</string>
+
+    <string name="msg_clear_cache">キャッシュファイルを削除しました。</string>
+    <string name="msg_clear_history">最近のファイルリストを削除しました。</string>
+
+    <string name="msg_no_image_in_zip">圧縮（ZIP）ファイルに画像がありません。</string>
+
+    <string name="dialog_review_title">漫画ビューアを応援して下さい。</string>
+    <string name="dialog_review_content">漫画ビューアを楽しんでいますか？漫画ビューアのためにレビューを残してください！</string>
+</resources>
