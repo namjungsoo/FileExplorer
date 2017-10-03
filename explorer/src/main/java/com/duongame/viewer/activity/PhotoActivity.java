@@ -1,5 +1,6 @@
 package com.duongame.viewer.activity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -17,6 +18,15 @@ import java.util.ArrayList;
 
 public class PhotoActivity extends PagerActivity {
     private final static String TAG = "PhotoActivity";
+
+    public static Intent getLocalIntent(Context context, ExplorerItem item) {
+        final Intent intent = new Intent(context, PhotoActivity.class);
+        // 풀패스에서 폴더만 떼옴
+        intent.putExtra("path", item.path.substring(0, item.path.lastIndexOf('/')));
+        intent.putExtra("name", item.name);
+        intent.putExtra("size", item.size);
+        return intent;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

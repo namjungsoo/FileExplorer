@@ -49,6 +49,8 @@ import java.util.ArrayList;
 import static android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION;
 import static android.view.View.GONE;
 import static com.duongame.explorer.ExplorerConfig.MAX_THUMBNAILS;
+import static com.duongame.explorer.adapter.ExplorerItem.FileType.APK;
+import static com.duongame.explorer.adapter.ExplorerItem.FileType.ZIP;
 
 /**
  * Created by namjungsoo on 2016-11-23.
@@ -105,23 +107,27 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
             }
         }
 
+        openLastBook();
+
+        return rootView;
+    }
+
+    public void openLastBook() {
         final BookDB.Book book = BookDB.getLastBook(getActivity());
-        if(book != null) {
+        if (book != null) {
             // zip파일인가 체크
-            if(book.path.toLowerCase().endsWith(".zip")) {
+            if (book.path.toLowerCase().endsWith(".zip")) {
                 loadLastBookZip(book, false);
             }
             // zip파일인가 체크
-            else if(book.path.toLowerCase().endsWith(".pdf")) {
-                //loadLastBookPdf(book, false);
+            else if (book.path.toLowerCase().endsWith(".pdf")) {
+                loadLastBookPdf(book, false);
             }
-            // zip파일인가 체크
-            else if(book.path.toLowerCase().endsWith(".txt")) {
-                //loadLastBookZip(book, false);
+            // txt파일인가 체크
+            else if (book.path.toLowerCase().endsWith(".txt")) {
+                loadLastBookText(book, false);
             }
         }
-
-        return rootView;
     }
 
     @Override
@@ -282,59 +288,41 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
                 break;
             case IMAGE: {
 //                backupPosition();
-
-                final Intent intent = new Intent(getActivity(), PhotoActivity.class);
-
-                // 풀패스에서 폴더만 떼옴
-                intent.putExtra("path", item.path.substring(0, item.path.lastIndexOf('/')));
-                intent.putExtra("name", item.name);
-                intent.putExtra("size", item.size);
-
+                final Intent intent = PhotoActivity.getLocalIntent(getContext(), item);
                 startActivity(intent);
             }
             break;
             case PDF: {
 //                backupPosition();
-
-                final Intent intent = new Intent(getActivity(), PdfActivity.class);
-                intent.putExtra("path", item.path);
-                intent.putExtra("name", item.name);
-                intent.putExtra("current_page", 0);
-                intent.putExtra("size", item.size);
-
-                startActivity(intent);
-
-                Log.d(TAG, "onAdapterItemClick pdf");
+                final BookDB.Book book = BookDB.getBook(getActivity(), item.path);
+                if (book == null) {
+                    final Intent intent = PdfActivity.getLocalIntent(getContext(), item);
+                    startActivity(intent);
+                } else {
+                    loadLastBookPdf(book, true);
+                }
             }
             break;
             case ZIP: {
 //                backupPosition();
-
                 final BookDB.Book book = BookDB.getBook(getActivity(), item.path);
-
                 if (book == null) {
-                    final Intent intent = new Intent(getActivity(), ZipActivity.class);
-                    intent.putExtra("path", item.path);
-                    intent.putExtra("name", item.name);
-                    intent.putExtra("current_page", 0);
-                    intent.putExtra("size", item.size);
+                    final Intent intent = ZipActivity.getLocalIntent(getContext(), item);
                     startActivity(intent);
                 } else {
                     loadLastBookZip(book, true);
                 }
-
             }
             break;
             case TEXT: {
 //                backupPosition();
-
-                final Intent intent = new Intent(getActivity(), TextActivity.class);
-                intent.putExtra("path", item.path);
-                intent.putExtra("name", item.name);
-                intent.putExtra("current_page", 0);
-                intent.putExtra("size", item.size);
-
-                startActivity(intent);
+                final BookDB.Book book = BookDB.getBook(getActivity(), item.path);
+                if (book == null) {
+                    final Intent intent = TextActivity.getLocalIntent(getContext(), item);
+                    startActivity(intent);
+                } else {
+                    loadLastBookText(book, true);
+                }
             }
             break;
             case APK: {
@@ -366,14 +354,29 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
         holder.more.setVisibility(View.GONE);
     }
 
-    void loadLastBookZip(final BookDB.Book book, final boolean cancelToRead) {
-        final Intent intent = new Intent(getActivity(), ZipActivity.class);
-        intent.putExtra("path", book.path);
-        intent.putExtra("name", book.name);
-        intent.putExtra("size", book.size);
-        intent.putExtra("extract_file", book.extract_file);
-        intent.putExtra("side", book.side.getValue());
+    void loadLastBookText(final BookDB.Book book, final boolean cancelToRead) {
+        final Intent intent = TextActivity.getLocalIntent(getContext(), book);
+        showRecentLoadingDialog(intent, book, cancelToRead);
+    }
 
+    void loadLastBookPdf(final BookDB.Book book, final boolean cancelToRead) {
+        final Intent intent = PdfActivity.getLocalIntent(getContext(), book);
+        showRecentLoadingDialog(intent, book, cancelToRead);
+    }
+
+    void loadLastBookZip(final BookDB.Book book, final boolean cancelToRead) {
+        final Intent intent = ZipActivity.getLocalIntent(getContext(), book);
+        showRecentLoadingDialog(intent, book, cancelToRead);
+
+        //TODO: 나중에 이미지 preview를 만들자.
+//                    if(book.last_file != null) {
+//                        ImageView imageView = new ImageView(getActivity());
+//                        imageView.setImageBitmap();
+//                    }
+
+    }
+
+    void showRecentLoadingDialog(final Intent intent, final BookDB.Book book, final boolean cancelToRead) {
         View view = getActivity().getLayoutInflater().inflate(R.layout.history_item, null, false);
         updateHistoryItem(view, book);
 
@@ -399,13 +402,6 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
                         }
                     }
                 });
-
-        //TODO: 나중에 이미지 preview를 만들자.
-//                    if(book.last_file != null) {
-//                        ImageView imageView = new ImageView(getActivity());
-//                        imageView.setImageBitmap();
-//                    }
-
         builder.show();
     }
 
@@ -561,13 +557,13 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
     }
 
     public void visibleTest() {
-        if(viewType == SWITCH_GRID) {
-            GridLayoutManager manager = (GridLayoutManager)gridView.getLayoutManager();
-            if(manager != null) {
+        if (viewType == SWITCH_GRID) {
+            GridLayoutManager manager = (GridLayoutManager) gridView.getLayoutManager();
+            if (manager != null) {
                 int first = manager.findFirstVisibleItemPosition();
                 int last = manager.findLastVisibleItemPosition();
 
-                Log.e(TAG, "first="+ first + " last="+last);
+                Log.e(TAG, "first=" + first + " last=" + last);
             }
         }
     }

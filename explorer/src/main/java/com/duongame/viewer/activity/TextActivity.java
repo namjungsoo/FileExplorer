@@ -1,5 +1,6 @@
 package com.duongame.viewer.activity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.AsyncTask;
@@ -13,6 +14,7 @@ import android.widget.TextView;
 
 import com.duongame.R;
 import com.duongame.comicz.db.BookDB;
+import com.duongame.explorer.adapter.ExplorerItem;
 import com.duongame.explorer.helper.FileHelper;
 import com.duongame.explorer.manager.FontManager;
 import com.duongame.viewer.listener.TextOnTouchListener;
@@ -58,6 +60,15 @@ public class TextActivity extends ViewerActivity {
             24, 28, 32, 36, 40,
             44, 48, 54, 60, 66,
             72};
+
+    public static Intent getLocalIntent(Context context, ExplorerItem item) {
+        final Intent intent = new Intent(context, TextActivity.class);
+        intent.putExtra("path", item.path);
+        intent.putExtra("name", item.name);
+        intent.putExtra("size", item.size);
+        intent.putExtra("current_page", 0);
+        return intent;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -1,5 +1,6 @@
 package com.duongame.viewer.activity;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -97,6 +98,25 @@ public class ZipActivity extends PagerActivity {
             extractFileCount = totalFileCount;
         }
     };
+
+    public static Intent getLocalIntent(Context context, ExplorerItem item) {
+        final Intent intent = new Intent(context, ZipActivity.class);
+        intent.putExtra("path", item.path);
+        intent.putExtra("name", item.name);
+        intent.putExtra("size", item.size);
+        intent.putExtra("current_page", 0);
+        return intent;
+    }
+
+    public static Intent getLocalIntent(Context context, BookDB.Book book) {
+        final Intent intent = new Intent(context, ZipActivity.class);
+        intent.putExtra("path", book.path);
+        intent.putExtra("name", book.name);
+        intent.putExtra("size", book.size);
+        intent.putExtra("extract_file", book.extract_file);
+        intent.putExtra("side", book.side.getValue());
+        return intent;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

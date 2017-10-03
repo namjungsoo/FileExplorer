@@ -159,29 +159,28 @@ public class MainActivity extends AppCompatActivity {
             return false;
         }
 
-        if(id == R.id.action_visible_test) {
+//        if (id == R.id.action_settings) {
+//            return true;
+//        }
+
+        if (id == R.id.action_open_lastbook) {
             ExplorerFragment fragment = (ExplorerFragment) getSupportFragmentManager().getFragments().get(0);
             if (fragment != null) {
-                fragment.visibleTest();
+                fragment.openLastBook();
             }
             return true;
         }
 
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
         if (id == R.id.action_clear_cache) {
-            clearHistory();
             clearCache();
 
-            ToastHelper.showToast(this, "캐쉬 파일을 삭제하였습니다.");
+            ToastHelper.showToast(this, getResources().getString(R.string.msg_clear_cache));
         }
 
         if (id == R.id.action_clear_history) {
             clearHistory();
 
-            ToastHelper.showToast(this, "최근파일 목록을 삭제하였습니다.");
+            ToastHelper.showToast(this, getResources().getString(R.string.msg_clear_history));
         }
 
         return super.onOptionsItemSelected(item);
