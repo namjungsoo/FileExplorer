@@ -50,7 +50,7 @@ public class HistoryFragment extends BaseFragment {
             public void onItemClick(int position) {
                 if (bookList != null) {
                     final BookDB.Book book = bookList.get(position);
-                    BookLoader.load(getActivity(), book);
+                    BookLoader.loadContinue(getActivity(), book);
                 }
             }
         });

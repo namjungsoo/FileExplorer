@@ -8,7 +8,7 @@
     <string name="action_open_lastbook">Open Last Book</string>
 
     <string name="msg_last_book">Would you like to open the last book you read?</string>
-    <string name="msg_last_page">Would you like to open the last page you read?</string>
+    <string name="msg_last_page">There is last page you read. (Page: %d)\nWould you like to continue?</string>
 
     <string name="msg_clear_cache">Cache files were deleted.</string>
     <string name="msg_clear_history">Recent files list was deleted.</string>

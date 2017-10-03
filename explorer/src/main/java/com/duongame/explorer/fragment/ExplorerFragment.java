@@ -1,6 +1,5 @@
 package com.duongame.explorer.fragment;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -9,7 +8,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.FileProvider;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -24,7 +22,6 @@ import android.widget.TextView;
 import android.widget.ViewSwitcher;
 
 import com.duongame.R;
-import com.duongame.comicz.adapter.HistoryRecyclerAdapter;
 import com.duongame.comicz.db.BookDB;
 import com.duongame.comicz.db.BookLoader;
 import com.duongame.explorer.adapter.ExplorerAdapter;
@@ -38,10 +35,7 @@ import com.duongame.explorer.helper.PreferenceHelper;
 import com.duongame.explorer.manager.ExplorerManager;
 import com.duongame.explorer.manager.PermissionManager;
 import com.duongame.explorer.manager.PositionManager;
-import com.duongame.viewer.activity.PdfActivity;
 import com.duongame.viewer.activity.PhotoActivity;
-import com.duongame.viewer.activity.TextActivity;
-import com.duongame.viewer.activity.ZipActivity;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -49,8 +43,6 @@ import java.util.ArrayList;
 import static android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION;
 import static android.view.View.GONE;
 import static com.duongame.explorer.ExplorerConfig.MAX_THUMBNAILS;
-import static com.duongame.explorer.adapter.ExplorerItem.FileType.APK;
-import static com.duongame.explorer.adapter.ExplorerItem.FileType.ZIP;
 
 /**
  * Created by namjungsoo on 2016-11-23.
@@ -112,21 +104,17 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
         return rootView;
     }
 
-    public void openLastBook() {
+    private void openLastBook() {
         final BookDB.Book book = BookDB.getLastBook(getActivity());
         if (book != null) {
-            // zip파일인가 체크
-            if (book.path.toLowerCase().endsWith(".zip")) {
-                loadLastBookZip(book, false);
-            }
-            // zip파일인가 체크
-            else if (book.path.toLowerCase().endsWith(".pdf")) {
-                loadLastBookPdf(book, false);
-            }
-            // txt파일인가 체크
-            else if (book.path.toLowerCase().endsWith(".txt")) {
-                loadLastBookText(book, false);
-            }
+            BookLoader.loadWithAlert(getActivity(), book, true);
+        }
+    }
+
+    public void openLastBookDirect() {
+        final BookDB.Book book = BookDB.getLastBook(getActivity());
+        if (book != null) {
+            BookLoader.loadContinue(getActivity(), book);
         }
     }
 
@@ -270,141 +258,65 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
         updateFileList(path);
     }
 
-    //TODO: 읽던 파일이면 읽던 페이지로 이동해야 함.
+    void onClickDirectory(ExplorerItem item) {
+        String newPath;
+        if (ExplorerManager.getLastPath().equals("/")) {
+            newPath = ExplorerManager.getLastPath() + item.name;
+        } else {
+            newPath = ExplorerManager.getLastPath() + "/" + item.name;
+        }
+
+        updateFileList(newPath);
+    }
+
+    void onClickImage(ExplorerItem item) {
+        final Intent intent = PhotoActivity.getLocalIntent(getContext(), item);
+        startActivity(intent);
+
+    }
+
+    void onClickApk(ExplorerItem item) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            final Intent intent = new Intent(Intent.ACTION_VIEW);
+            final String providerName = getContext().getPackageName() + ".provider";
+            final Uri apkUri = FileProvider.getUriForFile(getContext(), providerName, new File(item.path));
+            intent.setDataAndType(apkUri, "application/vnd.android.package-archive");
+            intent.addFlags(FLAG_GRANT_READ_URI_PERMISSION);
+            startActivity(intent);
+        } else {
+            final Intent intent = new Intent(Intent.ACTION_VIEW);
+            intent.setDataAndType(Uri.parse("file://" + item.path), "application/vnd.android.package-archive");
+            startActivity(intent);
+        }
+    }
+
+    void onClickBook(ExplorerItem item) {
+        BookLoader.load(getActivity(), item, false);
+    }
+
     void onAdapterItemClick(int position) {
         ExplorerItem item = fileList.get(position);
         switch (item.type) {
             case DIRECTORY:
-//                backupPosition();
-
-                String newPath;
-                if (ExplorerManager.getLastPath().equals("/")) {
-                    newPath = ExplorerManager.getLastPath() + item.name;
-                } else {
-                    newPath = ExplorerManager.getLastPath() + "/" + item.name;
-                }
-
-                updateFileList(newPath);
+                onClickDirectory(item);
                 break;
-            case IMAGE: {
-//                backupPosition();
-                final Intent intent = PhotoActivity.getLocalIntent(getContext(), item);
-                startActivity(intent);
-            }
-            break;
-            case PDF: {
-//                backupPosition();
-                final BookDB.Book book = BookDB.getBook(getActivity(), item.path);
-                if (book == null) {
-                    final Intent intent = PdfActivity.getLocalIntent(getContext(), item);
-                    startActivity(intent);
-                } else {
-                    loadLastBookPdf(book, true);
-                }
-            }
-            break;
-            case ZIP: {
-//                backupPosition();
-                final BookDB.Book book = BookDB.getBook(getActivity(), item.path);
-                if (book == null) {
-                    final Intent intent = ZipActivity.getLocalIntent(getContext(), item);
-                    startActivity(intent);
-                } else {
-                    loadLastBookZip(book, true);
-                }
-            }
-            break;
-            case TEXT: {
-//                backupPosition();
-                final BookDB.Book book = BookDB.getBook(getActivity(), item.path);
-                if (book == null) {
-                    final Intent intent = TextActivity.getLocalIntent(getContext(), item);
-                    startActivity(intent);
-                } else {
-                    loadLastBookText(book, true);
-                }
-            }
-            break;
-            case APK: {
-//                backupPosition();
+            case IMAGE:
+                onClickImage(item);
+                break;
+            case APK:
+                onClickApk(item);
+                break;
 
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                    final Intent intent = new Intent(Intent.ACTION_VIEW);
-                    final String providerName = getContext().getPackageName() + ".provider";
-                    final Uri apkUri = FileProvider.getUriForFile(getContext(), providerName, new File(item.path));
-                    intent.setDataAndType(apkUri, "application/vnd.android.package-archive");
-                    intent.addFlags(FLAG_GRANT_READ_URI_PERMISSION);
-                    startActivity(intent);
-                } else {
-                    final Intent intent = new Intent(Intent.ACTION_VIEW);
-                    intent.setDataAndType(Uri.parse("file://" + item.path), "application/vnd.android.package-archive");
-                    startActivity(intent);
-                }
-            }
-            break;
+            case PDF:
+            case TEXT:
+            case ZIP:
+                //TODO: 나중에 이미지 preview를 만들자.
+                onClickBook(item);
+                break;
         }
     }
 
-    void updateHistoryItem(View view, BookDB.Book book) {
-        HistoryRecyclerAdapter.HistoryViewHolder holder = new HistoryRecyclerAdapter.HistoryViewHolder(view);
-
-        BookLoader.updateBookHolder(getContext(), holder, book);
-        BookLoader.loadBookBitmap(getContext(), holder, book.path);
-
-        holder.more.setVisibility(View.GONE);
-    }
-
-    void loadLastBookText(final BookDB.Book book, final boolean cancelToRead) {
-        final Intent intent = TextActivity.getLocalIntent(getContext(), book);
-        showRecentLoadingDialog(intent, book, cancelToRead);
-    }
-
-    void loadLastBookPdf(final BookDB.Book book, final boolean cancelToRead) {
-        final Intent intent = PdfActivity.getLocalIntent(getContext(), book);
-        showRecentLoadingDialog(intent, book, cancelToRead);
-    }
-
-    void loadLastBookZip(final BookDB.Book book, final boolean cancelToRead) {
-        final Intent intent = ZipActivity.getLocalIntent(getContext(), book);
-        showRecentLoadingDialog(intent, book, cancelToRead);
-
-        //TODO: 나중에 이미지 preview를 만들자.
-//                    if(book.last_file != null) {
-//                        ImageView imageView = new ImageView(getActivity());
-//                        imageView.setImageBitmap();
-//                    }
-
-    }
-
-    void showRecentLoadingDialog(final Intent intent, final BookDB.Book book, final boolean cancelToRead) {
-        View view = getActivity().getLayoutInflater().inflate(R.layout.history_item, null, false);
-        updateHistoryItem(view, book);
-
-        // 이부분은 물어보고 셋팅하자.
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity())
-                .setTitle("알림")
-                .setView(view)
-                .setMessage(String.format("마지막에 읽던 페이지가 있습니다.\n(페이지: %d)\n계속 읽으시겠습니까?", book.current_page + 1))
-                .setIcon(R.drawable.comicz)
-                .setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        intent.putExtra("current_page", book.current_page);
-                        startActivity(intent);
-                    }
-                })
-                .setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        if (cancelToRead) {
-                            intent.putExtra("current_page", 0);
-                            startActivity(intent);
-                        }
-                    }
-                });
-        builder.show();
-    }
-
+    //TODO: 나중에 구현
     void backupPosition() {
 //        PositionManager.setPosition(ExplorerManager.getLastPath(), currentView.getFirstVisiblePosition());
 //        PositionManager.setTop(ExplorerManager.getLastPath(), getCurrentViewScrollTop());

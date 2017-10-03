@@ -166,7 +166,7 @@ public class MainActivity extends AppCompatActivity {
         if (id == R.id.action_open_lastbook) {
             ExplorerFragment fragment = (ExplorerFragment) getSupportFragmentManager().getFragments().get(0);
             if (fragment != null) {
-                fragment.openLastBook();
+                fragment.openLastBookDirect();
             }
             return true;
         }

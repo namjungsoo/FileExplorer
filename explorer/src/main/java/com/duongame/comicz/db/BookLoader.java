@@ -8,13 +8,14 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
+import android.view.View;
 
 import com.duongame.R;
 import com.duongame.comicz.adapter.HistoryRecyclerAdapter;
 import com.duongame.explorer.adapter.ExplorerItem;
 import com.duongame.explorer.bitmap.BitmapCacheManager;
-import com.duongame.explorer.helper.AlertHelper;
 import com.duongame.explorer.helper.DateHelper;
 import com.duongame.explorer.helper.FileHelper;
 import com.duongame.explorer.task.thumbnail.LoadPdfThumbnailTask;
@@ -31,7 +32,8 @@ import static com.google.android.gms.internal.zzs.TAG;
  */
 
 public class BookLoader {
-    public static void load(Activity context, BookDB.Book book) {
+    // 히스토리일 경우는 바로 읽음
+    public static void loadContinue(Activity context, BookDB.Book book) {
         Class<?> cls = null;
         if (book.path.toLowerCase().endsWith(".zip")) {
             cls = ZipActivity.class;
@@ -53,7 +55,7 @@ public class BookLoader {
         }
     }
 
-    private static void loadInternal(final Activity context, ExplorerItem item) {
+    private static Intent getIntentNew(final Activity context, ExplorerItem item) {
         Class<?> cls = null;
         if (item.path.toLowerCase().endsWith(".zip")) {
             cls = ZipActivity.class;
@@ -62,6 +64,7 @@ public class BookLoader {
         } else if (item.path.toLowerCase().endsWith(".txt")) {
             cls = TextActivity.class;
         }
+
         if (cls != null) {
             final Intent intent = new Intent(context, cls);
             intent.putExtra("path", item.path);
@@ -70,28 +73,92 @@ public class BookLoader {
             intent.putExtra("size", item.size);
             intent.putExtra("extract_file", 0);
             intent.putExtra("side", item.side.getValue());
-            context.startActivity(intent);
+            return intent;
+        }
+        return null;
+    }
+
+    private static Intent getIntentNew(final Activity context, BookDB.Book book) {
+        Class<?> cls = null;
+        if (book.path.toLowerCase().endsWith(".zip")) {
+            cls = ZipActivity.class;
+        } else if (book.path.toLowerCase().endsWith(".pdf")) {
+            cls = PdfActivity.class;
+        } else if (book.path.toLowerCase().endsWith(".txt")) {
+            cls = TextActivity.class;
+        }
+        if (cls != null) {
+            final Intent intent = new Intent(context, cls);
+            intent.putExtra("path", book.path);
+            intent.putExtra("name", book.name);
+            intent.putExtra("current_page", 0);
+            intent.putExtra("size", book.size);
+            intent.putExtra("extract_file", book.extract_file);
+            intent.putExtra("side", book.side.getValue());
+            return intent;
+        }
+        return null;
+    }
+
+    private static void loadNew(final Activity context, ExplorerItem item) {
+        Intent intent = getIntentNew(context, item);
+        context.startActivity(intent);
+    }
+
+    private static void loadNew(final Activity context, BookDB.Book book) {
+        Intent intent = getIntentNew(context, book);
+        context.startActivity(intent);
+    }
+
+    // 탐색기, 검색일 경우 여기서 읽음
+    public static void load(final Activity context, final ExplorerItem item, final boolean cancelToRead) {
+        final BookDB.Book book = getHistory(context, item);
+
+        // 새로 페이지 0부터 읽음
+        if(book == null) {
+            loadNew(context, item);
+        } else {
+            // 팝업을 띄운다음에 읽자
+            loadWithAlert(context, book, cancelToRead);
         }
     }
 
-    public static void load(final Activity context, final ExplorerItem item) {
-        final BookDB.Book book = getHistory(context, item);
-        if(book == null) {
-            loadInternal(context, item);
-        } else {
-            // 팝업을 띄운다음에 읽자
-            AlertHelper.showAlert(context, context.getString(R.string.app_name_free), context.getString(R.string.msg_last_page), new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    load(context, book);
-                }
-            }, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    loadInternal(context, item);
-                }
-            }, null);
-        }
+    private static void updateHistoryItem(Context context, View view, BookDB.Book book) {
+        HistoryRecyclerAdapter.HistoryViewHolder holder = new HistoryRecyclerAdapter.HistoryViewHolder(view);
+
+        BookLoader.updateBookHolder(context, holder, book);
+        BookLoader.loadBookBitmap(context, holder, book.path);
+
+        holder.more.setVisibility(View.GONE);
+    }
+
+    public static void loadWithAlert(final Activity context, final BookDB.Book book, final boolean cancelToRead) {
+        View view = context.getLayoutInflater().inflate(R.layout.history_item, null, false);
+        updateHistoryItem(context, view, book);
+
+        // 이부분은 물어보고 셋팅하자.
+        AlertDialog.Builder builder = new AlertDialog.Builder(context)
+                .setTitle(context.getString(R.string.app_name_free))
+                .setView(view)
+                .setMessage(String.format(context.getString(R.string.msg_last_page), book.current_page + 1))
+                .setIcon(R.drawable.comicz)
+                // 연속해서 읽을경우
+                .setPositiveButton(context.getString(R.string.ok), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        loadContinue(context, book);
+                    }
+                })
+                // 연속해서 읽지 않거나, 취소함
+                .setNegativeButton(context.getString(R.string.cancel), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if (!cancelToRead) {// 처음부터 읽음
+                            loadNew(context, book);
+                        }
+                    }
+                });
+        builder.show();
     }
 
     private static BookDB.Book getHistory(Activity context, ExplorerItem item) {

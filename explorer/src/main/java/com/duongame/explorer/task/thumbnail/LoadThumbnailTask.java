@@ -1,6 +1,6 @@
 package com.duongame.explorer.task.thumbnail;
 
-import android.app.Activity;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.widget.ImageView;
@@ -13,11 +13,11 @@ import com.duongame.explorer.bitmap.BitmapLoader;
  */
 
 public class LoadThumbnailTask extends AsyncTask<String, Void, Bitmap> {
-    private final Activity context;
+    private final Context context;
     private final ImageView imageView;
     private String path;
 
-    public LoadThumbnailTask(Activity context, ImageView imageView) {
+    public LoadThumbnailTask(Context context, ImageView imageView) {
         this.context = context;
         this.imageView = imageView;
     }

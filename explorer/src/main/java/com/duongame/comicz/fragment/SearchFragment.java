@@ -67,7 +67,7 @@ public class SearchFragment extends BaseFragment {
                     public void onItemClick(int position) {
                         if(fileList != null) {
                             ExplorerItem item = fileList.get(position);
-                            BookLoader.load(getActivity(), item);
+                            BookLoader.load(getActivity(), item, false);
                         }
                     }
                 });

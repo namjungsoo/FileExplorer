@@ -8,7 +8,7 @@
     <string name="action_open_lastbook">마지막 읽던 책 열기</string>
 
     <string name="msg_last_book">마지막으로 읽던 책을 여시겠습니까?</string>
-    <string name="msg_last_page">마지막으로 읽던 페이지를 여시겠습니까?</string>
+    <string name="msg_last_page">마지막에 읽던 페이지가 있습니다. (페이지: %d)\n계속 읽으시겠습니까?</string>
 
     <string name="msg_clear_cache">캐쉬 파일을 삭제하였습니다.</string>
     <string name="msg_clear_history">최근파일 목록을 삭제하였습니다.</string>
