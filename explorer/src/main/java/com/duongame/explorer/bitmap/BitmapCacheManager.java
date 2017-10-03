@@ -124,6 +124,10 @@ public class BitmapCacheManager {
         }
     }
 
+    public static void recycleDrawable() {
+        drawableCache.clear();
+    }
+
     public static void recycleBitmap() {
         for (String key : bitmapCache.keySet()) {
             final Bitmap bitmap = bitmapCache.get(key);

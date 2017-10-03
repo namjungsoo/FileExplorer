@@ -190,6 +190,7 @@ public class MainActivity extends AppCompatActivity {
         BitmapCacheManager.recycleThumbnail();
         BitmapCacheManager.recyclePage();
         BitmapCacheManager.recycleBitmap();
+        BitmapCacheManager.recycleDrawable();
 
         final File file = getFilesDir();
         deleteRecursive(file);

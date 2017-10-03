@@ -1,11 +1,9 @@
 package com.duongame.viewer.activity;
 
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.ViewTreeObserver;
 import android.widget.ScrollView;
@@ -14,7 +12,6 @@ import android.widget.TextView;
 
 import com.duongame.R;
 import com.duongame.comicz.db.BookDB;
-import com.duongame.explorer.adapter.ExplorerItem;
 import com.duongame.explorer.helper.FileHelper;
 import com.duongame.explorer.manager.FontManager;
 import com.duongame.viewer.listener.TextOnTouchListener;
@@ -61,14 +58,14 @@ public class TextActivity extends ViewerActivity {
             44, 48, 54, 60, 66,
             72};
 
-    public static Intent getLocalIntent(Context context, ExplorerItem item) {
-        final Intent intent = new Intent(context, TextActivity.class);
-        intent.putExtra("path", item.path);
-        intent.putExtra("name", item.name);
-        intent.putExtra("size", item.size);
-        intent.putExtra("current_page", 0);
-        return intent;
-    }
+    ViewTreeObserver.OnGlobalLayoutListener onGlobalLayoutListener = new ViewTreeObserver.OnGlobalLayoutListener() {
+        @Override
+        public void onGlobalLayout() {
+            int scrollY = getScrollY();
+            scrollText.setScrollY(scrollY);
+            scrollText.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,6 +89,9 @@ public class TextActivity extends ViewerActivity {
                 updateScrollInfo(page);
             }
         });
+
+        scrollText.getViewTreeObserver().addOnGlobalLayoutListener(onGlobalLayoutListener);
+
         processIntent();
 
         // 전체 화면으로 들어감
@@ -122,15 +122,12 @@ public class TextActivity extends ViewerActivity {
     void updateFontSize() {
         fontSize = fontSizeArray[fontIndex];
         textContent.setTextSize(fontSize);
-        Log.d(TAG, "fontSize=" + fontSize);
     }
 
     int getPercent() {
         // 현재 스크롤 위치를 얻어보자
         int maxScroll = scrollText.getChildAt(0).getHeight() - scrollText.getHeight();
         int scrollY = scrollText.getScrollY();
-
-//        Log.d(TAG, "maxScroll=" + maxScroll + " scrollY=" + scrollY);
 
         int percent = scrollY * LINES_PER_PAGE / maxScroll;
         return percent;
@@ -177,10 +174,9 @@ public class TextActivity extends ViewerActivity {
 
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                if(dragging) {
+                if (dragging) {
                     page = seekBar.getProgress();
                     scroll = 0;
-                    seekChanged();
                     updateTextView();
                 }
             }
@@ -198,7 +194,6 @@ public class TextActivity extends ViewerActivity {
     }
 
     public void updateScrollInfo(int position) {
-        Log.d(TAG, "updateScrollInfo=" + position);
         final int count = lineList.size() / LINES_PER_PAGE;
         textPage.setText((position + 1) + "/" + count + String.format(" (%02d%%)", getPercent() / 10));
         seekPage.setMax(count - 1);
@@ -293,7 +288,7 @@ public class TextActivity extends ViewerActivity {
             super.onPostExecute(result);
 
             textInfo.setText("" + lineList.size() + " lines");
-            seekChanged();
+            scrollText.getViewTreeObserver().addOnGlobalLayoutListener(onGlobalLayoutListener);
         }
     }
 
@@ -314,22 +309,9 @@ public class TextActivity extends ViewerActivity {
         textContent.setText(text);
     }
 
-    void seekChanged() {
-        updateScrollInfo(page);
-
-        scrollText.post(new Runnable() {
-            @Override
-            public void run() {
-                // 스크롤에 따라서 움직여 줘야 함
-                int maxScroll = scrollText.getChildAt(0).getHeight() - scrollText.getHeight();
-                int scrollY = maxScroll * TextActivity.this.scroll / LINES_PER_PAGE;
-
-                //TODO: 어떤게 좋은지 체크해봐야 함
-//                scrollText.setScrollY(scrollY);
-                scrollText.scrollTo(0,0);
-                scrollText.invalidate();
-            }
-        });
-
+    int getScrollY() {
+        int maxScroll = scrollText.getChildAt(0).getHeight() - scrollText.getHeight();
+        int scrollY = maxScroll * TextActivity.this.scroll / LINES_PER_PAGE;
+        return scrollY;
     }
 }

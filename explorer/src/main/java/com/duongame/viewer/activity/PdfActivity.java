@@ -1,6 +1,5 @@
 package com.duongame.viewer.activity;
 
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.pdf.PdfRenderer;
 import android.os.Build;
@@ -28,15 +27,6 @@ public class PdfActivity extends PagerActivity {
     private PdfRenderer renderer;
     private PdfPagerAdapter adapter;
     private long size;// zip 파일의 용량
-
-    public static Intent getLocalIntent(Context context, ExplorerItem item) {
-        final Intent intent = new Intent(context, PdfActivity.class);
-        intent.putExtra("path", item.path);
-        intent.putExtra("name", item.name);
-        intent.putExtra("size", item.size);
-        intent.putExtra("current_page", 0);
-        return intent;
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
