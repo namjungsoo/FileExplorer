@@ -1,13 +1,8 @@
 package com.duongame.comicz.adapter;
 
 import android.app.Activity;
-import android.graphics.Bitmap;
-import android.graphics.Color;
-import android.os.AsyncTask;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -18,18 +13,11 @@ import android.widget.TextView;
 
 import com.duongame.R;
 import com.duongame.comicz.db.BookDB;
-import com.duongame.explorer.adapter.ExplorerItem;
-import com.duongame.explorer.bitmap.BitmapCacheManager;
+import com.duongame.comicz.db.BookLoader;
 import com.duongame.explorer.fragment.BaseFragment;
-import com.duongame.explorer.helper.DateHelper;
-import com.duongame.explorer.helper.FileHelper;
-import com.duongame.explorer.task.thumbnail.LoadPdfThumbnailTask;
-import com.duongame.explorer.task.thumbnail.LoadZipThumbnailTask;
 import com.duongame.explorer.view.RoundedImageView;
 
 import java.util.ArrayList;
-
-import static com.duongame.explorer.bitmap.BitmapCacheManager.getThumbnail;
 
 /**
  * Created by js296 on 2017-08-13.
@@ -77,21 +65,10 @@ public class HistoryRecyclerAdapter extends RecyclerView.Adapter<HistoryRecycler
         if (bookList != null) {
             final BookDB.Book book = bookList.get(position);
 
-            holder.name.setText(book.name);
-            holder.size.setText(FileHelper.getMinimizedSize(book.size));
-            holder.date.setText(DateHelper.getDBDate(book.date));
-            holder.page.setText(getPageText(book));
-            holder.percent.setText(getPercentText(book));
-            holder.progressBar.setMax(100);
-            holder.progressBar.setProgress(book.percent);
-            if (book.percent == 100) {
-                holder.progressBar.getProgressDrawable().setColorFilter(Color.YELLOW, android.graphics.PorterDuff.Mode.SRC_IN);
-            } else {
-                holder.progressBar.getProgressDrawable().setColorFilter(
-                        ContextCompat.getColor(context, R.color.colorAccent),
-                        android.graphics.PorterDuff.Mode.SRC_IN);
-            }
-            holder.more.setTag(book.path);
+            BookLoader.updateBookHolder(context, holder, book);
+
+            // 추가적인 UI 정보
+            holder.position = position;
             holder.more.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(final View v) {
@@ -116,8 +93,6 @@ public class HistoryRecyclerAdapter extends RecyclerView.Adapter<HistoryRecycler
                     popup.show();
                 }
             });
-
-            holder.position = position;
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -127,7 +102,7 @@ public class HistoryRecyclerAdapter extends RecyclerView.Adapter<HistoryRecycler
                 }
             });
 
-            loadBitmap(holder, book.path);
+            BookLoader.loadBookBitmap(context, holder, book.path);
         }
     }
 
@@ -139,60 +114,17 @@ public class HistoryRecyclerAdapter extends RecyclerView.Adapter<HistoryRecycler
         return 0;
     }
 
-    private String getPageText(BookDB.Book book) {
-        // 압축이 다 풀렸으면, 페이지를 기준으로 한다.
-        // 압축파일이 아니라면 둘다 0이다.
-        if (book.extract_file == book.total_file) {
-            // 텍스트가 아닐경우에는 PDF나 ZIP이다.
-            if (book.type != ExplorerItem.FileType.TEXT)
-                return (book.current_page + 1) + "/" + book.total_page;
-            else {
-                BookDB.TextBook textBook = BookDB.getTextBook(book);
-                return textBook.getPageText();
-            }
-        } else {
-            return (book.current_file + 1) + "/" + book.total_file;
-        }
-    }
+    public static class HistoryViewHolder extends RecyclerView.ViewHolder {
+        public RoundedImageView thumb;
+        public TextView name;
+        public TextView size;
+        public TextView date;
 
-    private String getPercentText(BookDB.Book book) {
-        return String.valueOf(book.percent) + "%";
-    }
-
-    private void loadBitmap(HistoryViewHolder holder, String path) {
-        Log.d(TAG, "loadBitmap " + holder.thumb.getWidth() + " " + holder.thumb.getHeight());
-
-        // zip 파일의 썸네일을 읽자
-        if (path.toLowerCase().endsWith(".txt")) {
-            holder.thumb.setImageBitmap(BitmapCacheManager.getResourceBitmap(context.getResources(), R.drawable.text));
-            return;
-        }
-
-        final Bitmap bitmap = getThumbnail(path);
-        if (bitmap == null) {
-            if (path.toLowerCase().endsWith(".zip")) {
-                final LoadZipThumbnailTask task = new LoadZipThumbnailTask(context, holder.thumb, holder.more);
-                task.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, path);
-            } else if (path.toLowerCase().endsWith(".pdf")) {
-                final LoadPdfThumbnailTask task = new LoadPdfThumbnailTask(context, holder.thumb, holder.more);
-                task.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, path);
-            }
-        } else {
-            holder.thumb.setImageBitmap(bitmap);
-        }
-    }
-
-    protected static class HistoryViewHolder extends RecyclerView.ViewHolder {
-        RoundedImageView thumb;
-        TextView name;
-        TextView size;
-        TextView date;
-
-        TextView page;
-        TextView percent;
-        ProgressBar progressBar;
-        ImageView more;// tag사용중
-        int position;
+        public TextView page;
+        public TextView percent;
+        public ProgressBar progressBar;
+        public ImageView more;// tag사용중
+        public int position;
 
         public HistoryViewHolder(View itemView) {
             super(itemView);

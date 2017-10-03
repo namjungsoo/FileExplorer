@@ -24,7 +24,9 @@ import android.widget.TextView;
 import android.widget.ViewSwitcher;
 
 import com.duongame.R;
+import com.duongame.comicz.adapter.HistoryRecyclerAdapter;
 import com.duongame.comicz.db.BookDB;
+import com.duongame.comicz.db.BookLoader;
 import com.duongame.explorer.adapter.ExplorerAdapter;
 import com.duongame.explorer.adapter.ExplorerGridAdapter;
 import com.duongame.explorer.adapter.ExplorerItem;
@@ -103,13 +105,21 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
             }
         }
 
-//        final BookDB.Book book = BookDB.getLastBook(getActivity());
-//        if(book != null) {
-//            // zip파일인가 체크
-//            if(book.path.toLowerCase().endsWith(".zip")) {
-//                loadLastBookZip(book, false);
-//            }
-//        }
+        final BookDB.Book book = BookDB.getLastBook(getActivity());
+        if(book != null) {
+            // zip파일인가 체크
+            if(book.path.toLowerCase().endsWith(".zip")) {
+                loadLastBookZip(book, false);
+            }
+            // zip파일인가 체크
+            else if(book.path.toLowerCase().endsWith(".pdf")) {
+                //loadLastBookPdf(book, false);
+            }
+            // zip파일인가 체크
+            else if(book.path.toLowerCase().endsWith(".txt")) {
+                //loadLastBookZip(book, false);
+            }
+        }
 
         return rootView;
     }
@@ -347,6 +357,15 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
         }
     }
 
+    void updateHistoryItem(View view, BookDB.Book book) {
+        HistoryRecyclerAdapter.HistoryViewHolder holder = new HistoryRecyclerAdapter.HistoryViewHolder(view);
+
+        BookLoader.updateBookHolder(getContext(), holder, book);
+        BookLoader.loadBookBitmap(getContext(), holder, book.path);
+
+        holder.more.setVisibility(View.GONE);
+    }
+
     void loadLastBookZip(final BookDB.Book book, final boolean cancelToRead) {
         final Intent intent = new Intent(getActivity(), ZipActivity.class);
         intent.putExtra("path", book.path);
@@ -355,9 +374,13 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
         intent.putExtra("extract_file", book.extract_file);
         intent.putExtra("side", book.side.getValue());
 
+        View view = getActivity().getLayoutInflater().inflate(R.layout.history_item, null, false);
+        updateHistoryItem(view, book);
+
         // 이부분은 물어보고 셋팅하자.
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity())
                 .setTitle("알림")
+                .setView(view)
                 .setMessage(String.format("마지막에 읽던 페이지가 있습니다.\n(페이지: %d)\n계속 읽으시겠습니까?", book.current_page + 1))
                 .setIcon(R.drawable.comicz)
                 .setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {

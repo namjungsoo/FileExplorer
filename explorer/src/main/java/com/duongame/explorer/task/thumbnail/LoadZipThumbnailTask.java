@@ -1,6 +1,6 @@
 package com.duongame.explorer.task.thumbnail;
 
-import android.app.Activity;
+import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.support.annotation.Nullable;
@@ -22,12 +22,12 @@ import java.io.File;
 public class LoadZipThumbnailTask extends AsyncTask<String, Void, String> {
     private final String TAG = LoadZipThumbnailTask.class.getSimpleName();
 
-    private final Activity context;
+    private final Context context;
 
     private ImageView icon, iconSmall;
     private String path;
 
-    public LoadZipThumbnailTask(Activity context, ImageView icon, ImageView iconSmall) {
+    public LoadZipThumbnailTask(Context context, ImageView icon, ImageView iconSmall) {
         this.context = context;
         this.icon = icon;
         this.iconSmall = iconSmall;

@@ -1,6 +1,6 @@
 package com.duongame.explorer.bitmap;
 
-import android.app.Activity;
+import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -49,7 +49,7 @@ public class BitmapLoader {
         public Drawable drawable;
     }
 
-    public static BitmapOrDrawable loadThumbnail(Activity context, ExplorerItem.FileType type, String path) {
+    public static BitmapOrDrawable loadThumbnail(Context context, ExplorerItem.FileType type, String path) {
         BitmapOrDrawable bod = new BitmapOrDrawable();
 
         switch (type) {
@@ -73,7 +73,7 @@ public class BitmapLoader {
         return bod;
     }
 
-    public static Drawable loadApkThumbnailDrawable(Activity context, String path) {
+    public static Drawable loadApkThumbnailDrawable(Context context, String path) {
         Drawable drawable = BitmapCacheManager.getDrawable(path);
         if(drawable != null)
             return drawable;
@@ -95,7 +95,7 @@ public class BitmapLoader {
         return drawable;
     }
 
-    public static Bitmap loadImageThumbnailBitmap(Activity context, String path) {
+    public static Bitmap loadImageThumbnailBitmap(Context context, String path) {
         Bitmap bitmap = BitmapCacheManager.getThumbnail(path);
         if(bitmap != null)
             return bitmap;
@@ -117,7 +117,7 @@ public class BitmapLoader {
         return bitmap;
     }
 
-    public static Bitmap loadVideoThumbnailBitmap(Activity context, String path) {
+    public static Bitmap loadVideoThumbnailBitmap(Context context, String path) {
         Bitmap bitmap = BitmapCacheManager.getThumbnail(path);
         if(bitmap != null)
             return bitmap;
@@ -133,7 +133,7 @@ public class BitmapLoader {
         return bitmap;
     }
 
-    public static Bitmap loadPdfThumbnailBitmap(Activity context, String path) {
+    public static Bitmap loadPdfThumbnailBitmap(Context context, String path) {
         Bitmap bitmap = BitmapCacheManager.getThumbnail(path);
         if(bitmap != null)
             return bitmap;
@@ -148,7 +148,7 @@ public class BitmapLoader {
         return bitmap;
     }
 
-    public static String getZipThumbnailFileName(Activity context, String path) {
+    public static String getZipThumbnailFileName(Context context, String path) {
         // ZIP파일 안에 있는 이미지 파일을 찾자.
         String image = null;
         try {
@@ -165,7 +165,7 @@ public class BitmapLoader {
         return image;
     }
 
-    public static Bitmap loadZipThumbnailBitmap(Activity context, String path) {
+    public static Bitmap loadZipThumbnailBitmap(Context context, String path) {
         Bitmap bitmap = BitmapCacheManager.getThumbnail(path);
         if(bitmap != null)
             return bitmap;
@@ -205,7 +205,7 @@ public class BitmapLoader {
         }
     }
 
-    public static Bitmap getThumbnail(Activity context, String path, boolean exifRotation) {
+    public static Bitmap getThumbnail(Context context, String path, boolean exifRotation) {
 //        Log.d("BitmapLoader", "getThumbnail path="+path);
         final Cursor cursor = context.getContentResolver().query(
                 MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
