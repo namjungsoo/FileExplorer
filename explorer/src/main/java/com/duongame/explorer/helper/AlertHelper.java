@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 
 import com.duongame.R;
+import com.duongame.explorer.manager.AdBannerManager;
 
 /**
  * Created by namjungsoo on 2016-04-30.
@@ -38,10 +39,16 @@ public class AlertHelper {
 //        AdBannerManager.initPopupAd(context);// 항상 초기화 해주어야 함
 //    }
 
-    public static void showAlert(Activity context, String title, String message, DialogInterface.OnClickListener posListener, DialogInterface.OnClickListener negListener, DialogInterface.OnKeyListener keyListener) {
+    public static void showAlert(Activity context,
+                                 String title,
+                                 String message,
+                                 DialogInterface.OnClickListener posListener,
+                                 DialogInterface.OnClickListener negListener,
+                                 DialogInterface.OnKeyListener keyListener) {
         final AlertDialog.Builder builder = new AlertDialog.Builder(context)
                 .setTitle(title)
                 .setMessage(message)
+                .setView(AdBannerManager.getAdPopupView())
                 .setIcon(R.drawable.comicz)
                 .setOnKeyListener(keyListener)
                 .setPositiveButton(context.getString(R.string.ok), posListener)
@@ -51,10 +58,16 @@ public class AlertHelper {
     }
 
 
-    public static void showAlert(Activity context, String title, String message, DialogInterface.OnClickListener posListener, DialogInterface.OnKeyListener keyListener, boolean okOnly) {
+    public static void showAlert(Activity context,
+                                 String title,
+                                 String message,
+                                 DialogInterface.OnClickListener posListener,
+                                 DialogInterface.OnKeyListener keyListener,
+                                 boolean okOnly) {
         final AlertDialog.Builder builder = new AlertDialog.Builder(context)
                 .setTitle(title)
                 .setMessage(message)
+                .setView(AdBannerManager.getAdPopupView())
                 .setIcon(R.drawable.comicz)
                 .setOnKeyListener(keyListener)
                 .setPositiveButton(context.getString(R.string.ok), posListener);

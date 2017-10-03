@@ -19,6 +19,7 @@ import com.duongame.R;
 import com.duongame.comicz.AnalyticsApplication;
 import com.duongame.comicz.adapter.ComicPagerAdapter;
 import com.duongame.comicz.db.BookDB;
+import com.duongame.comicz.db.BookLoader;
 import com.duongame.explorer.bitmap.BitmapCacheManager;
 import com.duongame.explorer.fragment.BaseFragment;
 import com.duongame.explorer.fragment.ExplorerFragment;
@@ -26,6 +27,7 @@ import com.duongame.explorer.helper.ShortcutHelper;
 import com.duongame.explorer.helper.ToastHelper;
 import com.duongame.explorer.manager.AdBannerManager;
 import com.duongame.explorer.manager.PermissionManager;
+import com.duongame.explorer.manager.ReviewManager;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
@@ -44,6 +46,8 @@ public class MainActivity extends AppCompatActivity {
     private TabLayout tab;
     private View mainView;
 
+    private boolean showReview;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,6 +60,7 @@ public class MainActivity extends AppCompatActivity {
         initToolbar();
 
         ShortcutHelper.checkShortcut(this);
+        showReview = ReviewManager.checkReview(this);
 
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
 
@@ -71,6 +76,10 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
         mTracker.setScreenName("MainActivity");
         mTracker.send(new HitBuilders.ScreenViewBuilder().build());
+    }
+
+    public boolean getShowReview() {
+        return showReview;
     }
 
     private void initContentView() {
@@ -172,10 +181,7 @@ public class MainActivity extends AppCompatActivity {
 //        }
 
         if (id == R.id.action_open_lastbook) {
-            ExplorerFragment fragment = (ExplorerFragment) getSupportFragmentManager().getFragments().get(0);
-            if (fragment != null) {
-                fragment.openLastBookDirect();
-            }
+            BookLoader.openLastBookDirect(this);
             return true;
         }
 

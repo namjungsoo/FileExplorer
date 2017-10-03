@@ -17,6 +17,7 @@ import com.duongame.explorer.adapter.ExplorerItem;
 import com.duongame.explorer.bitmap.BitmapCacheManager;
 import com.duongame.explorer.bitmap.ZipLoader;
 import com.duongame.explorer.helper.AlertHelper;
+import com.duongame.explorer.manager.AdBannerManager;
 import com.duongame.viewer.adapter.PhotoPagerAdapter;
 import com.duongame.viewer.adapter.ViewerPagerAdapter;
 
@@ -199,6 +200,7 @@ public class ZipActivity extends PagerActivity {
                         finish();
                     }
                 }, null, true);
+                AdBannerManager.initPopupAd(this);// 항상 초기화 해주어야 함
                 return;
             }
             pagerAdapter.setImageList(imageList);

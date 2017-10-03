@@ -22,7 +22,7 @@ import android.widget.TextView;
 import android.widget.ViewSwitcher;
 
 import com.duongame.R;
-import com.duongame.comicz.db.BookDB;
+import com.duongame.comicz.activity.MainActivity;
 import com.duongame.comicz.db.BookLoader;
 import com.duongame.explorer.adapter.ExplorerAdapter;
 import com.duongame.explorer.adapter.ExplorerGridAdapter;
@@ -99,23 +99,14 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
             }
         }
 
-        openLastBook();
+        MainActivity activity = (MainActivity) getActivity();
+        if (activity == null) {
+            if (!activity.getShowReview()) {
+                BookLoader.openLastBook(getActivity());
+            }
+        }
 
         return rootView;
-    }
-
-    private void openLastBook() {
-        final BookDB.Book book = BookDB.getLastBook(getActivity());
-        if (book != null) {
-            BookLoader.loadWithAlert(getActivity(), book, true);
-        }
-    }
-
-    public void openLastBookDirect() {
-        final BookDB.Book book = BookDB.getLastBook(getActivity());
-        if (book != null) {
-            BookLoader.loadContinue(getActivity(), book);
-        }
     }
 
     @Override

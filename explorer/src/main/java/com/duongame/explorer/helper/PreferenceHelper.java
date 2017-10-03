@@ -23,6 +23,9 @@ public class PreferenceHelper {
     private static final String LAST_POSITION = "last_position";
     private static final String LAST_TOP = "last_top";
 
+    private static final String REVIEW_COUNT = "review_count";
+    private static final String REVIEWED = "reviewed";
+
     private static SharedPreferences pref = null;
 
     private static void checkPrefManager(Context context) {
@@ -130,4 +133,32 @@ public class PreferenceHelper {
         editor.putInt(LAST_TOP, lastTop);
         editor.commit();
     }
+
+    public static int getReviewCount(Context context) {
+        checkPrefManager(context);
+        final int review = pref.getInt(REVIEW_COUNT, 0);
+        Log.d(TAG, "review=" + review);
+        return review;
+    }
+
+    public static void setReviewCount(Context context, int count) {
+        Log.d(TAG, "count=" + count);
+        checkPrefManager(context);
+        final SharedPreferences.Editor editor = pref.edit();
+        editor.putInt(REVIEW_COUNT, count);
+        editor.commit();
+    }
+
+    public static boolean getReviewed(Context context) {
+        checkPrefManager(context);
+        return pref.getBoolean(REVIEWED, false);
+    }
+
+    public static void setReviewed(Context context, boolean reviewed) {
+        checkPrefManager(context);
+        final SharedPreferences.Editor editor = pref.edit();
+        editor.putBoolean(REVIEWED, reviewed);
+        editor.commit();
+    }
+
 }

@@ -14,4 +14,8 @@
     <string name="msg_clear_history">Recent files list was deleted.</string>
 
     <string name="msg_no_image_in_zip">There is no image in the compressed (ZIP) file.</string>
+
+    <string name="dialog_review_title">Please support ComicViewer</string>
+    <string name="dialog_review_content">Are you enjoying ComicViewer? Please leave a review for us!</string>
+
 </resources>
