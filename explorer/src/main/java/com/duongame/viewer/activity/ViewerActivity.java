@@ -22,7 +22,9 @@ import com.duongame.BuildConfig;
 import com.duongame.R;
 import com.duongame.comicz.AnalyticsApplication;
 import com.duongame.explorer.bitmap.BitmapCacheManager;
+import com.duongame.explorer.helper.PreferenceHelper;
 import com.duongame.explorer.manager.AdBannerManager;
+import com.duongame.explorer.manager.AdInterstitialManager;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.analytics.Tracker;
 import com.google.firebase.analytics.FirebaseAnalytics;
@@ -109,6 +111,22 @@ public class ViewerActivity extends AppCompatActivity {
         ((ViewGroup) adView.getParent()).removeView(adView);
         BitmapCacheManager.recycleBitmap();
         BitmapCacheManager.recyclePage();
+
+        // 전면 광고 노출
+        showInterstitialAd();
+    }
+
+    void showInterstitialAd() {
+        final int count = PreferenceHelper.getExitAdCount(this);
+
+        // 2번중에 1번을 띄워준다.
+        if (count % 2 == 1) {// 전면 팝업후 종료 팝업
+            if (!AdInterstitialManager.showAd(this, AdInterstitialManager.MODE_EXIT)) {
+                // 보여지지 않았다면 insterstitial후 카운트 증가하지 않음
+                return;
+            }
+        }
+        PreferenceHelper.setExitAdCount(this, count + 1);
     }
 
     private void initActionBar() {

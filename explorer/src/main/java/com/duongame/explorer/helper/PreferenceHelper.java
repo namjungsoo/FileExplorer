@@ -25,6 +25,7 @@ public class PreferenceHelper {
 
     private static final String REVIEW_COUNT = "review_count";
     private static final String REVIEWED = "reviewed";
+    private static final String EXIT_COUNT = "exit_count";
 
     private static SharedPreferences pref = null;
 
@@ -158,6 +159,18 @@ public class PreferenceHelper {
         checkPrefManager(context);
         final SharedPreferences.Editor editor = pref.edit();
         editor.putBoolean(REVIEWED, reviewed);
+        editor.commit();
+    }
+
+    public static int getExitAdCount(Context context) {
+        checkPrefManager(context);
+        return pref.getInt(EXIT_COUNT, 0);
+    }
+
+    public static void setExitAdCount(Context context, int count) {
+        checkPrefManager(context);
+        final SharedPreferences.Editor editor = pref.edit();
+        editor.putInt(EXIT_COUNT, count);
         editor.commit();
     }
 

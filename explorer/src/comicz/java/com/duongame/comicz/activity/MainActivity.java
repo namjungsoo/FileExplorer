@@ -26,6 +26,7 @@ import com.duongame.explorer.fragment.ExplorerFragment;
 import com.duongame.explorer.helper.ShortcutHelper;
 import com.duongame.explorer.helper.ToastHelper;
 import com.duongame.explorer.manager.AdBannerManager;
+import com.duongame.explorer.manager.AdInterstitialManager;
 import com.duongame.explorer.manager.PermissionManager;
 import com.duongame.explorer.manager.ReviewManager;
 import com.google.android.gms.ads.AdView;
@@ -53,6 +54,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         AdBannerManager.init(this);
+        AdInterstitialManager.init(this);
 
         initContentView();
 

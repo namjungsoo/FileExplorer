@@ -13,7 +13,8 @@ import com.google.android.gms.ads.InterstitialAd;
 public class AdInterstitialManager {
     private final static String TAG = "AdInterstitialManager";
 
-    private static final String INTERSTITIAL_ID = "ca-app-pub-5576037828251153/9933993027";
+    // 코믹뷰어 전면광고
+    private static final String INTERSTITIAL_ID = "ca-app-pub-5576037828251153/9737551820";
     private static InterstitialAd interstitialAD = null;
 
     public static final int MODE_EXIT = 1;
