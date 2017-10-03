@@ -162,21 +162,26 @@ public class TextActivity extends ViewerActivity {
     protected void initToolBox() {
         super.initToolBox();
         seekPage.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            boolean dragging;
+
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                page = seekBar.getProgress();
-                scroll = 0;
-                seekChanged();
-                updateTextView();
+                if(dragging) {
+                    page = seekBar.getProgress();
+                    scroll = 0;
+                    seekChanged();
+                    updateTextView();
+                }
             }
 
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
-
+                dragging = true;
             }
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
+                dragging = false;
             }
         });
     }
