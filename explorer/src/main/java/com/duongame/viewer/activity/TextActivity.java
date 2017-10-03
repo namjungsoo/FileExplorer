@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.ViewTreeObserver;
 import android.widget.ScrollView;
+import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.duongame.R;
@@ -157,10 +158,33 @@ public class TextActivity extends ViewerActivity {
         }
     }
 
+    @Override
+    protected void initToolBox() {
+        super.initToolBox();
+        seekPage.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                page = seekBar.getProgress();
+                scroll = 0;
+                seekChanged();
+                updateTextView();
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+            }
+        });
+    }
+
     public void updateScrollInfo(int position) {
         Log.d(TAG, "updateScrollInfo=" + position);
         final int count = lineList.size() / LINES_PER_PAGE;
-        textPage.setText((position + 1) + "/" + count + String.format(" (%02d%%)", getPercent()/10));
+        textPage.setText((position + 1) + "/" + count + String.format(" (%02d%%)", getPercent() / 10));
         seekPage.setMax(count - 1);
 
         // 이미지가 1개일 경우 처리
@@ -208,6 +232,7 @@ public class TextActivity extends ViewerActivity {
         protected Void doInBackground(String... params) {
             final String path = params[0];
 
+            // 인코딩을 얻는다.
             final String encoding = checkEncoding(path);
 
             final File file = new File(path);
@@ -216,16 +241,18 @@ public class TextActivity extends ViewerActivity {
                 final InputStreamReader reader = new InputStreamReader(fis, encoding);
                 final BufferedReader bufferedReader = new BufferedReader(reader);
 
+                // 파일 전체의 라인을 얻는다.
                 String line;
                 while ((line = bufferedReader.readLine()) != null) {
                     lineList.add(line);
 
+                    // 라인 갯수가 1000개씩 딱딱 맞다면, 해당페이지의 정보를 textview에 업데이트 한다.
                     if (lineList.size() == (page + 1) * LINES_PER_PAGE) {
                         publishProgress(page);
                     }
                 }
 
-                // 남은 자료가 마지막것보다 작지만 나머지를 보내야 할때는
+                // 남은 자료가 마지막것보다 작지만 나머지를 보내야 할때는 publish 한다.
                 final int size = lineList.size();
                 if (size > page * LINES_PER_PAGE && size < (page + 1) * LINES_PER_PAGE) {
                     publishProgress(page);
@@ -242,19 +269,7 @@ public class TextActivity extends ViewerActivity {
 
         @Override
         protected void onProgressUpdate(Integer... progress) {
-            final StringBuilder builder = new StringBuilder();
-            final int size = lineList.size();
-            if (size < page * LINES_PER_PAGE)
-                return;
-
-            int max = Math.min(size, (page + 1) * LINES_PER_PAGE);
-            for (int i = page * LINES_PER_PAGE; i < max; i++) {
-                builder.append(lineList.get(i));
-                builder.append("\n");
-            }
-
-            final String text = builder.toString();
-            textContent.setText(text);
+            updateTextView();
         }
 
         @Override
@@ -262,18 +277,43 @@ public class TextActivity extends ViewerActivity {
             super.onPostExecute(result);
 
             textInfo.setText("" + lineList.size() + " lines");
-            updateScrollInfo(page);
-
-            scrollText.post(new Runnable() {
-                @Override
-                public void run() {
-                    // 스크롤에 따라서 움직여 줘야 함
-                    int maxScroll = scrollText.getChildAt(0).getHeight() - scrollText.getHeight();
-                    int scrollY = maxScroll * scroll / LINES_PER_PAGE;
-                    scrollText.setScrollY(scrollY);
-                }
-            });
+            seekChanged();
         }
     }
 
+    void updateTextView() {
+        final StringBuilder builder = new StringBuilder();
+        final int size = lineList.size();
+        if (size < page * LINES_PER_PAGE)
+            return;
+
+        // 전체 텍스트에서 페이지에 해당하는 라인을 1000개(LINES_PER_PAGE)만큼 추가해 준다.
+        int max = Math.min(size, (page + 1) * LINES_PER_PAGE);
+        for (int i = page * LINES_PER_PAGE; i < max; i++) {
+            builder.append(lineList.get(i));
+            builder.append("\n");
+        }
+
+        final String text = builder.toString();
+        textContent.setText(text);
+    }
+
+    void seekChanged() {
+        updateScrollInfo(page);
+
+        scrollText.post(new Runnable() {
+            @Override
+            public void run() {
+                // 스크롤에 따라서 움직여 줘야 함
+                int maxScroll = scrollText.getChildAt(0).getHeight() - scrollText.getHeight();
+                int scrollY = maxScroll * TextActivity.this.scroll / LINES_PER_PAGE;
+
+                //TODO: 어떤게 좋은지 체크해봐야 함
+//                scrollText.setScrollY(scrollY);
+                scrollText.scrollTo(0,0);
+                scrollText.invalidate();
+            }
+        });
+
+    }
 }
