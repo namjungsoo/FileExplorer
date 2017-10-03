@@ -1,0 +1,73 @@
+{
+  "project_info": {
+    "project_number": "651440203075",
+    "firebase_url": "https://project-7323150840259011694.firebaseio.com",
+    "project_id": "project-7323150840259011694",
+    "storage_bucket": "project-7323150840259011694.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:651440203075:android:5a9e6aceedc2dbcb",
+        "android_client_info": {
+          "package_name": "com.duongame.comicz"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "651440203075-kbseoarmk2mijen893c4fc9unbu9o7k2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBOv5ZR_hmM3fyJdmdUcH27Xq85JXkcGBA"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:651440203075:android:e33e249df9baf8cd",
+        "android_client_info": {
+          "package_name": "com.duongame.comicz.free"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "651440203075-kbseoarmk2mijen893c4fc9unbu9o7k2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBOv5ZR_hmM3fyJdmdUcH27Xq85JXkcGBA"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -2,6 +2,7 @@ package com.duongame.comicz;
 
 import android.app.Application;
 
+import com.duongame.R;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.Tracker;
 
@@ -17,7 +18,7 @@ public class AnalyticsApplication extends Application {
             GoogleAnalytics analytics = GoogleAnalytics.getInstance(this);
             // To enable debug logging use: adb shell setprop log.tag.GAv4 DEBUG
             //mTracker = analytics.newTracker(R.xml.global_tracker);
-            mTracker = analytics.newTracker("UA-61499807-13");
+            mTracker = analytics.newTracker(R.xml.analytics_tracker);
         }
         return mTracker;
     }

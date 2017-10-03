@@ -27,6 +27,7 @@ import com.duongame.explorer.helper.ToastHelper;
 import com.duongame.explorer.manager.AdBannerManager;
 import com.duongame.explorer.manager.PermissionManager;
 import com.google.android.gms.ads.AdView;
+import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.google.firebase.analytics.FirebaseAnalytics;
 
@@ -63,6 +64,13 @@ public class MainActivity extends AppCompatActivity {
 
         //TEST
 //        FirebaseCrash.report(new Exception("My first Android non-fatal error"));
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mTracker.setScreenName("MainActivity");
+        mTracker.send(new HitBuilders.ScreenViewBuilder().build());
     }
 
     private void initContentView() {
