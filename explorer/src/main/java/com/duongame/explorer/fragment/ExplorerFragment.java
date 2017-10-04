@@ -22,7 +22,6 @@ import android.widget.TextView;
 import android.widget.ViewSwitcher;
 
 import com.duongame.R;
-import com.duongame.comicz.activity.MainActivity;
 import com.duongame.comicz.db.BookLoader;
 import com.duongame.explorer.adapter.ExplorerAdapter;
 import com.duongame.explorer.adapter.ExplorerGridAdapter;
@@ -35,6 +34,7 @@ import com.duongame.explorer.helper.PreferenceHelper;
 import com.duongame.explorer.manager.ExplorerManager;
 import com.duongame.explorer.manager.PermissionManager;
 import com.duongame.explorer.manager.PositionManager;
+import com.duongame.file.activity.MainActivity;
 import com.duongame.viewer.activity.PhotoActivity;
 
 import java.io.File;

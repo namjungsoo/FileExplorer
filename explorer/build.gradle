@@ -27,11 +27,17 @@ android {
 
         // 파일탐색기
         file {
+            buildConfigField "String", "BANNER_ID", "\"ca-app-pub-5576037828251153/8260818625\""
+            buildConfigField "String", "POPUP_ID", "\"ca-app-pub-5576037828251153/2214285028\""
+            buildConfigField "String", "INTERSTITIAL_ID", "\"ca-app-pub-5576037828251153/9737551820\""
             applicationIdSuffix '.file'
             dimension "project"
         }
         // 코믹제트
         comicz {
+            buildConfigField "String", "BANNER_ID", "\"ca-app-pub-5576037828251153/8260818625\""
+            buildConfigField "String", "POPUP_ID", "\"ca-app-pub-5576037828251153/2214285028\""
+            buildConfigField "String", "INTERSTITIAL_ID", "\"ca-app-pub-5576037828251153/9737551820\""
             applicationIdSuffix '.comicz'
             dimension "project"
         }

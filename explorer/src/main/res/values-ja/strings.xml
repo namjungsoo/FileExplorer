@@ -22,5 +22,8 @@
     </string-array>
     <string name="permissions">アクセス許可要求</string>
     <string name="no_files">ファイルがありません。</string>
-
+    <string name="msg_no_image_in_zip">圧縮（ZIP）ファイルに画像がありません。</string>
+    <string name="dialog_review_title">漫画ビューアを応援して下さい。</string>
+    <string name="dialog_review_content">漫画ビューアを楽しんでいますか？漫画ビューアのためにレビューを残してください！</string>
+    <string name="msg_last_page">最後に読んだページがあります。（ページ：%d）\n続行読みたいですか？</string>
 </resources>

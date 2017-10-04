@@ -3,6 +3,7 @@ package com.duongame.explorer.manager;
 import android.app.Activity;
 import android.util.Log;
 
+import com.duongame.BuildConfig;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
@@ -14,7 +15,9 @@ public class AdInterstitialManager {
     private final static String TAG = "AdInterstitialManager";
 
     // 코믹뷰어 전면광고
-    private static final String INTERSTITIAL_ID = "ca-app-pub-5576037828251153/9737551820";
+//    private static final String INTERSTITIAL_ID = "ca-app-pub-5576037828251153/9737551820";
+    private static final String INTERSTITIAL_ID = BuildConfig.INTERSTITIAL_ID;
+
     private static InterstitialAd interstitialAD = null;
 
     public static final int MODE_EXIT = 1;

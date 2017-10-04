@@ -3,13 +3,13 @@ package com.duongame.file.activity;
 import android.Manifest;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import com.duongame.R;
 import com.duongame.comicz.db.BookDB;
+import com.duongame.explorer.activity.BaseActivity;
 import com.duongame.explorer.bitmap.BitmapCacheManager;
 import com.duongame.explorer.fragment.BaseFragment;
 import com.duongame.explorer.helper.ToastHelper;
@@ -17,7 +17,7 @@ import com.duongame.explorer.manager.ExplorerManager;
 
 import java.io.File;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends BaseActivity {
     private final static String TAG = "MainActivity";
 
     @Override

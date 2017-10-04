@@ -3,6 +3,7 @@ package com.duongame.explorer.manager;
 import android.app.Activity;
 import android.util.Log;
 
+import com.duongame.BuildConfig;
 import com.duongame.R;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
@@ -20,8 +21,10 @@ public class AdBannerManager {
 //    private static final String POPUP_ID = "ca-app-pub-5576037828251153/3639793825";
 
     //COMICZ
-    private static final String BANNER_ID = "ca-app-pub-5576037828251153/8260818625";
-    private static final String POPUP_ID = "ca-app-pub-5576037828251153/2214285028";
+//    private static final String BANNER_ID = "ca-app-pub-5576037828251153/8260818625";
+//    private static final String POPUP_ID = "ca-app-pub-5576037828251153/2214285028";
+    private static final String BANNER_ID = BuildConfig.BANNER_ID;
+    private static final String POPUP_ID = BuildConfig.POPUP_ID;
 
     private static AdView[] adBannerView = new AdView[2];
     private static AdView adPopupView;

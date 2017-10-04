@@ -22,4 +22,8 @@
     </string-array>
     <string name="permissions">권한 요청</string>
     <string name="no_files">파일이 없습니다.</string>
+    <string name="msg_no_image_in_zip">압축(ZIP) 파일에 이미지가 없습니다.</string>
+    <string name="dialog_review_title">코믹뷰어를 응원해주세요</string>
+    <string name="dialog_review_content">코믹뷰어를 즐기고 계신가요? 코믹뷰어를 위해서 리뷰를 남겨주세요!</string>
+    <string name="msg_last_page">마지막에 읽던 페이지가 있습니다. (페이지: %d)\n계속 읽으시겠습니까?</string>
 </resources>
