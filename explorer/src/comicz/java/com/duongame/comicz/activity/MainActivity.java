@@ -16,7 +16,7 @@ import android.widget.RelativeLayout;
 
 import com.duongame.BuildConfig;
 import com.duongame.R;
-import com.duongame.comicz.AnalyticsApplication;
+import com.duongame.AnalyticsApplication;
 import com.duongame.comicz.adapter.ComicPagerAdapter;
 import com.duongame.comicz.db.BookDB;
 import com.duongame.comicz.db.BookLoader;

@@ -1,8 +1,7 @@
-package com.duongame.comicz;
+package com.duongame;
 
 import android.app.Application;
 
-import com.duongame.R;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.Tracker;
 

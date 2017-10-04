@@ -20,7 +20,7 @@ import android.widget.TextView;
 
 import com.duongame.BuildConfig;
 import com.duongame.R;
-import com.duongame.comicz.AnalyticsApplication;
+import com.duongame.AnalyticsApplication;
 import com.duongame.explorer.bitmap.BitmapCacheManager;
 import com.duongame.explorer.helper.PreferenceHelper;
 import com.duongame.explorer.manager.AdBannerManager;

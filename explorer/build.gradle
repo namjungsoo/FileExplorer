@@ -52,6 +52,14 @@ android {
         }
 
     }
+    variantFilter { variant ->
+        if (variant.getFlavors().get(1).name.equals('main')) {
+            variant.setIgnore(true);
+        }
+        if (variant.getFlavors().get(1).name.equals('pro')) {
+            variant.setIgnore(true);
+        }
+    }
 }
 
 dependencies {
