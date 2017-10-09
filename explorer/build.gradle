@@ -32,6 +32,8 @@ android {
             buildConfigField "String", "INTERSTITIAL_ID", "\"ca-app-pub-5576037828251153/9737551820\""
             applicationIdSuffix '.file'
             dimension "project"
+            versionCode 1
+            versionName "1.0.0"
         }
         // 코믹제트
         comicz {
@@ -40,6 +42,8 @@ android {
             buildConfigField "String", "INTERSTITIAL_ID", "\"ca-app-pub-5576037828251153/9737551820\""
             applicationIdSuffix '.comicz'
             dimension "project"
+            versionCode 3
+            versionName "1.0.2"
         }
 
         // 유료

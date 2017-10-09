@@ -94,6 +94,9 @@ public class BitmapCacheManager {
 
     // drawable
     public static void setDrawable(String path, Drawable drawable) {
+        if(path == null || drawable == null)
+            return;
+
         drawableCache.putIfAbsent(path, drawable);
     }
 

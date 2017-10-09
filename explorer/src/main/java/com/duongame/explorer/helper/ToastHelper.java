@@ -9,6 +9,9 @@ import android.widget.Toast;
  */
 public class ToastHelper {
     public static void showToast(Context context, int resId) {
+        if(context == null)
+            return;
+
         final String message = context.getString(resId);
         showToast(context, message);
     }
