@@ -16,8 +16,8 @@ import java.util.Date;
  */
 
 public class ExplorerManager {
-    private static String lastPath;
     private static final String initialPath = Environment.getExternalStorageDirectory().getAbsolutePath();
+    private static String lastPath = Environment.getExternalStorageDirectory().getAbsolutePath();
     private static ArrayList<ExplorerItem> imageList = new ArrayList<>();
 
     public static String getInitialPath() {

@@ -42,8 +42,8 @@ android {
             buildConfigField "String", "INTERSTITIAL_ID", "\"ca-app-pub-5576037828251153/9737551820\""
             applicationIdSuffix '.comicz'
             dimension "project"
-            versionCode 3
-            versionName "1.0.2"
+            versionCode 4
+            versionName "1.0.3"
         }
 
         // 유료

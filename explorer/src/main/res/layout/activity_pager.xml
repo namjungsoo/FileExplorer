@@ -7,7 +7,7 @@
     android:background="@color/colorBlackBackground"
     tools:context="com.duongame.viewer.activity.PagerActivity">
 
-    <android.support.v4.view.ViewPager
+    <com.duongame.explorer.view.ViewPagerEx
         android:id="@+id/pager"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />

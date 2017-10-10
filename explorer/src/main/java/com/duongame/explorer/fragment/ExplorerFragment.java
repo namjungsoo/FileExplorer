@@ -99,14 +99,19 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
             }
         }
 
+        return rootView;
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
         MainActivity activity = (MainActivity) getActivity();
-        if (activity == null) {
+        if (activity != null) {
             if (!activity.getShowReview()) {
-                BookLoader.openLastBook(getActivity());
+                BookLoader.openLastBook(activity);
             }
         }
-
-        return rootView;
     }
 
     @Override

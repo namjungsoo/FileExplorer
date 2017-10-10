@@ -1,5 +1,6 @@
 package com.duongame.explorer.task.thumbnail;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
@@ -47,6 +48,11 @@ public class LoadZipThumbnailTask extends AsyncTask<String, Void, String> {
             return;
         if (param == null)
             return;
+        if (context instanceof Activity) {
+            if(((Activity)context).isFinishing())
+                return;
+        }
+
         GlideApp.with(context)
                 .load(new File(param))
                 .diskCacheStrategy(DiskCacheStrategy.ALL)

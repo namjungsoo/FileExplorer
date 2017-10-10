@@ -18,14 +18,15 @@ import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import com.duongame.AnalyticsApplication;
 import com.duongame.BuildConfig;
 import com.duongame.R;
-import com.duongame.AnalyticsApplication;
 import com.duongame.explorer.bitmap.BitmapCacheManager;
 import com.duongame.explorer.helper.PreferenceHelper;
 import com.duongame.explorer.manager.AdBannerManager;
 import com.duongame.explorer.manager.AdInterstitialManager;
 import com.google.android.gms.ads.AdView;
+import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.google.firebase.analytics.FirebaseAnalytics;
 
@@ -71,7 +72,6 @@ public class ViewerActivity extends AppCompatActivity {
 
         AnalyticsApplication application = (AnalyticsApplication) getApplication();
         mTracker = application.getDefaultTracker();
-
     }
 
     protected void initContentView() {
@@ -82,12 +82,14 @@ public class ViewerActivity extends AppCompatActivity {
             final RelativeLayout layout = new RelativeLayout(this);
             layout.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT));
 
+            AdBannerManager.initBannerAd(this, 1);
             adView = AdBannerManager.getAdBannerView(1);
 
             // adview layout params
             RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
             params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
             adView.setLayoutParams(params);
+            AdBannerManager.requestAd(1);
 
             // mainview layout params
             params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
@@ -106,14 +108,42 @@ public class ViewerActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
-        super.onDestroy();
+        if (adView != null) {
+            ViewGroup vg = (ViewGroup) adView.getParent();
+            if(vg != null) {
+                vg.removeView(adView);
+            }
+            adView.removeAllViews();
+            adView.destroy();
+        }
 
-        ((ViewGroup) adView.getParent()).removeView(adView);
         BitmapCacheManager.recycleBitmap();
         BitmapCacheManager.recyclePage();
 
         // 전면 광고 노출
         showInterstitialAd();
+
+        super.onDestroy();
+    }
+
+    @Override
+    protected void onPause() {
+        if (adView != null)
+            adView.pause();
+
+        super.onPause();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        if (adView != null) {
+            adView.resume();
+        }
+
+        mTracker.setScreenName(this.getClass().getSimpleName());
+        mTracker.send(new HitBuilders.ScreenViewBuilder().build());
     }
 
     void showInterstitialAd() {

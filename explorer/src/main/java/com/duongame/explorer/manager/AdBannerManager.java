@@ -35,15 +35,6 @@ public class AdBannerManager {
 
         // 좌우를 꽉채워주는 배너 타입
         adView.setAdSize(adtype);
-
-        // 기본 요청을 시작합니다.
-        final AdRequest adRequest = new AdRequest.Builder()
-                // 이제 테스트를 제거하자.
-//                .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
-                .build();
-
-        // 광고 요청으로 adView를 로드합니다.
-        adView.loadAd(adRequest);
         return adView;
     }
 
@@ -84,6 +75,7 @@ public class AdBannerManager {
                 Log.d(TAG, "onAdLoaded");
             }
         });
+        //requestAd(i);
     }
 
     public static void initPopupAd(Activity context) {
@@ -121,12 +113,12 @@ public class AdBannerManager {
                 Log.d(TAG, "onAdLoaded");
             }
         });
-
+        requestAd(adPopupView);
     }
 
     public static void init(Activity context) {
         initBannerAd(context, 0);
-        initBannerAd(context, 1);
+//        initBannerAd(context, 1);
         initPopupAd(context);
     }
 
@@ -136,5 +128,23 @@ public class AdBannerManager {
 
     public static AdView getAdPopupView() {
         return adPopupView;
+    }
+
+    public static void requestAd(AdView adView) {
+        if(adView != null) {
+            // 기본 요청을 시작합니다.
+            final AdRequest adRequest = new AdRequest.Builder()
+                    // 이제 테스트를 제거하자.
+//                .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+                    .build();
+
+            // 광고 요청으로 adView를 로드합니다.
+            adView.loadAd(adRequest);
+        }
+    }
+
+    public static void requestAd(int i) {
+        AdView adView = getAdBannerView(i);
+        requestAd(adView);
     }
 }

@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
 import com.duongame.BuildConfig;
@@ -46,6 +47,7 @@ public class MainActivity extends AppCompatActivity {
     private ComicPagerAdapter adapter;
     private TabLayout tab;
     private View mainView;
+    private AdView adView;
 
     private boolean showReview;
 
@@ -74,9 +76,36 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
+    public void onDestroy() {
+        if (adView != null) {
+            ViewGroup vg = (ViewGroup) adView.getParent();
+            if(vg != null) {
+                vg.removeView(adView);
+            }
+            adView.removeAllViews();
+            adView.destroy();
+        }
+
+        super.onDestroy();
+    }
+
+    @Override
+    protected void onPause() {
+        if (adView != null)
+            adView.pause();
+
+        super.onPause();
+    }
+
+    @Override
     protected void onResume() {
         super.onResume();
-        mTracker.setScreenName("MainActivity");
+
+        if (adView != null) {
+            adView.resume();
+        }
+
+        mTracker.setScreenName(this.getClass().getSimpleName());
         mTracker.send(new HitBuilders.ScreenViewBuilder().build());
     }
 
@@ -92,12 +121,13 @@ public class MainActivity extends AppCompatActivity {
             final RelativeLayout layout = new RelativeLayout(this);
             layout.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT));
 
-            final AdView adView = AdBannerManager.getAdBannerView(0);
+            adView = AdBannerManager.getAdBannerView(0);
 
             // adview layout params
             RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
             params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
             adView.setLayoutParams(params);
+            AdBannerManager.requestAd(0);
 
             // mainview layout params
             params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);

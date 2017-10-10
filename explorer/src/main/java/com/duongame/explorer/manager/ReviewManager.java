@@ -19,6 +19,7 @@ public class ReviewManager {
 
     public static boolean checkReview(final Activity context) {
         // 리뷰 카운트를 체크하여 리뷰가 안되어 있으면 리뷰를 해줌
+        boolean ret = false;
         if (!PreferenceHelper.getReviewed(context)) {
             final int reviewCount = PreferenceHelper.getReviewCount(context) + 1;
 
@@ -46,13 +47,13 @@ public class ReviewManager {
                                 }
                             }, null);
                     AdBannerManager.initPopupAd(context);// 항상 초기화 해주어야 함
+                    ret = true;
                     break;
                 }
             }
 
             PreferenceHelper.setReviewCount(context, reviewCount);
-            return true;
         }
-        return false;
+        return ret;
     }
 }
