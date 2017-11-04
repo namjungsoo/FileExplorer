@@ -104,6 +104,7 @@ public class BookDB extends SQLiteOpenHelper {
 
         // 동적으로 변함
         public int current_page;// 현재 페이지 인덱스. 텍스트의 경우 현재 페이지*1000 + 0~99.9%
+        //TODO: 텍스트의 경우 1000 -> 10000으로 변경하여야 함
         public int total_page;// 최대 페이지 수. 전체를 다 로딩하지 않으면 알수 없음. 텍스트의 경우 전체 라인수
 
         public int current_file;// 현재 파일 인덱스
@@ -115,7 +116,7 @@ public class BookDB extends SQLiteOpenHelper {
         public String last_file;// 마지막 이미지 파일의 파일명
 
         // DB에 저장되지 않음
-        public int percent;
+        public int percent;// 0~100을 가진다.
 
         public Book() {
 

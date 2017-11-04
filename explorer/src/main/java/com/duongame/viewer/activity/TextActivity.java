@@ -63,7 +63,7 @@ public class TextActivity extends ViewerActivity {
         public void onGlobalLayout() {
             int scrollY = getScrollY();
             scrollText.setScrollY(scrollY);
-            scrollText.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+            scrollText.getViewTreeObserver().removeGlobalOnLayoutListener(this);
         }
     };
 
@@ -107,6 +107,8 @@ public class TextActivity extends ViewerActivity {
             name = extras.getString("name");
             size = extras.getLong("size");
 
+            //TODO: 현재 스크롤의 단위를 1/1000으로 적용하고 있으므로 정확도가 좋지 못하여 1/10000으로 변경하여야 함
+            // 이때 DB의 마이그레이션이 필요할수 있음
             int current_page = extras.getInt("current_page");
             page = current_page / LINES_PER_PAGE;
             scroll = current_page - LINES_PER_PAGE * page;

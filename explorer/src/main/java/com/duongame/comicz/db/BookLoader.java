@@ -32,18 +32,22 @@ import static com.google.android.gms.internal.zzs.TAG;
  */
 
 public class BookLoader {
-    public static void openLastBook(Activity context) {
+    public static boolean openLastBook(Activity context) {
         final BookDB.Book book = BookDB.getLastBook(context);
-        if (book != null) {
+        if (book != null && book.percent < 100) {
             BookLoader.loadWithAlert(context, book, true);
+            return true;
         }
+        return false;
     }
 
-    public static void openLastBookDirect(Activity context) {
+    public static boolean openLastBookDirect(Activity context) {
         final BookDB.Book book = BookDB.getLastBook(context);
-        if (book != null) {
+        if (book != null && book.percent < 100) {
             BookLoader.loadContinue(context, book);
+            return true;
         }
+        return false;
     }
 
     // 히스토리일 경우는 바로 읽음
