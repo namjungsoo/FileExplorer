@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.os.ParcelFileDescriptor;
 import android.util.Log;
 
+import com.duongame.comicz.db.Book;
 import com.duongame.comicz.db.BookDB;
 import com.duongame.explorer.adapter.ExplorerItem;
 import com.duongame.explorer.helper.FileHelper;
@@ -46,7 +47,7 @@ public class PdfActivity extends PagerActivity {
     protected void onPause() {
         Log.i(TAG, "onPause");
 
-        final BookDB.Book book = new BookDB.Book();
+        final Book book = new Book();
 
         // 고정적인 내용 5개
         book.path = path;

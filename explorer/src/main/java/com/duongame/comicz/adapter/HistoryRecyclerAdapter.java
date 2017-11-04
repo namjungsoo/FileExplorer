@@ -12,6 +12,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.duongame.R;
+import com.duongame.comicz.db.Book;
 import com.duongame.comicz.db.BookDB;
 import com.duongame.comicz.db.BookLoader;
 import com.duongame.explorer.fragment.BaseFragment;
@@ -28,19 +29,19 @@ public class HistoryRecyclerAdapter extends RecyclerView.Adapter<HistoryRecycler
 
     private Activity context;
     private BaseFragment fragment;
-    private ArrayList<BookDB.Book> bookList;
+    private ArrayList<Book> bookList;
 
-    public HistoryRecyclerAdapter(Activity context, BaseFragment fragment, ArrayList<BookDB.Book> bookList) {
+    public HistoryRecyclerAdapter(Activity context, BaseFragment fragment, ArrayList<Book> bookList) {
         this.context = context;
         this.fragment = fragment;
         this.bookList = bookList;
     }
 
-    public void setBookList(ArrayList<BookDB.Book> bookList) {
+    public void setBookList(ArrayList<Book> bookList) {
         this.bookList = bookList;
     }
 
-    public ArrayList<BookDB.Book> getBookList() {
+    public ArrayList<Book> getBookList() {
         return bookList;
     }
 
@@ -63,7 +64,7 @@ public class HistoryRecyclerAdapter extends RecyclerView.Adapter<HistoryRecycler
     @Override
     public void onBindViewHolder(final HistoryViewHolder holder, int position) {
         if (bookList != null) {
-            final BookDB.Book book = bookList.get(position);
+            final Book book = bookList.get(position);
 
             BookLoader.updateBookHolder(context, holder, book);
 

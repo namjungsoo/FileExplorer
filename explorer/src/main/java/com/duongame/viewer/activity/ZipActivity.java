@@ -12,6 +12,7 @@ import android.widget.TextView;
 import android.widget.ViewSwitcher;
 
 import com.duongame.R;
+import com.duongame.comicz.db.Book;
 import com.duongame.comicz.db.BookDB;
 import com.duongame.explorer.adapter.ExplorerItem;
 import com.duongame.explorer.bitmap.BitmapCacheManager;
@@ -123,7 +124,7 @@ public class ZipActivity extends PagerActivity {
         Log.i(TAG, "onPause");
         zipLoader.cancelTask();
 
-        final BookDB.Book book = new BookDB.Book();
+        final Book book = new Book();
 
         // 고정적인 내용 5개
         book.path = path;

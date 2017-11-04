@@ -33,7 +33,7 @@ import static com.google.android.gms.internal.zzs.TAG;
 
 public class BookLoader {
     public static boolean openLastBook(Activity context) {
-        final BookDB.Book book = BookDB.getLastBook(context);
+        final Book book = BookDB.getLastBook(context);
         if (book != null && book.percent < 100) {
             BookLoader.loadWithAlert(context, book, true);
             return true;
@@ -42,7 +42,7 @@ public class BookLoader {
     }
 
     public static boolean openLastBookDirect(Activity context) {
-        final BookDB.Book book = BookDB.getLastBook(context);
+        final Book book = BookDB.getLastBook(context);
         if (book != null && book.percent < 100) {
             BookLoader.loadContinue(context, book);
             return true;
@@ -51,7 +51,7 @@ public class BookLoader {
     }
 
     // 히스토리일 경우는 바로 읽음
-    public static void loadContinue(Activity context, BookDB.Book book) {
+    public static void loadContinue(Activity context, Book book) {
         Class<?> cls = null;
         if (book.path.toLowerCase().endsWith(".zip")) {
             cls = ZipActivity.class;
@@ -97,7 +97,7 @@ public class BookLoader {
         return null;
     }
 
-    private static Intent getIntentNew(final Activity context, BookDB.Book book) {
+    private static Intent getIntentNew(final Activity context, Book book) {
         Class<?> cls = null;
         if (book.path.toLowerCase().endsWith(".zip")) {
             cls = ZipActivity.class;
@@ -126,14 +126,14 @@ public class BookLoader {
         context.startActivity(intent);
     }
 
-    private static void loadNew(final Activity context, BookDB.Book book) {
+    private static void loadNew(final Activity context, Book book) {
         Intent intent = getIntentNew(context, book);
         context.startActivity(intent);
     }
 
     // 탐색기, 검색일 경우 여기서 읽음
     public static void load(final Activity context, final ExplorerItem item, final boolean cancelToRead) {
-        final BookDB.Book book = getHistory(context, item);
+        final Book book = getHistory(context, item);
 
         // 새로 페이지 0부터 읽음
         if(book == null) {
@@ -144,7 +144,7 @@ public class BookLoader {
         }
     }
 
-    private static void updateHistoryItem(Context context, View view, BookDB.Book book) {
+    private static void updateHistoryItem(Context context, View view, Book book) {
         HistoryRecyclerAdapter.HistoryViewHolder holder = new HistoryRecyclerAdapter.HistoryViewHolder(view);
 
         BookLoader.updateBookHolder(context, holder, book);
@@ -153,7 +153,7 @@ public class BookLoader {
         holder.more.setVisibility(View.GONE);
     }
 
-    public static void loadWithAlert(final Activity context, final BookDB.Book book, final boolean cancelToRead) {
+    public static void loadWithAlert(final Activity context, final Book book, final boolean cancelToRead) {
         View view = context.getLayoutInflater().inflate(R.layout.history_item, null, false);
         updateHistoryItem(context, view, book);
 
@@ -182,7 +182,7 @@ public class BookLoader {
         builder.show();
     }
 
-    private static BookDB.Book getHistory(Activity context, ExplorerItem item) {
+    private static Book getHistory(Activity context, ExplorerItem item) {
         return BookDB.getBook(context, item.path);
     }
 
@@ -209,7 +209,7 @@ public class BookLoader {
         }
     }
 
-    private static String getPageText(BookDB.Book book) {
+    private static String getPageText(Book book) {
         // 압축이 다 풀렸으면, 페이지를 기준으로 한다.
         // 압축파일이 아니라면 둘다 0이다.
         if (book.extract_file == book.total_file) {
@@ -217,19 +217,18 @@ public class BookLoader {
             if (book.type != ExplorerItem.FileType.TEXT)
                 return (book.current_page + 1) + "/" + book.total_page;
             else {
-                BookDB.TextBook textBook = BookDB.getTextBook(book);
-                return textBook.getPageText();
+                return TextBook.getPageText(book);
             }
         } else {
             return (book.current_file + 1) + "/" + book.total_file;
         }
     }
 
-    private static String getPercentText(BookDB.Book book) {
+    private static String getPercentText(Book book) {
         return String.valueOf(book.percent) + "%";
     }
 
-    public static void updateBookHolder(Context context, HistoryRecyclerAdapter.HistoryViewHolder holder, BookDB.Book book) {
+    public static void updateBookHolder(Context context, HistoryRecyclerAdapter.HistoryViewHolder holder, Book book) {
         holder.name.setText(book.name);
         holder.size.setText(FileHelper.getMinimizedSize(book.size));
         holder.date.setText(DateHelper.getDBDate(book.date));

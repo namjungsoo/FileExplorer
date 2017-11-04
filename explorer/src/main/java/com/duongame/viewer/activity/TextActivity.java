@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.ViewTreeObserver;
 import android.widget.ScrollView;
@@ -11,7 +12,9 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.duongame.R;
+import com.duongame.comicz.db.Book;
 import com.duongame.comicz.db.BookDB;
+import com.duongame.comicz.db.TextBook;
 import com.duongame.explorer.helper.FileHelper;
 import com.duongame.explorer.manager.FontManager;
 import com.duongame.viewer.listener.TextOnTouchListener;
@@ -27,7 +30,7 @@ import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 
-import static com.duongame.comicz.db.BookDB.TextBook.LINES_PER_PAGE;
+import static com.duongame.comicz.db.TextBook.LINES_PER_PAGE;
 
 /**
  * Created by namjungsoo on 2016-11-18.
@@ -141,6 +144,11 @@ public class TextActivity extends ViewerActivity {
     int getPercent2() {
         // 현재 스크롤 위치를 얻어보자
         int maxScroll = scrollText.getChildAt(0).getHeight() - scrollText.getHeight();
+        Log.d(TAG, "maxScroll=" + maxScroll);
+        if (maxScroll <= 0) {
+            return 10000;
+        }
+
         int scrollY = scrollText.getScrollY();
 
         // 10000으로 곱한다.
@@ -151,6 +159,9 @@ public class TextActivity extends ViewerActivity {
     int getPercent() {
         // 현재 스크롤 위치를 얻어보자
         int maxScroll = scrollText.getChildAt(0).getHeight() - scrollText.getHeight();
+        if (maxScroll <= 0) {
+            return 1000;
+        }
         int scrollY = scrollText.getScrollY();
 
         int percent = scrollY * LINES_PER_PAGE / maxScroll;
@@ -163,17 +174,17 @@ public class TextActivity extends ViewerActivity {
 
         if (USE_10K_PERCENT) {
             int percent = getPercent2();
-            if (percent >= LINES_PER_PAGE * 10) {
+            if (percent >= LINES_PER_PAGE * 10) {// 9999를 만들어야 페이지를 넘어가지 않는다.
                 percent = LINES_PER_PAGE * 10 - 1;
             }
-            BookDB.Book book = BookDB.buildTextBook2(path, name, size, percent, page, lineList.size());
+            Book book = TextBook.buildTextBook2(path, name, size, percent, page, lineList.size());
             BookDB.setLastBook(this, book);
         } else {
             int percent = getPercent();
             if (percent >= LINES_PER_PAGE) {
                 percent = LINES_PER_PAGE - 1;
             }
-            BookDB.Book book = BookDB.buildTextBook(path, name, size, percent, page, lineList.size());
+            Book book = TextBook.buildTextBook(path, name, size, percent, page, lineList.size());
             BookDB.setLastBook(this, book);
         }
 
@@ -235,7 +246,7 @@ public class TextActivity extends ViewerActivity {
         final int count = (lineList.size() - 1) / LINES_PER_PAGE;
 
         if (USE_10K_PERCENT) {
-            // 현재페이지(1부터시작)/전체페이지(퍼센트%)
+            // 현재페이지(1부터시작)/전체페이지 (현재페이지 퍼센트%)
             String text = (position + 1) + "/" + (count + 1) + String.format(" (%02d%%)", getPercent2() / 100);
             textPage.setText(text);
         } else {

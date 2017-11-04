@@ -12,6 +12,7 @@ import android.widget.ViewSwitcher;
 
 import com.duongame.R;
 import com.duongame.comicz.adapter.HistoryRecyclerAdapter;
+import com.duongame.comicz.db.Book;
 import com.duongame.comicz.db.BookDB;
 import com.duongame.comicz.db.BookLoader;
 import com.duongame.explorer.fragment.BaseFragment;
@@ -32,7 +33,7 @@ public class HistoryFragment extends BaseFragment {
     private ViewSwitcher switcherContents;
 
     private HistoryRecyclerAdapter recyclerAdapter;
-    private ArrayList<BookDB.Book> bookList;
+    private ArrayList<Book> bookList;
 
     @Override
     public View onCreateView(LayoutInflater inflater, final ViewGroup container,
@@ -49,7 +50,7 @@ public class HistoryFragment extends BaseFragment {
             @Override
             public void onItemClick(int position) {
                 if (bookList != null) {
-                    final BookDB.Book book = bookList.get(position);
+                    final Book book = bookList.get(position);
                     BookLoader.loadContinue(getActivity(), book);
                 }
             }
