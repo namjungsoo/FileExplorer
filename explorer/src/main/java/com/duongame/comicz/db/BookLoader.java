@@ -89,6 +89,7 @@ public class BookLoader {
             intent.putExtra("name", item.name);
             intent.putExtra("current_page", 0);
             intent.putExtra("size", item.size);
+            intent.putExtra("current_file", 0);
             intent.putExtra("extract_file", 0);
             intent.putExtra("side", item.side.getValue());
             return intent;
@@ -111,8 +112,10 @@ public class BookLoader {
             intent.putExtra("name", book.name);
             intent.putExtra("current_page", 0);
             intent.putExtra("size", book.size);
+            intent.putExtra("current_file", book.current_file);
             intent.putExtra("extract_file", book.extract_file);
             intent.putExtra("side", book.side.getValue());
+
             return intent;
         }
         return null;

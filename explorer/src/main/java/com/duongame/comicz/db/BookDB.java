@@ -44,26 +44,50 @@ public class BookDB extends SQLiteOpenHelper {
         text.currentPage = book.current_page / LINES_PER_PAGE;
         text.currentPercent = book.current_page - text.currentPage * LINES_PER_PAGE;
 
-        // 마지막 페이지이면, 1000라인 이하일수 있다. 전체가 1000라인 이하인 것도 마찬가지다.
-        if (text.currentPage == (text.lineCount / LINES_PER_PAGE)) {// 읽기 완료된 파일이다.
-            text.currentLine = text.lineCount;
-            text.totalPercent = LINES_PER_PAGE;
-        } else {
-            int currentPageLine = 0;
-            int prevTotalPageLineCount = 0;
-            int currentTotalPageLineCount = 0;
-            prevTotalPageLineCount = text.currentPage * LINES_PER_PAGE;
+        if(book.current_file == 0) {
+            // 마지막 페이지이면, 1000라인 이하일수 있다. 전체가 1000라인 이하인 것도 마찬가지다.
+            if (text.currentPage == (text.lineCount / LINES_PER_PAGE)) {// 읽기 완료된 파일이다.
+                text.currentLine = text.lineCount;
+                text.totalPercent = LINES_PER_PAGE;
+            } else {
+                int currentPageLine = 0;
+                int prevTotalPageLineCount = 0;
+                int currentTotalPageLineCount = 0;
+                prevTotalPageLineCount = text.currentPage * LINES_PER_PAGE;
 
-            currentPageLine = currentTotalPageLineCount * text.currentPercent / LINES_PER_PAGE;
-            if (text.currentPage == ((text.lineCount / LINES_PER_PAGE) - 1)) {// 마지막 페이지이다.
-                // 남은 라인을 먼저 계산
-                currentTotalPageLineCount = text.lineCount - prevTotalPageLineCount;
-            } else {// 가운데 페이지이다.
-                currentTotalPageLineCount = LINES_PER_PAGE;
+                currentPageLine = currentTotalPageLineCount * text.currentPercent / LINES_PER_PAGE;
+                if (text.currentPage == ((text.lineCount / LINES_PER_PAGE) - 1)) {// 마지막 페이지이다.
+                    // 남은 라인을 먼저 계산
+                    currentTotalPageLineCount = text.lineCount - prevTotalPageLineCount;
+                } else {// 가운데 페이지이다.
+                    currentTotalPageLineCount = LINES_PER_PAGE;
+                }
+
+                text.currentLine = prevTotalPageLineCount + currentPageLine;
+                text.totalPercent = text.currentLine * LINES_PER_PAGE / text.lineCount;
             }
+        } else {
+            // 마지막 페이지이면, 1000라인 이하일수 있다. 전체가 1000라인 이하인 것도 마찬가지다.
+            if (text.currentPage == (text.lineCount / LINES_PER_PAGE)) {// 읽기 완료된 파일이다.
+                text.currentLine = text.lineCount;
+                text.totalPercent = LINES_PER_PAGE;
+            } else {
+                int currentPageLine = 0;
+                int prevTotalPageLineCount = 0;
+                int currentTotalPageLineCount = 0;
+                prevTotalPageLineCount = text.currentPage * LINES_PER_PAGE;
 
-            text.currentLine = prevTotalPageLineCount + currentPageLine;
-            text.totalPercent = text.currentLine * LINES_PER_PAGE / text.lineCount;
+                currentPageLine = currentTotalPageLineCount * text.currentPercent / LINES_PER_PAGE;
+                if (text.currentPage == ((text.lineCount / LINES_PER_PAGE) - 1)) {// 마지막 페이지이다.
+                    // 남은 라인을 먼저 계산
+                    currentTotalPageLineCount = text.lineCount - prevTotalPageLineCount;
+                } else {// 가운데 페이지이다.
+                    currentTotalPageLineCount = LINES_PER_PAGE;
+                }
+
+                text.currentLine = prevTotalPageLineCount + currentPageLine;
+                text.totalPercent = text.currentLine * LINES_PER_PAGE / text.lineCount;
+            }
         }
 
         return text;
@@ -88,6 +112,30 @@ public class BookDB extends SQLiteOpenHelper {
 
         // zip아 아니면 사용하지 않는 부분
         book.current_file = 0;
+        book.extract_file = 0;
+        book.side = ExplorerItem.Side.SIDE_ALL;
+
+        return book;
+    }
+
+    public static Book buildTextBook2(String path, String name, long size, int percent, int page, int lineCount) {
+        // 현재 라인을 book에 저장하자.
+        final BookDB.Book book = new BookDB.Book();
+        // 고정적인 내용 5개
+        book.path = path;
+        book.name = name;
+        book.type = ExplorerItem.FileType.TEXT;
+        book.size = size;
+        book.total_file = 0;// 파일의 갯수이다.
+
+        // 동적인 내용 6개
+        book.current_page = page * LINES_PER_PAGE + percent/10;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            book.total_page = lineCount;
+        }
+
+        // zip아 아니면 사용하지 않는 부분
+        book.current_file = percent;
         book.extract_file = 0;
         book.side = ExplorerItem.Side.SIDE_ALL;
 
@@ -142,10 +190,18 @@ public class BookDB extends SQLiteOpenHelper {
         }
 
         public void updatePercent() {
-            if (total_page > 0) {
-                percent = ((current_page + 1) * 100) / total_page;
-            } else if (total_file > 0) {
-                percent = ((current_file + 1) * 100) / total_file;
+            if(name.toLowerCase().endsWith(".txt")) {
+                if(current_file == 0) {
+                    percent = current_page % 1000 / 10;
+                } else {
+                    percent = current_file % 10000 / 100;
+                }
+            } else {
+                if (total_page > 0) {
+                    percent = ((current_page + 1) * 100) / total_page;
+                } else if (total_file > 0) {
+                    percent = ((current_file + 1) * 100) / total_file;
+                }
             }
         }
     }
@@ -197,7 +253,8 @@ public class BookDB extends SQLiteOpenHelper {
 
         book.path = cursor.getString(0);
         book.name = cursor.getString(1);
-        book.type.setValue(cursor.getInt(2));
+        int type = cursor.getInt(2);
+        book.type = ExplorerItem.FileType.values()[type];
         book.size = cursor.getLong(3);
         book.total_file = cursor.getInt(4);
 
@@ -308,9 +365,10 @@ public class BookDB extends SQLiteOpenHelper {
             Log.i(TAG, "setLastBook=" + sql2);
             db.execSQL(sql2);
         } else {// 없으면 추가
+            int type = book.type.getValue();
             final String sql2 = "INSERT INTO book VALUES('" + book.path
                     + "','" + book.name
-                    + "'," + book.type.getValue()
+                    + "'," + type
                     + "," + book.size
                     + "," + book.total_file
 

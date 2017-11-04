@@ -49,9 +49,12 @@ public class TextActivity extends ViewerActivity {
 
     private int fontSize = 20;
     private int fontIndex = 4;
+    private boolean useScrollV2 = false;
 
     private ArrayList<String> lineList = new ArrayList<>();
-    static int MAX_FONT_SIZE_INDEX = 16;
+
+    private static boolean USE_10K_PERCENT = true;
+    private static int MAX_FONT_SIZE_INDEX = 16;
 
     private int[] fontSizeArray = new int[]{12, 14, 16, 18, 20,
             24, 28, 32, 36, 40,
@@ -110,8 +113,16 @@ public class TextActivity extends ViewerActivity {
             //TODO: 현재 스크롤의 단위를 1/1000으로 적용하고 있으므로 정확도가 좋지 못하여 1/10000으로 변경하여야 함
             // 이때 DB의 마이그레이션이 필요할수 있음
             int current_page = extras.getInt("current_page");
+            int current_file = extras.getInt("current_file");
             page = current_page / LINES_PER_PAGE;
-            scroll = current_page - LINES_PER_PAGE * page;
+
+            if (current_file == 0) {
+                scroll = current_page - LINES_PER_PAGE * page;
+                useScrollV2 = false;
+            } else {
+                scroll = current_file;
+                useScrollV2 = true;
+            }
 
             textSize.setText(FileHelper.getMinimizedSize(size));
             textName.setText(name);
@@ -124,6 +135,17 @@ public class TextActivity extends ViewerActivity {
     void updateFontSize() {
         fontSize = fontSizeArray[fontIndex];
         textContent.setTextSize(fontSize);
+    }
+
+    // 1/10000 퍼센트를 지정함
+    int getPercent2() {
+        // 현재 스크롤 위치를 얻어보자
+        int maxScroll = scrollText.getChildAt(0).getHeight() - scrollText.getHeight();
+        int scrollY = scrollText.getScrollY();
+
+        // 10000으로 곱한다.
+        int percent = scrollY * LINES_PER_PAGE * 10 / maxScroll;
+        return percent;
     }
 
     int getPercent() {
@@ -139,13 +161,22 @@ public class TextActivity extends ViewerActivity {
     public void onPause() {
         super.onPause();
 
-        int percent = getPercent();
-        if (percent >= LINES_PER_PAGE) {
-            percent = LINES_PER_PAGE - 1;
+        if (USE_10K_PERCENT) {
+            int percent = getPercent2();
+            if (percent >= LINES_PER_PAGE * 10) {
+                percent = LINES_PER_PAGE * 10 - 1;
+            }
+            BookDB.Book book = BookDB.buildTextBook2(path, name, size, percent, page, lineList.size());
+            BookDB.setLastBook(this, book);
+        } else {
+            int percent = getPercent();
+            if (percent >= LINES_PER_PAGE) {
+                percent = LINES_PER_PAGE - 1;
+            }
+            BookDB.Book book = BookDB.buildTextBook(path, name, size, percent, page, lineList.size());
+            BookDB.setLastBook(this, book);
         }
 
-        BookDB.Book book = BookDB.buildTextBook(path, name, size, percent, page, lineList.size());
-        BookDB.setLastBook(this, book);
     }
 
     @Override
@@ -196,13 +227,27 @@ public class TextActivity extends ViewerActivity {
         });
     }
 
+    // 현재 스크롤 정보를 표시하고 seek를 업데이트함
     public void updateScrollInfo(int position) {
-        final int count = lineList.size() / LINES_PER_PAGE;
-        textPage.setText((position + 1) + "/" + count + String.format(" (%02d%%)", getPercent() / 10));
-        seekPage.setMax(count - 1);
+        //final int count = lineList.size() / LINES_PER_PAGE;
+
+        // 0-999까지가 1개의 페이지이다.
+        final int count = (lineList.size() - 1) / LINES_PER_PAGE;
+
+        if (USE_10K_PERCENT) {
+            // 현재페이지(1부터시작)/전체페이지(퍼센트%)
+            String text = (position + 1) + "/" + (count + 1) + String.format(" (%02d%%)", getPercent2() / 100);
+            textPage.setText(text);
+        } else {
+            String text = (position + 1) + "/" + (count + 1) + String.format(" (%02d%%)", getPercent() / 10);
+            textPage.setText(text);
+        }
+
+        int max = count;
+        seekPage.setMax(max);
 
         // 이미지가 1개일 경우 처리
-        if (position == 0 && count == 1) {
+        if (position == 0 && count == 0) {
             seekPage.setProgress(count);
             seekPage.setEnabled(false);
         } else {
@@ -296,6 +341,7 @@ public class TextActivity extends ViewerActivity {
         }
     }
 
+    // 본문 텍스트를 업데이트함
     void updateTextView() {
         final StringBuilder builder = new StringBuilder();
         final int size = lineList.size();
@@ -313,9 +359,16 @@ public class TextActivity extends ViewerActivity {
         textContent.setText(text);
     }
 
+    // 저장되었던 스크롤 위치를 계산함
     int getScrollY() {
         int maxScroll = scrollText.getChildAt(0).getHeight() - scrollText.getHeight();
-        int scrollY = maxScroll * TextActivity.this.scroll / LINES_PER_PAGE;
+        int scrollY = 0;
+
+        if (useScrollV2) {
+            scrollY = maxScroll * TextActivity.this.scroll / (LINES_PER_PAGE * 10);
+        } else {
+            scrollY = maxScroll * TextActivity.this.scroll / LINES_PER_PAGE;
+        }
         return scrollY;
     }
 }
