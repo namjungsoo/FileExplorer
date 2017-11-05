@@ -1,12 +1,18 @@
 package com.duongame.comicz.db;
 
+import android.util.Log;
+
 import com.duongame.explorer.adapter.ExplorerItem;
+
+import static com.duongame.comicz.db.TextBook.LINES_PER_PAGE;
 
 /**
  * Created by namjungsoo on 2017-11-05.
  */
 
 public class Book {
+    private static final String TAG = Book.class.getSimpleName();
+
     // 변하지 않음
     public String path;// 패스
     public String name;// 파일명
@@ -54,30 +60,50 @@ public class Book {
     }
 
     public void updatePercent() {
-        if(name.toLowerCase().endsWith(".txt")) {
-//                // 페이지 갯수 계산
-//                int pages = total_page / LINES_PER_PAGE;
-//                if(total_page % LINES_PER_PAGE > 0) {
-//                    pages++;
-//                }
-//
-//                current_page / 100.f;
-//                current_page % 1000;
+        if (name.toLowerCase().endsWith(".txt")) {
 
-            if(current_file == 0) {
-                int current = current_page % 1000;
-                if(current == 999)
-                    percent = 100;
-                else
-                    percent = current / 10;
+            // 전체 페이지 갯수를 계산
+            // 저장된 total_page는 lineCount이다.
+            int textTotalPages = total_page / LINES_PER_PAGE;
+            if (total_page % LINES_PER_PAGE > 0) {
+                textTotalPages++;
+            }
+
+            // 현재 페이지의 번호를 계산
+            int textCurrentPage = current_page / LINES_PER_PAGE;
+
+            // 페이지당 퍼센트를 계산
+            float perPagePercent = 100.0f / textTotalPages;
+
+            // 현재 페이지의 시작점 퍼센트를 계산
+            float beginPagePercent = perPagePercent * textCurrentPage;
+
+            // 남은 페이지 라인에 해당하는 퍼센트를 계산해서 더함
+            // 마지막 페이지와 중간 페이지의 차이가 있음
+            float proceedingPagePercent;
+
+            if (current_file == 0) {
+                int current = current_page % LINES_PER_PAGE;
+                if (current == 999) {
+                    //percent = 100;
+                    proceedingPagePercent = perPagePercent;
+                } else {
+                    //percent = current / 10;
+                    proceedingPagePercent = perPagePercent * (current / 1000.0f);
+                }
 
             } else {
                 int current = current_file % 10000;
-                if(current == 9999)
-                    percent = 100;
-                else
-                    percent = current / 100;
+                if (current == 9999) {
+                    //percent = 100;
+                    proceedingPagePercent = perPagePercent;
+                } else {
+                    //percent = current / 100;
+                    proceedingPagePercent = perPagePercent * (current / 10000.0f);
+                }
             }
+            percent = (int) (beginPagePercent + proceedingPagePercent);
+            Log.d(TAG, "percent=" + percent);
         } else {
             if (total_page > 0) {
                 percent = ((current_page + 1) * 100) / total_page;
