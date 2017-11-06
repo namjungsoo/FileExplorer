@@ -275,6 +275,12 @@ public class ZipActivity extends PagerActivity {
     private void updatePageSide() {
         Log.d(TAG, "updatePageSide");
 
+        if(pagerAdapter == null)
+            return;
+
+        if(pagerAdapter.getImageList() == null)
+            return;
+
         // Task가 실행중이면 pause
         // 그리고 리스트에서 좌우를 변경함
         // 이후 task에서는 변경된 것으로 작업함
