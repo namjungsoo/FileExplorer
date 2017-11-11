@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="comicz_name_free">Visualizador de quadrinhos</string>
+    <string name="comicz_name_pro">Visualizador de quadrinhos Pro</string>
+    <string name="file_name_free">Gerenciador de arquivos</string>
+    <string name="file_name_pro">Gerenciador de arquivos Pro</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Cancelar</string>
+    <string name="grid">Grade</string>
+    <string name="list">Lista</string>
+    <string name="sort">Ordenar</string>
+    <string name="explorer">Diretório</string>
+    <string name="history">História</string>
+    <string name="search">Pesquisa</string>
+    <string name="left">Esquerda</string>
+    <string name="right">Direita</string>
+    <string name="both">Ambos</string>
+    <string name="filename">Nome do arquivo</string>
+    <string name="backpressed">Para sair, pressione o botão Voltar novamente.</string>
+    <string name="action_settings">Configurações</string>
+    <string name="no_contents">Sem conteúdo</string>
+    <string-array name="search_file">
+        <item>ZIP</item>
+        <item>TXT</item>
+        <item>PDF</item>
+    </string-array>
+    <string name="permissions">Solicitar permissões</string>
+    <string name="no_files">Nenhum arquivo encontrado.</string>
+    <string name="msg_no_image_in_zip">Não há imagem no arquivo compactado (ZIP).</string>
+    <string name="dialog_review_title">Apoie o Visualizador de quadrinhos</string>
+    <string name="dialog_review_content">Você está curtindo o Visualizador de quadrinhos? Deixe um comentário para nós!</string>
+    <string name="msg_last_page">Há uma última página que você leu. (Página: %d)\nVocê gostaria de continuar?</string>
+    <string name="action_clear_cache">Remover Cache</string>
+    <string name="action_clear_history">Remover histórico</string>
+    <string name="action_open_lastbook">Abrir o último livro</string>
+    <string name="msg_last_book">Gostaria de abrir o último livro que você leu?</string>
+    <string name="msg_clear_cache">Os arquivos de cache foram excluídos.</string>
+    <string name="msg_clear_history">A lista de arquivos recentes foi excluída.</string>
+</resources>

@@ -40,11 +40,20 @@ public class ShortcutHelper {
         intent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, shortcutIntent);
 
         int resId = 0;
-        if(BuildConfig.SHOW_AD) {
-            resId = R.string.app_name_free;
-        } else {
-            resId = R.string.app_name_pro;
+        if(BuildConfig.FLAVOR_project.equals("comicz")) {
+            if(BuildConfig.SHOW_AD) {
+                resId = R.string.comicz_name_free;
+            } else {
+                resId = R.string.comicz_name_pro;
+            }
+        } else if(BuildConfig.FLAVOR_project.equals("file")) {
+            if(BuildConfig.SHOW_AD) {
+                resId = R.string.file_name_free;
+            } else {
+                resId = R.string.file_name_pro;
+            }
         }
+
         intent.putExtra(Intent.EXTRA_SHORTCUT_NAME, context.getResources().getString(resId));
         intent.putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE, iconResource);
         intent.putExtra("duplicate", false);

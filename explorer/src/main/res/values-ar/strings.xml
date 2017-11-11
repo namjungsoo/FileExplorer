@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="comicz_name_free">كاريكاتير عارض</string>
+    <string name="comicz_name_pro">كاريكاتير عارض Pro</string>
+    <string name="file_name_free">مدير الملفات</string>
+    <string name="file_name_pro">مدير الملفات Pro</string>
+    <string name="ok">حسنا</string>
+    <string name="cancel">إلغاء</string>
+    <string name="grid">شبكة</string>
+    <string name="list">قائمة</string>
+    <string name="sort">الترتيب حسب</string>
+    <string name="explorer">دليل</string>
+    <string name="history">التاريخ</string>
+    <string name="search">بحث</string>
+    <string name="left">يمين</string>
+    <string name="right">يسار</string>
+    <string name="both">كلا</string>
+    <string name="filename">اسم الملف</string>
+    <string name="backpressed">لإنهاء، اضغط على الزر مرة أخرى.</string>
+    <string name="action_settings">إعدادات</string>
+    <string name="no_contents">لا محتويات</string>
+    <string-array name="search_file">
+        <item>ZIP</item>
+        <item>TXT</item>
+        <item>PDF</item>
+    </string-array>
+    <string name="permissions">طلب الأذونات</string>
+    <string name="no_files">لا توجد ملفات.</string>
+    <string name="msg_no_image_in_zip">لا توجد صورة في ملف مضغوط (زيب).</string>
+    <string name="dialog_review_title">يرجى دعم عارض كوميدي</string>
+    <string name="dialog_review_content">هل تستمتع بالمشاهد الهزلية ؟ أرجوك اترك المراجعة لنا</string>
+    <string name="msg_last_page">هناك الصفحة الاخيره التي تقراها (الصفحة: d%) هل تريد المتابعة ؟</string>
+    <string name="action_clear_cache">أزاله ذاكره التخزين المؤقت</string>
+    <string name="action_clear_history">أزاله المحفوظات</string>
+    <string name="action_open_lastbook">فتح الكتاب الأخير</string>
+    <string name="msg_last_book">هل تريد فتح الكتاب الأخير الذي تقراه ؟</string>
+    <string name="msg_clear_cache">تم حذف ملفات ذاكره التخزين المؤقت ،</string>
+    <string name="msg_clear_history">تم حذف قائمه الملفات الاخيره.</string>
+</resources>

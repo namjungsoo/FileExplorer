@@ -159,7 +159,7 @@ public class BookLoader {
 
         // 이부분은 물어보고 셋팅하자.
         AlertDialog.Builder builder = new AlertDialog.Builder(context)
-                .setTitle(context.getString(R.string.app_name_free))
+                .setTitle(context.getString(R.string.comicz_name_free))
                 .setView(view)
                 .setMessage(String.format(context.getString(R.string.msg_last_page), book.current_page + 1))
                 .setIcon(R.drawable.comicz)

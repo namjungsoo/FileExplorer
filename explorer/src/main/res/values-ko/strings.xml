@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="comicz_name_free">코믹뷰어</string>
+    <string name="comicz_name_pro">코믹뷰어 Pro</string>
+    <string name="file_name_free">파일매니저</string>
+    <string name="file_name_pro">파일매니저 Pro</string>
     <string name="ok">확인</string>
     <string name="cancel">취소</string>
     <string name="grid">그리드</string>
@@ -26,4 +30,10 @@
     <string name="dialog_review_title">코믹뷰어를 응원해주세요</string>
     <string name="dialog_review_content">코믹뷰어를 즐기고 계신가요? 코믹뷰어를 위해서 리뷰를 남겨주세요!</string>
     <string name="msg_last_page">마지막에 읽던 페이지가 있습니다. (페이지: %d)\n계속 읽으시겠습니까?</string>
+    <string name="action_clear_cache">캐쉬 삭제</string>
+    <string name="action_clear_history">최근파일 삭제</string>
+    <string name="action_open_lastbook">마지막 읽던 책 열기</string>
+    <string name="msg_last_book">마지막으로 읽던 책을 여시겠습니까?</string>
+    <string name="msg_clear_cache">캐쉬 파일을 삭제하였습니다.</string>
+    <string name="msg_clear_history">최근파일 목록을 삭제하였습니다.</string>
 </resources>

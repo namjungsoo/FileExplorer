@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="comicz_name_free">हास्य व्यूअर</string>
+    <string name="comicz_name_pro">हास्य व्यूअर Pro</string>
+    <string name="file_name_free">फ़ाइल प्रबंधक</string>
+    <string name="file_name_pro">फ़ाइल प्रबंधक Pro</string>
+    <string name="ok">ठीक</string>
+    <string name="cancel">रद्द करना</string>
+    <string name="grid">जाल</string>
+    <string name="list">सूची</string>
+    <string name="sort">तरह</string>
+    <string name="explorer">निर्देशिका</string>
+    <string name="history">इतिहास</string>
+    <string name="search">खोज</string>
+    <string name="left">बाईं</string>
+    <string name="right">दाईं</string>
+    <string name="both">दोनों</string>
+    <string name="filename">फ़ाइल का नाम</string>
+    <string name="backpressed">छोड़ने के लिए, वापस बटन फिर से दबाएं</string>
+    <string name="action_settings">सेटिंग्स</string>
+    <string name="no_contents">कोई सामग्री नहीं है</string>
+    <string-array name="search_file">
+        <item>ZIP</item>
+        <item>TXT</item>
+        <item>PDF</item>
+    </string-array>
+    <string name="permissions">अनुरोध अनुमतियां</string>
+    <string name="no_files">कोई फाइल नहीं मिली।</string>
+    <string name="msg_no_image_in_zip">संकुचित (ZIP) फ़ाइल में कोई छवि नहीं है</string>
+    <string name="dialog_review_title">कृपया कॉमिक व्यूअर का समर्थन करें</string>
+    <string name="dialog_review_content">क्या आप एक कॉमिक दर्शक का आनंद ले रहे हैं? कृपया हमारे लिए एक समीक्षा छोड़ दो!</string>
+    <string name="msg_last_page">आपके द्वारा पढ़े गए अंतिम पृष्ठ (पृष्ठ: %d)\nक्या आप जारी रखना चाहते हैं?</string>
+    <string name="action_clear_cache">कैश निकालें</string>
+    <string name="action_clear_history">इतिहास निकालें</string>
+    <string name="action_open_lastbook">अंतिम पुस्तक खोलें</string>
+    <string name="msg_last_book">क्या आप पढ़ते समय आखिरी किताब खोलना चाहते हैं?</string>
+    <string name="msg_clear_cache">कैश फ़ाइलें हटाई गईं</string>
+    <string name="msg_clear_history">हाल की फ़ाइलें सूची हटा दी गई थी।</string>
+</resources>

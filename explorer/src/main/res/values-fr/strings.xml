@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="comicz_name_free">Spectateur comique</string>
+    <string name="comicz_name_pro">Spectateur comique Pro</string>
+    <string name="file_name_free">Gestionnaire de fichiers</string>
+    <string name="file_name_pro">Gestionnaire de fichiers Pro</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Annuler</string>
+    <string name="grid">La grille</string>
+    <string name="list">Liste</string>
+    <string name="sort">Trier</string>
+    <string name="explorer">Annuaire</string>
+    <string name="history">Histoire</string>
+    <string name="search">Chercher</string>
+    <string name="left">La gauche</string>
+    <string name="right">Droite</string>
+    <string name="both">Tous les deux</string>
+    <string name="filename">Nom de fichier</string>
+    <string name="backpressed">Pour quitter, appuyez à nouveau sur le bouton de retour.</string>
+    <string name="action_settings">Paramètres</string>
+    <string name="no_contents">Pas de contenu</string>
+    <string-array name="search_file">
+        <item>ZIP</item>
+        <item>TXT</item>
+        <item>PDF</item>
+    </string-array>
+    <string name="permissions">Demander des autorisations</string>
+    <string name="no_files">Aucun fichier trouvé.</string>
+    <string name="msg_no_image_in_zip">Il n\'y a pas d\'image dans le fichier compressé (ZIP).</string>
+    <string name="dialog_review_title">S\'il vous plaît soutenir Comic Viewer</string>
+    <string name="dialog_review_content">Vous appréciez Comic Viewer? S\'il vous plaît laissez un commentaire pour nous!</string>
+    <string name="msg_last_page">Il y a la dernière page que vous lisez. (Page: %d)\nVoulez-vous continuer?</string>
+    <string name="action_clear_cache">Supprimer le cache</string>
+    <string name="action_clear_history">Supprimer l\'historique</string>
+    <string name="action_open_lastbook">Ouvrir le dernier livre</string>
+    <string name="msg_last_book">Voulez-vous ouvrir le dernier livre que vous avez lu?</string>
+    <string name="msg_clear_cache">Les fichiers de cache ont été supprimés.</string>
+    <string name="msg_clear_history">La liste des fichiers récents a été supprimée.</string>
+</resources>

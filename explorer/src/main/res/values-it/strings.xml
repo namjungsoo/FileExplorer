@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="comicz_name_free">Visualizzatore comico</string>
+    <string name="comicz_name_pro">Visualizzatore comico Pro</string>
+    <string name="file_name_free">File Manager</string>
+    <string name="file_name_pro">File Manager Pro</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Annulla</string>
+    <string name="grid">Griglia</string>
+    <string name="list">Elenco</string>
+    <string name="sort">Ordinare</string>
+    <string name="explorer">Cartella</string>
+    <string name="history">Storia</string>
+    <string name="search">Ricerca</string>
+    <string name="left">Sinistra</string>
+    <string name="right">Destra</string>
+    <string name="both">Entrambi</string>
+    <string name="filename">Nome del file</string>
+    <string name="backpressed">Per uscire, premere nuovamente il tasto indietro.</string>
+    <string name="action_settings">Impostazioni</string>
+    <string name="no_contents">Nessun contenuto</string>
+    <string-array name="search_file">
+        <item>ZIP</item>
+        <item>TXT</item>
+        <item>PDF</item>
+    </string-array>
+    <string name="permissions">Richiedi autorizzazioni</string>
+    <string name="no_files">Nessun file trovato.</string>
+    <string name="msg_no_image_in_zip">Non c\'è alcuna immagine nel file compresso (ZIP).</string>
+    <string name="dialog_review_title">Supporta il Visualizzatore comico</string>
+    <string name="dialog_review_content">Stai divertendo Visualizzatore comico? Lasci prego una recensione per noi!</string>
+    <string name="msg_last_page">C\'è l\'ultima pagina che leggi. (Pagina: %d)\nSi piacerebbe continuare?</string>
+    <string name="action_clear_cache">Rimuovi la cache</string>
+    <string name="action_clear_history">Rimuovi la Storia</string>
+    <string name="action_open_lastbook">Apri l\'ultimo libro</string>
+    <string name="msg_last_book">Vuoi aprire l\'ultimo libro che hai letto?</string>
+    <string name="msg_clear_cache">I file di cache sono stati eliminati.</string>
+    <string name="msg_clear_history">L\'elenco dei file recenti è stato eliminato.</string>
+</resources>
