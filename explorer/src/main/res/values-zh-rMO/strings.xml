@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="comicz_name_free">漫畫瀏覽器</string>
+    <string name="comicz_name_pro">漫畫瀏覽器 Pro</string>
+    <string name="file_name_free">文件管理器</string>
+    <string name="file_name_pro">文件管理器 Pro</string>
+    <string name="ok">好</string>
+    <string name="cancel">取消</string>
+    <string name="grid">格子</string>
+    <string name="list">名單</string>
+    <string name="sort">分類</string>
+    <string name="explorer">目錄</string>
+    <string name="history">歷史</string>
+    <string name="search">搜索</string>
+    <string name="left">左邊</string>
+    <string name="right">右邊</string>
+    <string name="both">雙方</string>
+    <string name="filename">文件名</string>
+    <string name="backpressed">要退出，請再次按返回按鈕。 </string>
+    <string name="action_settings">設置</string>
+    <string name="no_contents">沒有內容</string>
+    <string-array name="search_file">
+        <item>ZIP</item>
+        <item>TXT</item>
+        <item>PDF</item>
+    </string-array>
+    <string name="permissions">請求權限</string>
+    <string name="no_files">沒有找到文件。 </string>
+    <string name="msg_no_image_in_zip">壓縮（ZIP）文件中沒有圖像。 </string>
+    <string name="dialog_review_title">請支持漫畫瀏覽器</string>
+    <string name="dialog_review_content">你喜歡漫畫瀏覽器嗎？請留下我們的評論！ </string>
+    <string name="msg_last_page">有你閱讀的最後一頁。 （Page：%d）\n你想繼續嗎？ </string>
+    <string name="action_clear_cache">清除緩存</string>
+    <string name="action_clear_history">清除歷史記錄</string>
+    <string name="action_open_lastbook">打開最後一本書</string>
+    <string name="msg_last_book">你想打開你讀的最後一本書嗎？ </string>
+    <string name="msg_clear_cache">緩存文件已被刪除。 </string>
+    <string name="msg_clear_history">最近的文件列表已被刪除。 </string>
+</resources>

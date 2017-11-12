@@ -1,24 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="comicz_name_free">Visualizador de quadrinhos</string>
-    <string name="comicz_name_pro">Visualizador de quadrinhos Pro</string>
-    <string name="file_name_free">Gerenciador de arquivos</string>
-    <string name="file_name_pro">Gerenciador de arquivos Pro</string>
+    <string name="comicz_name_free">Visor cómico</string>
+    <string name="comicz_name_pro">Visor cómico Pro</string>
+    <string name="file_name_free">Administrador de archivos</string>
+    <string name="file_name_pro">Administrador de archivos Pro</string>
     <string name="ok">OK</string>
     <string name="cancel">Cancelar</string>
-    <string name="grid">Grelha</string>
+    <string name="grid">Cuadrícula</string>
     <string name="list">Lista</string>
-    <string name="sort">Classificar</string>
-    <string name="explorer">Diretório</string>
-    <string name="history">História</string>
-    <string name="search">Pesquisar</string>
-    <string name="left">Esquerda</string>
-    <string name="right">Direito</string>
+    <string name="sort">Ordenar</string>
+    <string name="explorer">Directorio</string>
+    <string name="history">History</string>
+    <string name="search">Historia</string>
+    <string name="left">Izquierda</string>
+    <string name="right">Derecha</string>
     <string name="both">Ambos</string>
-    <string name="filename">Nome do arquivo</string>
-    <string name="backpressed">Para sair, pressione o botão Voltar novamente.</string>
-    <string name="action_settings">Configurações</string>
-    <string name="no_contents">Sem conteúdo</string>
+    <string name="filename">Nombre del archivo</string>
+    <string name="backpressed">Para salir, presione el botón Atrás nuevamente.</string>
+    <string name="action_settings">Configuraciones</string>
+    <string name="no_contents">Sin contenido</string>
     <string-array name="search_file">
         <item>ZIP</item>
         <item>TXT</item>
