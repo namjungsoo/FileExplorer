@@ -57,7 +57,12 @@ public class RoundedImageView extends android.support.v7.widget.AppCompatImageVi
             clipPath.addRoundRect(new RectF(padding, padding, w - padding, h - padding), radius, radius, Path.Direction.CW);
         }
 
-        canvas.clipPath(clipPath);
+        // 특정 기기에서 익셉션 발생함
+        try {
+            canvas.clipPath(clipPath);
+            super.onDraw(canvas);
+        } catch (UnsupportedOperationException e) {
+        }
 
         try {
             super.onDraw(canvas);

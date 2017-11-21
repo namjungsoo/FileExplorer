@@ -101,6 +101,10 @@ public class BookDB extends SQLiteOpenHelper {
     }
 
     public static Book getBook(Context context, String path) {
+        if(path == null)
+            return null;
+        // 문자열중 작은 따옴표 '변환
+        path = path.replace("'", "\'");
         final SQLiteDatabase db = getInstance(context).getReadableDatabase();
         final String sql = "SELECT * FROM book WHERE path='" + path + "'";
         final Cursor cursor = db.rawQuery(sql, null);

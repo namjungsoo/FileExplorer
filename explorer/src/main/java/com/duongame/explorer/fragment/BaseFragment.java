@@ -1,5 +1,6 @@
 package com.duongame.explorer.fragment;
 
+import android.app.Activity;
 import android.support.v4.app.Fragment;
 
 import com.duongame.R;
@@ -19,7 +20,14 @@ public class BaseFragment extends Fragment {
     public void onBackPressed() {
         long current = System.currentTimeMillis();
         if (lastBackPressed != 0 && current - lastBackPressed < TIME_MS) {// 마지막 누른후 2초 안이면 종료 한다.
-            getActivity().finish();
+
+            // activity가 null일수 있음
+            Activity activity = getActivity();
+            if(activity != null) {
+                if(!activity.isFinishing()) {
+                    activity.finish();
+                }
+            }
         } else {// 그게 아니면 한번더 입력을 받는다
             lastBackPressed = current;
 
