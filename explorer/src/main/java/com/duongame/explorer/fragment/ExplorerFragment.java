@@ -35,6 +35,7 @@ import com.duongame.explorer.helper.PreferenceHelper;
 import com.duongame.explorer.manager.ExplorerManager;
 import com.duongame.explorer.manager.PermissionManager;
 import com.duongame.explorer.manager.PositionManager;
+import com.duongame.explorer.view.DividerItemDecoration;
 import com.duongame.viewer.activity.PhotoActivity;
 
 import java.io.File;
@@ -206,6 +207,8 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
         listView.setAdapter(adapter);
         listView.addOnScrollListener(new ExplorerScrollListener());
         listView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        listView.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL_LIST));
+
         adapter.setOnItemClickListener(this);
 
         viewType = SWITCH_LIST;

@@ -12,9 +12,11 @@ public class ViewPagerEx extends android.support.v4.view.ViewPager {
     public ViewPagerEx(Context context) {
         super(context);
     }
+
     public ViewPagerEx(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
+
     @Override
     public boolean onTouchEvent(MotionEvent ev) {
         try {
@@ -24,6 +26,7 @@ public class ViewPagerEx extends android.support.v4.view.ViewPager {
         }
         return false;
     }
+
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
         try {

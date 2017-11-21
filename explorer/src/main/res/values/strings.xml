@@ -36,4 +36,5 @@
     <string name="msg_last_book">Would you like to open the last book you read?</string>
     <string name="msg_clear_cache">Cache files were deleted.</string>
     <string name="msg_clear_history">Recent files list was deleted.</string>
+    <string name="hide_completed_file">Hide completed files</string>
 </resources>

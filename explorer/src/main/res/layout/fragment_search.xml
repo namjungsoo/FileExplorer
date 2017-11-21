@@ -37,6 +37,11 @@
             android:text="@string/search" />
     </LinearLayout>
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="@color/colorDivider" />
+
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">

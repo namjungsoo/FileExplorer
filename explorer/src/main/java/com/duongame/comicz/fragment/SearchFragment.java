@@ -21,6 +21,7 @@ import com.duongame.comicz.db.BookLoader;
 import com.duongame.explorer.adapter.ExplorerItem;
 import com.duongame.explorer.fragment.BaseFragment;
 import com.duongame.explorer.manager.ExplorerManager;
+import com.duongame.explorer.view.DividerItemDecoration;
 
 import java.util.ArrayList;
 
@@ -89,6 +90,7 @@ public class SearchFragment extends BaseFragment {
 
         recyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_search);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL_LIST));
 
         spinnerType = (Spinner) rootView.findViewById(R.id.spinner_type);
         editKeyword = (EditText) rootView.findViewById(R.id.edit_keyword);
@@ -108,6 +110,7 @@ public class SearchFragment extends BaseFragment {
                 task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
                 progressBar.setVisibility(View.VISIBLE);
+                switcherContents.setDisplayedChild(0);
             }
         });
 

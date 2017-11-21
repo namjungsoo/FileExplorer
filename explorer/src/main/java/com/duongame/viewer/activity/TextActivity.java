@@ -6,7 +6,9 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.View;
 import android.view.ViewTreeObserver;
+import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -42,6 +44,7 @@ public class TextActivity extends ViewerActivity {
 
     private ScrollView scrollText;
     private TextView textContent;
+    private ProgressBar progressBar;
 
     private String path;
     private String name;
@@ -97,6 +100,7 @@ public class TextActivity extends ViewerActivity {
         });
 
         scrollText.getViewTreeObserver().addOnGlobalLayoutListener(onGlobalLayoutListener);
+        progressBar = (ProgressBar)findViewById(R.id.progress_text);
 
         processIntent();
 
@@ -130,6 +134,7 @@ public class TextActivity extends ViewerActivity {
             textSize.setText(FileHelper.getMinimizedSize(size));
             textName.setText(name);
 
+            progressBar.setVisibility(View.VISIBLE);
             final LoadTextTask task = new LoadTextTask();
             task.execute(path);
         }
@@ -349,6 +354,8 @@ public class TextActivity extends ViewerActivity {
             textInfo.setText("" + lineList.size() + " lines");
             scrollText.getViewTreeObserver().addOnGlobalLayoutListener(onGlobalLayoutListener);
             updateScrollInfo(page);
+
+            progressBar.setVisibility(View.GONE);
         }
     }
 

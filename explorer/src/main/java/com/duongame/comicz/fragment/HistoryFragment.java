@@ -8,6 +8,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
+import android.widget.Switch;
 import android.widget.ViewSwitcher;
 
 import com.duongame.R;
@@ -16,6 +18,7 @@ import com.duongame.comicz.db.Book;
 import com.duongame.comicz.db.BookDB;
 import com.duongame.comicz.db.BookLoader;
 import com.duongame.explorer.fragment.BaseFragment;
+import com.duongame.explorer.view.DividerItemDecoration;
 
 import java.util.ArrayList;
 
@@ -31,19 +34,29 @@ public class HistoryFragment extends BaseFragment {
 
     private RecyclerView recyclerView;
     private ViewSwitcher switcherContents;
+    private Switch switchHide;
 
     private HistoryRecyclerAdapter recyclerAdapter;
     private ArrayList<Book> bookList;
+    private boolean isHideCompleted = false;
 
     @Override
     public View onCreateView(LayoutInflater inflater, final ViewGroup container,
                              Bundle savedInstanceState) {
-        if(DEBUG)
+        if (DEBUG)
             Log.d(TAG, "onCreateView");
 
         rootView = (ViewGroup) inflater.inflate(R.layout.fragment_history, container, false);
         //listView = (ListView) rootView.findViewById(R.id.list_history);
         recyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_history);
+        switchHide = (Switch) rootView.findViewById(R.id.switch_hide);
+        switchHide.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                isHideCompleted = isChecked;
+                onRefresh();
+            }
+        });
 
         recyclerAdapter = new HistoryRecyclerAdapter(getActivity(), this, null);
         recyclerAdapter.setOnItemClickListener(new HistoryRecyclerAdapter.OnItemClickListener() {
@@ -57,7 +70,7 @@ public class HistoryFragment extends BaseFragment {
         });
         recyclerView.setAdapter(recyclerAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-
+        recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL_LIST));
         switcherContents = (ViewSwitcher) rootView.findViewById(R.id.switcher_contents);
 
         return rootView;
@@ -67,7 +80,20 @@ public class HistoryFragment extends BaseFragment {
 
         @Override
         protected Void doInBackground(Void... params) {
-            bookList = BookDB.getBooks(getActivity());
+            bookList = new ArrayList<>();
+            ArrayList<Book> historyList = BookDB.getBooks(getActivity());
+
+            for (int i = 0; i < historyList.size(); i++) {
+                Book book = historyList.get(i);
+                if (isHideCompleted) {
+                    if (book.percent < 100) {
+                        bookList.add(book);
+                    }
+                } else {
+                    bookList.add(book);
+                }
+            }
+
             if (recyclerAdapter != null) {
                 recyclerAdapter.setBookList(bookList);
             }
@@ -101,14 +127,14 @@ public class HistoryFragment extends BaseFragment {
     @Override
     public void onPause() {
         super.onPause();
-        if(DEBUG)
+        if (DEBUG)
             Log.d(TAG, "onPause");
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        if(DEBUG)
+        if (DEBUG)
             Log.i(TAG, "onResume");
         onRefresh();
     }
