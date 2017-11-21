@@ -36,4 +36,5 @@
     <string name="msg_last_book">最後に読んだ本を開きますか？</string>
     <string name="msg_clear_cache">キャッシュファイルを削除しました。</string>
     <string name="msg_clear_history">最近のファイルリストを削除しました。</string>
+    <string name="hide_completed_file">完成したファイルを隠す</string>
 </resources>

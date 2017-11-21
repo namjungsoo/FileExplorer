@@ -26,6 +26,7 @@ public class PreferenceHelper {
     private static final String REVIEW_COUNT = "review_count";
     private static final String REVIEWED = "reviewed";
     private static final String EXIT_COUNT = "exit_count";
+    private static final String HIDE_COMPLETED = "hide_completed";
 
     private static SharedPreferences pref = null;
 
@@ -40,26 +41,12 @@ public class PreferenceHelper {
         return prefIsShortcut;
     }
 
-    //
-//    public static boolean isExplorerHelp(Context context) {
-//        checkPrefManager(context);
-//        final boolean prefIsExplorerHelp = pref.getBoolean(PREF_IS_EXPLORER_HELP, true);
-//        return prefIsExplorerHelp;
-//    }
-//
     public static void setShortcut(Context context, boolean shortcut) {
         checkPrefManager(context);
         final SharedPreferences.Editor editor = pref.edit();
         editor.putBoolean(IS_SHORTCUT, shortcut);
         editor.commit();
     }
-//
-//    public static void setExplorerHelp(Context context, boolean explorerHelp) {
-//        checkPrefManager(context);
-//        final SharedPreferences.Editor editor = pref.edit();
-//        editor.putBoolean(PREF_IS_EXPLORER_HELP, explorerHelp);
-//        editor.commit();
-//    }
 
     public static int getStartCount(Context context) {
         checkPrefManager(context);
@@ -171,6 +158,18 @@ public class PreferenceHelper {
         checkPrefManager(context);
         final SharedPreferences.Editor editor = pref.edit();
         editor.putInt(EXIT_COUNT, count);
+        editor.commit();
+    }
+
+    public static boolean getHideCompleted(Context context) {
+        checkPrefManager(context);
+        return pref.getBoolean(HIDE_COMPLETED, false);
+    }
+
+    public static void setHideCompleted(Context context, boolean hide) {
+        checkPrefManager(context);
+        final SharedPreferences.Editor editor = pref.edit();
+        editor.putBoolean(HIDE_COMPLETED, hide);
         editor.commit();
     }
 

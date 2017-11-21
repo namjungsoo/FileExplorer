@@ -36,4 +36,5 @@
     <string name="msg_last_book">क्या आप पढ़ते समय आखिरी किताब खोलना चाहते हैं?</string>
     <string name="msg_clear_cache">कैश फ़ाइलें हटाई गईं</string>
     <string name="msg_clear_history">हाल की फ़ाइलें सूची हटा दी गई थी।</string>
+    <string name="hide_completed_file">पूरी हुई फ़ाइलें छुपाएं</string>
 </resources>

@@ -18,6 +18,7 @@ import com.duongame.comicz.db.Book;
 import com.duongame.comicz.db.BookDB;
 import com.duongame.comicz.db.BookLoader;
 import com.duongame.explorer.fragment.BaseFragment;
+import com.duongame.explorer.helper.PreferenceHelper;
 import com.duongame.explorer.view.DividerItemDecoration;
 
 import java.util.ArrayList;
@@ -49,11 +50,15 @@ public class HistoryFragment extends BaseFragment {
         rootView = (ViewGroup) inflater.inflate(R.layout.fragment_history, container, false);
         //listView = (ListView) rootView.findViewById(R.id.list_history);
         recyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_history);
+        isHideCompleted = PreferenceHelper.getHideCompleted(getActivity());
+
         switchHide = (Switch) rootView.findViewById(R.id.switch_hide);
+        switchHide.setChecked(isHideCompleted);
         switchHide.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 isHideCompleted = isChecked;
+                PreferenceHelper.setHideCompleted(getActivity(), isHideCompleted);
                 onRefresh();
             }
         });

@@ -36,4 +36,5 @@
     <string name="msg_last_book">마지막으로 읽던 책을 여시겠습니까?</string>
     <string name="msg_clear_cache">캐쉬 파일을 삭제하였습니다.</string>
     <string name="msg_clear_history">최근파일 목록을 삭제하였습니다.</string>
+    <string name="hide_completed_file">완료된 파일 숨김</string>
 </resources>

@@ -36,4 +36,5 @@
     <string name="msg_last_book">Gostaria de abrir o último livro que você leu?</string>
     <string name="msg_clear_cache">Os arquivos de cache foram excluídos.</string>
     <string name="msg_clear_history">A lista de arquivos recentes foi excluída.</string>
+    <string name="hide_completed_file">Ocultar arquivos preenchidos</string>
 </resources>

@@ -36,4 +36,5 @@
     <string name="msg_last_book">هل تريد فتح الكتاب الأخير الذي تقراه ؟</string>
     <string name="msg_clear_cache">تم حذف ملفات ذاكره التخزين المؤقت ،</string>
     <string name="msg_clear_history">تم حذف قائمه الملفات الاخيره.</string>
+    <string name="hide_completed_file">إخفاء الملفات المكتملة</string>
 </resources>

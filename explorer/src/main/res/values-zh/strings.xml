@@ -36,4 +36,5 @@
     <string name="msg_last_book">你想打开你读的最后一本书吗？</string>
     <string name="msg_clear_cache">缓存文件已被删除。</string>
     <string name="msg_clear_history">最近的文件列表已被删除。</string>
+    <string name="hide_completed_file">隐藏完成的文件</string>
 </resources>
