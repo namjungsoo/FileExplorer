@@ -9,7 +9,7 @@
         android:label="${APP_NAME}"
         android:theme="@style/ExplorerTheme">
 
-        <activity android:name="com.duongame.file.activity.MainActivity">
+        <activity android:name="com.duongame.explorer.activity.FileActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

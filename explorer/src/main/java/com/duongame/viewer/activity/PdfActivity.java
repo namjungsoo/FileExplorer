@@ -60,7 +60,11 @@ public class PdfActivity extends PagerActivity {
         final int page = pager.getCurrentItem();
         book.current_page = page;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            book.total_page = renderer.getPageCount();
+            //FIX:
+            // renderer가 null일 수 있음
+            if(renderer != null) {
+                book.total_page = renderer.getPageCount();
+            }
         }
         book.current_file = 0;
         book.extract_file = 0;

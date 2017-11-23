@@ -313,7 +313,16 @@ public class TextActivity extends ViewerActivity {
             final File file = new File(path);
             try {
                 final FileInputStream fis = new FileInputStream(file);
-                final InputStreamReader reader = new InputStreamReader(fis, encoding);
+
+                //FIX:
+                // encoding이 null일수 있음
+                final InputStreamReader reader;
+                if(encoding != null) {
+                    reader = new InputStreamReader(fis, encoding);
+                } else {
+                    reader = new InputStreamReader(fis);
+                }
+
                 final BufferedReader bufferedReader = new BufferedReader(reader);
 
                 // 파일 전체의 라인을 얻는다.

@@ -1,7 +1,8 @@
 package com.duongame.explorer.helper;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
+
 import java.util.Date;
 
 /**
@@ -9,21 +10,21 @@ import java.util.Date;
  */
 
 public class DateHelper {
-    private static final SimpleDateFormat dateFormat = new SimpleDateFormat("yy-MM-dd(E) hh:mm:ss a");
-    private static final SimpleDateFormat dbFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    //FIX:
+    // Thread-safe 문제를 해결함
+    private static final DateTimeFormatter dateFormat = DateTimeFormat.forPattern("yy-MM-dd(E) hh:mm:ss a");
+    private static final DateTimeFormatter dbFormat = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss");
 
-    public static String getExplorerDate(Date date) {
-        return dateFormat.format(date);
+    public static String getExplorerDate(long dateLong) {
+        return dateFormat.print(dateLong);
     }
 
-    public static String getDBDate(String dbDate)  {
-        final Date date;
-        try {
-            date = dbFormat.parse(dbDate);
-        } catch (ParseException e) {
-            e.printStackTrace();
-            return null;
-        }
-        return getExplorerDate(date);
+    public static String getExplorerDate(Date date) {
+        return dateFormat.print(date.getTime());
+    }
+
+    public static String getDBDate(String dbDate) {
+        final long dateLong = dbFormat.parseDateTime(dbDate).getMillis();
+        return getExplorerDate(dateLong);
     }
 }

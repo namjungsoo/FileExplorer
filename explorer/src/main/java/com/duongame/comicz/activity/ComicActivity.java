@@ -37,8 +37,8 @@ import com.google.firebase.analytics.FirebaseAnalytics;
 
 import java.io.File;
 
-public class MainActivity extends AppCompatActivity {
-    private final static String TAG = "MainActivity";
+public class ComicActivity extends AppCompatActivity {
+    private final static String TAG = "ComicActivity";
 
     private FirebaseAnalytics mFirebaseAnalytics;
     private Tracker mTracker;
@@ -116,7 +116,7 @@ public class MainActivity extends AppCompatActivity {
     private void initContentView() {
         if (BuildConfig.SHOW_AD) {
             final LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            mainView = inflater.inflate(R.layout.activity_main, null, true);
+            mainView = inflater.inflate(R.layout.activity_comic, null, true);
 
             final RelativeLayout layout = new RelativeLayout(this);
             layout.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT));
@@ -139,7 +139,7 @@ public class MainActivity extends AppCompatActivity {
 
             setContentView(layout);
         } else {
-            setContentView(R.layout.activity_main);
+            setContentView(R.layout.activity_comic);
         }
     }
 

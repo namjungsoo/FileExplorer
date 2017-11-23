@@ -10,7 +10,7 @@
         android:largeHeap="true"
         android:screenOrientation="portrait"
         android:theme="@style/ExplorerTheme">
-        <activity android:name="com.duongame.comicz.activity.MainActivity"
+        <activity android:name="com.duongame.comicz.activity.ComicActivity"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

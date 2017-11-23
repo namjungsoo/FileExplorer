@@ -1,4 +1,4 @@
-package com.duongame.file.activity;
+package com.duongame.explorer.activity;
 
 import android.Manifest;
 import android.graphics.Color;
@@ -9,7 +9,6 @@ import android.view.MenuItem;
 
 import com.duongame.R;
 import com.duongame.comicz.db.BookDB;
-import com.duongame.explorer.activity.BaseActivity;
 import com.duongame.explorer.bitmap.BitmapCacheManager;
 import com.duongame.explorer.fragment.BaseFragment;
 import com.duongame.explorer.helper.ToastHelper;
@@ -17,13 +16,13 @@ import com.duongame.explorer.manager.ExplorerManager;
 
 import java.io.File;
 
-public class MainActivity extends BaseActivity {
-    private final static String TAG = "MainActivity";
+public class FileActivity extends BaseActivity {
+    private final static String TAG = "ComicActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_file);
 
         initToolbar();
         //TEST
