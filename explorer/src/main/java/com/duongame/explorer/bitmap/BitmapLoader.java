@@ -19,6 +19,7 @@ import android.os.ParcelFileDescriptor;
 import android.provider.MediaStore;
 import android.util.Log;
 
+import com.duongame.BuildConfig;
 import com.duongame.R;
 import com.duongame.explorer.adapter.ExplorerItem;
 import com.duongame.explorer.helper.FileHelper;
@@ -474,7 +475,8 @@ public class BitmapLoader {
             BitmapCacheManager.setPage(key, page);
             BitmapCacheManager.setPage(keyOther, pageOther);
         } else {
-            Log.e(TAG, "splitBitmapSide current_page or pageOther is null");
+            if(BuildConfig.DEBUG)
+                Log.e(TAG, "splitBitmapSide current_page or pageOther is null");
         }
 
         // 잘리는 비트맵은 더이상 사용하지 않으므로 삭제한다.

@@ -11,6 +11,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.ViewSwitcher;
 
+import com.duongame.BuildConfig;
 import com.duongame.R;
 import com.duongame.comicz.db.Book;
 import com.duongame.comicz.db.BookDB;
@@ -299,7 +300,8 @@ public class ZipActivity extends PagerActivity {
         // 좌우를 변경한다.
         //final ArrayList<ExplorerItem> imageList = pagerAdapter.getImageList();
         final ArrayList<ExplorerItem> imageList = (ArrayList<ExplorerItem>) pagerAdapter.getImageList().clone();
-        Log.e(TAG, "updatePageSide imageList size=" + imageList.size());
+        if(BuildConfig.DEBUG)
+            Log.e(TAG, "updatePageSide imageList size=" + imageList.size());
         final ArrayList<ExplorerItem> newImageList = new ArrayList<>();
 
         for (int i = 0; i < imageList.size(); i++) {
@@ -322,9 +324,11 @@ public class ZipActivity extends PagerActivity {
                         final ExplorerItem newItem = (ExplorerItem) item.clone();
                         newItem.side = SIDE_ALL;
                         newImageList.add(newItem);
-                        Log.e(TAG, "updatePageSide equal to SIDE_ALL i=" + i);
+                        if(BuildConfig.DEBUG)
+                            Log.e(TAG, "updatePageSide equal to SIDE_ALL i=" + i);
                     } else {
-                        Log.e(TAG, "item=" + item.path + " item1=" + item1.path);
+                        if(BuildConfig.DEBUG)
+                            Log.e(TAG, "item=" + item.path + " item1=" + item1.path);
                     }
                 } else {// 이미 SIDE_ALL이면 그냥 더하자
                     final ExplorerItem newItem = (ExplorerItem) item.clone();
@@ -389,10 +393,12 @@ public class ZipActivity extends PagerActivity {
         pagerAdapter.notifyDataSetChanged();
         pager.setAdapter(pagerAdapter);
 
-        Log.e(TAG, "updatePageSide newImageList size=" + newImageList.size());
-        Log.e(TAG, "updatePageSide newImageList 0=" + newImageList.get(0));
-        Log.e(TAG, "updatePageSide newImageList 1=" + newImageList.get(1));
-        Log.d(TAG, "updatePageSide notifyDataSetChanged");
+        if(BuildConfig.DEBUG) {
+            Log.e(TAG, "updatePageSide newImageList size=" + newImageList.size());
+            Log.e(TAG, "updatePageSide newImageList 0=" + newImageList.get(0));
+            Log.e(TAG, "updatePageSide newImageList 1=" + newImageList.get(1));
+            Log.d(TAG, "updatePageSide notifyDataSetChanged");
+        }
 
         if (lastSide == SIDE_ALL || side == SIDE_ALL) {
             // 페이지 연산을 파일명 단위로 한다.

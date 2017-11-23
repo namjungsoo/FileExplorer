@@ -21,6 +21,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.ViewSwitcher;
 
+import com.duongame.BuildConfig;
 import com.duongame.R;
 import com.duongame.comicz.db.BookLoader;
 import com.duongame.explorer.activity.BaseActivity;
@@ -426,10 +427,9 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
         //task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, path);
         if(mSearchTask != null) {
             mSearchTask.cancel(true);
-        } else {
-            mSearchTask = new SearchTask(isPathChanged(path));
         }
-        mSearchTask.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, path);
+        mSearchTask = new SearchTask(isPathChanged(path));
+        mSearchTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, path);
 
         // 가장 오른쪽으로 스크롤
         scrollPath.post(new Runnable() {
@@ -485,7 +485,8 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
                 int first = manager.findFirstVisibleItemPosition();
                 int last = manager.findLastVisibleItemPosition();
 
-                Log.e(TAG, "first=" + first + " last=" + last);
+                if(BuildConfig.DEBUG)
+                    Log.e(TAG, "first=" + first + " last=" + last);
             }
         }
     }

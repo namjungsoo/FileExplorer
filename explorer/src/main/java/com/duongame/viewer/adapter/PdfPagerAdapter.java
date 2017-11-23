@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 
+import com.duongame.BuildConfig;
 import com.duongame.R;
 import com.duongame.explorer.adapter.ExplorerItem;
 import com.duongame.viewer.activity.PagerActivity;
@@ -136,7 +137,8 @@ public class PdfPagerAdapter extends ViewerPagerAdapter {
                 }
             }
         } else {
-            Log.e(TAG, "imageView is null");
+            if(BuildConfig.DEBUG)
+                Log.e(TAG, "imageView is null");
         }
     }
 

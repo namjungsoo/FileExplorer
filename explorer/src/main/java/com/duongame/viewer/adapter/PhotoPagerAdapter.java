@@ -8,6 +8,7 @@ import android.view.ViewTreeObserver;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 
+import com.duongame.BuildConfig;
 import com.duongame.R;
 import com.duongame.explorer.adapter.ExplorerItem;
 import com.duongame.explorer.bitmap.BitmapCacheManager;
@@ -187,7 +188,8 @@ public class PhotoPagerAdapter extends ViewerPagerAdapter {
 
                     @Override
                     public void onFail() {
-                        Log.e(TAG, "onFail " + imageList.get(position).path);
+                        if(BuildConfig.DEBUG)
+                            Log.e(TAG, "onFail " + imageList.get(position).path);
 
                         // 기존 GIF가 있으면 가져와서 stop해줌
                         pagerActivity.stopGifAnimation();
