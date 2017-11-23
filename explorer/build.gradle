@@ -43,8 +43,8 @@ android {
             buildConfigField "String", "INTERSTITIAL_ID", "\"ca-app-pub-5576037828251153/9737551820\""
             applicationIdSuffix '.comicz'
             dimension "project"
-            versionCode 9
-            versionName "1.0.8"
+            versionCode 10
+            versionName "1.0.9"
             addManifestPlaceholders([APP_NAME: "@string/comicz_name_free"])
         }
 

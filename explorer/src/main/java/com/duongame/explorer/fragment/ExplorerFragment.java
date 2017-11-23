@@ -80,6 +80,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
     // 기타
     private ImageButton sdcard = null;
     private String extSdCard = null;
+    private SearchTask mSearchTask = null;
 
     @Nullable
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
@@ -235,7 +236,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
     }
 
     // 새로운 파일이 추가 되었을때 스캔을 하라는 의미이다.
-    void refreshThumbnail() {
+    void requestThumbnailScan() {
         ArrayList<ExplorerItem> imageList = (ArrayList<ExplorerItem>) ExplorerManager.getImageList().clone();
 
         FragmentActivity activity = getActivity();
@@ -373,6 +374,9 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
 
         @Override
         protected void onPostExecute(Void result) {
+            if(isCancelled())
+                return;
+
             // SearchTask가 resume
             if (pathChanged) {
                 adapter.notifyDataSetChanged();
@@ -417,8 +421,15 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
             BitmapCacheManager.recycleThumbnail();
         }
 
-        SearchTask task = new SearchTask(isPathChanged(path));
-        task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, path);
+        //FIX:
+        //SearchTask task = new SearchTask(isPathChanged(path));
+        //task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, path);
+        if(mSearchTask != null) {
+            mSearchTask.cancel(true);
+        } else {
+            mSearchTask = new SearchTask(isPathChanged(path));
+        }
+        mSearchTask.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, path);
 
         // 가장 오른쪽으로 스크롤
         scrollPath.post(new Runnable() {
@@ -437,7 +448,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
         new Thread(new Runnable() {
             @Override
             public void run() {
-                refreshThumbnail();
+                requestThumbnailScan();
             }
         }).start();
     }
