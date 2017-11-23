@@ -3,10 +3,12 @@
     package="com.duongame">
 
     <application
+        android:name=".AnalyticsApplication"
         android:allowBackup="true"
         android:largeHeap="true"
         android:icon="@drawable/explorer"
         android:label="${APP_NAME}"
+        android:screenOrientation="portrait"
         android:theme="@style/ExplorerTheme">
 
         <activity android:name="com.duongame.explorer.activity.FileActivity">

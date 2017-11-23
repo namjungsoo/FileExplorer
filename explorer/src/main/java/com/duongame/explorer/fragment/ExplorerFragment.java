@@ -22,8 +22,8 @@ import android.widget.TextView;
 import android.widget.ViewSwitcher;
 
 import com.duongame.R;
-import com.duongame.comicz.activity.ComicActivity;
 import com.duongame.comicz.db.BookLoader;
+import com.duongame.explorer.activity.BaseActivity;
 import com.duongame.explorer.adapter.ExplorerAdapter;
 import com.duongame.explorer.adapter.ExplorerGridAdapter;
 import com.duongame.explorer.adapter.ExplorerItem;
@@ -107,7 +107,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        ComicActivity activity = (ComicActivity) getActivity();
+        BaseActivity activity = (BaseActivity) getActivity();
         if (activity != null) {
             if (!activity.getShowReview()) {
                 BookLoader.openLastBook(activity);

@@ -21,6 +21,7 @@ import com.duongame.AnalyticsApplication;
 import com.duongame.comicz.adapter.ComicPagerAdapter;
 import com.duongame.comicz.db.BookDB;
 import com.duongame.comicz.db.BookLoader;
+import com.duongame.explorer.activity.BaseActivity;
 import com.duongame.explorer.bitmap.BitmapCacheManager;
 import com.duongame.explorer.fragment.BaseFragment;
 import com.duongame.explorer.fragment.ExplorerFragment;
@@ -37,7 +38,7 @@ import com.google.firebase.analytics.FirebaseAnalytics;
 
 import java.io.File;
 
-public class ComicActivity extends AppCompatActivity {
+public class ComicActivity extends BaseActivity {
     private final static String TAG = "ComicActivity";
 
     private FirebaseAnalytics mFirebaseAnalytics;
@@ -109,6 +110,7 @@ public class ComicActivity extends AppCompatActivity {
         mTracker.send(new HitBuilders.ScreenViewBuilder().build());
     }
 
+    @Override
     public boolean getShowReview() {
         return showReview;
     }
