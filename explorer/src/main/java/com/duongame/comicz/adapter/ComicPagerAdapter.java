@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.util.Log;
 import android.view.ViewGroup;
 
 import com.duongame.R;
@@ -42,11 +41,8 @@ public class ComicPagerAdapter extends FragmentPagerAdapter {
     @Override
     public Fragment getItem(int position) {
         BaseFragment fragment = null;
-
-        if(DEBUG)
-            Log.d(TAG, "getItem=" + position);
-
         fragment = fragmentMap.get(position);
+
         if (fragment == null) {
             switch (position) {
                 case 0:
@@ -83,9 +79,6 @@ public class ComicPagerAdapter extends FragmentPagerAdapter {
     @Override
     public void setPrimaryItem(ViewGroup container, int position, Object object) {
         super.setPrimaryItem(container, position, object);
-
-        if(DEBUG)
-            Log.d(TAG, "setPrimaryItem=" + position);
 
         if(position != lastPosition) {
             lastPosition = position;

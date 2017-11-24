@@ -43,7 +43,6 @@ public abstract class ViewerPagerAdapter extends PagerAdapter {
         if (imageList == null)
             return 0;
 
-//        Log.d(TAG, "getCount="+imageList.size());
         return imageList.size();
     }
 

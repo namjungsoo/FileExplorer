@@ -8,7 +8,6 @@ import android.view.ViewTreeObserver;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 
-import com.duongame.BuildConfig;
 import com.duongame.R;
 import com.duongame.explorer.adapter.ExplorerItem;
 import com.duongame.explorer.bitmap.BitmapCacheManager;
@@ -43,8 +42,6 @@ public class PhotoPagerAdapter extends ViewerPagerAdapter {
 
     @Override
     public Object instantiateItem(final ViewGroup container, final int position) {
-        Log.w(TAG, "instantiateItem position=" + position);
-
         final FrameLayout rootView = (FrameLayout) context.getLayoutInflater().inflate(R.layout.viewer_page, container, false);
         final ImageView imageView = (ImageView) rootView.findViewById(R.id.image_viewer);
 
@@ -54,7 +51,6 @@ public class PhotoPagerAdapter extends ViewerPagerAdapter {
 
         final int width = container.getWidth();
         final int height = container.getHeight();
-//        Log.d(TAG, "instantiateItem width=" + width + " height=" + height);
 
         if (width == 0 || height == 0) {
             container.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
@@ -62,8 +58,6 @@ public class PhotoPagerAdapter extends ViewerPagerAdapter {
                 public void onGlobalLayout() {
                     final int width = container.getWidth();
                     final int height = container.getHeight();
-//                    Log.d(TAG, "onGlobalLayout width=" + width + " height=" + height);
-//                    Log.d(TAG, "LoadBitmapTask execute");
 
                     loadCurrentBitmap(position, imageView, width, height);
 
@@ -102,7 +96,6 @@ public class PhotoPagerAdapter extends ViewerPagerAdapter {
 
     @Override
     public void destroyItem(ViewGroup container, int position, Object object) {
-//        Log.w(TAG, "destroyItem position=" + position);
         container.removeView((View) object);
 
         final ViewGroup rootView = (ViewGroup) object;
@@ -121,14 +114,11 @@ public class PhotoPagerAdapter extends ViewerPagerAdapter {
 
     @Override
     public void setPrimaryItem(final ViewGroup container, final int position, Object object) {
-//        Log.w(TAG, "setPrimaryItem position=" + position);
         final int width = container.getWidth();
         final int height = container.getHeight();
-//        Log.d(TAG, "setPrimaryItem width=" + width + " height=" + height);
 
         if (position != lastPosition) {
             lastPosition = position;
-            Log.w(TAG, "setPrimaryItem position changed");
 
             // preload bitmap task
             if (width == 0 || height == 0) {
@@ -137,7 +127,6 @@ public class PhotoPagerAdapter extends ViewerPagerAdapter {
                     public void onGlobalLayout() {
                         final int width = container.getWidth();
                         final int height = container.getHeight();
-//                    Log.d(TAG, "onGlobalLayout width=" + width + " height=" + height);
 
                         preloadAndRemoveNearBitmap(position, width, height);
 
@@ -157,7 +146,6 @@ public class PhotoPagerAdapter extends ViewerPagerAdapter {
 
             final PagerActivity pagerActivity = (PagerActivity) context;
             final GifImageView imageView = (GifImageView) rootView.findViewById(R.id.image_viewer);
-            Log.w(TAG, "imageView tag=" + imageView.getTag());
 
             if(!useGifAni)
                 return;
@@ -166,8 +154,6 @@ public class PhotoPagerAdapter extends ViewerPagerAdapter {
                 final LoadGifTask task = new LoadGifTask(new LoadGifTask.LoadGifListener() {
                     @Override
                     public void onSuccess(byte[] data) {
-                        Log.w(TAG, "onSuccess path=" + imageList.get(position).path);
-
                         // 기존 GIF가 있으면 가져와서 stop해줌
                         pagerActivity.stopGifAnimation();
 
@@ -188,9 +174,6 @@ public class PhotoPagerAdapter extends ViewerPagerAdapter {
 
                     @Override
                     public void onFail() {
-                        if(BuildConfig.DEBUG)
-                            Log.e(TAG, "onFail " + imageList.get(position).path);
-
                         // 기존 GIF가 있으면 가져와서 stop해줌
                         pagerActivity.stopGifAnimation();
                         pagerActivity.setGifImageView(null);

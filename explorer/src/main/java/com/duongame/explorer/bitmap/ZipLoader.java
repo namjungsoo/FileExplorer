@@ -3,7 +3,6 @@ package com.duongame.explorer.bitmap;
 import android.content.Context;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
-import android.util.Log;
 
 import com.duongame.explorer.adapter.ExplorerItem;
 import com.duongame.explorer.helper.FileHelper;
@@ -39,9 +38,7 @@ public class ZipLoader {
     }
 
     public void cancelTask() {
-        Log.d(TAG, "cancelTask");
         if (task != null) {
-            Log.d(TAG, "cancelTask OK");
             task.cancel(true);
         }
     }
@@ -60,17 +57,13 @@ public class ZipLoader {
 
     public void pause() {
         if (task != null && !task.isCancelled()) {
-            Log.d(TAG, "pause");
             task.setPauseWork(true);
-            Log.d(TAG, "pause OK");
         }
     }
 
     public void resume() {
-        Log.d(TAG, "resume");
         if (task != null && !task.isCancelled()) {
             task.setPauseWork(false);
-            Log.d(TAG, "resume OK");
         }
     }
 
@@ -155,20 +148,10 @@ public class ZipLoader {
 
                     return firstList;
                 } else {
-                    Log.i(TAG, "extract_file=" + extract);
                     // 동기적으로 이미 압축 풀린 놈들을 가져오자
                     for (int i = 0; i < extract; i++) {
                         final ExplorerItem item = (ExplorerItem) imageList.get(i);
                         ZipExtractTask.processItem(i, item, side, firstList);
-                    }
-
-                    Log.i(TAG, "firstList.size=" + firstList.size());
-                    for(int i=0; i<firstList.size(); i++) {
-                        Log.i(TAG, i+ ": " + firstList.get(i).path + " " + firstList.get(i).side);
-                    }
-
-                    if (extract == imageList.size()) {
-                        Log.i(TAG, "extract_file == imageList.size()");
                     }
 
                     task = new ZipExtractTask(zipFile, imageList, listener, extract, (ArrayList<ExplorerItem>)firstList.clone());

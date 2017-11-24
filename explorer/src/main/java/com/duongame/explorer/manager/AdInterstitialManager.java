@@ -1,9 +1,9 @@
 package com.duongame.explorer.manager;
 
 import android.app.Activity;
-import android.util.Log;
 
 import com.duongame.BuildConfig;
+import com.duongame.explorer.helper.JLog;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
@@ -43,7 +43,7 @@ public class AdInterstitialManager {
             @Override
             public void onAdClosed() {
                 super.onAdClosed();
-                Log.d(TAG, "onAdClosed");
+                JLog.d(TAG, "onAdClosed");
                 requestNewInterstitial();
 
                 //TODO: 나중에 구현
@@ -57,25 +57,25 @@ public class AdInterstitialManager {
             @Override
             public void onAdFailedToLoad(int errorCode) {
                 super.onAdFailedToLoad(errorCode);
-                Log.d(TAG, "onAdFailedToLoad");
+                JLog.d(TAG, "onAdFailedToLoad");
             }
 
             @Override
             public void onAdLeftApplication() {
                 super.onAdLeftApplication();
-                Log.d(TAG, "onAdLeftApplication");
+                JLog.d(TAG, "onAdLeftApplication");
             }
 
             @Override
             public void onAdOpened() {
                 super.onAdOpened();
-                Log.d(TAG, "onAdOpened");
+                JLog.d(TAG, "onAdOpened");
             }
 
             @Override
             public void onAdLoaded() {
                 super.onAdLoaded();
-                Log.d(TAG, "onAdLoaded");
+                JLog.d(TAG, "onAdLoaded");
             }
         });                                // 광고의 리스너를 설정합니다.
 
@@ -85,10 +85,10 @@ public class AdInterstitialManager {
         AdInterstitialManager.mode = mode;
         if (interstitialAD.isLoaded()) {
             interstitialAD.show();
-            Log.d(TAG, "show");
+            JLog.d(TAG, "show");
             return true;
         } else {
-            Log.d(TAG, "finish");
+            JLog.d(TAG, "finish");
             return false;
         }
     }

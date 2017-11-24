@@ -17,9 +17,7 @@ import android.os.Build;
 import android.os.Environment;
 import android.os.ParcelFileDescriptor;
 import android.provider.MediaStore;
-import android.util.Log;
 
-import com.duongame.BuildConfig;
 import com.duongame.R;
 import com.duongame.explorer.adapter.ExplorerItem;
 import com.duongame.explorer.helper.FileHelper;
@@ -76,7 +74,7 @@ public class BitmapLoader {
 
     public static Drawable loadApkThumbnailDrawable(Context context, String path) {
         Drawable drawable = BitmapCacheManager.getDrawable(path);
-        if(drawable != null)
+        if (drawable != null)
             return drawable;
 
         final PackageManager pm = context.getPackageManager();
@@ -98,12 +96,12 @@ public class BitmapLoader {
 
     public static Bitmap loadImageThumbnailBitmap(Context context, String path) {
         Bitmap bitmap = BitmapCacheManager.getThumbnail(path);
-        if(bitmap != null)
+        if (bitmap != null)
             return bitmap;
 
         // 시스템에서 찾은거
         bitmap = BitmapLoader.getThumbnail(context, path, true);
-        if(bitmap != null) {
+        if (bitmap != null) {
             BitmapCacheManager.setThumbnail(path, bitmap);
             return bitmap;
         }
@@ -120,12 +118,12 @@ public class BitmapLoader {
 
     public static Bitmap loadVideoThumbnailBitmap(Context context, String path) {
         Bitmap bitmap = BitmapCacheManager.getThumbnail(path);
-        if(bitmap != null)
+        if (bitmap != null)
             return bitmap;
 
         // 시스템에서 찾은거
         bitmap = ThumbnailUtils.createVideoThumbnail(path, MediaStore.Images.Thumbnails.MICRO_KIND);
-        if(bitmap != null) {
+        if (bitmap != null) {
             BitmapCacheManager.setThumbnail(path, bitmap);
             return bitmap;
         }
@@ -136,12 +134,12 @@ public class BitmapLoader {
 
     public static Bitmap loadPdfThumbnailBitmap(Context context, String path) {
         Bitmap bitmap = BitmapCacheManager.getThumbnail(path);
-        if(bitmap != null)
+        if (bitmap != null)
             return bitmap;
 
         // 직접 생성
         bitmap = BitmapLoader.decodeSquareThumbnailFromPdfFile(path, MICRO_KIND_SIZE);
-        if(bitmap != null) {
+        if (bitmap != null) {
             BitmapCacheManager.setThumbnail(path, bitmap);
             return bitmap;
         }
@@ -168,7 +166,7 @@ public class BitmapLoader {
 
     public static Bitmap loadZipThumbnailBitmap(Context context, String path) {
         Bitmap bitmap = BitmapCacheManager.getThumbnail(path);
-        if(bitmap != null)
+        if (bitmap != null)
             return bitmap;
 
         final String image = getZipThumbnailFileName(context, path);
@@ -207,7 +205,6 @@ public class BitmapLoader {
     }
 
     public static Bitmap getThumbnail(Context context, String path, boolean exifRotation) {
-//        Log.d("BitmapLoader", "getThumbnail path="+path);
         final Cursor cursor = context.getContentResolver().query(
                 MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
                 new String[]{MediaStore.MediaColumns._ID},
@@ -301,12 +298,11 @@ public class BitmapLoader {
         BitmapFactory.decodeFile(path, options);
 
         options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
-//        Log.d(TAG, "inSampleSize=" + options.inSampleSize);
 
         // 로드하기 위해서는 위에서 true 로 설정했던 inJustDecodeBounds 의 값을 false 로 설정합니다.
         options.inJustDecodeBounds = false;
-        //options.inDither = true;
-        //options.inPreferQualityOverSped = true;
+//        options.inDither = true;
+//        options.inPreferQualityOverSped = true;
 
         Bitmap bitmap = BitmapFactory.decodeFile(path, options);
         if (exifRotation) {
@@ -337,7 +333,7 @@ public class BitmapLoader {
     private static Bitmap cropBitmapUsingDecoder(String path, float ratio, BitmapFactory.Options options) throws IOException {
         final Bitmap bitmap;
         final BitmapRegionDecoder decoder = BitmapRegionDecoder.newInstance(path, false);
-//            Log.d("tag", "decoder path=" + path + " width="+width + " height="+height);
+
         if (ratio > 1) {// 어떤 크기가 들어오더라도 가운데 크롭을 하기 위해서이다.
             int top = (decoder.getHeight() - decoder.getWidth()) >> 1;
             bitmap = decoder.decodeRegion(new Rect(0, top, decoder.getWidth(), top + decoder.getWidth()), options);
@@ -403,8 +399,6 @@ public class BitmapLoader {
         }
 
         options.inSampleSize = calculateInSampleSize(options, width, height);
-//        Log.d("tag", "original path=" +path + " width="+options.outWidth + " height="+options.outHeight + " sample="+options.inSampleSize);
-//        Log.d("tag", "thumb path=" +path + " width="+width + " height="+height);
 
         // 로드하기 위해서는 위에서 true 로 설정했던 inJustDecodeBounds 의 값을 false 로 설정합니다.
         options.inJustDecodeBounds = false;
@@ -424,23 +418,8 @@ public class BitmapLoader {
         }
     }
 
-    // 현재 사용안함
-//    public static Bitmap decodeSampleBitmapFromResource(Resources res, int resId, int reqWidth, int reqHeight) {
-//        final BitmapFactory.Options options = new BitmapFactory.Options();
-//        options.inJustDecodeBounds = true;
-//        BitmapFactory.decodeResource(res, resId, options);
-//
-//        options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
-//
-//        // 로드하기 위해서는 위에서 true 로 설정했던 inJustDecodeBounds 의 값을 false 로 설정합니다.
-//        options.inJustDecodeBounds = false;
-//        return BitmapFactory.decodeResource(res, resId, options);
-//    }
-
     // 왼쪽 오른쪽을 자른 비트맵을 리턴한다
     public static Bitmap splitBitmapSide(Bitmap bitmap, ExplorerItem item) {
-//        Log.d(TAG, "splitBitmapSide=" + item.name);
-
         // 이미 캐시된 페이지가 있으면
         final String key;
         final String keyOther;
@@ -451,7 +430,6 @@ public class BitmapLoader {
 
         Bitmap page = BitmapCacheManager.getPage(key);
         if (page != null) {
-            Log.d(TAG, "splitBitmapSide getPage=" + item.name);
             return page;
         }
 
@@ -459,15 +437,11 @@ public class BitmapLoader {
         switch (item.side) {
             case LEFT:
                 page = createBitmap(bitmap, 0, 0, bitmap.getWidth() >> 1, bitmap.getHeight());
-//                Log.d(TAG, "splitBitmapSide LEFT current_page=" + item.name);
                 pageOther = createBitmap(bitmap, bitmap.getWidth() >> 1, 0, bitmap.getWidth() >> 1, bitmap.getHeight());
-//                Log.d(TAG, "splitBitmapSide LEFT pageOther=" + itemOther.name);
                 break;
             case RIGHT:
                 page = createBitmap(bitmap, bitmap.getWidth() >> 1, 0, bitmap.getWidth() >> 1, bitmap.getHeight());
-//                Log.d(TAG, "splitBitmapSide RIGHT current_page=" + item.name);
                 pageOther = createBitmap(bitmap, 0, 0, bitmap.getWidth() >> 1, bitmap.getHeight());
-//                Log.d(TAG, "splitBitmapSide RIGHT pageOther=" + itemOther.name);
                 break;
         }
 
@@ -475,16 +449,12 @@ public class BitmapLoader {
             BitmapCacheManager.setPage(key, page);
             BitmapCacheManager.setPage(keyOther, pageOther);
         } else {
-            if(BuildConfig.DEBUG)
-                Log.e(TAG, "splitBitmapSide current_page or pageOther is null");
         }
 
         // 잘리는 비트맵은 더이상 사용하지 않으므로 삭제한다.
         // 이거 때문에 recycled 에러가 발생한다.
         // remove를 하지 않으면 oom이 발생한다.
         BitmapCacheManager.removeBitmap(item.path);
-//        Log.d(TAG, "splitBitmapSide removeBitmap=" + item.name);
-
         return page;
     }
 }

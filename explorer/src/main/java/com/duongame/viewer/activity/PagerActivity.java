@@ -61,24 +61,20 @@ public class PagerActivity extends ViewerActivity {
 
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
-                Log.d(TAG, "onStartTrackingTouch");
             }
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-                Log.d(TAG, "onStopTrackingTouch");
                 final int page = seekBar.getProgress();
 
                 int current = pager.getCurrentItem();
                 int diff = Math.abs(current - page);
-                Log.d(TAG, "onStopTrackingTouch current=" + current + " diff=" + diff);
 
                 if (Math.abs(current - page) > 2) {
                     // 모든 로딩 중인 태스크를 정리하고 비트맵을 리사이클을 한다.
                     pagerAdapter.stopAllTasks();
                     BitmapCacheManager.recyclePage();
                     BitmapCacheManager.recycleBitmap();
-                    Log.d(TAG, "onStopTrackingTouch recycle");
                 }
 
                 pager.setCurrentItem(page, false);
@@ -109,7 +105,6 @@ public class PagerActivity extends ViewerActivity {
     }
 
     protected void updateScrollInfo(int position) {
-        Log.d(TAG, "updateScrollInfo=" + position);
         final int count = pagerAdapter.getCount();
         textPage.setText((position + 1) + "/" + count);
 
@@ -133,14 +128,11 @@ public class PagerActivity extends ViewerActivity {
         pager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-//                Log.e(TAG, "onPageScrolled position=" + position);
 //                textName.setText(pagerAdapter.getImageList().get(position).name);
             }
 
             @Override
             public void onPageSelected(int position) {
-                Log.w(TAG, "onPageSelected position=" + position);
-
                 updateScrollInfo(position);
                 updateName(position);
                 updateInfo(position);
@@ -198,7 +190,6 @@ public class PagerActivity extends ViewerActivity {
 
     public void stopGifAnimation() {
         if (gifImageView != null) {
-            Log.w(TAG, "stopGifAnimation");
             gifImageView.stopAnimation();
         }
     }

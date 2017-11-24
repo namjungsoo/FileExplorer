@@ -4,7 +4,6 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
-import android.util.Log;
 
 import com.duongame.explorer.adapter.ExplorerItem;
 
@@ -48,9 +47,6 @@ public class BitmapCacheManager {
     // current_page
     public static void setPage(String key, Bitmap bitmap) {
         pageCache.putIfAbsent(key, bitmap);
-
-        if (DEBUG)
-            Log.d(TAG, "setPage key=" + key + " pageCache size=" + pageCache.size());
     }
 
     public static Bitmap getPage(String key) {
@@ -74,9 +70,8 @@ public class BitmapCacheManager {
                     bitmap.recycle();
             }
         }
+
         pageCache.clear();
-        if (DEBUG)
-            Log.d(TAG, "recyclePage");
     }
 
     // resource bitmap
@@ -108,8 +103,6 @@ public class BitmapCacheManager {
     // image bitmap
     public static void setBitmap(String path, Bitmap bitmap) {
         bitmapCache.putIfAbsent(path, bitmap);
-        if (DEBUG)
-            Log.d(TAG, "setBitmap path=" + path + " bitmapCache size=" + bitmapCache.size());
     }
 
     public static Bitmap getBitmap(String path) {
@@ -122,8 +115,6 @@ public class BitmapCacheManager {
             if (!bitmap.isRecycled())
                 bitmap.recycle();
             bitmapCache.remove(path);
-            if (DEBUG)
-                Log.d(TAG, "removeBitmap removeBitmap=" + path + " size=" + bitmapCache.size());
         }
     }
 
@@ -140,14 +131,10 @@ public class BitmapCacheManager {
             }
         }
         bitmapCache.clear();
-        if (DEBUG)
-            Log.d(TAG, "recycleBitmap");
     }
 
     // thumbnail
     public static void setThumbnail(String path, Bitmap bitmap) {
-        if (DEBUG)
-            Log.d(TAG, "setThumbnail path=" + path);
         thumbnailCache.putIfAbsent(path, bitmap);
 
         // 사용안함
@@ -192,8 +179,6 @@ public class BitmapCacheManager {
             thumbnailCache.remove(key);
         }
         thumbnailCache.clear();
-        if(DEBUG)
-            Log.d(TAG, "recycleThumbnail");
     }
 
 }

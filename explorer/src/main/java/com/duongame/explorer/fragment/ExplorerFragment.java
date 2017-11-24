@@ -11,7 +11,6 @@ import android.support.v4.content.FileProvider;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,7 +20,6 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.ViewSwitcher;
 
-import com.duongame.BuildConfig;
 import com.duongame.R;
 import com.duongame.comicz.db.BookLoader;
 import com.duongame.explorer.activity.BaseActivity;
@@ -86,9 +84,6 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
     @Nullable
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
                              Bundle savedInstanceState) {
-        if (DEBUG)
-            Log.d(TAG, "onCreateView");
-
         rootView = inflater.inflate(R.layout.fragment_explorer, container, false);
 
         initUI();
@@ -375,7 +370,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
 
         @Override
         protected void onPostExecute(Void result) {
-            if(isCancelled())
+            if (isCancelled())
                 return;
 
             // SearchTask가 resume
@@ -408,12 +403,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
     }
 
     public void updateFileList(final String path) {
-        if (DEBUG)
-            Log.w(TAG, "updateFileList path=" + path);
-
         if (adapter == null) {
-            if (DEBUG)
-                Log.w(TAG, "updateFileList adapter==null");
             return;
         }
 
@@ -425,7 +415,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
         //FIX:
         //SearchTask task = new SearchTask(isPathChanged(path));
         //task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, path);
-        if(mSearchTask != null) {
+        if (mSearchTask != null) {
             mSearchTask.cancel(true);
         }
         mSearchTask = new SearchTask(isPathChanged(path));
@@ -484,9 +474,6 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
             if (manager != null) {
                 int first = manager.findFirstVisibleItemPosition();
                 int last = manager.findLastVisibleItemPosition();
-
-                if(BuildConfig.DEBUG)
-                    Log.e(TAG, "first=" + first + " last=" + last);
             }
         }
     }

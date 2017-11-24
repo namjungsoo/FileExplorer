@@ -1,13 +1,10 @@
 package com.duongame.explorer.task.bitmap;
 
 import android.graphics.Bitmap;
-import android.util.Log;
 
 import com.duongame.explorer.adapter.ExplorerItem;
 import com.duongame.explorer.bitmap.BitmapCacheManager;
 import com.duongame.explorer.helper.FileHelper;
-
-import static android.content.ContentValues.TAG;
 
 /**
  * Created by namjungsoo on 2016. 12. 25..
@@ -35,7 +32,6 @@ public class RemoveAndPreloadBitmapTask extends BitmapTask {
                 final ExplorerItem item = removeList[i];
 
                 if (item.side == ExplorerItem.Side.SIDE_ALL) {
-                    Log.w(TAG, "RemoveAndPreloadBitmapTask REMOVE " + item.path);
                     BitmapCacheManager.removeBitmap(item.path);
                 } else {
                     String path = BitmapCacheManager.changePathToPage(item);
@@ -57,7 +53,6 @@ public class RemoveAndPreloadBitmapTask extends BitmapTask {
                     continue;
 
                 // preload는 bitmap만 읽어서 캐쉬에 넣어놓는 용도이다.
-                Log.w(TAG, "RemoveAndPreloadBitmapTask PRELOAD " + item.path);
                 loadBitmap(item);
             }
         }

@@ -3,7 +3,6 @@ package com.duongame.explorer.helper;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Environment;
-import android.util.Log;
 
 /**
  * Created by 정수 on 2015-11-15.
@@ -55,9 +54,6 @@ public class PreferenceHelper {
     }
 
     public static void setStartCount(Context context, int count) {
-        if (DEBUG)
-            Log.e(TAG, "setStartCount total_file=" + count);
-
         checkPrefManager(context);
         final SharedPreferences.Editor editor = pref.edit();
         editor.putInt(START_COUNT, count);
@@ -80,9 +76,6 @@ public class PreferenceHelper {
     public static String getLastPath(Context context) {
         checkPrefManager(context);
         final String lastPath = pref.getString(LAST_PATH, Environment.getExternalStorageDirectory().getAbsolutePath());
-
-        if (DEBUG)
-            Log.w(TAG, "getLastPath=" + lastPath);
         return lastPath;
     }
 
@@ -91,9 +84,6 @@ public class PreferenceHelper {
         final SharedPreferences.Editor editor = pref.edit();
         editor.putString(LAST_PATH, lastPath);
         editor.commit();
-
-        if (DEBUG)
-            Log.w(TAG, "setLastPath=" + lastPath);
     }
 
     public static int getLastPosition(Context context) {
@@ -125,12 +115,10 @@ public class PreferenceHelper {
     public static int getReviewCount(Context context) {
         checkPrefManager(context);
         final int review = pref.getInt(REVIEW_COUNT, 0);
-        Log.d(TAG, "review=" + review);
         return review;
     }
 
     public static void setReviewCount(Context context, int count) {
-        Log.d(TAG, "count=" + count);
         checkPrefManager(context);
         final SharedPreferences.Editor editor = pref.edit();
         editor.putInt(REVIEW_COUNT, count);

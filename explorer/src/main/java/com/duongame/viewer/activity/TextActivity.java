@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewTreeObserver;
@@ -149,7 +148,6 @@ public class TextActivity extends ViewerActivity {
     int getPercent2() {
         // 현재 스크롤 위치를 얻어보자
         int maxScroll = scrollText.getChildAt(0).getHeight() - scrollText.getHeight();
-        Log.d(TAG, "maxScroll=" + maxScroll);
         if (maxScroll <= 0) {
             return 10000;
         }

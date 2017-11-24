@@ -14,7 +14,6 @@ import android.widget.TextView;
 
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.target.ImageViewTarget;
-import com.duongame.BuildConfig;
 import com.duongame.GlideApp;
 import com.duongame.R;
 import com.duongame.explorer.bitmap.BitmapCacheManager;
@@ -157,8 +156,6 @@ public class ExplorerAdapter extends RecyclerView.Adapter<ExplorerAdapter.Explor
     }
 
     void setIconImage(final ExplorerViewHolder viewHolder, final ExplorerItem item) {
-        if(BuildConfig.DEBUG)
-            Log.e(TAG, "setIconImage " + item.path + " " + viewHolder.icon.hashCode());
         final Bitmap bitmap = getThumbnail(item.path);
         if (bitmap == null) {
             viewHolder.icon.setImageResource(R.drawable.file);
@@ -178,8 +175,6 @@ public class ExplorerAdapter extends RecyclerView.Adapter<ExplorerAdapter.Explor
                         }
                     });
         } else {
-            if(BuildConfig.DEBUG)
-                Log.e(TAG, "setIconImage existing " + item.position);
             viewHolder.icon.setImageBitmap(bitmap);
         }
 
@@ -205,7 +200,6 @@ public class ExplorerAdapter extends RecyclerView.Adapter<ExplorerAdapter.Explor
             LoadZipThumbnailTask task = new LoadZipThumbnailTask(context, viewHolder.icon, viewHolder.iconSmall);
             task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, item.path);
         } else {
-            Log.d(TAG, "setIconZip cache found");
             viewHolder.icon.setImageDrawable(drawable);
         }
     }

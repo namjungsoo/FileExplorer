@@ -5,7 +5,6 @@ import android.graphics.pdf.PdfRenderer;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.ParcelFileDescriptor;
-import android.util.Log;
 
 import com.duongame.comicz.db.Book;
 import com.duongame.comicz.db.BookDB;
@@ -32,7 +31,6 @@ public class PdfActivity extends PagerActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.d(TAG, "onCreate pdf");
 
         this.adapter = (PdfPagerAdapter) pagerAdapter;
         processIntent();
@@ -45,8 +43,6 @@ public class PdfActivity extends PagerActivity {
 
     @Override
     protected void onPause() {
-        Log.i(TAG, "onPause");
-
         final Book book = new Book();
 
         // 고정적인 내용 5개
@@ -91,7 +87,6 @@ public class PdfActivity extends PagerActivity {
     }
 
     protected void processIntent() {
-        Log.d(TAG, "processIntent pdf");
         final ArrayList<ExplorerItem> imageList;
         final Intent intent = getIntent();
         final Bundle extras = intent.getExtras();

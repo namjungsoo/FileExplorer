@@ -4,7 +4,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -44,9 +43,6 @@ public class HistoryFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, final ViewGroup container,
                              Bundle savedInstanceState) {
-        if (DEBUG)
-            Log.d(TAG, "onCreateView");
-
         rootView = (ViewGroup) inflater.inflate(R.layout.fragment_history, container, false);
         //listView = (ListView) rootView.findViewById(R.id.list_history);
         recyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_history);
@@ -132,15 +128,11 @@ public class HistoryFragment extends BaseFragment {
     @Override
     public void onPause() {
         super.onPause();
-        if (DEBUG)
-            Log.d(TAG, "onPause");
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        if (DEBUG)
-            Log.i(TAG, "onResume");
         onRefresh();
     }
 }

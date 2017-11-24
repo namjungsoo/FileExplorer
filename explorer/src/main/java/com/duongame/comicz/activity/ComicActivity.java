@@ -64,7 +64,7 @@ public class ComicActivity extends BaseActivity {
         initTabs();
         initToolbar();
 
-        ShortcutHelper.checkShortcut(this);
+//        ShortcutHelper.checkShortcut(this);
         showReview = ReviewManager.checkReview(this);
 
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);

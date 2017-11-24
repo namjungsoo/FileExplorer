@@ -2,7 +2,6 @@ package com.duongame.viewer.listener;
 
 import android.app.Activity;
 import android.graphics.PointF;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
 import android.view.View;
@@ -73,9 +72,6 @@ public abstract class BaseOnTouchListener implements View.OnTouchListener {
 
         switch (ev.getAction()) {
             case MotionEvent.ACTION_DOWN: {
-                if(DEBUG)
-                    Log.d(TAG,"MotionEvent.ACTION_DOWN");
-
                 lastMotionPt.x = initialMotionPt.x = ev.getX(0);
                 lastMotionPt.y = initialMotionPt.y = ev.getY(0);
                 return true;
@@ -83,20 +79,11 @@ public abstract class BaseOnTouchListener implements View.OnTouchListener {
             }
 
             case MotionEvent.ACTION_MOVE: {
-                if(DEBUG)
-                    Log.d(TAG,"MotionEvent.ACTION_MOVE");
-
                 if (!isBeingDragged) {
                     if (touchAxis == AXIS_X) {
-                        if(DEBUG)
-                            Log.d(TAG,"MotionEvent.ACTION_MOVE startDragXIfNeeded");
-
                         startDragXIfNeeded(ev);
                     }
                     else if (touchAxis == AXIS_Y) {
-                        if(DEBUG)
-                            Log.d(TAG,"MotionEvent.ACTION_MOVE startDragYIfNeeded");
-
                         startDragYIfNeeded(ev);
                     }
                 }
@@ -109,9 +96,6 @@ public abstract class BaseOnTouchListener implements View.OnTouchListener {
 
             case MotionEvent.ACTION_CANCEL:
             case MotionEvent.ACTION_UP: {
-                if(DEBUG)
-                    Log.d(TAG,"MotionEvent.ACTION_UP");
-
                 if (velocityTracker != null) {
                     velocityTracker.recycle();
                     velocityTracker = null;
@@ -119,9 +103,6 @@ public abstract class BaseOnTouchListener implements View.OnTouchListener {
 
                 // 내가 캡쳐 했으면 true
                 if (handleActionUp()) {
-                    if(DEBUG)
-                        Log.d(TAG,"MotionEvent.ACTION_UP handleActionUp true");
-
                     return true;
                 }
                 break;
@@ -134,7 +115,6 @@ public abstract class BaseOnTouchListener implements View.OnTouchListener {
 
     @Override
     public boolean onTouch(View v, MotionEvent ev) {
-//                Log.d(TAG, "onTouch");
         return handleTouch(v, ev);
     }
 

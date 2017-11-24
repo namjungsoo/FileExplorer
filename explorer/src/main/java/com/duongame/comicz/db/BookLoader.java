@@ -187,8 +187,6 @@ public class BookLoader {
     }
 
     public static void loadBookBitmap(Context context, HistoryRecyclerAdapter.HistoryViewHolder holder, String path) {
-        Log.d(TAG, "loadBookBitmap " + holder.thumb.getWidth() + " " + holder.thumb.getHeight());
-
         // zip 파일의 썸네일을 읽자
         if (path.toLowerCase().endsWith(".txt")) {
             holder.thumb.setImageBitmap(BitmapCacheManager.getResourceBitmap(context.getResources(), R.drawable.text));

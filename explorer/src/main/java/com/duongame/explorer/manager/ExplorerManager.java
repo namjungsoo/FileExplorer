@@ -101,7 +101,6 @@ public class ExplorerManager {
                 if (willAdd)
                     normalList.add(item);
             }
-//            Log.d("TAG", item.toString());
         }
 
         // 디렉토리 우선 정렬 및 가나다 정렬

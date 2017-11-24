@@ -1,7 +1,5 @@
 package com.duongame.comicz.db;
 
-import android.util.Log;
-
 import com.duongame.explorer.adapter.ExplorerItem;
 
 import static com.duongame.comicz.db.TextBook.LINES_PER_PAGE;
@@ -103,7 +101,6 @@ public class Book {
                 }
             }
             percent = (int) (beginPagePercent + proceedingPagePercent);
-            Log.d(TAG, "percent=" + percent);
         } else {
             if (total_page > 0) {
                 percent = ((current_page + 1) * 100) / total_page;

@@ -1,10 +1,10 @@
 package com.duongame.explorer.manager;
 
 import android.app.Activity;
-import android.util.Log;
 
 import com.duongame.BuildConfig;
 import com.duongame.R;
+import com.duongame.explorer.helper.JLog;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
@@ -48,31 +48,31 @@ public class AdBannerManager {
             @Override
             public void onAdClosed() {
                 super.onAdClosed();
-                Log.d(TAG, "onAdClosed");
+                JLog.d(TAG, "onAdClosed");
             }
 
             @Override
             public void onAdFailedToLoad(int errorCode) {
                 super.onAdFailedToLoad(errorCode);
-                Log.d(TAG, "onAdFailedToLoad="+errorCode);
+                JLog.d(TAG, "onAdFailedToLoad="+errorCode);
             }
 
             @Override
             public void onAdLeftApplication() {
                 super.onAdLeftApplication();
-                Log.d(TAG, "onAdLeftApplication");
+                JLog.d(TAG, "onAdLeftApplication");
             }
 
             @Override
             public void onAdOpened() {
                 super.onAdOpened();
-                Log.d(TAG, "onAdOpened");
+                JLog.d(TAG, "onAdOpened");
             }
 
             @Override
             public void onAdLoaded() {
                 super.onAdLoaded();
-                Log.d(TAG, "onAdLoaded");
+                JLog.d(TAG, "onAdLoaded");
             }
         });
         //requestAd(i);
@@ -86,31 +86,31 @@ public class AdBannerManager {
             @Override
             public void onAdClosed() {
                 super.onAdClosed();
-                Log.d(TAG, "onAdClosed");
+                JLog.d(TAG, "onAdClosed");
             }
 
             @Override
             public void onAdFailedToLoad(int errorCode) {
                 super.onAdFailedToLoad(errorCode);
-                Log.d(TAG, "onAdFailedToLoad " + errorCode);
+                JLog.d(TAG, "onAdFailedToLoad " + errorCode);
             }
 
             @Override
             public void onAdLeftApplication() {
                 super.onAdLeftApplication();
-                Log.d(TAG, "onAdLeftApplication");
+                JLog.d(TAG, "onAdLeftApplication");
             }
 
             @Override
             public void onAdOpened() {
                 super.onAdOpened();
-                Log.d(TAG, "onAdOpened");
+                JLog.d(TAG, "onAdOpened");
             }
 
             @Override
             public void onAdLoaded() {
                 super.onAdLoaded();
-                Log.d(TAG, "onAdLoaded");
+                JLog.d(TAG, "onAdLoaded");
             }
         });
         requestAd(adPopupView);

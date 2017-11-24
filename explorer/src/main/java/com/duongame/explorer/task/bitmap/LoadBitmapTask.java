@@ -1,7 +1,6 @@
 package com.duongame.explorer.task.bitmap;
 
 import android.graphics.Bitmap;
-import android.util.Log;
 import android.widget.ImageView;
 
 import com.duongame.explorer.adapter.ExplorerItem;
@@ -44,8 +43,6 @@ public class LoadBitmapTask extends BitmapTask {
         }
 
         Bitmap bitmap = null;
-        Log.d(this.getClass().getSimpleName(), "loadBitmap");
-
         bitmap = loadBitmap(item);
         return bitmap;
     }
@@ -84,7 +81,6 @@ public class LoadBitmapTask extends BitmapTask {
 
                 //TODO: 이게 왜 현재 사용이 안되지?
                 //PhotoView 때문인가
-//                Log.d(TAG, "width=" + width + " height=" + height);
 //                final FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) imageView.getLayoutParams();
 //                params.width = newWidth;
 //                params.height = newHeight;

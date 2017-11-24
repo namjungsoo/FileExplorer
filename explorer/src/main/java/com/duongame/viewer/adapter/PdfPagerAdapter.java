@@ -6,13 +6,11 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.pdf.PdfRenderer;
 import android.os.Build;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 
-import com.duongame.BuildConfig;
 import com.duongame.R;
 import com.duongame.explorer.adapter.ExplorerItem;
 import com.duongame.viewer.activity.PagerActivity;
@@ -41,7 +39,6 @@ public class PdfPagerAdapter extends ViewerPagerAdapter {
 
     @Override
     public Object instantiateItem(final ViewGroup container, final int position) {
-//        Log.d(TAG, "instantiateItem position=" + position);
         final ViewGroup rootView = (ViewGroup) context.getLayoutInflater().inflate(R.layout.viewer_page, container, false);
         final ImageView imageView = (ImageView) rootView.findViewById(R.id.image_viewer);
 
@@ -56,7 +53,6 @@ public class PdfPagerAdapter extends ViewerPagerAdapter {
                 public void onGlobalLayout() {
                     final int width = container.getWidth();
                     final int height = container.getHeight();
-//                    Log.d(TAG, "onGlobalLayout width=" + width + " height=" + height);
 
                     loadPage(position, imageView, width, height);
                     container.getViewTreeObserver().removeGlobalOnLayoutListener(this);
@@ -71,8 +67,6 @@ public class PdfPagerAdapter extends ViewerPagerAdapter {
     }
 
     private void loadPage(int position, ImageView imageView, int width, int height) {
-//        Log.d(TAG, "loadPage position=" + position);
-
         if (imageView != null) {
             final ExplorerItem item = imageList.get(position);
             if (item == null)
@@ -137,8 +131,6 @@ public class PdfPagerAdapter extends ViewerPagerAdapter {
                 }
             }
         } else {
-            if(BuildConfig.DEBUG)
-                Log.e(TAG, "imageView is null");
         }
     }
 
@@ -150,7 +142,6 @@ public class PdfPagerAdapter extends ViewerPagerAdapter {
         if (item == null)
             return;
 
-//        Log.w(TAG, "destroyItem position="+position + " path=" + item.path);
         final ViewGroup rootView = (ViewGroup) object;
         final ImageView imageView = (ImageView) rootView.findViewById(R.id.image_viewer);
 
@@ -159,7 +150,6 @@ public class PdfPagerAdapter extends ViewerPagerAdapter {
         if(d instanceof BitmapDrawable) {
             Bitmap b = ((BitmapDrawable)d).getBitmap();
             b.recycle();
-//            Log.w(TAG, "recycle");
         }
 
         imageView.setImageBitmap(null);
@@ -168,7 +158,6 @@ public class PdfPagerAdapter extends ViewerPagerAdapter {
 
     @Override
     public void setPrimaryItem(final ViewGroup container, final int position, Object object) {
-//        Log.d(TAG, "setPrimaryItem position=" + position);
     }
 
     @Override

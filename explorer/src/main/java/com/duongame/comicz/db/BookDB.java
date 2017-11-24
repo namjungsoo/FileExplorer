@@ -44,7 +44,6 @@ public class BookDB extends SQLiteOpenHelper {
                 "last_file TEXT" +
 
                 ");";
-        Log.d(TAG, "onCreate sql=" + sql);
         db.execSQL(sql);
 //        db.close();
     }
@@ -129,8 +128,6 @@ public class BookDB extends SQLiteOpenHelper {
         while (cursor.moveToNext()) {
             book = newBook(cursor);
             bookList.add(book);
-
-            Log.i(TAG, "getBooks " + book.toString());
         }
         cursor.close();
 //        db.close();
@@ -143,12 +140,10 @@ public class BookDB extends SQLiteOpenHelper {
 
         Book book = null;
         final String sql = "SELECT * FROM book ORDER BY date DESC LIMIT 1";
-        Log.d(TAG, "getLastBookmark sql=" + sql);
 
         final Cursor cursor = db.rawQuery(sql, null);
         while (cursor.moveToNext()) {
             book = newBook(cursor);
-            Log.d(TAG, "getLastBook " + book.toString());
         }
         cursor.close();
 //        db.close();
@@ -181,7 +176,6 @@ public class BookDB extends SQLiteOpenHelper {
                     + ",date=datetime('now','localtime')"
                     + ",last_file='" + book.last_file + "'"
                     + " WHERE path='" + book.path + "'";
-            Log.i(TAG, "setLastBook=" + sql2);
             db.execSQL(sql2);
         } else {// 없으면 추가
             int type = book.type.getValue();
@@ -202,7 +196,6 @@ public class BookDB extends SQLiteOpenHelper {
                     + ",datetime('now','localtime')"
                     + ",'" + book.last_file + "'"
                     + ")";
-            Log.i(TAG, "setLastBook=" + sql2);
             db.execSQL(sql2);
         }
 //        db.close();

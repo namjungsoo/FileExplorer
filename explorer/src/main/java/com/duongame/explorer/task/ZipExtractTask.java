@@ -64,7 +64,6 @@ public class ZipExtractTask extends AsyncTask<String, Integer, Void> {
     }
 
     public static void processItem(int orgIndex, ExplorerItem item, ExplorerItem.Side side, ArrayList<ExplorerItem> imageList) {
-//        Log.i(TAG,"processItem orgIndex="+orgIndex);
         final BitmapFactory.Options options = BitmapLoader.decodeBounds(item.path);
 
         // 나중에 페이지 전환을 위해서 넣어둔다.

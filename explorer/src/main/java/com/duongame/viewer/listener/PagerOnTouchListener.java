@@ -68,8 +68,6 @@ public class PagerOnTouchListener extends BaseOnTouchListener {
 
         @Override
         protected void onPostExecute(Void result) {
-//            Log.d(TAG, "actionDownTime=" + actionDownTime + " actionUpTime=" + actionUpTime);
-//            Log.d(TAG, "actionDownTime > actionUpTime=" + (actionDownTime > actionUpTime) + " delta=" + (actionDownTime - actionUpTime));
             if (actionDownTime < actionUpTime) {
                 activity.setFullscreen(!activity.getFullscreen());
             }
@@ -100,7 +98,6 @@ public class PagerOnTouchListener extends BaseOnTouchListener {
             // 터치 영역을 확인하여 좌/중/우를 확인하자.
             int width = activity.getPager().getWidth();
             int height = activity.getPager().getHeight();
-//                            Log.d(TAG, "width="+width + " height="+height);
 
             int left = width / 4;
             int right = width * 3 / 4;

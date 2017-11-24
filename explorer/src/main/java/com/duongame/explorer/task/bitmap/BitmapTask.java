@@ -3,13 +3,10 @@ package com.duongame.explorer.task.bitmap;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
-import android.util.Log;
 
 import com.duongame.explorer.adapter.ExplorerItem;
 import com.duongame.explorer.bitmap.BitmapCacheManager;
 import com.duongame.explorer.bitmap.BitmapLoader;
-
-import static android.content.ContentValues.TAG;
 
 /**
  * Created by namjungsoo on 2016-12-17.
@@ -43,7 +40,6 @@ public class BitmapTask extends AsyncTask<ExplorerItem, Void, Bitmap> {
             bitmap = BitmapCacheManager.getPage(page);
 
             if (bitmap != null) {
-                Log.d(this.getClass().getSimpleName(), "loadBitmap found cached current_page="+item.path);
                 return bitmap;
             }
         }
@@ -81,22 +77,18 @@ public class BitmapTask extends AsyncTask<ExplorerItem, Void, Bitmap> {
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
-                    Log.w("BitmapTask", "decode retry=" + count);
                 } else {
                     if (item.side == ExplorerItem.Side.SIDE_ALL) {
-                        Log.w(this.getClass().getSimpleName(), "loadBitmap setBitmap="+item.path);
                         BitmapCacheManager.setBitmap(item.path, bitmap);
                     }
                     else {
                         // 비트맵을 로딩했으면 이제 자르자
-                        Log.w(this.getClass().getSimpleName(), "loadBitmap splitBitmapSide="+item.path);
                         bitmap = BitmapLoader.splitBitmapSide(bitmap, item);
                     }
                     break;
                 }
             }
         } else {
-            Log.d(TAG, "loadBitmap found cached bitmap=" + item.path);
         }
         return bitmap;
     }
