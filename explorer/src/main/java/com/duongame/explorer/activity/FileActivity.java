@@ -24,7 +24,7 @@ public class FileActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_file);
 
-//        initToolbar();
+        initToolbar();
         //TEST
 //        FirebaseCrash.report(new Exception("My first Android non-fatal error"));
 
@@ -32,8 +32,10 @@ public class FileActivity extends BaseActivity {
 
     private void initToolbar() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        toolbar.setTitleTextColor(Color.WHITE);
+        if(toolbar != null) {
+            setSupportActionBar(toolbar);
+            toolbar.setTitleTextColor(Color.WHITE);
+        }
     }
 
     @Override
