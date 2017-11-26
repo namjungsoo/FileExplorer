@@ -31,6 +31,8 @@ public class PermissionManager {
                         PERMISSION_STORAGE);
                 isStoragePermissions = false;
                 return false;
+            } else {
+                isStoragePermissions = true;
             }
         } else {
             isStoragePermissions = true;

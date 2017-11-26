@@ -124,7 +124,7 @@
 
         </ViewSwitcher>
 
-        <!-- 파일이 없거나 권한이 없거나 -->
+        <!-- 파일이 없거나 권한이 없거나 파일이 없다. -->
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
