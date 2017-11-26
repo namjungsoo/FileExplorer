@@ -9,7 +9,6 @@ import android.graphics.Color;
 import android.os.AsyncTask;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
-import android.util.Log;
 import android.view.View;
 
 import com.duongame.R;
@@ -25,7 +24,6 @@ import com.duongame.viewer.activity.TextActivity;
 import com.duongame.viewer.activity.ZipActivity;
 
 import static com.duongame.explorer.bitmap.BitmapCacheManager.getThumbnail;
-import static com.google.android.gms.internal.zzs.TAG;
 
 /**
  * Created by js296 on 2017-08-21.
