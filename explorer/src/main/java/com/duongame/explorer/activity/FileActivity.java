@@ -107,9 +107,10 @@ public class FileActivity extends BaseActivity {
     }
 
     void clearCache() {
-        BitmapCacheManager.recycleThumbnail();
-        BitmapCacheManager.recyclePage();
-        BitmapCacheManager.recycleBitmap();
+        BitmapCacheManager.removeAllThumbnails();
+        BitmapCacheManager.removeAllPages();
+        BitmapCacheManager.removeAllBitmaps();
+        BitmapCacheManager.removeAllDrawables();
 
         final File file = getFilesDir();
         deleteRecursive(file);

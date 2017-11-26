@@ -2,7 +2,6 @@ package com.duongame.viewer.activity;
 
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.widget.SeekBar;
 
 import com.duongame.R;
@@ -73,8 +72,8 @@ public class PagerActivity extends ViewerActivity {
                 if (Math.abs(current - page) > 2) {
                     // 모든 로딩 중인 태스크를 정리하고 비트맵을 리사이클을 한다.
                     pagerAdapter.stopAllTasks();
-                    BitmapCacheManager.recyclePage();
-                    BitmapCacheManager.recycleBitmap();
+                    BitmapCacheManager.removeAllPages();
+                    BitmapCacheManager.removeAllBitmaps();
                 }
 
                 pager.setCurrentItem(page, false);

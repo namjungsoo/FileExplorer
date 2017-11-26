@@ -117,8 +117,8 @@ public class ViewerActivity extends AppCompatActivity {
             adView.destroy();
         }
 
-        BitmapCacheManager.recycleBitmap();
-        BitmapCacheManager.recyclePage();
+        BitmapCacheManager.removeAllBitmaps();
+        BitmapCacheManager.removeAllPages();
 
         // 전면 광고 노출
         showInterstitialAd();

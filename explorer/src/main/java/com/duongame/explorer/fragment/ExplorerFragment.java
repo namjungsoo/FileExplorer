@@ -409,7 +409,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
 
         // 썸네일이 꽉찼을때는 비워준다.
         if (BitmapCacheManager.getThumbnailCount() > MAX_THUMBNAILS) {
-            BitmapCacheManager.recycleThumbnail();
+            BitmapCacheManager.removeAllThumbnails();
         }
 
         //FIX:

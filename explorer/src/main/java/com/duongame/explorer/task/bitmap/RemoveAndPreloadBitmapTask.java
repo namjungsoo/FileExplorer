@@ -53,7 +53,13 @@ public class RemoveAndPreloadBitmapTask extends BitmapTask {
                     continue;
 
                 // preload는 bitmap만 읽어서 캐쉬에 넣어놓는 용도이다.
-                loadBitmap(item);
+                //FIX:
+                // OOM 처리
+                try {
+                    loadBitmap(item);
+                } catch(OutOfMemoryError e) {
+                    return null;
+                }
             }
         }
         return null;

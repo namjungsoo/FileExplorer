@@ -54,23 +54,25 @@ public class BitmapCacheManager {
     }
 
     public static void removePage(String key) {
-        final Bitmap bitmap = pageCache.get(key);
+        Bitmap bitmap = pageCache.get(key);
         if (bitmap != null) {
-            if (!bitmap.isRecycled())
+            if (!bitmap.isRecycled()) {
                 bitmap.recycle();
+            }
+            bitmap = null;
             pageCache.remove(key);
         }
     }
 
-    public static void recyclePage() {
+    public static void removeAllPages() {
         for (String key : pageCache.keySet()) {
-            final Bitmap bitmap = pageCache.get(key);
+            Bitmap bitmap = pageCache.get(key);
             if (bitmap != null) {
                 if (!bitmap.isRecycled())
                     bitmap.recycle();
+                bitmap = null;
             }
         }
-
         pageCache.clear();
     }
 
@@ -110,24 +112,26 @@ public class BitmapCacheManager {
     }
 
     public static void removeBitmap(String path) {
-        final Bitmap bitmap = bitmapCache.get(path);
+        Bitmap bitmap = bitmapCache.get(path);
         if (bitmap != null) {
             if (!bitmap.isRecycled())
                 bitmap.recycle();
+            bitmap = null;
             bitmapCache.remove(path);
         }
     }
 
-    public static void recycleDrawable() {
+    public static void removeAllDrawables() {
         drawableCache.clear();
     }
 
-    public static void recycleBitmap() {
+    public static void removeAllBitmaps() {
         for (String key : bitmapCache.keySet()) {
-            final Bitmap bitmap = bitmapCache.get(key);
+            Bitmap bitmap = bitmapCache.get(key);
             if (bitmap != null) {
                 if (!bitmap.isRecycled())
                     bitmap.recycle();
+                bitmap = null;
             }
         }
         bitmapCache.clear();
@@ -150,7 +154,7 @@ public class BitmapCacheManager {
         return thumbnailCache.size();
     }
 
-    public static void recycleThumbnail() {
+    public static void removeAllThumbnails() {
         // 이미지를 먼저 null로 하고 => try/catch로 처리함
         // adapter 자체적으로 file, directory 이미지로 처리하게 변경됨
         // 사용안함
@@ -164,7 +168,7 @@ public class BitmapCacheManager {
 
         final ArrayList<String> recycleList = new ArrayList<>();
         for (String key : thumbnailCache.keySet()) {
-            final Bitmap bitmap = thumbnailCache.get(key);
+            Bitmap bitmap = thumbnailCache.get(key);
             //if (bitmap != null && !bitmap.isRecycled()) {
             if (bitmap != null) {
                 // 리소스(아이콘)용 썸네일이 아니면 삭제
@@ -172,6 +176,7 @@ public class BitmapCacheManager {
                     bitmap.recycle();
                     recycleList.add(key);
                 }
+                bitmap = null;
             }
         }
 
@@ -180,5 +185,4 @@ public class BitmapCacheManager {
         }
         thumbnailCache.clear();
     }
-
 }

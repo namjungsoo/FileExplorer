@@ -6,7 +6,6 @@ import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -25,7 +24,6 @@ import com.duongame.explorer.activity.BaseActivity;
 import com.duongame.explorer.bitmap.BitmapCacheManager;
 import com.duongame.explorer.fragment.BaseFragment;
 import com.duongame.explorer.fragment.ExplorerFragment;
-import com.duongame.explorer.helper.ShortcutHelper;
 import com.duongame.explorer.helper.ToastHelper;
 import com.duongame.explorer.manager.AdBannerManager;
 import com.duongame.explorer.manager.AdInterstitialManager;
@@ -235,10 +233,10 @@ public class ComicActivity extends BaseActivity {
     }
 
     void clearCache() {
-        BitmapCacheManager.recycleThumbnail();
-        BitmapCacheManager.recyclePage();
-        BitmapCacheManager.recycleBitmap();
-        BitmapCacheManager.recycleDrawable();
+        BitmapCacheManager.removeAllThumbnails();
+        BitmapCacheManager.removeAllPages();
+        BitmapCacheManager.removeAllBitmaps();
+        BitmapCacheManager.removeAllDrawables();
 
         final File file = getFilesDir();
         deleteRecursive(file);

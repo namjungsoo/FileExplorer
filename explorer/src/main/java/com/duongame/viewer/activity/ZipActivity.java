@@ -4,7 +4,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -284,8 +283,8 @@ public class ZipActivity extends PagerActivity {
         // 초기화 하기전에 task를 전부 stop한다.
         pagerAdapter.stopAllTasks();
         pager.removeAllViews();
-        BitmapCacheManager.recyclePage();
-        BitmapCacheManager.recycleBitmap();
+        BitmapCacheManager.removeAllPages();
+        BitmapCacheManager.removeAllBitmaps();
 
         // 데이터를 업데이트 하자.
         // 좌우를 변경한다.
