@@ -7,6 +7,7 @@ android {
     defaultConfig {
         applicationId 'com.duongame'
         buildConfigField "boolean", "SHOW_AD", "true"
+        buildConfigField "boolean", "PREVIEW_ZIP", "false"
         minSdkVersion 14
         targetSdkVersion 25
         versionCode 2
@@ -41,6 +42,7 @@ android {
             buildConfigField "String", "BANNER_ID", "\"ca-app-pub-5576037828251153/8260818625\""
             buildConfigField "String", "POPUP_ID", "\"ca-app-pub-5576037828251153/2214285028\""
             buildConfigField "String", "INTERSTITIAL_ID", "\"ca-app-pub-5576037828251153/9737551820\""
+            buildConfigField "boolean", "PREVIEW_ZIP", "true"
             applicationIdSuffix '.comicz'
             dimension "project"
             versionCode 13

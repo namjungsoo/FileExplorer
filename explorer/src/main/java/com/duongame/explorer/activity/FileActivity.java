@@ -1,35 +1,99 @@
 package com.duongame.explorer.activity;
 
 import android.Manifest;
+import android.content.Context;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.RelativeLayout;
 
+import com.duongame.AnalyticsApplication;
+import com.duongame.BuildConfig;
 import com.duongame.R;
 import com.duongame.comicz.db.BookDB;
 import com.duongame.explorer.bitmap.BitmapCacheManager;
 import com.duongame.explorer.fragment.BaseFragment;
 import com.duongame.explorer.fragment.ExplorerFragment;
 import com.duongame.explorer.helper.ToastHelper;
+import com.duongame.explorer.manager.AdBannerManager;
+import com.duongame.explorer.manager.AdInterstitialManager;
 import com.duongame.explorer.manager.ExplorerManager;
+import com.duongame.explorer.manager.ReviewManager;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.analytics.Tracker;
+import com.google.firebase.analytics.FirebaseAnalytics;
 
 import java.io.File;
 
 public class FileActivity extends BaseActivity {
     private final static String TAG = "ComicActivity";
 
+    private FirebaseAnalytics mFirebaseAnalytics;
+    private Tracker mTracker;
+
+    // admob
+    private View mainView;
+    private AdView adView;
+
+    private boolean showReview;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_file);
+//        setContentView(R.layout.activity_file);
+
+        AdBannerManager.init(this);
+        AdInterstitialManager.init(this);
+
+        initContentView();
 
         initToolbar();
+
+        showReview = ReviewManager.checkReview(this);
+
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
+
+        AnalyticsApplication application = (AnalyticsApplication) getApplication();
+        mTracker = application.getDefaultTracker();
+
         //TEST
 //        FirebaseCrash.report(new Exception("My first Android non-fatal error"));
 
+    }
+
+    private void initContentView() {
+        if (BuildConfig.SHOW_AD) {
+            final LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            mainView = inflater.inflate(R.layout.activity_file, null, true);
+
+            final RelativeLayout layout = new RelativeLayout(this);
+            layout.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT));
+
+            adView = AdBannerManager.getAdBannerView(0);
+
+            // adview layout params
+            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+            params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+            adView.setLayoutParams(params);
+            AdBannerManager.requestAd(0);
+
+            // mainview layout params
+            params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
+            params.addRule(RelativeLayout.ABOVE, adView.getId());
+            mainView.setLayoutParams(params);
+
+            layout.addView(adView);
+            layout.addView(mainView);
+
+            setContentView(layout);
+        } else {
+            setContentView(R.layout.activity_file);
+        }
     }
 
     private void initToolbar() {

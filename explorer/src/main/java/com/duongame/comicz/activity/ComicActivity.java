@@ -42,9 +42,12 @@ public class ComicActivity extends BaseActivity {
     private FirebaseAnalytics mFirebaseAnalytics;
     private Tracker mTracker;
 
+    // viewpager
     private ViewPager pager;
     private ComicPagerAdapter adapter;
     private TabLayout tab;
+
+    // admob
     private View mainView;
     private AdView adView;
 

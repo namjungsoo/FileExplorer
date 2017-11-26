@@ -6,7 +6,6 @@ import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -14,6 +13,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.target.ImageViewTarget;
+import com.duongame.BuildConfig;
 import com.duongame.GlideApp;
 import com.duongame.R;
 import com.duongame.explorer.bitmap.BitmapCacheManager;
@@ -197,8 +197,10 @@ public class ExplorerAdapter extends RecyclerView.Adapter<ExplorerAdapter.Explor
         if (drawable == null) {
             viewHolder.icon.setImageResource(R.drawable.zip);
 
-            LoadZipThumbnailTask task = new LoadZipThumbnailTask(context, viewHolder.icon, viewHolder.iconSmall);
-            task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, item.path);
+            if(BuildConfig.PREVIEW_ZIP) {
+                LoadZipThumbnailTask task = new LoadZipThumbnailTask(context, viewHolder.icon, viewHolder.iconSmall);
+                task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, item.path);
+            }
         } else {
             viewHolder.icon.setImageDrawable(drawable);
         }
