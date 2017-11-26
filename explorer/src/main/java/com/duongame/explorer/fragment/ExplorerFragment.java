@@ -49,7 +49,7 @@ import static com.duongame.explorer.ExplorerConfig.MAX_THUMBNAILS;
  * Created by namjungsoo on 2016-11-23.
  */
 
-public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.OnItemClickListener {
+public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.OnItemClickListener, ExplorerAdapter.OnItemLongClickListener {
     private final static String TAG = "ExplorerFragment";
     private final static boolean DEBUG = false;
 
@@ -80,7 +80,9 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
     // 기타
     private ImageButton sdcard = null;
     private String extSdCard = null;
-    private SearchTask mSearchTask = null;
+    private SearchTask searchTask = null;
+
+    private boolean selectMode = false;
 
     @Nullable
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
@@ -303,8 +305,24 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
         BookLoader.load(getActivity(), item, false);
     }
 
+    void onAdapterItemLongClick(int position) {
+        ExplorerItem item = fileList.get(position);
+        if(item == null)
+            return;
+
+        // 이미 선택 모드라면 이름변경을 해줌
+        if(selectMode) {
+            //renameFileWithDialog
+        } else {// 선택 모드로 진입 + 현재 파일 선택
+            selectMode = true;
+        }
+    }
+
     void onAdapterItemClick(int position) {
         ExplorerItem item = fileList.get(position);
+        if(item == null)
+            return;
+
         switch (item.type) {
             case DIRECTORY:
                 onClickDirectory(item);
@@ -366,6 +384,11 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
         onAdapterItemClick(position);
     }
 
+    @Override
+    public void onItemLongClick(int position) {
+        onAdapterItemLongClick(position);
+    }
+
     class SearchTask extends AsyncTask<String, Void, Void> {
 
         boolean pathChanged;
@@ -393,7 +416,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
 
             // SearchTask가 resume
             if (pathChanged) {
-                if(fileList != null && fileList.size() > 0) {
+                if (fileList != null && fileList.size() > 0) {
                     currentView.scrollToPosition(0);
                     currentView.invalidate();
                 }
@@ -442,11 +465,11 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
         //FIX:
         //SearchTask task = new SearchTask(isPathChanged(path));
         //task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, path);
-        if (mSearchTask != null) {
-            mSearchTask.cancel(true);
+        if (searchTask != null) {
+            searchTask.cancel(true);
         }
-        mSearchTask = new SearchTask(isPathChanged);
-        mSearchTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, path);
+        searchTask = new SearchTask(isPathChanged);
+        searchTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, path);
         JLog.e(TAG, "updateFileList executeOnExecutor");
 
         // 가장 오른쪽으로 스크롤
@@ -475,7 +498,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
     //HACK: 모두 전체 새로 읽기로 수정함
     public void updateFileList(final String path) {
         //updateFileList(path, isPathChanged(path));
-        if(path == null)
+        if (path == null)
             updateFileList(path, true);
         else
             updateFileList(path, isPathChanged(path));

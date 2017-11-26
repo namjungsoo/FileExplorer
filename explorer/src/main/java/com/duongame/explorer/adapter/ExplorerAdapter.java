@@ -41,11 +41,18 @@ public class ExplorerAdapter extends RecyclerView.Adapter<ExplorerAdapter.Explor
     private final static boolean DEBUG = false;
 
     protected ArrayList<ExplorerItem> fileList;
-
-    // file path와 file item을 묶어 놓음
-    protected HashMap<String, ExplorerItem> fileMap;
-
+    protected HashMap<String, ExplorerItem> fileMap;// file path와 file item을 묶어 놓음
     protected Activity context;
+
+    private boolean selectMode = false;
+
+    public boolean getSelectMode() {
+        return selectMode;
+    }
+
+    public void setSelectMode(boolean mode) {
+        selectMode = mode;
+    }
 
 //    private Handler mainHandler;
 
@@ -55,13 +62,22 @@ public class ExplorerAdapter extends RecyclerView.Adapter<ExplorerAdapter.Explor
 //    private Queue<BitmapMessage> messageQueue = new ConcurrentLinkedQueue<>();
 
     OnItemClickListener onItemClickListener;
+    OnItemLongClickListener onLongItemClickListener;
 
     public interface OnItemClickListener {
         void onItemClick(int position);
     }
 
+    public interface OnItemLongClickListener {
+        void onItemLongClick(int position);
+    }
+
     public void setOnItemClickListener(OnItemClickListener listener) {
         onItemClickListener = listener;
+    }
+
+    public void setOnLongItemClickListener(OnItemLongClickListener listener) {
+        onLongItemClickListener = listener;
     }
 
     // 썸네일이 있는 파일만 true
@@ -100,7 +116,7 @@ public class ExplorerAdapter extends RecyclerView.Adapter<ExplorerAdapter.Explor
         this.fileList = fileList;
     }
 
-    public static class ExplorerViewHolder extends RecyclerView.ViewHolder {
+    static class ExplorerViewHolder extends RecyclerView.ViewHolder {
         public ImageView iconSmall;// 현재 사용안함. 작은 아이콘을 위해서 남겨둠
         public RoundedImageView icon;
         public TextView name;
@@ -129,12 +145,26 @@ public class ExplorerAdapter extends RecyclerView.Adapter<ExplorerAdapter.Explor
     @Override
     public void onBindViewHolder(final ExplorerViewHolder holder, int position) {
         bindViewHolderExplorer(holder, position);
+        if (holder == null)
+            return;
+
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (onItemClickListener != null) {
                     onItemClickListener.onItemClick(holder.position);
                 }
+            }
+        });
+
+        holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                if (onLongItemClickListener != null) {
+                    onLongItemClickListener.onItemLongClick(holder.position);
+                    return true;
+                }
+                return false;
             }
         });
     }
@@ -169,7 +199,7 @@ public class ExplorerAdapter extends RecyclerView.Adapter<ExplorerAdapter.Explor
                     .into(new ImageViewTarget<Drawable>(viewHolder.icon) {
                         @Override
                         protected void setResource(@Nullable Drawable resource) {
-                            if(viewHolder.iconSmall.getTag() == item.path) {
+                            if (viewHolder.iconSmall.getTag() == item.path) {
                                 getView().setImageDrawable(resource);
                             }
                         }
@@ -197,7 +227,7 @@ public class ExplorerAdapter extends RecyclerView.Adapter<ExplorerAdapter.Explor
         if (drawable == null) {
             viewHolder.icon.setImageResource(R.drawable.zip);
 
-            if(BuildConfig.PREVIEW_ZIP) {
+            if (BuildConfig.PREVIEW_ZIP) {
                 LoadZipThumbnailTask task = new LoadZipThumbnailTask(context, viewHolder.icon, viewHolder.iconSmall);
                 task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, item.path);
             }

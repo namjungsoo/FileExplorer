@@ -22,7 +22,6 @@ import com.duongame.explorer.fragment.ExplorerFragment;
 import com.duongame.explorer.helper.ToastHelper;
 import com.duongame.explorer.manager.AdBannerManager;
 import com.duongame.explorer.manager.AdInterstitialManager;
-import com.duongame.explorer.manager.ExplorerManager;
 import com.duongame.explorer.manager.ReviewManager;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.analytics.Tracker;
@@ -98,7 +97,7 @@ public class FileActivity extends BaseActivity {
 
     private void initToolbar() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        if(toolbar != null) {
+        if (toolbar != null) {
             setSupportActionBar(toolbar);
             toolbar.setTitleTextColor(Color.WHITE);
         }
@@ -133,10 +132,9 @@ public class FileActivity extends BaseActivity {
 
     @Override
     public void onBackPressed() {
-        if (!ExplorerManager.isInitialPath()) {
-            final BaseFragment fragment = (BaseFragment)getSupportFragmentManager().getFragments().get(0);
+        final BaseFragment fragment = (BaseFragment) getSupportFragmentManager().getFragments().get(0);
+        if (fragment != null)
             fragment.onBackPressed();
-        }
     }
 
     @Override
@@ -199,13 +197,12 @@ public class FileActivity extends BaseActivity {
         final File file = getFilesDir();
         deleteRecursive(file);
 
-        final BaseFragment fragment = (BaseFragment)getSupportFragmentManager().getFragments().get(0);
+        final BaseFragment fragment = (BaseFragment) getSupportFragmentManager().getFragments().get(0);
         fragment.onRefresh();
     }
 
     void clearHistory() {
         BookDB.clearBooks(this);
-
     }
 
     void deleteRecursive(File fileOrDirectory) {
