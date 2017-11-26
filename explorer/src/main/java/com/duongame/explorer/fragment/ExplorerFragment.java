@@ -30,6 +30,7 @@ import com.duongame.explorer.adapter.ExplorerListAdapter;
 import com.duongame.explorer.adapter.ExplorerScrollListener;
 import com.duongame.explorer.bitmap.BitmapCacheManager;
 import com.duongame.explorer.helper.ExtSdCardHelper;
+import com.duongame.explorer.helper.JLog;
 import com.duongame.explorer.helper.PreferenceHelper;
 import com.duongame.explorer.manager.ExplorerManager;
 import com.duongame.explorer.manager.PermissionManager;
@@ -110,6 +111,18 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
                 BookLoader.openLastBook(activity);
             }
         }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        JLog.e(TAG, "onStart");
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        JLog.e(TAG, "onStop");
     }
 
     @Override
@@ -363,6 +376,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
 
         @Override
         protected Void doInBackground(String... params) {
+            //path=params[0]
             fileList = ExplorerManager.search(params[0]);
             adapter.setFileList(fileList);
             return null;
@@ -370,22 +384,31 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
 
         @Override
         protected void onPostExecute(Void result) {
+            JLog.e(TAG, "SearchTask onPostExecute");
             if (isCancelled())
                 return;
 
+            JLog.e(TAG, "SearchTask isCancelled");
+            adapter.notifyDataSetChanged();
+
             // SearchTask가 resume
             if (pathChanged) {
-                adapter.notifyDataSetChanged();
-                currentView.scrollToPosition(0);
-                currentView.invalidate();
+                if(fileList != null && fileList.size() > 0) {
+                    currentView.scrollToPosition(0);
+                    currentView.invalidate();
+                }
+                JLog.e(TAG, "SearchTask pathChanged");
             }
 
             textPath.setText(ExplorerManager.getLastPath());
             textPath.requestLayout();
+            JLog.e(TAG, "SearchTask requestLayout");
 
             if (switcherContents != null) {
+                JLog.e(TAG, "SearchTask switcherContents != null");
                 if (fileList == null || fileList.size() <= 0) {
                     switcherContents.setDisplayedChild(1);
+                    JLog.e(TAG, "SearchTask setDisplayedChild(1)");
 
                     // 퍼미션이 있으면 퍼미션 버튼을 보이지 않게 함
                     if (PermissionManager.checkStoragePermissions()) {
@@ -397,29 +420,34 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
                     }
                 } else {
                     switcherContents.setDisplayedChild(0);
+                    JLog.e(TAG, "SearchTask setDisplayedChild()");
                 }
             }
         }
     }
 
-    public void updateFileList(final String path) {
+    public void updateFileList(final String path, boolean isPathChanged) {
+        JLog.e(TAG, "updateFileList");
         if (adapter == null) {
             return;
         }
 
+        JLog.e(TAG, "updateFileList adapter");
         // 썸네일이 꽉찼을때는 비워준다.
         if (BitmapCacheManager.getThumbnailCount() > MAX_THUMBNAILS) {
             BitmapCacheManager.removeAllThumbnails();
         }
 
+        JLog.e(TAG, "updateFileList BitmapCacheManager");
         //FIX:
         //SearchTask task = new SearchTask(isPathChanged(path));
         //task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, path);
         if (mSearchTask != null) {
             mSearchTask.cancel(true);
         }
-        mSearchTask = new SearchTask(isPathChanged(path));
+        mSearchTask = new SearchTask(isPathChanged);
         mSearchTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, path);
+        JLog.e(TAG, "updateFileList executeOnExecutor");
 
         // 가장 오른쪽으로 스크롤
         scrollPath.post(new Runnable() {
@@ -441,6 +469,16 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
                 requestThumbnailScan();
             }
         }).start();
+    }
+
+    //TODO: 차후에 pull to refresh로 새로고침 해줘야 함
+    //HACK: 모두 전체 새로 읽기로 수정함
+    public void updateFileList(final String path) {
+        //updateFileList(path, isPathChanged(path));
+        if(path == null)
+            updateFileList(path, true);
+        else
+            updateFileList(path, isPathChanged(path));
     }
 
     private boolean isPathChanged(String path) {
