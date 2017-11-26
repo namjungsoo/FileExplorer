@@ -43,8 +43,8 @@ android {
             buildConfigField "String", "INTERSTITIAL_ID", "\"ca-app-pub-5576037828251153/9737551820\""
             applicationIdSuffix '.comicz'
             dimension "project"
-            versionCode 12
-            versionName "1.0.9"
+            versionCode 13
+            versionName "1.1.0"
             addManifestPlaceholders([APP_NAME: "@string/comicz_name_free"])
         }
 
@@ -63,11 +63,11 @@ android {
     variantFilter { variant ->
         // 메인일 경우에 현재 사용하지 않으므로 무시하라
         if (variant.getFlavors().get(1).name.equals('main')) {
-            variant.setIgnore(true);
+            variant.setIgnore(true)
         }
         // 프로일 경우에 현재 사용하지 않으므로 무시하라
         if (variant.getFlavors().get(1).name.equals('pro')) {
-            variant.setIgnore(true);
+            variant.setIgnore(true)
         }
     }
 }
