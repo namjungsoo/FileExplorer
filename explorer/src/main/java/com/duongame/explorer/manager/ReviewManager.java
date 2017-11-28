@@ -26,6 +26,7 @@ public class ReviewManager {
             for (int i = 0; i < reviewIndex.length; i++) {
                 if (reviewCount == reviewIndex[i]) {// 리뷰할 횟수와 동일하면
                     AlertHelper.showAlert(context,
+                            //TODO: 문자열에 앱이름이 들어가지 않고 %s로 할수 있게 수정
                             context.getResources().getString(R.string.dialog_review_title),
                             context.getResources().getString(R.string.dialog_review_content),
                             new DialogInterface.OnClickListener() {

@@ -79,7 +79,6 @@ public class LoadBitmapTask extends BitmapTask {
 //                    newHeight = (int) (width * bmRatio);
 //                }
 
-                //TODO: 이게 왜 현재 사용이 안되지?
                 //PhotoView 때문인가
 //                final FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) imageView.getLayoutParams();
 //                params.width = newWidth;

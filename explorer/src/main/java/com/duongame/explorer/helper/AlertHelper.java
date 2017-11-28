@@ -39,6 +39,7 @@ public class AlertHelper {
 //        AdBannerManager.initPopupAd(context);// 항상 초기화 해주어야 함
 //    }
 
+    //TODO: 아이콘을 comicz에서 file로도 사용할수 있게 수정
     public static void showAlert(Activity context,
                                  String title,
                                  String message,

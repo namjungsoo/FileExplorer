@@ -307,20 +307,21 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
 
     void onAdapterItemLongClick(int position) {
         ExplorerItem item = fileList.get(position);
-        if(item == null)
+        if (item == null)
             return;
 
         // 이미 선택 모드라면 이름변경을 해줌
-        if(selectMode) {
+        if (selectMode) {
             //renameFileWithDialog
         } else {// 선택 모드로 진입 + 현재 파일 선택
             selectMode = true;
+            onRefresh();
         }
     }
 
     void onAdapterItemClick(int position) {
         ExplorerItem item = fileList.get(position);
-        if(item == null)
+        if (item == null)
             return;
 
         switch (item.type) {
@@ -518,10 +519,18 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
 
     @Override
     public void onBackPressed() {
-        if (!ExplorerManager.isInitialPath()) {
-            gotoUpDirectory();
+        // 선택모드이면 선택모드를 취소하는 방향으로
+        if (selectMode) {
+            selectMode = false;
+
+            // 다시 리프레시를 해야지 체크박스를 새로 그린다.
+            onRefresh();
         } else {
-            super.onBackPressed();
+            if (!ExplorerManager.isInitialPath()) {
+                gotoUpDirectory();
+            } else {
+                super.onBackPressed();
+            }
         }
     }
 

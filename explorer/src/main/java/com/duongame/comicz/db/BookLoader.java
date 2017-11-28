@@ -30,6 +30,7 @@ import static com.duongame.explorer.bitmap.BitmapCacheManager.getThumbnail;
  */
 
 public class BookLoader {
+    //TODO: 마지막 책읽기는 comicz만 수행
     public static boolean openLastBook(Activity context) {
         final Book book = BookDB.getLastBook(context);
         if (book != null && book.percent < 100) {
