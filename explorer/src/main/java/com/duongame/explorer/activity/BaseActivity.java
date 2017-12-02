@@ -127,7 +127,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_comicz, menu);
+        getMenuInflater().inflate(getMenuResId(), menu);
 
         // 메뉴를 흰색으로 변경
         this.menu = menu;
