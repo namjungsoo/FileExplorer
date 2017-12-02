@@ -59,6 +59,8 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     protected abstract int getLayoutResId();
 
+    protected abstract int getMenuResId();
+
     protected abstract BaseFragment getExplorerFragment();
 
     protected abstract BaseFragment getCurrentFragment();
@@ -125,7 +127,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
+        getMenuInflater().inflate(R.menu.menu_comicz, menu);
 
         // 메뉴를 흰색으로 변경
         this.menu = menu;

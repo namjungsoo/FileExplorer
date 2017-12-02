@@ -12,6 +12,11 @@ public class FileActivity extends BaseActivity {
     }
 
     @Override
+    protected int getMenuResId() {
+        return R.menu.menu_file;
+    }
+
+    @Override
     protected BaseFragment getExplorerFragment() {
         return (BaseFragment) getSupportFragmentManager().getFragments().get(0);
     }

@@ -30,6 +30,11 @@ public class ComicActivity extends BaseActivity {
     }
 
     @Override
+    protected int getMenuResId() {
+        return R.menu.menu_comicz;
+    }
+
+    @Override
     protected BaseFragment getExplorerFragment() {
         return (BaseFragment) adapter.getItem(0);
     }
