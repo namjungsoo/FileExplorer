@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -53,13 +54,6 @@ public class ExplorerAdapter extends RecyclerView.Adapter<ExplorerAdapter.Explor
     public void setSelectMode(boolean mode) {
         selectMode = mode;
     }
-
-//    private Handler mainHandler;
-
-    private final static int LOAD_BITMAP = 0;
-    private final static int LOAD_DRAWABLE = 1;
-
-//    private Queue<BitmapMessage> messageQueue = new ConcurrentLinkedQueue<>();
 
     OnItemClickListener onItemClickListener;
     OnItemLongClickListener onLongItemClickListener;
@@ -122,6 +116,8 @@ public class ExplorerAdapter extends RecyclerView.Adapter<ExplorerAdapter.Explor
         public TextView name;
         public TextView date;
         public TextView size;
+        public CheckBox check;
+
         public ExplorerItem.FileType type;
         public int position;
 
@@ -132,6 +128,7 @@ public class ExplorerAdapter extends RecyclerView.Adapter<ExplorerAdapter.Explor
             date = (TextView) itemView.findViewById(R.id.text_date);
             size = (TextView) itemView.findViewById(R.id.text_size);
             iconSmall = (ImageView) itemView.findViewById(R.id.file_small_icon);
+            check = (CheckBox)itemView.findViewById(R.id.check_file);
         }
     }
 
@@ -182,6 +179,20 @@ public class ExplorerAdapter extends RecyclerView.Adapter<ExplorerAdapter.Explor
         fileMap = new HashMap<>();
         for (ExplorerItem item : fileList) {
             fileMap.put(item.path, item);
+        }
+    }
+
+    protected void updateCheckBox(ExplorerViewHolder viewHolder, ExplorerItem item) {
+        if(getSelectMode()) {
+            viewHolder.check.setVisibility(View.VISIBLE);
+            if(item.selected) {
+                viewHolder.check.setChecked(true);
+            } else {
+                viewHolder.check.setChecked(false);
+            }
+        } else {
+            viewHolder.check.setVisibility(View.INVISIBLE);
+            viewHolder.check.setChecked(false);
         }
     }
 

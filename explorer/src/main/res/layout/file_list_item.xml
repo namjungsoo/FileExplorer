@@ -1,4 +1,4 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="70dp"
     android:background="?android:attr/selectableItemBackground">
@@ -48,11 +48,10 @@
                 android:id="@+id/text_path"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:textSize="13dp"
-                android:singleLine="true"
                 android:maxLines="1"
-                android:visibility="gone"
-                />
+                android:singleLine="true"
+                android:textSize="13dp"
+                android:visibility="gone" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -77,4 +76,10 @@
         </LinearLayout>
     </LinearLayout>
 
-</LinearLayout>
+    <CheckBox
+        android:id="@+id/check_file"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="invisible" />
+
+</FrameLayout>

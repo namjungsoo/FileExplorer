@@ -222,6 +222,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
         listView.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL_LIST));
 
         adapter.setOnItemClickListener(this);
+        adapter.setOnLongItemClickListener(this);
 
         viewType = SWITCH_LIST;
         currentView = listView;
@@ -238,7 +239,9 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
         gridView.setAdapter(adapter);
         gridView.addOnScrollListener(new ExplorerScrollListener());
         gridView.setLayoutManager(new GridLayoutManager(getActivity(), 4));
+
         adapter.setOnItemClickListener(this);
+        adapter.setOnLongItemClickListener(this);
 
         viewType = SWITCH_GRID;
         currentView = gridView;
@@ -283,7 +286,6 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
     void onClickImage(ExplorerItem item) {
         final Intent intent = PhotoActivity.getLocalIntent(getContext(), item);
         startActivity(intent);
-
     }
 
     void onClickApk(ExplorerItem item) {
@@ -315,6 +317,11 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
             //renameFileWithDialog
         } else {// 선택 모드로 진입 + 현재 파일 선택
             selectMode = true;
+
+            // 현재 위치의 아이템을 선택으로 설정
+            item.selected = true;
+
+            // 전체 리프레시
             onRefresh();
         }
     }
@@ -324,23 +331,30 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
         if (item == null)
             return;
 
-        switch (item.type) {
-            case DIRECTORY:
-                onClickDirectory(item);
-                break;
-            case IMAGE:
-                onClickImage(item);
-                break;
-            case APK:
-                onClickApk(item);
-                break;
+        if(selectMode) {
+            item.selected = !item.selected;
 
-            case PDF:
-            case TEXT:
-            case ZIP:
-                //TODO: 나중에 이미지 preview를 만들자.
-                onClickBook(item);
-                break;
+            // 아이템을 찾아서 UI를 업데이트 해주어야 함
+            adapter.notifyItemChanged(position);
+        } else {
+            switch (item.type) {
+                case DIRECTORY:
+                    onClickDirectory(item);
+                    break;
+                case IMAGE:
+                    onClickImage(item);
+                    break;
+                case APK:
+                    onClickApk(item);
+                    break;
+
+                case PDF:
+                case TEXT:
+                case ZIP:
+                    //TODO: 나중에 이미지 preview를 만들자.
+                    onClickBook(item);
+                    break;
+            }
         }
     }
 
@@ -455,6 +469,9 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
         if (adapter == null) {
             return;
         }
+
+        // 선택모드인지 설정해준다.
+        adapter.setSelectMode(selectMode);
 
         JLog.e(TAG, "updateFileList adapter");
         // 썸네일이 꽉찼을때는 비워준다.

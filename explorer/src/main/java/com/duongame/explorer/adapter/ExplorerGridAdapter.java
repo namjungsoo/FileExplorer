@@ -22,16 +22,19 @@ public class ExplorerGridAdapter extends ExplorerAdapter {
     public void bindViewHolderExplorer(ExplorerViewHolder viewHolder, int position) {
         if (viewHolder == null)
             return;
+
         ExplorerItem item = fileList.get(position);
         if (item == null)
             return;
+
         viewHolder.name.setText(item.name);
         viewHolder.icon.setRadiusDp(5);
         viewHolder.iconSmall.setVisibility(View.INVISIBLE);
         viewHolder.position = position;
         item.position = position;
 
-//        item.imageViewRef = new WeakReference<ImageView>(viewHolder.icon);
+        updateCheckBox(viewHolder, item);
+
         setIconDefault(viewHolder, item);
         setIcon(viewHolder, item);
     }
