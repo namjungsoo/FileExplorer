@@ -29,7 +29,7 @@ public class AppHelper {
         if(isComicz(context)) {
             return R.drawable.comicz;
         } else {
-            return R.drawable.file;
+            return R.drawable.explorer;
         }
     }
 }
