@@ -15,6 +15,7 @@ import com.duongame.R;
 import com.duongame.comicz.adapter.HistoryRecyclerAdapter;
 import com.duongame.explorer.adapter.ExplorerItem;
 import com.duongame.explorer.bitmap.BitmapCacheManager;
+import com.duongame.explorer.helper.AppHelper;
 import com.duongame.explorer.helper.DateHelper;
 import com.duongame.explorer.helper.FileHelper;
 import com.duongame.explorer.task.thumbnail.LoadPdfThumbnailTask;
@@ -161,7 +162,7 @@ public class BookLoader {
                 .setTitle(context.getString(R.string.comicz_name_free))
                 .setView(view)
                 .setMessage(String.format(context.getString(R.string.msg_last_page), book.current_page + 1))
-                .setIcon(R.drawable.comicz)
+                .setIcon(AppHelper.getIconResId(context))
                 // 연속해서 읽을경우
                 .setPositiveButton(context.getString(R.string.ok), new DialogInterface.OnClickListener() {
                     @Override

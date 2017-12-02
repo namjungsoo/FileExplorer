@@ -8,6 +8,7 @@ import android.net.Uri;
 import com.duongame.R;
 import com.duongame.comicz.db.BookLoader;
 import com.duongame.explorer.helper.AlertHelper;
+import com.duongame.explorer.helper.AppHelper;
 import com.duongame.explorer.helper.PreferenceHelper;
 
 /**
@@ -25,14 +26,7 @@ public class ReviewManager {
 
             for (int i = 0; i < reviewIndex.length; i++) {
                 if (reviewCount == reviewIndex[i]) {// 리뷰할 횟수와 동일하면
-                    final String packageName = context.getApplicationContext().getPackageName();
-                    final String appName;
-                    if(packageName.indexOf(".comicz") != -1) {
-                        appName = context.getResources().getString(R.string.comicz_name_free);
-                    } else {
-                        appName = context.getResources().getString(R.string.file_name_free);
-                    }
-
+                    final String appName = AppHelper.getAppName(context);
                     final String title = String.format(context.getResources().getString(R.string.dialog_review_title), appName);
                     final String content = String.format(context.getResources().getString(R.string.dialog_review_content), appName);
 
@@ -44,6 +38,7 @@ public class ReviewManager {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     final Intent marketLaunch = new Intent(Intent.ACTION_VIEW);
+                                    final String packageName = context.getApplicationContext().getPackageName();
 
                                     marketLaunch.setData(Uri.parse("market://details?id=" + packageName));
                                     context.startActivity(marketLaunch);

@@ -50,7 +50,7 @@ public class AlertHelper {
                 .setTitle(title)
                 .setMessage(message)
                 .setView(AdBannerManager.getAdPopupView())
-                .setIcon(R.drawable.comicz)
+                .setIcon(AppHelper.getIconResId(context))
                 .setOnKeyListener(keyListener)
                 .setPositiveButton(context.getString(R.string.ok), posListener)
                 .setNegativeButton(context.getString(R.string.cancel), negListener);
@@ -69,7 +69,7 @@ public class AlertHelper {
                 .setTitle(title)
                 .setMessage(message)
                 .setView(AdBannerManager.getAdPopupView())
-                .setIcon(R.drawable.comicz)
+                .setIcon(AppHelper.getIconResId(context))
                 .setOnKeyListener(keyListener)
                 .setPositiveButton(context.getString(R.string.ok), posListener);
 
