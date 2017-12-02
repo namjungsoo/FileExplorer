@@ -27,8 +27,8 @@
     <string name="permissions">Solicitar permissões</string>
     <string name="no_files">Nenhum arquivo encontrado.</string>
     <string name="msg_no_image_in_zip">Não há imagem no arquivo compactado (ZIP).</string>
-    <string name="dialog_review_title">Apoie o Visualizador de quadrinhos</string>
-    <string name="dialog_review_content">Você está curtindo o Visualizador de quadrinhos? Deixe um comentário para nós!</string>
+    <string name="dialog_review_title">Apoie o %s</string>
+    <string name="dialog_review_content">Você está curtindo o %s? Deixe um comentário para nós!</string>
     <string name="msg_last_page">Há uma última página que você leu. (Página: %d)\nVocê gostaria de continuar?</string>
     <string name="action_clear_cache">Remover Cache</string>
     <string name="action_clear_history">Remover histórico</string>

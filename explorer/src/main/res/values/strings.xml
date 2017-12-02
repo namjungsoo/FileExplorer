@@ -27,8 +27,8 @@
     <string name="permissions">Request permissions</string>
     <string name="no_files">No files found.</string>
     <string name="msg_no_image_in_zip">There is no image in the compressed (ZIP) file.</string>
-    <string name="dialog_review_title">Please support Comic Viewer</string>
-    <string name="dialog_review_content">Are you enjoying Comic Viewer? Please leave a review for us!</string>
+    <string name="dialog_review_title">Please support %s</string>
+    <string name="dialog_review_content">Are you enjoying %s? Please leave a review for us!</string>
     <string name="msg_last_page">There is last page you read. (Page: %d)\nWould you like to continue?</string>
     <string name="action_clear_cache">Remove Cache</string>
     <string name="action_clear_history">Remove History</string>
@@ -38,3 +38,5 @@
     <string name="msg_clear_history">Recent files list was deleted.</string>
     <string name="hide_completed_file">Hide completed files</string>
 </resources>
+<!--<string name="dialog_review_title">Please support Comic Viewer</string>-->
+<!--<string name="dialog_review_content">Are you enjoying Comic Viewer? Please leave a review for us!</string>-->

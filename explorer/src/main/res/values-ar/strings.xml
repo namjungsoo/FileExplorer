@@ -27,8 +27,8 @@
     <string name="permissions">طلب الأذونات</string>
     <string name="no_files">لا توجد ملفات.</string>
     <string name="msg_no_image_in_zip">لا توجد صورة في ملف مضغوط (زيب).</string>
-    <string name="dialog_review_title">يرجى دعم عارض كوميدي</string>
-    <string name="dialog_review_content">هل تستمتع بالمشاهد الهزلية ؟ أرجوك اترك المراجعة لنا</string>
+    <string name="dialog_review_title">يرجى دعم %s</string>
+    <string name="dialog_review_content">هل تستمتع %s؟ أرجوك اترك المراجعة لنا</string>
     <string name="msg_last_page">هناك الصفحة الاخيره التي تقراها (الصفحة: %d) هل تريد المتابعة ؟</string>
     <string name="action_clear_cache">أزاله ذاكره التخزين المؤقت</string>
     <string name="action_clear_history">أزاله المحفوظات</string>

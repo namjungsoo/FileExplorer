@@ -27,8 +27,8 @@
     <string name="permissions">Richiedi autorizzazioni</string>
     <string name="no_files">Nessun file trovato.</string>
     <string name="msg_no_image_in_zip">Non c\'è alcuna immagine nel file compresso (ZIP).</string>
-    <string name="dialog_review_title">Supporta il Visualizzatore comico</string>
-    <string name="dialog_review_content">Stai divertendo Visualizzatore comico? Lasci prego una recensione per noi!</string>
+    <string name="dialog_review_title">Supporta il %s</string>
+    <string name="dialog_review_content">Stai divertendo %s? Lasci prego una recensione per noi!</string>
     <string name="msg_last_page">C\'è l\'ultima pagina che leggi. (Pagina: %d)\nSi piacerebbe continuare?</string>
     <string name="action_clear_cache">Rimuovi la cache</string>
     <string name="action_clear_history">Rimuovi la Storia</string>

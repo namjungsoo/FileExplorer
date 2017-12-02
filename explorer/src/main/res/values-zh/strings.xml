@@ -27,8 +27,8 @@
     <string name="permissions">请求权限</string>
     <string name="no_files">没有找到文件。</string>
     <string name="msg_no_image_in_zip">压缩（ZIP）文件中没有图像。</string>
-    <string name="dialog_review_title">请支持漫画浏览器</string>
-    <string name="dialog_review_content">你喜欢漫画浏览器吗？ 请留下我们的评论！</string>
+    <string name="dialog_review_title">请支持%s</string>
+    <string name="dialog_review_content">你喜欢%s吗？ 请留下我们的评论！</string>
     <string name="msg_last_page">有你阅读的最后一页。（Page：%d）\n你想继续吗？</string>
     <string name="action_clear_cache">清除缓存</string>
     <string name="action_clear_history">清除历史记录</string>

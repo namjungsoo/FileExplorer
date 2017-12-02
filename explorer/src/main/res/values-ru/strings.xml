@@ -27,8 +27,8 @@
     <string name="permissions">Запросить разрешения</string>
     <string name="no_files">Файлов не найдено.</string>
     <string name="msg_no_image_in_zip">В сжатом (ZIP) файле нет изображения.</string>
-    <string name="dialog_review_title">Пожалуйста, поддержите Комический зритель</string>
-    <string name="dialog_review_content">Вам нравится Комический зритель? Пожалуйста, оставьте отзыв для нас!</string>
+    <string name="dialog_review_title">Пожалуйста, поддержите %s</string>
+    <string name="dialog_review_content">Вам нравится %s? Пожалуйста, оставьте отзыв для нас!</string>
     <string name="msg_last_page">Прочитана последняя страница. (Страница: %d)\nВы хотите продолжить?</string>
     <string name="action_clear_cache">Удалить кеш</string>
     <string name="action_clear_history">Удалить историю</string>

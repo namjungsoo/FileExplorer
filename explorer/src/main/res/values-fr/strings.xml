@@ -27,8 +27,8 @@
     <string name="permissions">Demander des autorisations</string>
     <string name="no_files">Aucun fichier trouvé.</string>
     <string name="msg_no_image_in_zip">Il n\'y a pas d\'image dans le fichier compressé (ZIP).</string>
-    <string name="dialog_review_title">S\'il vous plaît soutenir Comic Viewer</string>
-    <string name="dialog_review_content">Vous appréciez Comic Viewer? S\'il vous plaît laissez un commentaire pour nous!</string>
+    <string name="dialog_review_title">S\'il vous plaît soutenir %s</string>
+    <string name="dialog_review_content">Vous appréciez %s? S\'il vous plaît laissez un commentaire pour nous!</string>
     <string name="msg_last_page">Il y a la dernière page que vous lisez. (Page: %d)\nVoulez-vous continuer?</string>
     <string name="action_clear_cache">Supprimer le cache</string>
     <string name="action_clear_history">Supprimer l\'historique</string>

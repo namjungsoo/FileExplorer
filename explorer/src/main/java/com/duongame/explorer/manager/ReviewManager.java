@@ -25,15 +25,25 @@ public class ReviewManager {
 
             for (int i = 0; i < reviewIndex.length; i++) {
                 if (reviewCount == reviewIndex[i]) {// 리뷰할 횟수와 동일하면
+                    final String packageName = context.getApplicationContext().getPackageName();
+                    final String appName;
+                    if(packageName.indexOf(".comicz") != -1) {
+                        appName = context.getResources().getString(R.string.comicz_name_free);
+                    } else {
+                        appName = context.getResources().getString(R.string.file_name_free);
+                    }
+
+                    final String title = String.format(context.getResources().getString(R.string.dialog_review_title), appName);
+                    final String content = String.format(context.getResources().getString(R.string.dialog_review_content), appName);
+
                     AlertHelper.showAlert(context,
                             //TODO: 문자열에 앱이름이 들어가지 않고 %s로 할수 있게 수정
-                            context.getResources().getString(R.string.dialog_review_title),
-                            context.getResources().getString(R.string.dialog_review_content),
+                            title,
+                            content,
                             new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     final Intent marketLaunch = new Intent(Intent.ACTION_VIEW);
-                                    final String packageName = context.getApplicationContext().getPackageName();
 
                                     marketLaunch.setData(Uri.parse("market://details?id=" + packageName));
                                     context.startActivity(marketLaunch);

@@ -27,8 +27,8 @@
     <string name="permissions">अनुरोध अनुमतियां</string>
     <string name="no_files">कोई फाइल नहीं मिली।</string>
     <string name="msg_no_image_in_zip">संकुचित (ZIP) फ़ाइल में कोई छवि नहीं है</string>
-    <string name="dialog_review_title">कृपया कॉमिक व्यूअर का समर्थन करें</string>
-    <string name="dialog_review_content">क्या आप एक कॉमिक दर्शक का आनंद ले रहे हैं? कृपया हमारे लिए एक समीक्षा छोड़ दो!</string>
+    <string name="dialog_review_title">कृपया %s का समर्थन करें</string>
+    <string name="dialog_review_content">क्या आप एक %s का आनंद ले रहे हैं? कृपया हमारे लिए एक समीक्षा छोड़ दो!</string>
     <string name="msg_last_page">आपके द्वारा पढ़े गए अंतिम पृष्ठ (पृष्ठ: %d)\nक्या आप जारी रखना चाहते हैं?</string>
     <string name="action_clear_cache">कैश निकालें</string>
     <string name="action_clear_history">इतिहास निकालें</string>

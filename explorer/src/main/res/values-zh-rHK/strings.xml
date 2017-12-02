@@ -27,8 +27,8 @@
     <string name="permissions">請求權限</string>
     <string name="no_files">沒有找到文件。</string>
     <string name="msg_no_image_in_zip">壓縮（ZIP）文件中沒有圖像。</string>
-    <string name="dialog_review_title">請支持漫畫瀏覽器</string>
-    <string name="dialog_review_content">你喜歡漫畫瀏覽器嗎？請留下我們的評論！</string>
+    <string name="dialog_review_title">請支持%s</string>
+    <string name="dialog_review_content">你喜歡%s嗎？請留下我們的評論！</string>
     <string name="msg_last_page">有你閱讀的最後一頁。（Page：%d）\n你想繼續嗎？</string>
     <string name="action_clear_cache">清除緩存</string>
     <string name="action_clear_history">清除歷史記錄</string>
