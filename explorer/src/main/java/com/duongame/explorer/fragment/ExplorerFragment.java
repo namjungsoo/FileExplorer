@@ -214,6 +214,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
         switcherViewType.setDisplayedChild(SWITCH_LIST);
 
         adapter = new ExplorerListAdapter(getActivity(), fileList);
+        adapter.setSelectMode(selectMode);
 
         listView = (RecyclerView) rootView.findViewById(R.id.list_explorer);
         listView.setAdapter(adapter);
@@ -234,6 +235,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
         switcherViewType.setDisplayedChild(SWITCH_GRID);
 
         adapter = new ExplorerGridAdapter(getActivity(), fileList);
+        adapter.setSelectMode(selectMode);
 
         gridView = (RecyclerView) rootView.findViewById(R.id.grid_explorer);
         gridView.setAdapter(adapter);
@@ -317,6 +319,11 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
         // 이미 선택 모드라면 이름변경을 해줌
         if (selectMode) {
             //renameFileWithDialog
+            if(getSelectedFileCount() == 1) {
+
+            } else {
+                //TODO: 파일 이름 변경은 하나의 파일 선택시에만 가능합니다.
+            }
         } else {// 선택 모드로 진입 + 현재 파일 선택
             selectMode = true;
 
@@ -327,6 +334,23 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
             // UI 상태만 리프레시
             softRefresh();
         }
+    }
+
+    int getSelectedFileCount() {
+        if(fileList == null)
+            return 0;
+
+        int count = 0;
+        for(int i=0; i<fileList.size(); i++) {
+            if(fileList.get(i).selected) {
+                count++;
+            }
+        }
+        return count;
+    }
+
+    void renameFileWithDialog() {
+
     }
 
     void onAdapterItemClick(int position) {
