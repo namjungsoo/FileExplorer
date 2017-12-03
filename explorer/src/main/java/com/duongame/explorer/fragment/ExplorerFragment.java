@@ -308,6 +308,8 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
     }
 
     void onAdapterItemLongClick(int position) {
+        JLog.e(TAG, "onAdapterItemLongClick=" + position);
+
         ExplorerItem item = fileList.get(position);
         if (item == null)
             return;
@@ -320,18 +322,21 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
 
             // 현재 위치의 아이템을 선택으로 설정
             item.selected = true;
+            JLog.e(TAG, "onAdapterItemLongClick item=" + item.hashCode() + " " + item.selected);
 
-            // 전체 리프레시
-            onRefresh();
+            // UI 상태만 리프레시
+            softRefresh();
         }
     }
 
     void onAdapterItemClick(int position) {
+        JLog.e(TAG, "onAdapterItemClick=" + position);
+
         ExplorerItem item = fileList.get(position);
         if (item == null)
             return;
 
-        if(selectMode) {
+        if (selectMode) {
             item.selected = !item.selected;
 
             // 아이템을 찾아서 UI를 업데이트 해주어야 함
@@ -528,6 +533,13 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
         return pathChanged;
     }
 
+    private void softRefresh() {
+        if(adapter != null) {
+            adapter.setSelectMode(selectMode);
+            adapter.notifyDataSetChanged();
+        }
+    }
+
     @Override
     public void onRefresh() {
         // 외부 resume시에 들어올수도 있으므로 pref에서 읽는다.
@@ -541,7 +553,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
             selectMode = false;
 
             // 다시 리프레시를 해야지 체크박스를 새로 그린다.
-            onRefresh();
+            softRefresh();
         } else {
             if (!ExplorerManager.isInitialPath()) {
                 gotoUpDirectory();
