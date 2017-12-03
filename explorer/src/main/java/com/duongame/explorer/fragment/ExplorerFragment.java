@@ -1,5 +1,6 @@
 package com.duongame.explorer.fragment;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -15,6 +16,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -29,7 +31,10 @@ import com.duongame.explorer.adapter.ExplorerItem;
 import com.duongame.explorer.adapter.ExplorerListAdapter;
 import com.duongame.explorer.adapter.ExplorerScrollListener;
 import com.duongame.explorer.bitmap.BitmapCacheManager;
+import com.duongame.explorer.helper.AlertHelper;
+import com.duongame.explorer.helper.AppHelper;
 import com.duongame.explorer.helper.ExtSdCardHelper;
+import com.duongame.explorer.helper.FileHelper;
 import com.duongame.explorer.helper.JLog;
 import com.duongame.explorer.helper.PreferenceHelper;
 import com.duongame.explorer.manager.ExplorerManager;
@@ -319,10 +324,10 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
         // 이미 선택 모드라면 이름변경을 해줌
         if (selectMode) {
             //renameFileWithDialog
-            if(getSelectedFileCount() == 1) {
-
+            if (getSelectedFileCount() == 1) {
+                renameFileWithDialog(item);
             } else {
-                //TODO: 파일 이름 변경은 하나의 파일 선택시에만 가능합니다.
+                //TODO: "파일 이름 변경은 하나의 파일 선택시에만 가능합니다."
             }
         } else {// 선택 모드로 진입 + 현재 파일 선택
             selectMode = true;
@@ -337,20 +342,57 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
     }
 
     int getSelectedFileCount() {
-        if(fileList == null)
+        if (fileList == null)
             return 0;
 
         int count = 0;
-        for(int i=0; i<fileList.size(); i++) {
-            if(fileList.get(i).selected) {
+        for (int i = 0; i < fileList.size(); i++) {
+            if (fileList.get(i).selected) {
                 count++;
             }
         }
         return count;
     }
 
-    void renameFileWithDialog() {
+    void renameFileWithDialog(final ExplorerItem item) {
+        View view = getActivity().getLayoutInflater().inflate(R.layout.dialog_rename, null, false);
+        final EditText editFileName = (EditText) view.findViewById(R.id.file_name);
+        editFileName.setText(item.name);
 
+        AlertHelper.showAlert(getActivity(),
+                AppHelper.getAppName(getContext()),
+                "변경하실 파일명을 입력하세요.",
+                view, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        String newName = editFileName.getText().toString();
+                        renameFile(item, newName);
+                    }
+                }
+                , null, null);
+    }
+
+    // 파일이름을 변경하고 파일리스트에서 정보를 변경해야 한다.
+    void renameFile(ExplorerItem item, String newName) {
+        try {
+            String newPath = FileHelper.getParentPath(item.path) + "/" + newName;
+            JLog.e(TAG, item.path + " " + newPath);
+
+            // 파일이름을 변경
+            new File(item.path).renameTo(new File(newPath));
+
+            // 성공시 선택 해제 및 파일 정보 변경
+            item.selected = false;
+            item.name = newName;
+            item.path = newPath;
+
+            // 정보 변경 반영
+            adapter.notifyItemChanged(item.position);
+
+            //TODO: "파일 이름이 변경되었습니다."
+        } catch (Exception e) {
+            //TODO: "에러가 발생하였습니다."
+        }
     }
 
     void onAdapterItemClick(int position) {
@@ -558,7 +600,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
     }
 
     private void softRefresh() {
-        if(adapter != null) {
+        if (adapter != null) {
             adapter.setSelectMode(selectMode);
             adapter.notifyDataSetChanged();
         }

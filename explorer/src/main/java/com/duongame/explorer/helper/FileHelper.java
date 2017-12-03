@@ -117,4 +117,8 @@ public class FileHelper {
     public static String getFullPath(String path, String name) {
         return path + "/" + name;
     }
+
+    public static String getParentPath(String path) {
+        return path.substring(0, path.lastIndexOf('/'));
+    }
 }

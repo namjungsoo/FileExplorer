@@ -61,7 +61,7 @@ public class ExplorerItem implements Cloneable {
     public String name;
     public String date;
     public long size;
-    public String path;
+    public String path;// 파일명+패스이다.
     public FileType type;
 
     // 이미지 ZIP 데이터
