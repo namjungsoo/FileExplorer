@@ -19,6 +19,7 @@ import java.io.IOException;
 public class LoadGifTask extends AsyncTask<String, Integer, Void> {
     public interface LoadGifListener {
         public void onSuccess(byte[] data);
+
         public void onFail();
     }
 

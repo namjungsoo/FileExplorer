@@ -271,10 +271,10 @@ public class ZipActivity extends PagerActivity {
     }
 
     private void updatePageSide() {
-        if(pagerAdapter == null)
+        if (pagerAdapter == null)
             return;
 
-        if(pagerAdapter.getImageList() == null)
+        if (pagerAdapter.getImageList() == null)
             return;
 
         // Task가 실행중이면 pause

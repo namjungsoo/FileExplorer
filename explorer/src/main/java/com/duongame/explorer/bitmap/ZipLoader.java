@@ -107,7 +107,7 @@ public class ZipLoader {
             if (imageList.size() > 0) {
                 // 이미지 로딩후 확인해보고 좌우를 나눠야 되면 나누어 주자
                 // 파일명으로 실제 폴더 안에 파일이 있는지 검사
-                if(!(new File(imageList.get(0).name).exists()))
+                if (!(new File(imageList.get(0).name).exists()))
                     zipFile.extractFile(imageList.get(0).name, extractPath);
 
                 final BitmapFactory.Options options = BitmapLoader.decodeBounds(imageList.get(0).path);
@@ -154,7 +154,7 @@ public class ZipLoader {
                         ZipExtractTask.processItem(i, item, side, firstList);
                     }
 
-                    task = new ZipExtractTask(zipFile, imageList, listener, extract, (ArrayList<ExplorerItem>)firstList.clone());
+                    task = new ZipExtractTask(zipFile, imageList, listener, extract, (ArrayList<ExplorerItem>) firstList.clone());
                     task.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, extractPath);
                     return firstList;
                 }

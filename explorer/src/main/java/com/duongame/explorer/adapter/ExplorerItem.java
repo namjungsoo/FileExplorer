@@ -78,7 +78,7 @@ public class ExplorerItem implements Cloneable {
     public int priority;// 0이면 최우선, 1이면 낮음
     public boolean selected;// 선택되었는가 표시
 
-//    public WeakReference<ImageView> imageViewRef;
+    //    public WeakReference<ImageView> imageViewRef;
     public ImageViewAttacher attacher;
 
     public ExplorerItem(String path, String name, String date, long size, FileType type) {

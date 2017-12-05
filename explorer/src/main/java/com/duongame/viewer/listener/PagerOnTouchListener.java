@@ -16,10 +16,10 @@ public class PagerOnTouchListener extends BaseOnTouchListener {
     private final static String TAG = PagerOnTouchListener.class.getSimpleName();
     private final static int DOUBLE_TAP_INTERVAL_MS = 150;
 
-    PagerActivity activity;
-    long actionUpTime;
-    long actionDownTime;
-    AtomicBoolean isTaskRunning = new AtomicBoolean(false);
+    private PagerActivity activity;
+    private long actionUpTime;
+    private long actionDownTime;
+    private AtomicBoolean isTaskRunning = new AtomicBoolean(false);
 
     public PagerOnTouchListener(PagerActivity activity) {
         super(activity);

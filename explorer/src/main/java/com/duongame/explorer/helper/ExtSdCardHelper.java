@@ -43,14 +43,15 @@ public class ExtSdCardHelper {
         }
         return out;
     }
+
     public static String getExternalSdCardPath() {
         // 외장 SD카드 주소
         HashSet<String> mountSet = getExternalMounts();
-        if(mountSet.size() == 0)
+        if (mountSet.size() == 0)
             return null;
 
         String extSdCard = mountSet.iterator().next();
-        extSdCard = "/storage/" + extSdCard.substring(extSdCard.lastIndexOf("/")+1);
+        extSdCard = "/storage/" + extSdCard.substring(extSdCard.lastIndexOf("/") + 1);
         return extSdCard;
     }
 }

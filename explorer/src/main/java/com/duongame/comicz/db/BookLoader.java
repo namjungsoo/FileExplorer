@@ -136,7 +136,7 @@ public class BookLoader {
         final Book book = getHistory(context, item);
 
         // 새로 페이지 0부터 읽음
-        if(book == null) {
+        if (book == null) {
             loadNew(context, item);
         } else {
             // 팝업을 띄운다음에 읽자

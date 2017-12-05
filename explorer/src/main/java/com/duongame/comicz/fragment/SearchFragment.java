@@ -66,7 +66,7 @@ public class SearchFragment extends BaseFragment {
                 adapter.setOnItemClickListener(new SearchRecyclerAdapter.OnItemClickListener() {
                     @Override
                     public void onItemClick(int position) {
-                        if(fileList != null) {
+                        if (fileList != null) {
                             ExplorerItem item = fileList.get(position);
                             BookLoader.load(getActivity(), item, false);
                         }

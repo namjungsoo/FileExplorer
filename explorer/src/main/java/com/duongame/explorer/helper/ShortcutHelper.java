@@ -40,14 +40,14 @@ public class ShortcutHelper {
         intent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, shortcutIntent);
 
         int resId = 0;
-        if(BuildConfig.FLAVOR_project.equals("comicz")) {
-            if(BuildConfig.SHOW_AD) {
+        if (BuildConfig.FLAVOR_project.equals("comicz")) {
+            if (BuildConfig.SHOW_AD) {
                 resId = R.string.comicz_name_free;
             } else {
                 resId = R.string.comicz_name_pro;
             }
-        } else if(BuildConfig.FLAVOR_project.equals("file")) {
-            if(BuildConfig.SHOW_AD) {
+        } else if (BuildConfig.FLAVOR_project.equals("file")) {
+            if (BuildConfig.SHOW_AD) {
                 resId = R.string.file_name_free;
             } else {
                 resId = R.string.file_name_pro;

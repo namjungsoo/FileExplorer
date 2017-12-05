@@ -45,11 +45,11 @@ public class RemoveAndPreloadBitmapTask extends BitmapTask {
         if (params != null) {
             // preload
             for (int i = 0; i < params.length; i++) {
-                if(isCancelled())
+                if (isCancelled())
                     return null;
 
                 ExplorerItem item = params[i];
-                if(FileHelper.isGifImage(item.path))
+                if (FileHelper.isGifImage(item.path))
                     continue;
 
                 // preload는 bitmap만 읽어서 캐쉬에 넣어놓는 용도이다.
@@ -57,7 +57,7 @@ public class RemoveAndPreloadBitmapTask extends BitmapTask {
                 // OOM 처리
                 try {
                     loadBitmap(item);
-                } catch(OutOfMemoryError e) {
+                } catch (OutOfMemoryError e) {
                     return null;
                 }
             }

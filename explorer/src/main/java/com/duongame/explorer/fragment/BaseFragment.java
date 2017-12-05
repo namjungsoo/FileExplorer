@@ -23,8 +23,8 @@ public class BaseFragment extends Fragment {
 
             // activity가 null일수 있음
             Activity activity = getActivity();
-            if(activity != null) {
-                if(!activity.isFinishing()) {
+            if (activity != null) {
+                if (!activity.isFinishing()) {
                     activity.finish();
                 }
             }

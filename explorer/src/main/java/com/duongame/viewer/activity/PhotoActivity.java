@@ -84,7 +84,7 @@ public class PhotoActivity extends PagerActivity {
 
     @Override
     public void updateInfo(int position) {
-        if(pager.getCurrentItem() == position) {
+        if (pager.getCurrentItem() == position) {
             ExplorerItem item = pagerAdapter.getImageList().get(position);
             textInfo.setText("" + item.width + " x " + item.height);
             textSize.setText(FileHelper.getMinimizedSize(item.size));

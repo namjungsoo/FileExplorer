@@ -39,10 +39,10 @@ public class ImageViewAttacher extends PhotoViewAttacher {
     // 이유는 같은 크기인데도 layout change로 matrix가 초기화 되기 때문이다.
     @Override
     public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
-        if(imageView == null || imageView.getDrawable() == null)
+        if (imageView == null || imageView.getDrawable() == null)
             return;
 
-        if(!isLayoutInitialized) {
+        if (!isLayoutInitialized) {
             super.onLayoutChange(v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom);
             isLayoutInitialized = true;
         }

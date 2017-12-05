@@ -54,7 +54,7 @@ public class AdBannerManager {
             @Override
             public void onAdFailedToLoad(int errorCode) {
                 super.onAdFailedToLoad(errorCode);
-                JLog.d(TAG, "onAdFailedToLoad="+errorCode);
+                JLog.d(TAG, "onAdFailedToLoad=" + errorCode);
             }
 
             @Override
@@ -131,7 +131,7 @@ public class AdBannerManager {
     }
 
     public static void requestAd(AdView adView) {
-        if(adView != null) {
+        if (adView != null) {
             // 기본 요청을 시작합니다.
             final AdRequest adRequest = new AdRequest.Builder()
                     // 이제 테스트를 제거하자.

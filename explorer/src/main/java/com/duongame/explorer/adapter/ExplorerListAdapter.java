@@ -49,7 +49,7 @@ public class ExplorerListAdapter extends ExplorerAdapter {
 
     @Override
     public int getFirstVisibleItem(RecyclerView recyclerView) {
-        LinearLayoutManager layoutManager = (LinearLayoutManager)recyclerView.getLayoutManager();
+        LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
         return layoutManager.findFirstVisibleItemPosition();
     }
 
@@ -57,7 +57,7 @@ public class ExplorerListAdapter extends ExplorerAdapter {
     public int getVisibleItemCount(RecyclerView recyclerView) {
         int first = getFirstVisibleItem(recyclerView);
 
-        LinearLayoutManager layoutManager = (LinearLayoutManager)recyclerView.getLayoutManager();
+        LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
         int last = layoutManager.findLastVisibleItemPosition();
 
         return last - first + 1;

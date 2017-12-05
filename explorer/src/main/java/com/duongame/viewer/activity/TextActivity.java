@@ -99,7 +99,7 @@ public class TextActivity extends ViewerActivity {
         });
 
         scrollText.getViewTreeObserver().addOnGlobalLayoutListener(onGlobalLayoutListener);
-        progressBar = (ProgressBar)findViewById(R.id.progress_text);
+        progressBar = (ProgressBar) findViewById(R.id.progress_text);
 
         processIntent();
 
@@ -314,7 +314,7 @@ public class TextActivity extends ViewerActivity {
                 //FIX:
                 // encoding이 null일수 있음
                 final InputStreamReader reader;
-                if(encoding != null) {
+                if (encoding != null) {
                     reader = new InputStreamReader(fis, encoding);
                 } else {
                     reader = new InputStreamReader(fis);

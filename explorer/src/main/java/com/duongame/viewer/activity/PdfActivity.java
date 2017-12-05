@@ -58,7 +58,7 @@ public class PdfActivity extends PagerActivity {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             //FIX:
             // renderer가 null일 수 있음
-            if(renderer != null) {
+            if (renderer != null) {
                 book.total_page = renderer.getPageCount();
             }
         }
@@ -121,7 +121,7 @@ public class PdfActivity extends PagerActivity {
 
                     pager.setCurrentItem(page);
 
-                    textInfo.setText(""+renderer.getPageCount() + " pages");
+                    textInfo.setText("" + renderer.getPageCount() + " pages");
                     updateName(page);
                     updateScrollInfo(page);
                 } else {

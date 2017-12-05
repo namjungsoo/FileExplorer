@@ -7,22 +7,26 @@ import com.duongame.explorer.adapter.ExplorerItem;
 import com.duongame.explorer.helper.FileHelper;
 import com.duongame.viewer.activity.PagerActivity;
 
+import java.lang.ref.WeakReference;
+
 /**
  * Created by namjungsoo on 2016-12-16.
  */
 
 public class LoadBitmapTask extends BitmapTask {
-    private final ImageView imageView;
+    private final WeakReference<PagerActivity> contextRef;
+    private final WeakReference<ImageView> imageViewRef;
+
     private ExplorerItem item;
-    private PagerActivity context;
     private boolean useGifAni;
-    int position;
+    private int position;
 
     public LoadBitmapTask(PagerActivity context, ImageView imageView, int width, int height, boolean exif, boolean useGifAni, int position) {
         super(width, height, exif);
 
-        this.context = context;
-        this.imageView = imageView;
+        this.contextRef = new WeakReference<PagerActivity>(context);
+        this.imageViewRef = new WeakReference<ImageView>(imageView);
+
         this.position = position;
         this.useGifAni = useGifAni;
     }
@@ -52,14 +56,20 @@ public class LoadBitmapTask extends BitmapTask {
         super.onPostExecute(bitmap);
 
         // imageView 셋팅은 UI 쓰레드에서 해야 한다.
-        if (imageView != null) {
-            if (bitmap != null) {
-                imageView.setImageBitmap(bitmap);
-                imageView.setTag(item.path);
+        if (bitmap == null)
+            return;
 
-                context.updateInfo(position);
+        if (imageViewRef.get() == null)
+            return;
 
-                // 종횡비 체크
+        imageViewRef.get().setImageBitmap(bitmap);
+        imageViewRef.get().setTag(item.path);
+
+        if (!contextRef.get().isFinishing()) {
+            contextRef.get().updateInfo(position);
+        }
+
+        // 종횡비 체크
 //                final int bmWidth = bitmap.getWidth();
 //                final int bmHeight = bitmap.getHeight();
 //                final float bmRatio = (float) bmHeight / (float) bmWidth;
@@ -79,7 +89,7 @@ public class LoadBitmapTask extends BitmapTask {
 //                    newHeight = (int) (width * bmRatio);
 //                }
 
-                //PhotoView 때문인가
+        //PhotoView 때문인가
 //                final FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) imageView.getLayoutParams();
 //                params.width = newWidth;
 //                params.height = newHeight;
@@ -87,10 +97,10 @@ public class LoadBitmapTask extends BitmapTask {
 //
 //                imageView.setLayoutParams(params);
 //                imageView.requestLayout();
-            } else {
-                // 사용안함
+//            } else {
+        // 사용안함
 //                Glide.with(context).load(new File(item.path)).into(imageView);
-            }
-        }
+//            }
+//        }
     }
 }

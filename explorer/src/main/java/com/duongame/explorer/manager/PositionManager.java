@@ -15,7 +15,7 @@ public class PositionManager {
     }
 
     public static int getPosition(String path) {
-        if(positionMap.containsKey(path)) {
+        if (positionMap.containsKey(path)) {
             return positionMap.get(path);
         }
         return 0;
@@ -26,7 +26,7 @@ public class PositionManager {
     }
 
     public static int getTop(String path) {
-        if(topMap.containsKey(path)) {
+        if (topMap.containsKey(path)) {
             return topMap.get(path);
         }
         return 0;

@@ -147,8 +147,8 @@ public class PdfPagerAdapter extends ViewerPagerAdapter {
 
         //TODO: 이부분 살펴봐야함
         final Drawable d = imageView.getDrawable();
-        if(d instanceof BitmapDrawable) {
-            Bitmap b = ((BitmapDrawable)d).getBitmap();
+        if (d instanceof BitmapDrawable) {
+            Bitmap b = ((BitmapDrawable) d).getBitmap();
             b.recycle();
         }
 

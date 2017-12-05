@@ -38,7 +38,7 @@ public class ZipExtractTask extends AsyncTask<String, Integer, Void> {
         this.listener = listener;
         this.extract = extract;
 
-        if(zipImageList != null) {
+        if (zipImageList != null) {
             this.zipImageList = zipImageList;
         } else {
             this.zipImageList = new ArrayList<>();

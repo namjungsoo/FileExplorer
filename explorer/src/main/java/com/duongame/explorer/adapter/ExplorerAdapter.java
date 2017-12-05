@@ -129,7 +129,7 @@ public class ExplorerAdapter extends RecyclerView.Adapter<ExplorerAdapter.Explor
             date = (TextView) itemView.findViewById(R.id.text_date);
             size = (TextView) itemView.findViewById(R.id.text_size);
             iconSmall = (ImageView) itemView.findViewById(R.id.file_small_icon);
-            check = (CheckBox)itemView.findViewById(R.id.check_file);
+            check = (CheckBox) itemView.findViewById(R.id.check_file);
         }
     }
 
@@ -184,7 +184,7 @@ public class ExplorerAdapter extends RecyclerView.Adapter<ExplorerAdapter.Explor
     }
 
     protected void updateCheckBox(ExplorerViewHolder viewHolder, ExplorerItem item) {
-        if(getSelectMode()) {
+        if (getSelectMode()) {
             JLog.e(TAG, "updateCheckBox position=" + item.position + " item=" + item.hashCode() + " " + item.selected);
             viewHolder.check.setVisibility(View.VISIBLE);
             viewHolder.check.setChecked(item.selected);
@@ -209,6 +209,10 @@ public class ExplorerAdapter extends RecyclerView.Adapter<ExplorerAdapter.Explor
                     .into(new ImageViewTarget<Drawable>(viewHolder.icon) {
                         @Override
                         protected void setResource(@Nullable Drawable resource) {
+                            //FIX: destroyed activity error
+                            if (context.isFinishing())
+                                return;
+
                             if (viewHolder.iconSmall.getTag() == item.path) {
                                 getView().setImageDrawable(resource);
                             }

@@ -1,7 +1,6 @@
 package com.duongame.viewer.adapter;
 
 import android.os.AsyncTask;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
@@ -140,14 +139,14 @@ public class PhotoPagerAdapter extends ViewerPagerAdapter {
 
             // GIF 이미지일 경우
             // 메모리에 사라졌다가 재 로딩일 경우에 애니메이션이 잘 안된다.
-            final ViewGroup rootView = (ViewGroup)object;
-            if(rootView == null)
+            final ViewGroup rootView = (ViewGroup) object;
+            if (rootView == null)
                 return;
 
             final PagerActivity pagerActivity = (PagerActivity) context;
             final GifImageView imageView = (GifImageView) rootView.findViewById(R.id.image_viewer);
 
-            if(!useGifAni)
+            if (!useGifAni)
                 return;
 
             if (imageList.get(position).path.toLowerCase().endsWith(".gif")) {
@@ -165,7 +164,7 @@ public class PhotoPagerAdapter extends ViewerPagerAdapter {
                         pagerActivity.setGifImageView(imageView);
 
                         ExplorerItem item = getImageList().get(position);
-                        if(item != null) {
+                        if (item != null) {
                             item.width = imageView.getGifWidth();
                             item.height = imageView.getGifHeight();
                         }

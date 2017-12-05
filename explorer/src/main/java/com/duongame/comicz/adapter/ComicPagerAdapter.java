@@ -80,7 +80,7 @@ public class ComicPagerAdapter extends FragmentPagerAdapter {
     public void setPrimaryItem(ViewGroup container, int position, Object object) {
         super.setPrimaryItem(container, position, object);
 
-        if(position != lastPosition) {
+        if (position != lastPosition) {
             lastPosition = position;
             if (fragmentMap.containsKey(position)) {
                 final BaseFragment fragment = fragmentMap.get(position);

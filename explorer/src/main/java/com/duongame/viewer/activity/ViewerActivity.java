@@ -110,7 +110,7 @@ public class ViewerActivity extends AppCompatActivity {
     protected void onDestroy() {
         if (adView != null) {
             ViewGroup vg = (ViewGroup) adView.getParent();
-            if(vg != null) {
+            if (vg != null) {
                 vg.removeView(adView);
             }
             adView.removeAllViews();

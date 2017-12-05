@@ -80,8 +80,7 @@ public class BitmapTask extends AsyncTask<ExplorerItem, Void, Bitmap> {
                 } else {
                     if (item.side == ExplorerItem.Side.SIDE_ALL) {
                         BitmapCacheManager.setBitmap(item.path, bitmap);
-                    }
-                    else {
+                    } else {
                         // 비트맵을 로딩했으면 이제 자르자
                         bitmap = BitmapLoader.splitBitmapSide(bitmap, item);
                     }

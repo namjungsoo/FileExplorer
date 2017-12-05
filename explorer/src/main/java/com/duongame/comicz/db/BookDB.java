@@ -4,7 +4,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
 
 import com.duongame.explorer.adapter.ExplorerItem;
 
@@ -99,7 +98,7 @@ public class BookDB extends SQLiteOpenHelper {
     }
 
     public static Book getBook(Context context, String path) {
-        if(path == null)
+        if (path == null)
             return null;
         // 문자열중 작은 따옴표 '변환
         path = path.replace("'", "\'");

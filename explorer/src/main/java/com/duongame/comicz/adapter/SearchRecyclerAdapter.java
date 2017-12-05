@@ -71,7 +71,7 @@ public class SearchRecyclerAdapter extends RecyclerView.Adapter<SearchRecyclerAd
         holder.iconSmall.setTag(item.path);
 
 //        item.imageViewRef = new WeakReference<ImageView>(searchViewHolder.icon);
-        switch(item.type) {
+        switch (item.type) {
             case ZIP:
                 setIconZip(holder, item);
                 break;
@@ -86,7 +86,7 @@ public class SearchRecyclerAdapter extends RecyclerView.Adapter<SearchRecyclerAd
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(onItemClickListener != null) {
+                if (onItemClickListener != null) {
                     onItemClickListener.onItemClick(i);
                 }
             }

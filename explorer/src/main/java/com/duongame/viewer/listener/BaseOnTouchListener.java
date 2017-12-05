@@ -82,8 +82,7 @@ public abstract class BaseOnTouchListener implements View.OnTouchListener {
                 if (!isBeingDragged) {
                     if (touchAxis == AXIS_X) {
                         startDragXIfNeeded(ev);
-                    }
-                    else if (touchAxis == AXIS_Y) {
+                    } else if (touchAxis == AXIS_Y) {
                         startDragYIfNeeded(ev);
                     }
                 }

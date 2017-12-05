@@ -11,7 +11,7 @@ public class FontManager {
     static Typeface nanumMyeongjo;
 
     public static Typeface getTypeFaceNanumMeyongjo(Context context) {
-        if(nanumMyeongjo == null) {
+        if (nanumMyeongjo == null) {
             nanumMyeongjo = Typeface.createFromAsset(context.getAssets(), "fonts/NanumMyeongjo.ttf");
         }
         return nanumMyeongjo;

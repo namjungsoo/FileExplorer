@@ -7,7 +7,7 @@ import com.duongame.viewer.activity.TextActivity;
  */
 
 public class TextOnTouchListener extends BaseOnTouchListener {
-    TextActivity activity;
+    private TextActivity activity;
 
     public TextOnTouchListener(TextActivity activity) {
         super(activity);

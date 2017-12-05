@@ -1,5 +1,6 @@
 package com.duongame.explorer.task.thumbnail;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
@@ -8,18 +9,21 @@ import android.widget.ImageView;
 import com.duongame.explorer.bitmap.BitmapCacheManager;
 import com.duongame.explorer.bitmap.BitmapLoader;
 
+import java.lang.ref.WeakReference;
+
 /**
  * Created by namjungsoo on 2016-12-16.
  */
 
 public class LoadThumbnailTask extends AsyncTask<String, Void, Bitmap> {
-    private final Context context;
-    private final ImageView imageView;
+    private final WeakReference<Context> contextRef;
+    private final WeakReference<ImageView> imageViewRef;
+
     private String path;
 
     public LoadThumbnailTask(Context context, ImageView imageView) {
-        this.context = context;
-        this.imageView = imageView;
+        this.contextRef = new WeakReference<Context>(context);
+        this.imageViewRef = new WeakReference<ImageView>(imageView);
     }
 
     @Override
@@ -31,12 +35,20 @@ public class LoadThumbnailTask extends AsyncTask<String, Void, Bitmap> {
         if(isCancelled())
             return null;
 
+        if(contextRef.get() == null)
+            return null;
+
+        if (contextRef.get() instanceof Activity) {
+            if (((Activity) contextRef.get()).isFinishing())
+                return null;
+        }
+
         Bitmap bitmap = BitmapCacheManager.getThumbnail(path);
         if(isCancelled())
             return bitmap;
 
         if (bitmap == null) {
-            bitmap = BitmapLoader.getThumbnail(context, path, true);
+            bitmap = BitmapLoader.getThumbnail(contextRef.get(), path, true);
             if(isCancelled())
                 return bitmap;
 
@@ -53,10 +65,10 @@ public class LoadThumbnailTask extends AsyncTask<String, Void, Bitmap> {
     @Override
     protected void onPostExecute(Bitmap bitmap) {
         super.onPostExecute(bitmap);
-        if (imageView != null && bitmap != null) {
-            if (imageView != null) {
-                imageView.setImageBitmap(bitmap);
-            }
-        }
+        if (bitmap == null)
+            return;
+        if (imageViewRef.get() == null)
+            return;
+        imageViewRef.get().setImageBitmap(bitmap);
     }
 }

@@ -18,11 +18,11 @@ public class PreloadBitmapTask extends BitmapTask {
     protected Bitmap doInBackground(ExplorerItem... params) {
         // preload
         for (int i = 0; i < params.length; i++) {
-            if(isCancelled())
+            if (isCancelled())
                 return null;
 
             ExplorerItem item = params[i];
-            if(FileHelper.isGifImage(item.path))
+            if (FileHelper.isGifImage(item.path))
                 continue;
 
             // preload는 bitmap만 읽어서 캐쉬에 넣어놓는 용도이다.
