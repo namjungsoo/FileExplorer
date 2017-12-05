@@ -228,7 +228,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
         listView.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL_LIST));
 
         adapter.setOnItemClickListener(this);
-        adapter.setOnLongItemClickListener(this);
+//        adapter.setOnLongItemClickListener(this);
 
         viewType = SWITCH_LIST;
         currentView = listView;
@@ -248,7 +248,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
         gridView.setLayoutManager(new GridLayoutManager(getActivity(), 4));
 
         adapter.setOnItemClickListener(this);
-        adapter.setOnLongItemClickListener(this);
+//        adapter.setOnLongItemClickListener(this);
 
         viewType = SWITCH_GRID;
         currentView = gridView;
