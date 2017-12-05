@@ -10,7 +10,7 @@ import static com.duongame.explorer.adapter.ExplorerItem.Side.SIDE_ALL;
 
 public class ExplorerItem implements Cloneable {
     public enum FileType {
-        DIRECTORY(0),
+        FOLDER(0),
         IMAGE(1),
         VIDEO(2),
         AUDIO(3),

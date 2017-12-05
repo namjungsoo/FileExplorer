@@ -409,7 +409,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
             adapter.notifyItemChanged(position);
         } else {
             switch (item.type) {
-                case DIRECTORY:
+                case FOLDER:
                     onClickDirectory(item);
                     break;
                 case IMAGE:

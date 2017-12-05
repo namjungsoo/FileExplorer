@@ -298,11 +298,11 @@ public class BitmapLoader {
         BitmapFactory.decodeFile(path, options);
 
         options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
+        //FIX: 565로 메모리를 아낌
+        options.inPreferredConfig = Bitmap.Config.RGB_565;
 
         // 로드하기 위해서는 위에서 true 로 설정했던 inJustDecodeBounds 의 값을 false 로 설정합니다.
         options.inJustDecodeBounds = false;
-//        options.inDither = true;
-//        options.inPreferQualityOverSped = true;
 
         Bitmap bitmap = BitmapFactory.decodeFile(path, options);
         if (exifRotation) {

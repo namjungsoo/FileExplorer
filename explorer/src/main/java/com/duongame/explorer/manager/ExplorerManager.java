@@ -71,7 +71,7 @@ public class ExplorerManager {
             String fullPath = FileHelper.getFullPath(path, name);
             ExplorerItem item = new ExplorerItem(fullPath, name, date, size, type);
 
-            if (type == ExplorerItem.FileType.DIRECTORY) {
+            if (type == ExplorerItem.FileType.FOLDER) {
                 if (excludeDirectory == false) {
                     item.size = -1;
                     directoryList.add(item);
@@ -81,7 +81,7 @@ public class ExplorerManager {
                     ArrayList<ExplorerItem> subFileList = search(fullPath, keyword, ext, excludeDirectory, recursiveDirectory);
 
                     for (ExplorerItem subItem : subFileList) {
-                        if (subItem.type == ExplorerItem.FileType.DIRECTORY) {
+                        if (subItem.type == ExplorerItem.FileType.FOLDER) {
                             directoryList.add(subItem);
                         } else {
                             normalList.add(subItem);
@@ -128,7 +128,7 @@ public class ExplorerManager {
     }
 
     public static ExplorerItem.FileType getFileType(File eachFile) {
-        ExplorerItem.FileType type = eachFile.isDirectory() ? ExplorerItem.FileType.DIRECTORY : ExplorerItem.FileType.FILE;
+        ExplorerItem.FileType type = eachFile.isDirectory() ? ExplorerItem.FileType.FOLDER : ExplorerItem.FileType.FILE;
         final String lower = eachFile.getName().toLowerCase();
 
         if (FileHelper.isImage(eachFile.getName())) {

@@ -132,27 +132,32 @@ public class ZipActivity extends PagerActivity {
         final int page = pager.getCurrentItem();
         book.current_page = page;
 
-        // 페이지로 잘려져 있다.
-        final ArrayList<ExplorerItem> zipImageList = pagerAdapter.getImageList();
-        if (zipImageList != null) {
-            book.total_page = zipImageList.size();
-            final ExplorerItem item = zipImageList.get(page);
-            book.current_file = item.orgIndex;
+        try {
+            // 페이지로 잘려져 있다.
+            final ArrayList<ExplorerItem> zipImageList = pagerAdapter.getImageList();
+            if (zipImageList != null) {
+                book.total_page = zipImageList.size();
+                final ExplorerItem item = zipImageList.get(page);
+                book.current_file = item.orgIndex;
 
-            //TODO: 숫자가 맞는지 검증할것
-            if (zipExtractCompleted) {
-                // 전부 압축이 다 풀렸으므로 전체 파일 갯수를 입력해준다.
-                book.extract_file = extractFileCount;
-            } else {
-                // 앞으로 읽어야할 위치를 기억하기 위해 +1을 함
-                book.extract_file = extractFileCount + 1;
+                //TODO: 숫자가 맞는지 검증할것
+                if (zipExtractCompleted) {
+                    // 전부 압축이 다 풀렸으므로 전체 파일 갯수를 입력해준다.
+                    book.extract_file = extractFileCount;
+                } else {
+                    // 앞으로 읽어야할 위치를 기억하기 위해 +1을 함
+                    book.extract_file = extractFileCount + 1;
+                }
+                book.side = side;
+                book.last_file = item.path;
+
+                BookDB.setLastBook(this, book);
             }
-            book.side = side;
-            book.last_file = item.path;
-
-            BookDB.setLastBook(this, book);
         }
+        //TODO: 일단 막아둠
+        catch (IndexOutOfBoundsException e) {
 
+        }
         super.onPause();
     }
 
