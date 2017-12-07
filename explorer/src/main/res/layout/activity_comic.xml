@@ -5,7 +5,7 @@
     android:id="@+id/activity_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.duongame.comicz.activity.ComicActivity">
+    tools:context=".activity.ComicActivity">
 
     <!-- AppBarLayout is a wrapper for a Toolbar in order to apply scrolling effects. -->
     <!-- Note that AppBarLayout expects to be the first child nested within a CoordinatorLayout -->
@@ -36,7 +36,7 @@
             app:tabTextColor="@color/colorTextSecondary" />
     </android.support.design.widget.AppBarLayout>
 
-    <com.duongame.explorer.view.ViewPagerEx
+    <com.duongame.view.ViewPagerEx
         android:id="@+id/pager"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"

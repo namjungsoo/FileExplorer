@@ -11,7 +11,7 @@
         android:screenOrientation="portrait"
         android:theme="@style/ExplorerTheme">
 
-        <activity android:name="com.duongame.explorer.activity.FileActivity">
+        <activity android:name=".activity.FileActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -21,16 +21,16 @@
         </activity>
 
         <activity
-            android:name="com.duongame.viewer.activity.PhotoActivity"
+            android:name=".activity.PhotoActivity"
             android:theme="@style/ComicViewerTheme" />
         <activity
-            android:name="com.duongame.viewer.activity.ZipActivity"
+            android:name=".activity.ZipActivity"
             android:theme="@style/ComicViewerTheme" />
         <activity
-            android:name="com.duongame.viewer.activity.TextActivity"
+            android:name=".activity.TextActivity"
             android:theme="@style/ComicViewerTheme" />
         <activity
-            android:name="com.duongame.viewer.activity.PdfActivity"
+            android:name=".activity.PdfActivity"
             android:theme="@style/ComicViewerTheme" />
 
         <provider

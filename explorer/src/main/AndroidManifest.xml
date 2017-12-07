@@ -14,7 +14,7 @@
             <!--android:screenOrientation="portrait"-->
             <!--android:theme="@style/ExplorerTheme">-->
             <!--<activity-->
-                <!--android:name="com.duongame.comicz.activity.ComicActivity"-->
+                <!--android:nacom.duongame.activityvity.ComicActivity"-->
                 <!--android:screenOrientation="portrait">-->
                 <!--<intent-filter>-->
                     <!--<action android:name="android.intent.action.MAIN" />-->
@@ -23,19 +23,19 @@
                 <!--</intent-filter>-->
             <!--</activity>-->
             <!--<activity-->
-                <!--android:name="com.duongame.viewer.activity.PhotoActivity"-->
+                <!--android:nacom.duongame.activityvity.PhotoActivity"-->
                 <!--android:screenOrientation="portrait"-->
                 <!--android:theme="@style/ComicViewerTheme" />-->
             <!--<activity-->
-                <!--android:name="com.duongame.viewer.activity.ZipActivity"-->
+                <!--android:nacom.duongame.activityvity.ZipActivity"-->
                 <!--android:screenOrientation="portrait"-->
                 <!--android:theme="@style/ComicViewerTheme" />-->
             <!--<activity-->
-                <!--android:name="com.duongame.viewer.activity.TextActivity"-->
+                <!--android:nacom.duongame.activityvity.TextActivity"-->
                 <!--android:screenOrientation="portrait"-->
                 <!--android:theme="@style/ComicViewerTheme" />-->
             <!--<activity-->
-                <!--android:name="com.duongame.viewer.activity.PdfActivity"-->
+                <!--android:nacom.duongame.activityvity.PdfActivity"-->
                 <!--android:screenOrientation="portrait"-->
                 <!--android:theme="@style/ComicViewerTheme" />-->
 

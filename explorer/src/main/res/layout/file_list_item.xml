@@ -16,7 +16,7 @@
             android:layout_height="60dp"
             android:layout_marginRight="5dp">
 
-            <com.duongame.explorer.view.RoundedImageView
+            <com.duongame.view.RoundedImageView
                 android:id="@+id/file_icon"
                 android:layout_width="60dp"
                 android:layout_height="60dp" />
