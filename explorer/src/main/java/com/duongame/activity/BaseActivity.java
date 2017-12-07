@@ -147,10 +147,10 @@ public abstract class BaseActivity extends AppCompatActivity {
             ExplorerFragment fragment = (ExplorerFragment) getExplorerFragment();
             if (fragment != null) {
                 if (fragment.getViewType() == ExplorerFragment.SWITCH_GRID) {
-                    fragment.switchToList();
+                    fragment.changeViewType(ExplorerFragment.SWITCH_LIST);
                 }
                 else if (fragment.getViewType() == ExplorerFragment.SWITCH_LIST) {
-                    fragment.switchToGrid();
+                    fragment.changeViewType(ExplorerFragment.SWITCH_GRID);
                 }
                 updateViewTypeMenuIcon();
                 return true;

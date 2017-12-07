@@ -70,8 +70,8 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
     private HorizontalScrollView scrollPath;
 
     // 컨텐츠 관련
-    private RecyclerView gridView;
-    private RecyclerView listView;
+//    private RecyclerView gridView;
+//    private RecyclerView listView;
     private RecyclerView currentView;
     private View rootView;
 
@@ -204,54 +204,38 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
 
     void initViewType() {
         viewType = PreferenceHelper.getViewType(getActivity());
-        switch (viewType) {
-            case SWITCH_LIST:
-                switchToList();
-
-                break;
-            case SWITCH_GRID:
-                switchToGrid();
-                break;
-        }
+        changeViewType(viewType);
     }
 
-    public void switchToList() {
-        switcherViewType.setDisplayedChild(SWITCH_LIST);
+    public void changeViewType(int viewType) {
+        switcherViewType.setDisplayedChild(viewType);
 
         adapter = new ExplorerListAdapter(getActivity(), fileList);
         adapter.setSelectMode(selectMode);
 
-        listView = (RecyclerView) rootView.findViewById(R.id.list_explorer);
-        listView.setAdapter(adapter);
-        listView.addOnScrollListener(new ExplorerScrollListener());
-        listView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        listView.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL_LIST));
-
         adapter.setOnItemClickListener(this);
-//        adapter.setOnLongItemClickListener(this);
+        adapter.setOnLongItemClickListener(this);
 
-        viewType = SWITCH_LIST;
-        currentView = listView;
+        switch(viewType) {
+            case SWITCH_LIST:
+                currentView = (RecyclerView) rootView.findViewById(R.id.list_explorer);
+                if(currentView != null) {
+                    currentView.setLayoutManager(new LinearLayoutManager(getActivity()));
+                    currentView.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL_LIST));
+                }
+                break;
+            case SWITCH_GRID:
+                currentView = (RecyclerView) rootView.findViewById(R.id.grid_explorer);
+                if(currentView != null) {
+                    currentView.setLayoutManager(new GridLayoutManager(getActivity(), 4));
+                }
+                break;
+        }
 
-        PreferenceHelper.setViewType(getContext(), viewType);
-    }
-
-    public void switchToGrid() {
-        switcherViewType.setDisplayedChild(SWITCH_GRID);
-
-        adapter = new ExplorerGridAdapter(getActivity(), fileList);
-        adapter.setSelectMode(selectMode);
-
-        gridView = (RecyclerView) rootView.findViewById(R.id.grid_explorer);
-        gridView.setAdapter(adapter);
-        gridView.addOnScrollListener(new ExplorerScrollListener());
-        gridView.setLayoutManager(new GridLayoutManager(getActivity(), 4));
-
-        adapter.setOnItemClickListener(this);
-//        adapter.setOnLongItemClickListener(this);
-
-        viewType = SWITCH_GRID;
-        currentView = gridView;
+        if(currentView != null) {
+            currentView.setAdapter(adapter);
+            currentView.addOnScrollListener(new ExplorerScrollListener());
+        }
 
         PreferenceHelper.setViewType(getContext(), viewType);
     }
@@ -631,15 +615,5 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
 
     public int getViewType() {
         return viewType;
-    }
-
-    public void visibleTest() {
-        if (viewType == SWITCH_GRID) {
-            GridLayoutManager manager = (GridLayoutManager) gridView.getLayoutManager();
-            if (manager != null) {
-                int first = manager.findFirstVisibleItemPosition();
-                int last = manager.findLastVisibleItemPosition();
-            }
-        }
     }
 }
