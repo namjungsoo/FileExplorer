@@ -1,4 +1,4 @@
-package com.duongame.activity.adapter;
+package com.duongame.adapter;
 
 import android.os.AsyncTask;
 import android.view.View;
@@ -8,7 +8,6 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 
 import com.duongame.R;
-import com.duongame.adapter.ExplorerItem;
 import com.duongame.bitmap.BitmapCacheManager;
 import com.duongame.task.LoadGifTask;
 import com.duongame.task.bitmap.LoadBitmapTask;

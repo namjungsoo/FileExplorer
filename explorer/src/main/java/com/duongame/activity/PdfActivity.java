@@ -10,8 +10,8 @@ import com.duongame.adapter.ExplorerItem;
 import com.duongame.db.Book;
 import com.duongame.db.BookDB;
 import com.duongame.helper.FileHelper;
-import com.duongame.activity.adapter.PdfPagerAdapter;
-import com.duongame.activity.adapter.ViewerPagerAdapter;
+import com.duongame.adapter.PdfPagerAdapter;
+import com.duongame.adapter.ViewerPagerAdapter;
 
 import java.io.File;
 import java.io.FileNotFoundException;

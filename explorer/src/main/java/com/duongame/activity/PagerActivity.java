@@ -6,7 +6,7 @@ import android.widget.SeekBar;
 
 import com.duongame.R;
 import com.duongame.bitmap.BitmapCacheManager;
-import com.duongame.activity.adapter.ViewerPagerAdapter;
+import com.duongame.adapter.ViewerPagerAdapter;
 import com.duongame.listener.PagerOnTouchListener;
 import com.felipecsl.gifimageview.library.GifImageView;
 

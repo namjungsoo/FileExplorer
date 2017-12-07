@@ -1,4 +1,4 @@
-package com.duongame.activity.adapter;
+package com.duongame.adapter;
 
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -12,7 +12,6 @@ import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 
 import com.duongame.R;
-import com.duongame.adapter.ExplorerItem;
 import com.duongame.activity.PagerActivity;
 import com.duongame.attacher.ImageViewAttacher;
 import com.duongame.listener.PagerOnTouchListener;

@@ -1,9 +1,8 @@
-package com.duongame.activity.adapter;
+package com.duongame.adapter;
 
 import android.support.v4.view.PagerAdapter;
 import android.view.View;
 
-import com.duongame.adapter.ExplorerItem;
 import com.duongame.activity.PagerActivity;
 
 import java.util.ArrayList;

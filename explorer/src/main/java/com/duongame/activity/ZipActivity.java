@@ -18,8 +18,8 @@ import com.duongame.db.Book;
 import com.duongame.db.BookDB;
 import com.duongame.helper.AlertHelper;
 import com.duongame.manager.AdBannerManager;
-import com.duongame.activity.adapter.PhotoPagerAdapter;
-import com.duongame.activity.adapter.ViewerPagerAdapter;
+import com.duongame.adapter.PhotoPagerAdapter;
+import com.duongame.adapter.ViewerPagerAdapter;
 
 import net.lingala.zip4j.exception.ZipException;
 
