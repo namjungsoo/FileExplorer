@@ -195,6 +195,7 @@ public class ExplorerAdapter extends RecyclerView.Adapter<ExplorerAdapter.Explor
         }
     }
 
+    // 이전에는 system thumbnail image를 사용하였으나 이번에는 무조건 glide가 읽음
     void setIconImage(final ExplorerViewHolder viewHolder, final ExplorerItem item) {
         final Bitmap bitmap = getThumbnail(item.path);
         if (bitmap == null) {

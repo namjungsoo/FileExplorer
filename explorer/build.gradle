@@ -31,6 +31,7 @@ android {
             buildConfigField "String", "BANNER_ID", "\"ca-app-pub-5576037828251153/8260818625\""
             buildConfigField "String", "POPUP_ID", "\"ca-app-pub-5576037828251153/2214285028\""
             buildConfigField "String", "INTERSTITIAL_ID", "\"ca-app-pub-5576037828251153/9737551820\""
+            buildConfigField "boolean", "PREVIEW_ZIP", "false"
             applicationIdSuffix '.file'
             dimension "project"
             versionCode 1
@@ -45,8 +46,8 @@ android {
             buildConfigField "boolean", "PREVIEW_ZIP", "true"
             applicationIdSuffix '.comicz'
             dimension "project"
-            versionCode 15
-            versionName "1.1.2"
+            versionCode 16
+            versionName "1.1.3"
             addManifestPlaceholders([APP_NAME: "@string/comicz_name_free"])
         }
 

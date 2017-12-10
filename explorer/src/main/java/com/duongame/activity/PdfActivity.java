@@ -9,6 +9,7 @@ import android.os.ParcelFileDescriptor;
 import com.duongame.adapter.ExplorerItem;
 import com.duongame.db.Book;
 import com.duongame.db.BookDB;
+import com.duongame.helper.AppHelper;
 import com.duongame.helper.FileHelper;
 import com.duongame.adapter.PdfPagerAdapter;
 import com.duongame.adapter.ViewerPagerAdapter;
@@ -43,30 +44,32 @@ public class PdfActivity extends PagerActivity {
 
     @Override
     protected void onPause() {
-        final Book book = new Book();
+        if(AppHelper.isComicz(this)) {
+            final Book book = new Book();
 
-        // 고정적인 내용 5개
-        book.path = path;
-        book.name = name;
-        book.type = ExplorerItem.FileType.ZIP;
-        book.size = size;
-        book.total_file = 0;// 파일의 갯수이다.
+            // 고정적인 내용 5개
+            book.path = path;
+            book.name = name;
+            book.type = ExplorerItem.FileType.ZIP;
+            book.size = size;
+            book.total_file = 0;// 파일의 갯수이다.
 
-        // 동적인 내용 6개
-        final int page = pager.getCurrentItem();
-        book.current_page = page;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            //FIX:
-            // renderer가 null일 수 있음
-            if (renderer != null) {
-                book.total_page = renderer.getPageCount();
+            // 동적인 내용 6개
+            final int page = pager.getCurrentItem();
+            book.current_page = page;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                //FIX:
+                // renderer가 null일 수 있음
+                if (renderer != null) {
+                    book.total_page = renderer.getPageCount();
+                }
             }
-        }
-        book.current_file = 0;
-        book.extract_file = 0;
-        book.side = ExplorerItem.Side.SIDE_ALL;
+            book.current_file = 0;
+            book.extract_file = 0;
+            book.side = ExplorerItem.Side.SIDE_ALL;
 
-        BookDB.setLastBook(this, book);
+            BookDB.setLastBook(this, book);
+        }
 
         super.onPause();
     }

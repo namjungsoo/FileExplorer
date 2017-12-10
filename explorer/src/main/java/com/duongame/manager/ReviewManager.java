@@ -49,7 +49,9 @@ public class ReviewManager {
                             new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
-                                    BookLoader.openLastBook(context);
+                                    if (AppHelper.isComicz(context)) {
+                                        BookLoader.openLastBook(context);
+                                    }
                                 }
                             }, null);
                     AdBannerManager.initPopupAd(context);// 항상 초기화 해주어야 함

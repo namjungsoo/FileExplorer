@@ -115,7 +115,9 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
         BaseActivity activity = (BaseActivity) getActivity();
         if (activity != null) {
             if (!activity.getShowReview()) {
-                BookLoader.openLastBook(activity);
+                if (AppHelper.isComicz(getContext())) {
+                    BookLoader.openLastBook(activity);
+                }
             }
         }
     }
@@ -214,25 +216,28 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
         adapter.setSelectMode(selectMode);
 
         adapter.setOnItemClickListener(this);
-//        adapter.setOnLongItemClickListener(this);
+        // 코믹z가 아닐때 롱클릭 활성화 (임시)
+        if (!AppHelper.isComicz(getContext())) {
+            adapter.setOnLongItemClickListener(this);
+        }
 
-        switch(viewType) {
+        switch (viewType) {
             case SWITCH_LIST:
                 currentView = (RecyclerView) rootView.findViewById(R.id.list_explorer);
-                if(currentView != null) {
+                if (currentView != null) {
                     currentView.setLayoutManager(new LinearLayoutManager(getActivity()));
                     currentView.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL_LIST));
                 }
                 break;
             case SWITCH_GRID:
                 currentView = (RecyclerView) rootView.findViewById(R.id.grid_explorer);
-                if(currentView != null) {
+                if (currentView != null) {
                     currentView.setLayoutManager(new GridLayoutManager(getActivity(), 4));
                 }
                 break;
         }
 
-        if(currentView != null) {
+        if (currentView != null) {
             currentView.setAdapter(adapter);
             currentView.addOnScrollListener(new ExplorerScrollListener());
         }

@@ -9,7 +9,7 @@ import com.duongame.R;
  */
 
 public class AppHelper {
-    private static boolean isComicz(Context context) {
+    public static boolean isComicz(Context context) {
         if (context == null)
             return false;
         if (context.getApplicationContext().getPackageName().indexOf(".comicz") == -1)

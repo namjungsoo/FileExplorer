@@ -161,6 +161,8 @@ public class BookDB extends SQLiteOpenHelper {
         final SQLiteDatabase db = getInstance(context).getReadableDatabase();
 
         book.path = book.path.replace("'", "\'");
+        book.last_file = book.last_file.replace("'", "\'");
+
         // 기존에 저장된게 있는지 없는지 찾아본다음에 INSERT, UPDATE를 구분해서 처리함
         final String sql = "SELECT current_page FROM book WHERE path='" + book.path + "' LIMIT 1";
 

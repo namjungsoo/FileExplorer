@@ -172,8 +172,6 @@ public class TextActivity extends ViewerActivity {
 
     @Override
     public void onPause() {
-        super.onPause();
-
         if (USE_10K_PERCENT) {
             int percent = getPercent2();
             if (percent >= LINES_PER_PAGE * 10) {// 9999를 만들어야 페이지를 넘어가지 않는다.
@@ -190,6 +188,7 @@ public class TextActivity extends ViewerActivity {
             BookDB.setLastBook(this, book);
         }
 
+        super.onPause();
     }
 
     @Override
