@@ -84,6 +84,10 @@ public class BookDB extends SQLiteOpenHelper {
     }
 
     public static void clearBook(Context context, String path) {
+        if (path == null)
+            return;
+        // 문자열중 작은 따옴표 '변환
+        path = path.replace("'", "\'");
         final SQLiteDatabase db = getInstance(context).getWritableDatabase();
         final String sql = "DELETE FROM book WHERE path='" + path + "'";
         db.execSQL(sql);
@@ -151,8 +155,12 @@ public class BookDB extends SQLiteOpenHelper {
 
     // 마지막 책을 셋팅
     public static void setLastBook(Context context, Book book) {
+        if(book == null)
+            return;
+
         final SQLiteDatabase db = getInstance(context).getReadableDatabase();
 
+        book.path = book.path.replace("'", "\'");
         // 기존에 저장된게 있는지 없는지 찾아본다음에 INSERT, UPDATE를 구분해서 처리함
         final String sql = "SELECT current_page FROM book WHERE path='" + book.path + "' LIMIT 1";
 

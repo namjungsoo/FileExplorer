@@ -214,7 +214,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
         adapter.setSelectMode(selectMode);
 
         adapter.setOnItemClickListener(this);
-        adapter.setOnLongItemClickListener(this);
+//        adapter.setOnLongItemClickListener(this);
 
         switch(viewType) {
             case SWITCH_LIST:
@@ -311,7 +311,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
             if (getSelectedFileCount() == 1) {
                 renameFileWithDialog(item);
             } else {
-                //TODO: "파일 이름 변경은 하나의 파일 선택시에만 가능합니다."
+                //TODO: TEXT "파일 이름 변경은 하나의 파일 선택시에만 가능합니다."
             }
         } else {// 선택 모드로 진입 + 현재 파일 선택
             selectMode = true;
@@ -345,6 +345,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
 
         AlertHelper.showAlert(getActivity(),
                 AppHelper.getAppName(getContext()),
+                //TODO: TEXT
                 "변경하실 파일명을 입력하세요.",
                 view, new DialogInterface.OnClickListener() {
                     @Override
@@ -373,9 +374,9 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
             // 정보 변경 반영
             adapter.notifyItemChanged(item.position);
 
-            //TODO: "파일 이름이 변경되었습니다."
+            //TODO: TEXT "파일 이름이 변경되었습니다."
         } catch (Exception e) {
-            //TODO: "에러가 발생하였습니다."
+            //TODO: TEXT "에러가 발생하였습니다."
         }
     }
 

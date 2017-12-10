@@ -118,6 +118,7 @@ public class FileHelper {
         return path + "/" + name;
     }
 
+    // 마지막에 /를 포함하지 않는다.
     public static String getParentPath(String path) {
         return path.substring(0, path.lastIndexOf('/'));
     }
