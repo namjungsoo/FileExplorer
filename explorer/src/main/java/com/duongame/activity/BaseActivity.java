@@ -84,7 +84,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onDestroy() {
+    protected void onDestroy() {
         if (adView != null) {
             ViewGroup vg = (ViewGroup) adView.getParent();
             if (vg != null) {
@@ -93,6 +93,9 @@ public abstract class BaseActivity extends AppCompatActivity {
             adView.removeAllViews();
             adView.destroy();
         }
+
+        // 전면 광고 노출
+        showInterstitialAd();
 
         super.onDestroy();
     }
@@ -271,4 +274,16 @@ public abstract class BaseActivity extends AppCompatActivity {
             fragment.onRefresh();
     }
 
+    void showInterstitialAd() {
+        final int count = PreferenceHelper.getExitAdCount(this);
+
+        // 2번중에 1번을 띄워준다.
+        if (count % 2 == 1) {// 전면 팝업후 종료 팝업
+            if (!AdInterstitialManager.showAd(this, AdInterstitialManager.MODE_EXIT)) {
+                // 보여지지 않았다면 insterstitial후 카운트 증가하지 않음
+                return;
+            }
+        }
+        PreferenceHelper.setExitAdCount(this, count + 1);
+    }
 }

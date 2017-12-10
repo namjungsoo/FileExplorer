@@ -7,6 +7,8 @@ import android.support.v4.view.ViewPager;
 import com.duongame.R;
 import com.duongame.adapter.ComicPagerAdapter;
 import com.duongame.fragment.BaseFragment;
+import com.duongame.helper.PreferenceHelper;
+import com.duongame.manager.AdInterstitialManager;
 
 public class ComicActivity extends BaseActivity {
     private final static String TAG = ComicActivity.class.getSimpleName();
