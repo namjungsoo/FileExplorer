@@ -205,24 +205,17 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
     }
 
     void initViewType() {
-        viewType = PreferenceHelper.getViewType(getActivity());
-        changeViewType(viewType);
+        changeViewType(PreferenceHelper.getViewType(getActivity()));
     }
 
     public void changeViewType(int viewType) {
+        this.viewType = viewType;
+
         switcherViewType.setDisplayedChild(viewType);
-
-        adapter = new ExplorerListAdapter(getActivity(), fileList);
-        adapter.setSelectMode(selectMode);
-
-        adapter.setOnItemClickListener(this);
-        // 코믹z가 아닐때 롱클릭 활성화 (임시)
-        if (!AppHelper.isComicz(getContext())) {
-            adapter.setOnLongItemClickListener(this);
-        }
 
         switch (viewType) {
             case SWITCH_LIST:
+                adapter = new ExplorerListAdapter(getActivity(), fileList);
                 currentView = (RecyclerView) rootView.findViewById(R.id.list_explorer);
                 if (currentView != null) {
                     currentView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -230,11 +223,21 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
                 }
                 break;
             case SWITCH_GRID:
+                adapter = new ExplorerGridAdapter(getActivity(), fileList);
                 currentView = (RecyclerView) rootView.findViewById(R.id.grid_explorer);
                 if (currentView != null) {
                     currentView.setLayoutManager(new GridLayoutManager(getActivity(), 4));
                 }
                 break;
+        }
+
+        if(adapter != null) {
+            adapter.setSelectMode(selectMode);
+            adapter.setOnItemClickListener(this);
+            // 코믹z가 아닐때 롱클릭 활성화 (임시)
+            if (!AppHelper.isComicz(getContext())) {
+                adapter.setOnLongItemClickListener(this);
+            }
         }
 
         if (currentView != null) {
