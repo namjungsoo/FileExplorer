@@ -246,6 +246,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         BitmapCacheManager.removeAllPages();
         BitmapCacheManager.removeAllBitmaps();
         BitmapCacheManager.removeAllDrawables();
+        BookDB.clearBooks(this);
 
         final File file = getFilesDir();
         deleteRecursive(file);

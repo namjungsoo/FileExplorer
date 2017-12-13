@@ -214,7 +214,11 @@ public class ExplorerAdapter extends RecyclerView.Adapter<ExplorerAdapter.Explor
                             if (context.isFinishing())
                                 return;
 
-                            if (viewHolder.iconSmall.getTag().equals(item.path)) {
+                            Object tag = viewHolder.iconSmall.getTag();
+                            if (tag == null)
+                                return;
+
+                            if (tag.equals(item.path)) {
                                 getView().setImageDrawable(resource);
                             }
                         }

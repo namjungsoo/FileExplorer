@@ -21,10 +21,12 @@ import android.provider.MediaStore;
 import com.duongame.R;
 import com.duongame.adapter.ExplorerItem;
 import com.duongame.helper.FileHelper;
+import com.duongame.helper.JLog;
 
 import net.lingala.zip4j.exception.ZipException;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -249,6 +251,7 @@ public class BitmapLoader {
         return inSampleSize;
     }
 
+    //TODO: 비트맵 메모리 복사가 일어나고 있음
     public static Bitmap rotateBitmapOnExif(Bitmap bitmap, BitmapFactory.Options options, String path) {
         if (!FileHelper.isJpegImage(path))
             return bitmap;
@@ -292,7 +295,7 @@ public class BitmapLoader {
         return options;
     }
 
-    public static Bitmap decodeSampleBitmapFromFile(String path, int reqWidth, int reqHeight, boolean exifRotation) {
+    public static BitmapFactory.Options sampleDecodeBounds(String path, int reqWidth, int reqHeight) {
         final BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
         BitmapFactory.decodeFile(path, options);
@@ -303,8 +306,13 @@ public class BitmapLoader {
 
         // 로드하기 위해서는 위에서 true 로 설정했던 inJustDecodeBounds 의 값을 false 로 설정합니다.
         options.inJustDecodeBounds = false;
+        return options;
+    }
 
+    public static Bitmap decodeSampleBitmapFromFile(String path, int reqWidth, int reqHeight, boolean exifRotation) {
+        BitmapFactory.Options options = sampleDecodeBounds(path, reqWidth, reqHeight);
         Bitmap bitmap = BitmapFactory.decodeFile(path, options);
+
         if (exifRotation) {
             bitmap = rotateBitmapOnExif(bitmap, options, path);
         }
@@ -418,6 +426,115 @@ public class BitmapLoader {
         }
     }
 
+
+    public static Bitmap splitBitmapSide(ExplorerItem item, int width, int height, boolean exif) {
+        // 이미 캐시된 페이지가 있으면
+        final String key;
+        final String keyOther;
+        final ExplorerItem itemOther = (ExplorerItem) item.clone();
+        itemOther.side = item.side == LEFT ? RIGHT : LEFT;
+        key = BitmapCacheManager.changePathToPage(item);
+        keyOther = BitmapCacheManager.changePathToPage(itemOther);
+
+        Bitmap page = BitmapCacheManager.getPage(key);
+        if (page != null) {
+            return page;
+        }
+
+        Bitmap pageOther = null;
+        BitmapRegionDecoder decoder = null;
+        BitmapRegionDecoder decoderOther = null;
+
+        BitmapFactory.Options options = sampleDecodeBounds(item.path, width, height);
+        try {
+
+            switch (item.side) {
+                case LEFT:
+                    JLog.e(TAG, "samplesize " + options.inSampleSize);
+
+                    decoder = BitmapRegionDecoder.newInstance(item.path, false);
+                    if (decoder != null) {
+                        Rect rect = new Rect(0, 0, decoder.getWidth() >> 1, decoder.getHeight());
+                        JLog.e(TAG, "rect " + rect + " " + rect.width() + " " + rect.height());
+                        page = decoder.decodeRegion(rect, options);
+
+                        Rect rectOther = new Rect(decoder.getWidth() >> 1, 0, decoder.getWidth(), decoder.getHeight());
+                        JLog.e(TAG, "rectOther " + rectOther + " " + rectOther.width() + " " + rectOther.height());
+                        pageOther = decoder.decodeRegion(rectOther, options);
+
+                        decoder.recycle();
+                    }
+
+//                    decoderOther = BitmapRegionDecoder.newInstance(item.path, false);
+//                    if (decoderOther != null) {
+//                        Rect rectOther = new Rect(decoderOther.getWidth() >> 1, 0, decoderOther.getWidth(), decoderOther.getHeight());
+//                        JLog.e(TAG, "rectOther " + rectOther + " " + rectOther.width() + " " + rectOther.height());
+//
+//                        pageOther = decoderOther.decodeRegion(rectOther, options);
+//                        decoderOther.recycle();
+//                    }
+
+                    JLog.e(TAG, "page " + page.getWidth() + " " + page.getHeight());
+                    JLog.e(TAG, "pageOther " + pageOther.getWidth() + " " + pageOther.getHeight());
+                    break;
+
+                case RIGHT:
+                    JLog.e(TAG, "samplesize " + options.inSampleSize);
+
+                    decoder = BitmapRegionDecoder.newInstance(item.path, false);
+                    if (decoder != null) {
+                        Rect rect = new Rect(decoder.getWidth() >> 1, 0, decoder.getWidth(), decoder.getHeight());
+                        JLog.e(TAG, "rect " + rect + " " + rect.width() + " " + rect.height());
+                        page = decoder.decodeRegion(rect, options);
+
+                        Rect rectOther = new Rect(0, 0, decoder.getWidth() >> 1, decoder.getHeight());
+                        JLog.e(TAG, "rectOther " + rectOther + " " + rectOther.width() + " " + rectOther.height());
+                        pageOther = decoder.decodeRegion(rectOther, options);
+
+                        decoder.recycle();
+                    }
+
+//                    decoderOther = BitmapRegionDecoder.newInstance(item.path, false);
+//                    if (decoderOther != null) {
+//                        Rect rectOther = new Rect(0, 0, decoderOther.getWidth() >> 1, decoderOther.getHeight());
+//                        JLog.e(TAG, "rectOther " + rectOther + " " + rectOther.width() + " " + rectOther.height());
+//
+//                        pageOther = decoderOther.decodeRegion(rectOther, options);
+//                        decoderOther.recycle();
+//                    }
+
+                    JLog.e(TAG, "page " + page.getWidth() + " " + page.getHeight());
+                    JLog.e(TAG, "pageOther " + pageOther.getWidth() + " " + pageOther.getHeight());
+                    break;
+
+                default:
+                    JLog.e(TAG, "default " + item.path + " " + item.side);
+                    break;
+            }
+
+//            decoder.recycle();
+//            decoderOther.recycle();
+        } catch (Exception e) {
+            JLog.e(TAG, e.getMessage());
+            ;
+            if (decoder != null) {
+                decoder.recycle();
+            }
+            if (decoderOther != null) {
+                decoderOther.recycle();
+            }
+            return null;
+        }
+
+        if (page != null && pageOther != null) {
+            BitmapCacheManager.setPage(key, page);
+            BitmapCacheManager.setPage(keyOther, pageOther);
+        }
+
+        return page;
+    }
+
+    //HACK: 이것을 사용하지 말것
     // 왼쪽 오른쪽을 자른 비트맵을 리턴한다
     public static Bitmap splitBitmapSide(Bitmap bitmap, ExplorerItem item) {
         // 이미 캐시된 페이지가 있으면
