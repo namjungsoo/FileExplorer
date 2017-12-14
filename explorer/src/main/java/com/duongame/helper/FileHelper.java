@@ -63,6 +63,14 @@ public class FileHelper {
         return false;
     }
 
+    public static boolean isPngImage(String filename) {
+        final String lower = filename.toLowerCase();
+        if (lower.endsWith(".png")) {
+            return true;
+        }
+        return false;
+    }
+
     public static boolean isJpegImage(String filename) {
         final String lower = filename.toLowerCase();
         if (lower.endsWith(".jpg")

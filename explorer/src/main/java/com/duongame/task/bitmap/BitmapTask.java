@@ -7,6 +7,7 @@ import android.os.AsyncTask;
 import com.duongame.adapter.ExplorerItem;
 import com.duongame.bitmap.BitmapCacheManager;
 import com.duongame.bitmap.BitmapLoader;
+import com.duongame.helper.FileHelper;
 import com.duongame.helper.JLog;
 
 import java.io.IOException;
@@ -80,22 +81,33 @@ public class BitmapTask extends AsyncTask<ExplorerItem, Void, Bitmap> {
                         // 왜냐면 압축을 푸는 중인 파일도 있기 때문이다.
                         if (!waitImageExtracting())
                             break;
-                    }
-                    else {
+                    } else {
                         BitmapCacheManager.setBitmap(item.path, bitmap);
                         break;
                     }
                 } else {
-                    //TODO: 여기만 수정하면 된다. split bitmap
-                    bitmap = BitmapLoader.splitBitmapSide(item, width, height, exif);
-                    if (bitmap == null) {
-                        // 다른 비트맵이 기다려지길 기다렸다가 다시 시도하자.
-                        // 왜냐면 압축을 푸는 중인 파일도 있기 때문이다.
-                        if (!waitImageExtracting())
+                    // RegionDecoder가 지원되는 경우는 PNG, JPG
+                    if (FileHelper.isJpegImage(item.path) || FileHelper.isPngImage(item.path)) {
+                        bitmap = BitmapLoader.splitBitmapSide(item, width, height, exif);
+                        if (bitmap == null) {
+                            // 다른 비트맵이 기다려지길 기다렸다가 다시 시도하자.
+                            // 왜냐면 압축을 푸는 중인 파일도 있기 때문이다.
+                            if (!waitImageExtracting())
+                                break;
+                        } else {
                             break;
-                    }
-                    else {
-                        break;
+                        }
+                    } else {
+                        bitmap = BitmapLoader.decodeSampleBitmapFromFile(item.path, width, height, exif);
+                        if (bitmap == null) {
+                            // 다른 비트맵이 기다려지길 기다렸다가 다시 시도하자.
+                            // 왜냐면 압축을 푸는 중인 파일도 있기 때문이다.
+                            if (!waitImageExtracting())
+                                break;
+                        } else {
+                            bitmap = BitmapLoader.splitBitmapSide(bitmap, item);
+                            break;
+                        }
                     }
                 }
 

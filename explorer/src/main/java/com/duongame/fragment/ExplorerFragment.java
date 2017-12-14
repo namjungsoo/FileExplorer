@@ -88,7 +88,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
     private SearchTask searchTask = null;
 
     private boolean selectMode = false;
-
+    private DividerItemDecoration itemDecoration = null;
     @Nullable
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
                              Bundle savedInstanceState) {
@@ -219,7 +219,10 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
                 currentView = (RecyclerView) rootView.findViewById(R.id.list_explorer);
                 if (currentView != null) {
                     currentView.setLayoutManager(new LinearLayoutManager(getActivity()));
-                    currentView.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL_LIST));
+                    if(itemDecoration == null) {
+                        itemDecoration = new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL_LIST);
+                        currentView.addItemDecoration(itemDecoration);
+                    }
                 }
                 break;
             case SWITCH_GRID:

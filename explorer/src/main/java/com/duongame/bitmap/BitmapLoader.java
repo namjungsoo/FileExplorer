@@ -443,7 +443,6 @@ public class BitmapLoader {
 
         Bitmap pageOther = null;
         BitmapRegionDecoder decoder = null;
-        BitmapRegionDecoder decoderOther = null;
 
         BitmapFactory.Options options = sampleDecodeBounds(item.path, width, height);
         try {
@@ -465,15 +464,6 @@ public class BitmapLoader {
                         decoder.recycle();
                     }
 
-//                    decoderOther = BitmapRegionDecoder.newInstance(item.path, false);
-//                    if (decoderOther != null) {
-//                        Rect rectOther = new Rect(decoderOther.getWidth() >> 1, 0, decoderOther.getWidth(), decoderOther.getHeight());
-//                        JLog.e(TAG, "rectOther " + rectOther + " " + rectOther.width() + " " + rectOther.height());
-//
-//                        pageOther = decoderOther.decodeRegion(rectOther, options);
-//                        decoderOther.recycle();
-//                    }
-
                     JLog.e(TAG, "page " + page.getWidth() + " " + page.getHeight());
                     JLog.e(TAG, "pageOther " + pageOther.getWidth() + " " + pageOther.getHeight());
                     break;
@@ -494,15 +484,6 @@ public class BitmapLoader {
                         decoder.recycle();
                     }
 
-//                    decoderOther = BitmapRegionDecoder.newInstance(item.path, false);
-//                    if (decoderOther != null) {
-//                        Rect rectOther = new Rect(0, 0, decoderOther.getWidth() >> 1, decoderOther.getHeight());
-//                        JLog.e(TAG, "rectOther " + rectOther + " " + rectOther.width() + " " + rectOther.height());
-//
-//                        pageOther = decoderOther.decodeRegion(rectOther, options);
-//                        decoderOther.recycle();
-//                    }
-
                     JLog.e(TAG, "page " + page.getWidth() + " " + page.getHeight());
                     JLog.e(TAG, "pageOther " + pageOther.getWidth() + " " + pageOther.getHeight());
                     break;
@@ -516,12 +497,9 @@ public class BitmapLoader {
 //            decoderOther.recycle();
         } catch (Exception e) {
             JLog.e(TAG, e.getMessage());
-            ;
+
             if (decoder != null) {
                 decoder.recycle();
-            }
-            if (decoderOther != null) {
-                decoderOther.recycle();
             }
             return null;
         }
