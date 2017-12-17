@@ -15,6 +15,8 @@ import com.duongame.adapter.ExplorerItem;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 /**
  * Created by namjungsoo on 2017-12-07.
@@ -23,11 +25,14 @@ import java.util.ArrayList;
 public class DeleteDialog extends DialogFragment {
     ArrayList<ExplorerItem> fileList;
 
-    TextView textFileName;
-    TextView textFileProgress;
+    ProgressBar eachProgress;
+    ProgressBar totalProgress;
 
-    ProgressBar eachProgressBar;
-    ProgressBar totalProgressBar;
+    TextView fileName;
+    TextView eachText;
+    TextView totalText;
+
+    DeleteTask task;
 
     public DeleteDialog() {
 
@@ -43,9 +48,15 @@ public class DeleteDialog extends DialogFragment {
         if (builder != null) {
             View view = getActivity().getLayoutInflater().inflate(R.layout.dialog_multi, null, false);
 
-            textFileName = (TextView) view.findViewById(R.id.file_name);
-            textFileProgress = (TextView) view.findViewById(R.id.file_progress);
+            fileName = (TextView) view.findViewById(R.id.file_name);
+            eachText = (TextView) view.findViewById(R.id.each_text);
+            totalText = (TextView) view.findViewById(R.id.total_text);
 
+            eachProgress = (ProgressBar) view.findViewById(R.id.each_progress);
+            totalProgress = (ProgressBar) view.findViewById(R.id.total_progress);
+
+            eachProgress.setMax(100);
+            totalProgress.setMax(100);
 
             //TODO: TEXT "삭제"
             builder.setMessage("삭제")
@@ -54,8 +65,16 @@ public class DeleteDialog extends DialogFragment {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             // 지우던 파일을 취소한다.
+                            if (task != null) {
+                                task.cancel(true);
+                            }
+                            dismiss();
                         }
                     });
+
+            // task를 실행한다.
+            task = new DeleteTask();
+            task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
 
         // 여기서 task 시작하자
@@ -63,16 +82,18 @@ public class DeleteDialog extends DialogFragment {
     }
 
     class DeleteTask extends AsyncTask<Void, Integer, Void> {
-
         @Override
         protected Void doInBackground(Void... voids) {
             for (int i = 0; i < fileList.size(); i++) {
                 // 파일을 하나하나 지운다.
                 try {
-                    new File(fileList.get(i).path).delete();
-                    publishProgress(i);
-                }
-                catch(SecurityException e) {
+                    if (isCancelled()) {
+                        break;
+                    } else {
+                        new File(fileList.get(i).path).delete();
+                        publishProgress(i);
+                    }
+                } catch (SecurityException e) {
                     // 지울수 없는 파일
                 }
             }
@@ -82,7 +103,19 @@ public class DeleteDialog extends DialogFragment {
         @Override
         protected void onProgressUpdate(Integer... values) {
             int progress = values[0].intValue();
-            String fileName = fileList.get(progress).name;
+
+            String name = fileList.get(progress).name;
+            fileName.setText(name);
+
+            eachProgress.setProgress(100);
+            eachText.setText(String.format(getResources().getString(R.string.each_text), 100));
+
+            int size = fileList.size();
+            float total = ((float) progress + 1) / size;
+            int percent = (int) (total * 100);
+            totalProgress.setProgress(percent);
+
+            totalText.setText(String.format(getActivity().getResources().getString(R.string.total_text), progress + 1, size, percent));
         }
     }
 }

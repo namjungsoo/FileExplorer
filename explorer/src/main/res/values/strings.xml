@@ -37,6 +37,8 @@
     <string name="msg_clear_cache">Cache files were deleted.</string>
     <string name="msg_clear_history">Recent files list was deleted.</string>
     <string name="hide_completed_file">Hide completed files</string>
+    <string name="each_text">%d%%</string>
+    <string name="total_text">%1$d/%2$d (%3$d%%)</string>
 </resources>
 <!--<string name="dialog_review_title">Please support Comic Viewer</string>-->
 <!--<string name="dialog_review_content">Are you enjoying Comic Viewer? Please leave a review for us!</string>-->

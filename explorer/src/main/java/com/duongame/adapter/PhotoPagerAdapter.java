@@ -195,6 +195,11 @@ public class PhotoPagerAdapter extends ViewerPagerAdapter {
         preloadList.add(item);
     }
 
+
+    // 다음 인덱스에 해당하는 비트맵을 미리 로딩한다.
+    // +1, -1은 setPrimaryItem에서 로딩한다. (offscreen limit이 1이라도 최대 3개를 읽게 되어 있다.)
+    // +2~+3
+    // -2
     private ExplorerItem[] getPreloadArray(int position, int width, int height) {
         if (imageList == null)
             return null;
@@ -270,6 +275,7 @@ public class PhotoPagerAdapter extends ViewerPagerAdapter {
         return preloadArray;
     }
 
+    // 페이지 이동 방향에 따라 미리 읽어놓은 것중 쓰지 않은 것을 지운다.
     private ExplorerItem[] getRemoveArray(int position) {
         if (imageList == null)
             return null;

@@ -19,6 +19,15 @@
         android:layout_marginLeft="9dp"
         android:layout_marginRight="9dp" />
 
+    <TextView
+        android:id="@+id/each_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:layout_marginRight="9dp"
+        android:text="@string/each_text"
+        android:textSize="9sp" />
+
     <ProgressBar
         android:id="@+id/total_progress"
         style="?android:attr/progressBarStyleHorizontal"
@@ -28,9 +37,12 @@
         android:layout_marginRight="9dp" />
 
     <TextView
-        android:id="@+id/file_progress"
-        android:layout_gravity="center_horizontal"
+        android:id="@+id/total_text"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:layout_marginRight="9dp"
+        android:text="@string/total_text"
+        android:textSize="9sp" />
 
 </LinearLayout>
