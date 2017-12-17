@@ -206,6 +206,8 @@ public class ZipActivity extends PagerActivity {
                 AdBannerManager.initPopupAd(this);// 항상 초기화 해주어야 함
                 return;
             }
+
+            // 실질적으로 아무런 역할을 하지 않는다. ZipLoaderListener에서 담당한다.
             pagerAdapter.setImageList(imageList);
             pagerAdapter.notifyDataSetChanged();
 

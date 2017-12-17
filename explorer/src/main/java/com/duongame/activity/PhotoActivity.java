@@ -65,6 +65,12 @@ public class PhotoActivity extends PagerActivity {
 
             textName.setText(name);
 
+            //FIX:
+            // 이미지 리스트가 없거나 사이즈가 0이라면 리턴한다.
+            if(imageList == null || imageList.size() == 0) {
+                finish();
+            }
+
             // 이미지 파일 리스트에서 현재 위치를 찾자
             int current = 0;
             for (int i = 0; i < imageList.size(); i++) {
