@@ -9,6 +9,7 @@ import android.widget.ImageView;
 
 import com.duongame.R;
 import com.duongame.bitmap.BitmapCacheManager;
+import com.duongame.helper.JLog;
 import com.duongame.task.LoadGifTask;
 import com.duongame.task.bitmap.LoadBitmapTask;
 import com.duongame.task.bitmap.RemoveAndPreloadBitmapTask;
@@ -40,6 +41,8 @@ public class PhotoPagerAdapter extends ViewerPagerAdapter {
 
     @Override
     public Object instantiateItem(final ViewGroup container, final int position) {
+        JLog.e(TAG, "instantiateItem " + position);
+
         final FrameLayout rootView = (FrameLayout) context.getLayoutInflater().inflate(R.layout.viewer_page, container, false);
         final ImageView imageView = (ImageView) rootView.findViewById(R.id.image_viewer);
 
@@ -94,11 +97,31 @@ public class PhotoPagerAdapter extends ViewerPagerAdapter {
 
     @Override
     public void destroyItem(ViewGroup container, int position, Object object) {
+        // 공통 사항
         container.removeView((View) object);
 
+        // 이미지뷰에서 bitmap을 끊어주자.
         final ViewGroup rootView = (ViewGroup) object;
         final ImageView imageView = (ImageView) rootView.findViewById(R.id.image_viewer);
         imageView.setImageBitmap(null);
+
+        //FIX: OOM
+        // 현재 위치에 해당하는 bitmap을 찾아서 캐쉬 삭제 해주자.
+        deleteItemBitmapCache(position);
+    }
+
+    private void deleteItemBitmapCache(int position) {
+        try {
+            ExplorerItem item = getImageList().get(position);
+            // bitmap부터 체크
+            if(item.side == ExplorerItem.Side.SIDE_ALL) {
+                BitmapCacheManager.removeBitmap(item.path);
+            } else {
+                BitmapCacheManager.removePage(item.path);
+            }
+        } catch (Exception e) {
+
+        }
     }
 
     // 캐쉬에 비트맵이나 페이지가 있는지를 리턴
@@ -112,6 +135,8 @@ public class PhotoPagerAdapter extends ViewerPagerAdapter {
 
     @Override
     public void setPrimaryItem(final ViewGroup container, final int position, Object object) {
+        JLog.e(TAG, "setPrimaryItem " + position);
+
         final int width = container.getWidth();
         final int height = container.getHeight();
 
@@ -126,14 +151,16 @@ public class PhotoPagerAdapter extends ViewerPagerAdapter {
                         final int width = container.getWidth();
                         final int height = container.getHeight();
 
-                        preloadAndRemoveNearBitmap(position, width, height);
+                        //FIX: OOM
+//                        preloadAndRemoveNearBitmap(position, width, height);
 
                         container.getViewTreeObserver().removeGlobalOnLayoutListener(this);
                     }
                 });
 
             } else {
-                preloadAndRemoveNearBitmap(position, width, height);
+                //FIX: OOM
+//                preloadAndRemoveNearBitmap(position, width, height);
             }
 
             // GIF 이미지일 경우
