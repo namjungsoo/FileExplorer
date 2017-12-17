@@ -37,4 +37,6 @@
     <string name="msg_clear_cache">تم حذف ملفات ذاكره التخزين المؤقت ،</string>
     <string name="msg_clear_history">تم حذف قائمه الملفات الاخيره.</string>
     <string name="hide_completed_file">إخفاء الملفات المكتملة</string>
+    <string name="each_text">%d%%</string>
+    <string name="total_text">%1$d/%2$d (%3$d%%)</string>
 </resources>

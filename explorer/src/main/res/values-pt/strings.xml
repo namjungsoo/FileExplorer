@@ -37,4 +37,6 @@
     <string name="msg_clear_cache">Os arquivos de cache foram excluídos.</string>
     <string name="msg_clear_history">A lista de arquivos recentes foi excluída.</string>
     <string name="hide_completed_file">Ocultar arquivos preenchidos</string>
+    <string name="each_text">%d%%</string>
+    <string name="total_text">%1$d/%2$d (%3$d%%)</string>
 </resources>
