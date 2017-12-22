@@ -294,7 +294,7 @@ public class PhotoPagerAdapter extends ViewerPagerAdapter {
         if (preloadList.size() <= 0)
             return null;
 
-//        Collections.sort(preloadList, new FileHelper.FilePriorityComparator());
+//        Collections.sort(preloadList, new FileHelper.PriorityAscComparator());
 
         final ExplorerItem[] preloadArray = new ExplorerItem[preloadList.size()];
         preloadList.toArray(preloadArray);

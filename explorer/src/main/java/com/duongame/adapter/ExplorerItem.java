@@ -93,6 +93,10 @@ public class ExplorerItem implements Cloneable {
         return "path=" + path + " name=" + name + " date=" + date + " size=" + size + " type=" + type + " side=" + side + " index=" + index + " width=" + width + " height=" + height + " orgIndex=" + orgIndex;
     }
 
+    public String getExt() {
+        return name.substring(name.lastIndexOf('.') + 1);
+    }
+
     @Override
     public Object clone() {
         Object item;

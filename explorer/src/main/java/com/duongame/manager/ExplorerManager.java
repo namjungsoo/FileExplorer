@@ -9,6 +9,7 @@ import com.duongame.helper.FileHelper;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 
 /**
@@ -17,22 +18,49 @@ import java.util.Date;
 
 public class ExplorerManager {
     private static final String initialPath = Environment.getExternalStorageDirectory().getAbsolutePath();
-    private static String lastPath = Environment.getExternalStorageDirectory().getAbsolutePath();
-    private static ArrayList<ExplorerItem> imageList = new ArrayList<>();
+//    private static String lastPath = Environment.getExternalStorageDirectory().getAbsolutePath();
+
+    private ArrayList<ExplorerItem> imageList = new ArrayList<>();
+    private String lastPath;
+    private String keyword;
+    private String ext;
+    private boolean excludeDirectory;
+    private boolean recursiveDirectory;
+
 
     public static String getInitialPath() {
         return initialPath;
     }
 
-    public static String getLastPath() {
+    public String getLastPath() {
         return lastPath;
     }
 
-    public static boolean isInitialPath() {
-        return lastPath.equals(initialPath);
+    public boolean isInitialPath(String path) {
+        return path.equals(initialPath);
     }
 
-    public static ArrayList<ExplorerItem> search(String path, String keyword, String ext, boolean excludeDirectory, boolean recursiveDirectory) {
+    public void setExtension(String ext) {
+
+    }
+
+    public void setKeyword(String keyword) {
+
+    }
+
+    public void setExcludeDirectory(boolean b) {
+
+    }
+
+    public void setRecursiveDirectory(boolean b) {
+
+    }
+
+    public void setComparator(Comparator<ExplorerItem> comparator) {
+
+    }
+
+    public ArrayList<ExplorerItem> search(String path, String keyword, String ext, boolean excludeDirectory, boolean recursiveDirectory) {
         if (path == null) {
             path = initialPath;
         }
@@ -104,8 +132,8 @@ public class ExplorerManager {
         }
 
         // 디렉토리 우선 정렬 및 가나다 정렬
-        Collections.sort(directoryList, new FileHelper.FileNameAscendingComparator());
-        Collections.sort(normalList, new FileHelper.FileNameAscendingComparator());
+        Collections.sort(directoryList, new FileHelper.NameAscComparator());
+        Collections.sort(normalList, new FileHelper.NameAscComparator());
 
         fileList.addAll(directoryList);
         fileList.addAll(normalList);
@@ -119,11 +147,11 @@ public class ExplorerManager {
         return fileList;
     }
 
-    public static ArrayList<ExplorerItem> search(String path) {
+    public ArrayList<ExplorerItem> search(String path) {
         return search(path, null, null, false, false);
     }
 
-    public static ArrayList<ExplorerItem> getImageList() {
+    public ArrayList<ExplorerItem> getImageList() {
         return imageList;
     }
 
@@ -135,11 +163,9 @@ public class ExplorerManager {
             type = ExplorerItem.FileType.IMAGE;
         } else if (lower.endsWith(".zip"))
             type = ExplorerItem.FileType.ZIP;
-//        else if (lower.endsWith(".rar"))
-//            type = ExplorerItem.FileType.RAR;
         else if (lower.endsWith(".pdf"))
             type = ExplorerItem.FileType.PDF;
-        else if (lower.endsWith(".mp4") || lower.endsWith(".avi") || lower.endsWith(".3gp") || lower.endsWith(".mkv"))
+        else if (lower.endsWith(".mp4") || lower.endsWith(".avi") || lower.endsWith(".3gp") || lower.endsWith(".mkv") || lower.endsWith(".mov"))
             type = ExplorerItem.FileType.VIDEO;
         else if (lower.endsWith(".mp3"))
             type = ExplorerItem.FileType.AUDIO;

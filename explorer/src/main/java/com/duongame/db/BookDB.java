@@ -87,7 +87,7 @@ public class BookDB extends SQLiteOpenHelper {
         if (path == null)
             return;
         // 문자열중 작은 따옴표 '변환
-        path = path.replace("'", "\'");
+        path = path.replace("'", "\\'");
         final SQLiteDatabase db = getInstance(context).getWritableDatabase();
         final String sql = "DELETE FROM book WHERE path='" + path + "'";
         db.execSQL(sql);
@@ -105,7 +105,7 @@ public class BookDB extends SQLiteOpenHelper {
         if (path == null)
             return null;
         // 문자열중 작은 따옴표 '변환
-        path = path.replace("'", "\'");
+        path = path.replace("'", "\\'");
         final SQLiteDatabase db = getInstance(context).getReadableDatabase();
         final String sql = "SELECT * FROM book WHERE path='" + path + "'";
         final Cursor cursor = db.rawQuery(sql, null);
@@ -160,9 +160,9 @@ public class BookDB extends SQLiteOpenHelper {
 
         final SQLiteDatabase db = getInstance(context).getReadableDatabase();
 
-        book.path = book.path.replace("'", "\'");
+        book.path = book.path.replace("'", "\\'");
         if(book.last_file != null)
-            book.last_file = book.last_file.replace("'", "\'");
+            book.last_file = book.last_file.replace("'", "\\'");
 
         // 기존에 저장된게 있는지 없는지 찾아본다음에 INSERT, UPDATE를 구분해서 처리함
         final String sql = "SELECT current_page FROM book WHERE path='" + book.path + "' LIMIT 1";

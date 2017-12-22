@@ -43,6 +43,7 @@ public class FileHelper {
         }
     }
 
+    //region Extension
     public static boolean isImage(String filename) {
         final String lower = filename.toLowerCase();
         if (lower.endsWith(".jpg")
@@ -80,6 +81,7 @@ public class FileHelper {
         }
         return false;
     }
+    //endregion
 
     public static File getZipCacheFile(Context context, String filename) {
         final String filesDir = context.getFilesDir().getAbsolutePath();
@@ -93,23 +95,94 @@ public class FileHelper {
         return cachePath;
     }
 
-    public static class FileNameAscendingComparator implements Comparator<ExplorerItem> {
+    //region Comparator
+    // 파일 이름은 이름만 정렬하면 되는데
+    // 크기나 확장자는 정렬후에 이름으로 한번더 정렬 하여야 한다
+    public static class NameAscComparator implements Comparator<ExplorerItem> {
         @Override
         public int compare(ExplorerItem lhs, ExplorerItem rhs) {
             return lhs.name.compareToIgnoreCase(rhs.name);
         }
     }
 
-    public static class FilePriorityComparator implements Comparator<ExplorerItem> {
+    public static class NameDescComparator implements Comparator<ExplorerItem> {
         @Override
         public int compare(ExplorerItem lhs, ExplorerItem rhs) {
-            if (lhs.priority < rhs.priority)
-                return -1;
-            else if (lhs.priority > rhs.priority)
-                return 1;
-            return 0;
+            return rhs.name.compareToIgnoreCase(lhs.name);
         }
     }
+
+    public static class ExtAscComparator implements Comparator<ExplorerItem> {
+        @Override
+        public int compare(ExplorerItem lhs, ExplorerItem rhs) {
+            String lhsExt = lhs.getExt();
+            String rhsExt = rhs.getExt();
+
+            int ret = lhsExt.compareToIgnoreCase(rhsExt);
+            if(ret == 0) {
+                return lhs.name.compareToIgnoreCase(rhs.name);
+            } else {
+                return ret;
+            }
+        }
+    }
+
+    public static class ExtDescComparator implements Comparator<ExplorerItem> {
+        @Override
+        public int compare(ExplorerItem lhs, ExplorerItem rhs) {
+            String lhsExt = lhs.getExt();
+            String rhsExt = rhs.getExt();
+
+            int ret = rhsExt.compareToIgnoreCase(lhsExt);
+            if(ret == 0) {
+                return rhs.name.compareToIgnoreCase(lhs.name);
+            } else {
+                return ret;
+            }
+        }
+    }
+
+    public static class SizeAscComparator implements Comparator<ExplorerItem> {
+        @Override
+        public int compare(ExplorerItem lhs, ExplorerItem rhs) {
+            long ret = rhs.size - lhs.size;
+            if(ret == 0) {
+                return lhs.name.compareToIgnoreCase(rhs.name);
+            } else {
+                if(ret < 0)
+                    return -1;
+                else
+                    return 1;
+            }
+        }
+    }
+
+    public static class SizeDescComparator implements Comparator<ExplorerItem> {
+        @Override
+        public int compare(ExplorerItem lhs, ExplorerItem rhs) {
+            long ret = lhs.size - rhs.size;
+            if(ret == 0) {
+                return rhs.name.compareToIgnoreCase(lhs.name);
+            } else {
+                if(ret < 0)
+                    return -1;
+                else
+                    return 1;
+            }
+        }
+    }
+
+//    public static class PriorityAscComparator implements Comparator<ExplorerItem> {
+//        @Override
+//        public int compare(ExplorerItem lhs, ExplorerItem rhs) {
+//            if (lhs.priority < rhs.priority)
+//                return -1;
+//            else if (lhs.priority > rhs.priority)
+//                return 1;
+//            return 0;
+//        }
+//    }
+    //endregion
 
     public static String setPdfFileNameFromPage(String pdf, int page) {
         final String ret = pdf + "." + String.valueOf(page);

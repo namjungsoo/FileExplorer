@@ -46,8 +46,8 @@ android {
             buildConfigField "boolean", "PREVIEW_ZIP", "true"
             applicationIdSuffix '.comicz'
             dimension "project"
-            versionCode 20
-            versionName "1.1.7"
+            versionCode 21
+            versionName "1.1.8"
             addManifestPlaceholders([APP_NAME: "@string/comicz_name_free"])
         }
 

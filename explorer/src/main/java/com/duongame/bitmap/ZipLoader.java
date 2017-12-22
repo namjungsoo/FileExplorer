@@ -16,7 +16,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.nio.channels.FileChannel;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -94,7 +93,7 @@ public class ZipLoader {
                 imageList.add(new ExplorerItem(FileHelper.getFullPath(extractPath, name), name, "", 0, ExplorerItem.FileType.IMAGE));
             }
         }
-        Collections.sort(imageList, new FileHelper.FileNameAscendingComparator());
+        Collections.sort(imageList, new FileHelper.NameAscComparator());
     }
 
     private ArrayList<ExplorerItem> loadFirstImageOnly(ArrayList<ExplorerItem> imageList) {
