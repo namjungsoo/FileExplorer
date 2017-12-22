@@ -617,7 +617,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
             // 다시 리프레시를 해야지 체크박스를 새로 그린다.
             softRefresh();
         } else {
-            if (!ExplorerManager.isInitialPath()) {
+            if (!ExplorerManager.isInitialPath(ExplorerManager.getLastPath())) {
                 gotoUpDirectory();
             } else {
                 super.onBackPressed();

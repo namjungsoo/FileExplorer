@@ -20,47 +20,47 @@ public class ExplorerManager {
     private static final String initialPath = Environment.getExternalStorageDirectory().getAbsolutePath();
 //    private static String lastPath = Environment.getExternalStorageDirectory().getAbsolutePath();
 
-    private ArrayList<ExplorerItem> imageList = new ArrayList<>();
-    private String lastPath;
-    private String keyword;
-    private String ext;
-    private boolean excludeDirectory;
-    private boolean recursiveDirectory;
+    private static ArrayList<ExplorerItem> imageList = new ArrayList<>();
+    private static String lastPath;
+//    private String keyword;
+//    private String ext;
+//    private boolean excludeDirectory;
+//    private boolean recursiveDirectory;
 
 
     public static String getInitialPath() {
         return initialPath;
     }
 
-    public String getLastPath() {
+    public static String getLastPath() {
         return lastPath;
     }
 
-    public boolean isInitialPath(String path) {
+    public static boolean isInitialPath(String path) {
         return path.equals(initialPath);
     }
 
-    public void setExtension(String ext) {
+//    public void setExtension(String ext) {
+//
+//    }
+//
+//    public void setKeyword(String keyword) {
+//
+//    }
+//
+//    public void setExcludeDirectory(boolean b) {
+//
+//    }
+//
+//    public void setRecursiveDirectory(boolean b) {
+//
+//    }
+//
+//    public void setComparator(Comparator<ExplorerItem> comparator) {
+//
+//    }
 
-    }
-
-    public void setKeyword(String keyword) {
-
-    }
-
-    public void setExcludeDirectory(boolean b) {
-
-    }
-
-    public void setRecursiveDirectory(boolean b) {
-
-    }
-
-    public void setComparator(Comparator<ExplorerItem> comparator) {
-
-    }
-
-    public ArrayList<ExplorerItem> search(String path, String keyword, String ext, boolean excludeDirectory, boolean recursiveDirectory) {
+    public static ArrayList<ExplorerItem> search(String path, String keyword, String ext, boolean excludeDirectory, boolean recursiveDirectory) {
         if (path == null) {
             path = initialPath;
         }
@@ -147,11 +147,11 @@ public class ExplorerManager {
         return fileList;
     }
 
-    public ArrayList<ExplorerItem> search(String path) {
+    public static ArrayList<ExplorerItem> search(String path) {
         return search(path, null, null, false, false);
     }
 
-    public ArrayList<ExplorerItem> getImageList() {
+    public static ArrayList<ExplorerItem> getImageList() {
         return imageList;
     }
 
