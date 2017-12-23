@@ -1,14 +1,22 @@
 package com.duongame;
 
 import android.app.Application;
+import android.os.Environment;
 
+import com.duongame.adapter.ExplorerItem;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.Tracker;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.crash.FirebaseCrash;
 
+import java.util.ArrayList;
+
 public class AnalyticsApplication extends Application {
     private Tracker mTracker;
+
+    private ArrayList<ExplorerItem> imageList;
+    private final String initialPath = Environment.getExternalStorageDirectory().getAbsolutePath();
+    private String lastPath;
 
     /**
      * Gets the default {@link Tracker} for this {@link Application}.
@@ -33,4 +41,30 @@ public class AnalyticsApplication extends Application {
         }
         return mTracker;
     }
+
+    //region Path
+    public void setImageList(ArrayList<ExplorerItem> imageList) {
+        this.imageList = imageList;
+    }
+
+    public ArrayList<ExplorerItem> getImageList() {
+        return imageList;
+    }
+
+    public String getInitialPath() {
+        return initialPath;
+    }
+
+    public String getLastPath() {
+        return lastPath;
+    }
+
+    public void setLastPath(String path) {
+        lastPath = path;
+    }
+
+    public boolean isInitialPath(String path) {
+        return path.equals(initialPath);
+    }
+    //endregion
 }

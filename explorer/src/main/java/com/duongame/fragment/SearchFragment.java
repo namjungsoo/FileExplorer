@@ -19,7 +19,7 @@ import com.duongame.R;
 import com.duongame.adapter.SearchRecyclerAdapter;
 import com.duongame.adapter.ExplorerItem;
 import com.duongame.db.BookLoader;
-import com.duongame.manager.ExplorerManager;
+import com.duongame.helper.FileSearcher;
 import com.duongame.view.DividerItemDecoration;
 
 import java.util.ArrayList;
@@ -33,12 +33,14 @@ public class SearchFragment extends BaseFragment {
     private ViewSwitcher switcherContents;
     private RecyclerView recyclerView;
 
-    Spinner spinnerType;
-    Button buttonSearch;
-    EditText editKeyword;
-    ProgressBar progressBar;
-    ArrayList<ExplorerItem> fileList;
-    SearchRecyclerAdapter adapter;
+    private Spinner spinnerType;
+    private Button buttonSearch;
+    private EditText editKeyword;
+    private ProgressBar progressBar;
+    private ArrayList<ExplorerItem> fileList;
+    private SearchRecyclerAdapter adapter;
+
+    private FileSearcher fileSearcher;
 
     class SearchTask extends AsyncTask<Void, Void, Boolean> {
         String keyword;
@@ -51,8 +53,10 @@ public class SearchFragment extends BaseFragment {
 
         @Override
         protected Boolean doInBackground(Void... params) {
-            fileList = ExplorerManager.search(ExplorerManager.getInitialPath(), keyword, ext, true, true);
-            if (fileList.size() > 0) {
+            searchResult = fileSearcher.search(application.getInitialPath(), keyword, ext, true, true);
+            fileList = searchResult.fileList;
+
+            if (fileList != null && fileList.size() > 0) {
                 adapter = new SearchRecyclerAdapter(getActivity(), fileList);
                 return true;
             }
@@ -113,6 +117,7 @@ public class SearchFragment extends BaseFragment {
             }
         });
 
+        fileSearcher = new FileSearcher();
         return rootView;
     }
 

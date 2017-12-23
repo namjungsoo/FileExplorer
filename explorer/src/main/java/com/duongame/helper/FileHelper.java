@@ -44,6 +44,28 @@ public class FileHelper {
     }
 
     //region Extension
+    public static ExplorerItem.FileType getFileType(File eachFile) {
+        ExplorerItem.FileType type = eachFile.isDirectory() ? ExplorerItem.FileType.FOLDER : ExplorerItem.FileType.FILE;
+        final String lower = eachFile.getName().toLowerCase();
+
+        if (FileHelper.isImage(eachFile.getName())) {
+            type = ExplorerItem.FileType.IMAGE;
+        } else if (lower.endsWith(".zip"))
+            type = ExplorerItem.FileType.ZIP;
+        else if (lower.endsWith(".pdf"))
+            type = ExplorerItem.FileType.PDF;
+        else if (lower.endsWith(".mp4") || lower.endsWith(".avi") || lower.endsWith(".3gp") || lower.endsWith(".mkv") || lower.endsWith(".mov"))
+            type = ExplorerItem.FileType.VIDEO;
+        else if (lower.endsWith(".mp3"))
+            type = ExplorerItem.FileType.AUDIO;
+        else if (lower.endsWith(".txt") || lower.endsWith(".cap") || lower.endsWith(".log"))
+            type = ExplorerItem.FileType.TEXT;
+        else if (lower.endsWith(".apk"))
+            type = ExplorerItem.FileType.APK;
+
+        return type;
+    }
+
     public static boolean isImage(String filename) {
         final String lower = filename.toLowerCase();
         if (lower.endsWith(".jpg")

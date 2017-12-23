@@ -1,9 +1,12 @@
 package com.duongame.fragment;
 
 import android.app.Activity;
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 
+import com.duongame.AnalyticsApplication;
 import com.duongame.R;
+import com.duongame.helper.FileSearcher;
 import com.duongame.helper.ToastHelper;
 
 /**
@@ -11,8 +14,20 @@ import com.duongame.helper.ToastHelper;
  */
 
 public class BaseFragment extends Fragment {
-    long lastBackPressed = 0;
+    private long lastBackPressed = 0;
     private final static int TIME_MS = 2000;
+
+    // Search
+    protected AnalyticsApplication application;
+    protected FileSearcher fileSearcher;
+    protected FileSearcher.Result searchResult;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        application = (AnalyticsApplication) getActivity().getApplication();
+        fileSearcher = new FileSearcher();
+    }
 
     public void onRefresh() {
     }

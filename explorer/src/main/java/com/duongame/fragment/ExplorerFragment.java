@@ -25,6 +25,7 @@ import android.widget.ViewSwitcher;
 
 import com.duongame.R;
 import com.duongame.activity.BaseActivity;
+import com.duongame.activity.PhotoActivity;
 import com.duongame.adapter.ExplorerAdapter;
 import com.duongame.adapter.ExplorerGridAdapter;
 import com.duongame.adapter.ExplorerItem;
@@ -38,11 +39,9 @@ import com.duongame.helper.ExtSdCardHelper;
 import com.duongame.helper.FileHelper;
 import com.duongame.helper.JLog;
 import com.duongame.helper.PreferenceHelper;
-import com.duongame.manager.ExplorerManager;
 import com.duongame.manager.PermissionManager;
 import com.duongame.manager.PositionManager;
 import com.duongame.view.DividerItemDecoration;
-import com.duongame.activity.PhotoActivity;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -71,8 +70,6 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
     private HorizontalScrollView scrollPath;
 
     // 컨텐츠 관련
-//    private RecyclerView gridView;
-//    private RecyclerView listView;
     private RecyclerView currentView;
     private View rootView;
 
@@ -108,6 +105,9 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
                 sdcard.setVisibility(View.VISIBLE);
             }
         }
+
+        String path = PreferenceHelper.getLastPath(getContext());
+        application.setLastPath(path);
 
         return rootView;
     }
@@ -166,7 +166,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
 
     void initBottomUI() {
         LinearLayout bottom = ((BaseActivity) getActivity()).getBottomUI();
-        if(bottom == null)
+        if (bottom == null)
             return;
 
         // 삭제 버튼
@@ -273,7 +273,11 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
 
     // 새로운 파일이 추가 되었을때 스캔을 하라는 의미이다.
     void requestThumbnailScan() {
-        ArrayList<ExplorerItem> imageList = (ArrayList<ExplorerItem>) ExplorerManager.getImageList().clone();
+        //ArrayList<ExplorerItem> imageList = (ArrayList<ExplorerItem>) FileSearcher.getImageList().clone();
+        if (searchResult == null || searchResult.imageList == null)
+            return;
+
+        ArrayList<ExplorerItem> imageList = (ArrayList<ExplorerItem>) searchResult.imageList.clone();
 
         FragmentActivity activity = getActivity();
         for (ExplorerItem item : imageList) {
@@ -284,7 +288,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
     }
 
     public void gotoUpDirectory() {
-        String path = ExplorerManager.getLastPath();
+        String path = application.getLastPath();
         path = path.substring(0, path.lastIndexOf('/'));
         if (path.length() == 0) {
             path = "/";
@@ -296,10 +300,10 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
 
     void onClickDirectory(ExplorerItem item) {
         String newPath;
-        if (ExplorerManager.getLastPath().equals("/")) {
-            newPath = ExplorerManager.getLastPath() + item.name;
+        if (application.getLastPath().equals("/")) {
+            newPath = application.getLastPath() + item.name;
         } else {
-            newPath = ExplorerManager.getLastPath() + "/" + item.name;
+            newPath = application.getLastPath() + "/" + item.name;
         }
 
         updateFileList(newPath);
@@ -440,8 +444,8 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
 
     //TODO: 나중에 구현
     void backupPosition() {
-//        PositionManager.setPosition(ExplorerManager.getLastPath(), currentView.getFirstVisiblePosition());
-//        PositionManager.setTop(ExplorerManager.getLastPath(), getCurrentViewScrollTop());
+//        PositionManager.setPosition(FileSearcher.getLastPath(), currentView.getFirstVisiblePosition());
+//        PositionManager.setTop(FileSearcher.getLastPath(), getCurrentViewScrollTop());
     }
 
     int getCurrentViewScrollTop() {
@@ -487,6 +491,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
     class SearchTask extends AsyncTask<String, Void, Void> {
 
         boolean pathChanged;
+        String path;
 
         public SearchTask(boolean pathChanged) {
             this.pathChanged = pathChanged;
@@ -494,9 +499,12 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
 
         @Override
         protected Void doInBackground(String... params) {
-            //path=params[0]
-            fileList = ExplorerManager.search(params[0]);
-            adapter.setFileList(fileList);
+            path = params[0];
+            searchResult = fileSearcher.search(path);
+            if (searchResult != null) {
+                fileList = searchResult.fileList;
+                adapter.setFileList(fileList);
+            }
             return null;
         }
 
@@ -518,7 +526,9 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
                 JLog.e(TAG, "SearchTask pathChanged");
             }
 
-            textPath.setText(ExplorerManager.getLastPath());
+            // 성공했을때 현재 패스를 업데이트
+            application.setLastPath(path);
+            textPath.setText(path);
             textPath.requestLayout();
             JLog.e(TAG, "SearchTask requestLayout");
 
@@ -627,7 +637,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
         if (selectMode) {
             onNormalMode();
         } else {
-            if (!ExplorerManager.isInitialPath(ExplorerManager.getLastPath())) {
+            if (!application.isInitialPath(application.getLastPath())) {
                 gotoUpDirectory();
             } else {
                 super.onBackPressed();
@@ -664,6 +674,6 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
     }
 
     void onSelectItemClick(ExplorerItem item) {
-        
+
     }
 }

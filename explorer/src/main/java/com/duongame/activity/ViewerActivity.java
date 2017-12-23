@@ -60,6 +60,8 @@ public class ViewerActivity extends AppCompatActivity {
     private View mainView;
     private AdView adView;
 
+    protected AnalyticsApplication application;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,7 +72,7 @@ public class ViewerActivity extends AppCompatActivity {
 
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
 
-        AnalyticsApplication application = (AnalyticsApplication) getApplication();
+        application = (AnalyticsApplication) getApplication();
         mTracker = application.getDefaultTracker();
     }
 
