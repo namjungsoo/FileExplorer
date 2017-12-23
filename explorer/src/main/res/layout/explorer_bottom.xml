@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/bottom"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="bottom"
+    android:orientation="horizontal">
+
+    <Button
+        android:layout_width="72dp"
+        android:layout_height="wrap_content"
+        android:enabled="false"
+        android:text="버튼1" />
+
+    <Button
+        android:layout_width="72dp"
+        android:layout_height="wrap_content"
+        android:enabled="false"
+        android:text="버튼2" />
+
+    <Button
+        android:layout_width="72dp"
+        android:layout_height="wrap_content"
+        android:enabled="false"
+        android:text="버튼3" />
+
+    <Button
+        android:layout_width="72dp"
+        android:layout_height="wrap_content"
+        android:enabled="false"
+        android:text="버튼4" />
+
+    <Button
+        android:id="@+id/btn_delete"
+        android:layout_width="72dp"
+        android:layout_height="wrap_content"
+        android:text="삭제" />
+</LinearLayout>
