@@ -19,6 +19,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.ViewSwitcher;
 
@@ -89,13 +90,16 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
 
     private boolean selectMode = false;
     private DividerItemDecoration itemDecoration = null;
+
     @Nullable
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
                              Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_explorer, container, false);
 
         initUI();
+        initBottomUI();
         initViewType();
+
         PermissionManager.checkStoragePermissions(getActivity());
 
         extSdCard = ExtSdCardHelper.getExternalSdCardPath();
@@ -150,6 +154,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
         final int position = 0;
 //        final int position = currentView.getFirstVisiblePosition();
         final int top = getCurrentViewScrollTop();
+
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -157,6 +162,21 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
                 PreferenceHelper.setLastTop(getActivity(), top);
             }
         }).start();
+    }
+
+    void initBottomUI() {
+        LinearLayout bottom = ((BaseActivity) getActivity()).getBottomUI();
+        if(bottom == null)
+            return;
+
+        // 삭제 버튼
+        Button btnDelete = (Button) bottom.findViewById(R.id.btn_delete);
+        btnDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
     }
 
     void initUI() {
@@ -219,7 +239,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
                 currentView = (RecyclerView) rootView.findViewById(R.id.list_explorer);
                 if (currentView != null) {
                     currentView.setLayoutManager(new LinearLayoutManager(getActivity()));
-                    if(itemDecoration == null) {
+                    if (itemDecoration == null) {
                         itemDecoration = new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL_LIST);
                         currentView.addItemDecoration(itemDecoration);
                     }
@@ -234,7 +254,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
                 break;
         }
 
-        if(adapter != null) {
+        if (adapter != null) {
             adapter.setSelectMode(selectMode);
             adapter.setOnItemClickListener(this);
             // 코믹z가 아닐때 롱클릭 활성화 (임시)
@@ -325,14 +345,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
                 //TODO: TEXT "파일 이름 변경은 하나의 파일 선택시에만 가능합니다."
             }
         } else {// 선택 모드로 진입 + 현재 파일 선택
-            selectMode = true;
-
-            // 현재 위치의 아이템을 선택으로 설정
-            item.selected = true;
-            JLog.e(TAG, "onAdapterItemLongClick item=" + item.hashCode() + " " + item.selected);
-
-            // UI 상태만 리프레시
-            softRefresh();
+            onSelectMode(item);
         }
     }
 
@@ -612,10 +625,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
     public void onBackPressed() {
         // 선택모드이면 선택모드를 취소하는 방향으로
         if (selectMode) {
-            selectMode = false;
-
-            // 다시 리프레시를 해야지 체크박스를 새로 그린다.
-            softRefresh();
+            onNormalMode();
         } else {
             if (!ExplorerManager.isInitialPath(ExplorerManager.getLastPath())) {
                 gotoUpDirectory();
@@ -627,5 +637,33 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
 
     public int getViewType() {
         return viewType;
+    }
+
+    void onSelectMode(ExplorerItem item) {
+        selectMode = true;
+
+        // 현재 위치의 아이템을 선택으로 설정
+        item.selected = true;
+        JLog.e(TAG, "onAdapterItemLongClick item=" + item.hashCode() + " " + item.selected);
+
+        // UI 상태만 리프레시
+        softRefresh();
+
+        // 하단 UI 표시
+        ((BaseActivity) getActivity()).showBottomUI();
+    }
+
+    void onNormalMode() {
+        selectMode = false;
+
+        // 다시 리프레시를 해야지 체크박스를 새로 그린다.
+        softRefresh();
+
+        // 하단 UI 숨김
+        ((BaseActivity) getActivity()).hideBottomUI();
+    }
+
+    void onSelectItemClick(ExplorerItem item) {
+        
     }
 }

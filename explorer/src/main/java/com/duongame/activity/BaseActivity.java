@@ -11,6 +11,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import com.duongame.AnalyticsApplication;
@@ -23,6 +24,7 @@ import com.duongame.fragment.BaseFragment;
 import com.duongame.fragment.ExplorerFragment;
 import com.duongame.helper.PreferenceHelper;
 import com.duongame.helper.ToastHelper;
+import com.duongame.helper.UnitHelper;
 import com.duongame.manager.AdBannerManager;
 import com.duongame.manager.AdInterstitialManager;
 import com.duongame.manager.PermissionManager;
@@ -50,6 +52,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected AdView adView;
 
     protected Menu menu;
+    protected LinearLayout bottom;
 
     protected boolean showReview;
 
@@ -151,8 +154,7 @@ public abstract class BaseActivity extends AppCompatActivity {
             if (fragment != null) {
                 if (fragment.getViewType() == ExplorerFragment.SWITCH_GRID) {
                     fragment.changeViewType(ExplorerFragment.SWITCH_LIST);
-                }
-                else if (fragment.getViewType() == ExplorerFragment.SWITCH_LIST) {
+                } else if (fragment.getViewType() == ExplorerFragment.SWITCH_LIST) {
                     fragment.changeViewType(ExplorerFragment.SWITCH_GRID);
                 }
                 updateViewTypeMenuIcon();
@@ -215,6 +217,10 @@ public abstract class BaseActivity extends AppCompatActivity {
         } else {
             setContentView(getLayoutResId());
         }
+
+        // 최초에는 하단으로 숨겨둠
+        bottom = (LinearLayout)findViewById(R.id.bottom);
+        bottom.setTranslationY(UnitHelper.dpToPx(48));
     }
 
     @Override
@@ -286,5 +292,17 @@ public abstract class BaseActivity extends AppCompatActivity {
             }
         }
         PreferenceHelper.setExitAdCount(this, count + 1);
+    }
+
+    public LinearLayout getBottomUI() {
+        return bottom;
+    }
+
+    public void showBottomUI() {
+        bottom.animate().translationYBy(-bottom.getHeight());
+    }
+
+    public void hideBottomUI() {
+        bottom.animate().translationYBy(bottom.getHeight());
     }
 }
