@@ -5,6 +5,7 @@ import com.duongame.adapter.ExplorerItem;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 
 import static com.duongame.helper.FileHelper.getFileType;
@@ -19,32 +20,38 @@ public class FileSearcher {
         public ArrayList<ExplorerItem> imageList;
     }
 
-//    private String keyword;
-//    private String ext;
-//    private boolean excludeDirectory;
-//    private boolean recursiveDirectory;
+    private String keyword;
+    private String ext;
+    private boolean excludeDirectory;
+    private boolean recursiveDirectory;
+    private Comparator<ExplorerItem> comparator;
 
-//    public void setExtension(String ext) {
-//
-//    }
-//
-//    public void setKeyword(String keyword) {
-//
-//    }
-//
-//    public void setExcludeDirectory(boolean b) {
-//
-//    }
-//
-//    public void setRecursiveDirectory(boolean b) {
-//
-//    }
-//
-//    public void setComparator(Comparator<ExplorerItem> comparator) {
-//
-//    }
+    public FileSearcher setExtension(String ext) {
+        this.ext = ext;
+        return this;
+    }
 
-    public Result search(String path, String keyword, String ext, boolean excludeDirectory, boolean recursiveDirectory) {
+    public FileSearcher setKeyword(String keyword) {
+        this.keyword = keyword;
+        return this;
+    }
+
+    public FileSearcher setExcludeDirectory(boolean b) {
+        this.excludeDirectory = b;
+        return this;
+    }
+
+    public FileSearcher setRecursiveDirectory(boolean b) {
+        this.recursiveDirectory = b;
+        return this;
+    }
+
+    public FileSearcher setComparator(Comparator<ExplorerItem> comparator) {
+        this.comparator = comparator;
+        return this;
+    }
+
+    public Result search(String path) {
         File file = new File(path);
         if (file == null)
             return null;
@@ -81,13 +88,13 @@ public class FileSearcher {
             ExplorerItem item = new ExplorerItem(fullPath, name, date, size, type);
 
             if (type == ExplorerItem.FileType.FOLDER) {
-                if (excludeDirectory == false) {
+                if (!excludeDirectory) {
                     item.size = -1;
                     directoryList.add(item);
                 }
 
                 if (recursiveDirectory) {
-                    Result subFileList = search(fullPath, keyword, ext, excludeDirectory, recursiveDirectory);
+                    Result subFileList = search(fullPath);
 
                     if (subFileList != null) {
                         for (ExplorerItem subItem : subFileList.fileList) {
@@ -114,9 +121,12 @@ public class FileSearcher {
             }
         }
 
+        if(comparator == null) {
+            comparator = new FileHelper.NameAscComparator();
+        }
         // 디렉토리 우선 정렬 및 가나다 정렬
-        Collections.sort(directoryList, new FileHelper.NameAscComparator());
-        Collections.sort(normalList, new FileHelper.NameAscComparator());
+        Collections.sort(directoryList, comparator);
+        Collections.sort(normalList, comparator);
 
         fileList.addAll(directoryList);
         fileList.addAll(normalList);
@@ -132,10 +142,6 @@ public class FileSearcher {
         result.fileList = fileList;
         result.imageList = imageList;
         return result;
-    }
-
-    public Result search(String path) {
-        return search(path, null, null, false, false);
     }
 
 }

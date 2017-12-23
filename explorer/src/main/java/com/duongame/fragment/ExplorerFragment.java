@@ -500,7 +500,10 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
         @Override
         protected Void doInBackground(String... params) {
             path = params[0];
-            searchResult = fileSearcher.search(path);
+            searchResult = fileSearcher
+                    .setRecursiveDirectory(false)
+                    .setExcludeDirectory(false)
+                    .search(path);
             if (searchResult != null) {
                 fileList = searchResult.fileList;
                 adapter.setFileList(fileList);

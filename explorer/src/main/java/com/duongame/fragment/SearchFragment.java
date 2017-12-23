@@ -53,7 +53,11 @@ public class SearchFragment extends BaseFragment {
 
         @Override
         protected Boolean doInBackground(Void... params) {
-            searchResult = fileSearcher.search(application.getInitialPath(), keyword, ext, true, true);
+            searchResult = fileSearcher.setKeyword(keyword)
+                .setExtension(ext)
+                .setRecursiveDirectory(true)
+                .setExcludeDirectory(true)
+                .search(application.getInitialPath());
             fileList = searchResult.fileList;
 
             if (fileList != null && fileList.size() > 0) {
