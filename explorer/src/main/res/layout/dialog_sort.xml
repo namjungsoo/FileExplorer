@@ -22,19 +22,19 @@
                 android:id="@+id/sort_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="이름" />
+                android:text="@string/file_name" />
 
             <RadioButton
                 android:id="@+id/sort_ext"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="확장자" />
+                android:text="@string/file_ext" />
 
             <RadioButton
                 android:id="@+id/sort_size"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="크기" />
+                android:text="@string/file_size" />
         </RadioGroup>
 
         <RadioGroup
@@ -48,13 +48,13 @@
                 android:id="@+id/sort_accending"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="오름차순" />
+                android:text="@string/ascending" />
 
             <RadioButton
                 android:id="@+id/sort_descending"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="내림차순" />
+                android:text="@string/descending" />
         </RadioGroup>
     </LinearLayout>
 </LinearLayout>

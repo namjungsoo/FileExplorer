@@ -15,7 +15,7 @@
     <string name="left">Linke</string>
     <string name="right">Rechte</string>
     <string name="both">Beide</string>
-    <string name="filename">Dateiname</string>
+    <string name="file_name">Dateiname</string>
     <string name="backpressed">Zum Beenden drücken Sie die Zurück-Taste erneut.</string>
     <string name="action_settings">Einstellungen</string>
     <string name="no_contents">Kein Inhalt</string>

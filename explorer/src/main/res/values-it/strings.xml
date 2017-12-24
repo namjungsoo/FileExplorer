@@ -15,7 +15,7 @@
     <string name="left">Sinistra</string>
     <string name="right">Destra</string>
     <string name="both">Entrambi</string>
-    <string name="filename">Nome del file</string>
+    <string name="file_name">Nome del file</string>
     <string name="backpressed">Per uscire, premere nuovamente il tasto indietro.</string>
     <string name="action_settings">Impostazioni</string>
     <string name="no_contents">Nessun contenuto</string>

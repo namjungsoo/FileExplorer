@@ -15,7 +15,7 @@
     <string name="left">Izquierda</string>
     <string name="right">Derecha</string>
     <string name="both">Ambos</string>
-    <string name="filename">Nombre del archivo</string>
+    <string name="file_name">Nombre del archivo</string>
     <string name="backpressed">Para salir, presione el botón Atrás nuevamente.</string>
     <string name="action_settings">Configuraciones</string>
     <string name="no_contents">Sin contenido</string>

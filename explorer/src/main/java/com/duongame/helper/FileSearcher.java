@@ -24,6 +24,7 @@ public class FileSearcher {
     private String ext;
     private boolean excludeDirectory;
     private boolean recursiveDirectory;
+    private boolean hiddenFile = false;
     private Comparator<ExplorerItem> comparator;
 
     public FileSearcher setExtension(String ext) {
@@ -51,6 +52,11 @@ public class FileSearcher {
         return this;
     }
 
+    public FileSearcher setHiddenFile(boolean b) {
+        this.hiddenFile = b;
+        return this;
+    }
+
     public Result search(String path) {
         File file = new File(path);
         if (file == null)
@@ -71,7 +77,7 @@ public class FileSearcher {
         for (int i = 0; i < files.length; i++) {
             File eachFile = files[i];
             //if (eachFile.getName().equals(".") || eachFile.getName().equals("..")) {// .으로 시작되면 패스 함
-            if (eachFile.getName().startsWith(".")) {// .으로 시작되면 패스 함 (숨김파일임)
+            if (!hiddenFile && eachFile.getName().startsWith(".")) {// .으로 시작되면 패스 함 (숨김파일임)
                 continue;
             }
 

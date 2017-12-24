@@ -15,7 +15,7 @@
     <string name="left">La gauche</string>
     <string name="right">Droite</string>
     <string name="both">Tous les deux</string>
-    <string name="filename">Nom de fichier</string>
+    <string name="file_name">Nom de fichier</string>
     <string name="backpressed">Pour quitter, appuyez à nouveau sur le bouton de retour.</string>
     <string name="action_settings">Paramètres</string>
     <string name="no_contents">Pas de contenu</string>

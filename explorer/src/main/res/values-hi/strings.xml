@@ -15,7 +15,7 @@
     <string name="left">बाईं</string>
     <string name="right">दाईं</string>
     <string name="both">दोनों</string>
-    <string name="filename">फ़ाइल का नाम</string>
+    <string name="file_name">फ़ाइल का नाम</string>
     <string name="backpressed">छोड़ने के लिए, वापस बटन फिर से दबाएं</string>
     <string name="action_settings">सेटिंग्स</string>
     <string name="no_contents">कोई सामग्री नहीं है</string>

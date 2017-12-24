@@ -15,7 +15,7 @@
     <string name="left">左边</string>
     <string name="right">右边</string>
     <string name="both">双方</string>
-    <string name="filename">文件名</string>
+    <string name="file_name">文件名</string>
     <string name="backpressed">要退出，请再次按返回按钮。</string>
     <string name="action_settings">设置</string>
     <string name="no_contents">没有内容</string>

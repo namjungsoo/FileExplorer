@@ -15,7 +15,7 @@
     <string name="left">왼쪽</string>
     <string name="right">오른쪽</string>
     <string name="both">양면</string>
-    <string name="filename">파일명</string>
+    <string name="file_name">파일명</string>
     <string name="backpressed">종료하시려면 뒤로가기 버튼을 한번 더 누르세요.</string>
     <string name="action_settings">설정</string>
     <string name="no_contents">결과가 없습니다.</string>

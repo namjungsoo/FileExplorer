@@ -46,7 +46,7 @@ public class SortDialog extends DialogFragment {
 
             builder.setTitle(AppHelper.getAppName(getActivity()))
                     .setIcon(AppHelper.getIconResId(getActivity()))
-                    .setMessage("파일 정렬 기준을 선택하세요")
+                    .setMessage(R.string.file_sort)
                     .setView(view)
                     .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                         @Override
