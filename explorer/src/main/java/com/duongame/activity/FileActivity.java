@@ -2,6 +2,7 @@ package com.duongame.activity;
 
 import com.duongame.R;
 import com.duongame.fragment.BaseFragment;
+import com.duongame.fragment.ExplorerFragment;
 
 public class FileActivity extends BaseActivity {
     private final static String TAG = FileActivity.class.getSimpleName();;
@@ -17,8 +18,8 @@ public class FileActivity extends BaseActivity {
     }
 
     @Override
-    protected BaseFragment getExplorerFragment() {
-        return (BaseFragment) getSupportFragmentManager().getFragments().get(0);
+    protected ExplorerFragment getExplorerFragment() {
+        return (ExplorerFragment) getSupportFragmentManager().getFragments().get(0);
     }
 
     @Override

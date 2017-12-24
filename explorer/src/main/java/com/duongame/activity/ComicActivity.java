@@ -7,8 +7,7 @@ import android.support.v4.view.ViewPager;
 import com.duongame.R;
 import com.duongame.adapter.ComicPagerAdapter;
 import com.duongame.fragment.BaseFragment;
-import com.duongame.helper.PreferenceHelper;
-import com.duongame.manager.AdInterstitialManager;
+import com.duongame.fragment.ExplorerFragment;
 
 public class ComicActivity extends BaseActivity {
     private final static String TAG = ComicActivity.class.getSimpleName();
@@ -36,8 +35,8 @@ public class ComicActivity extends BaseActivity {
     }
 
     @Override
-    protected BaseFragment getExplorerFragment() {
-        return (BaseFragment) adapter.getItem(0);
+    protected ExplorerFragment getExplorerFragment() {
+        return (ExplorerFragment) adapter.getItem(0);
     }
 
     @Override

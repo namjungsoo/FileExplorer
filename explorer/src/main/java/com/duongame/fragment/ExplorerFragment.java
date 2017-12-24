@@ -33,6 +33,7 @@ import com.duongame.adapter.ExplorerListAdapter;
 import com.duongame.adapter.ExplorerScrollListener;
 import com.duongame.bitmap.BitmapCacheManager;
 import com.duongame.db.BookLoader;
+import com.duongame.dialog.DeleteDialog;
 import com.duongame.dialog.SortDialog;
 import com.duongame.helper.AlertHelper;
 import com.duongame.helper.AppHelper;
@@ -401,8 +402,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
 
         AlertHelper.showAlert(getActivity(),
                 AppHelper.getAppName(getContext()),
-                //TODO: TEXT
-                "변경하실 파일명을 입력하세요.",
+                getString(R.string.msg_file_rename),
                 view, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -542,6 +542,8 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
                     .setRecursiveDirectory(false)
                     .setExcludeDirectory(false)
                     .setComparator(comparator)
+                    .setHiddenFile(false)
+                    .setImageListEnable(true)
                     .search(path);
             if (searchResult != null) {
                 fileList = searchResult.fileList;
@@ -722,6 +724,13 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
 
         // 아이템을 찾아서 UI를 업데이트 해주어야 함
         adapter.notifyItemChanged(position);
+
+        // 선택된 파일 카운트 업데이트
+        int count = getSelectedFileCount();
+        BaseActivity baseActivity = (BaseActivity) this.getActivity();
+        if (baseActivity != null) {
+            baseActivity.updateSelectedFileCount(count);
+        }
     }
 
     void onRunItemClick(ExplorerItem item) {
@@ -739,9 +748,39 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
             case PDF:
             case TEXT:
             case ZIP:
-                //TODO: 나중에 이미지 preview를 만들자.
+                //TODO: 나중에 읽던 책의 현재위치 이미지의 preview를 만들자.
                 onClickBook(item);
                 break;
         }
+    }
+
+    public void deleteFileWithDialog() {
+        int count = getSelectedFileCount();
+        // 파일을 삭제할건지 경고
+        AlertHelper.showAlert(getActivity(),
+                AppHelper.getAppName(getActivity()),
+                String.format(getString(R.string.warn_file_delete), count),
+                null,
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        DeleteDialog deleteDialog = new DeleteDialog();
+                        deleteDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                            @Override
+                            public void onDismiss(DialogInterface dialog) {
+                                onRefresh();
+                                //onNormalMode();// 삭제후에는 노말모드로 돌아간다.
+                            }
+                        });
+                        deleteDialog.setFileList(fileList);
+                        deleteDialog.show(getActivity().getFragmentManager(), "delete");
+                    }
+                }, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                }, null);
+
     }
 }

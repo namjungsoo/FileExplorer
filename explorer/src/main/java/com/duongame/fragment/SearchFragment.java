@@ -57,6 +57,7 @@ public class SearchFragment extends BaseFragment {
                 .setExtension(ext)
                 .setRecursiveDirectory(true)
                 .setExcludeDirectory(true)
+                .setImageListEnable(false)
                 .search(application.getInitialPath());
             fileList = searchResult.fileList;
 

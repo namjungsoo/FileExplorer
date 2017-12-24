@@ -4,35 +4,37 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_gravity="bottom"
-    android:orientation="horizontal">
+    android:orientation="horizontal"
+    android:background="@color/colorPrimary">
 
     <Button
         android:layout_width="72dp"
         android:layout_height="wrap_content"
         android:enabled="false"
-        android:text="버튼1" />
+        android:text="@string/copy" />
 
     <Button
         android:layout_width="72dp"
         android:layout_height="wrap_content"
         android:enabled="false"
-        android:text="버튼2" />
+        android:text="@string/cut" />
 
     <Button
         android:layout_width="72dp"
         android:layout_height="wrap_content"
         android:enabled="false"
-        android:text="버튼3" />
+        android:text="@string/paste" />
 
+    <!-- 모든 선택된 파일이 zip일때 unzip으로 동작한다. -->
     <Button
         android:layout_width="72dp"
         android:layout_height="wrap_content"
         android:enabled="false"
-        android:text="버튼4" />
+        android:text="@string/zip" />
 
     <Button
         android:id="@+id/btn_delete"
         android:layout_width="72dp"
         android:layout_height="wrap_content"
-        android:text="삭제" />
+        android:text="@string/delete" />
 </LinearLayout>

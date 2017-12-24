@@ -4,8 +4,10 @@
     <string name="comicz_name_pro">Comic Viewer Pro</string>
     <string name="file_name_free">File Manager</string>
     <string name="file_name_pro">File Manager Pro</string>
+
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
+
     <string name="grid">Grid</string>
     <string name="list">List</string>
     <string name="sort">Sort</string>
@@ -15,6 +17,7 @@
     <string name="left">Left</string>
     <string name="right">Right</string>
     <string name="both">Both</string>
+
     <string name="file_name">File name</string>
     <string name="backpressed">To quit, press the back button again.</string>
     <string name="action_settings">Settings</string>
@@ -46,13 +49,19 @@
     <string name="paste">Paste</string>
     <string name="zip">Zip</string>
     <string name="unzip">Unzip</string>
-    <string name="delete">Delete</string>
+    <string name="delete">Del</string>
 
-    <string name="file_sort">Please select a file sort method.</string>
+    <string name="msg_file_sort">Please select a file sort method.</string>
     <string name="file_ext">File extension</string>
     <string name="file_size">File size</string>
     <string name="ascending">Ascending</string>
     <string name="descending">Descending</string>
+
+    <string name="msg_file_rename">Please enter the name of the file to change.</string>
+
+    <string name="warn_file_delete">Are you sure you want to delete the %d selected files?</string>
+    <string name="msg_file_delete">The selected file is being deleted.</string>
+    <string name="toast_file_delete">The selected file has been deleted.</string>
 
 </resources>
 <!--<string name="dialog_review_title">Please support Comic Viewer</string>-->

@@ -22,10 +22,12 @@ public class FileSearcher {
 
     private String keyword;
     private String ext;
+    private Comparator<ExplorerItem> comparator;
+
     private boolean excludeDirectory;
     private boolean recursiveDirectory;
-    private boolean hiddenFile = false;
-    private Comparator<ExplorerItem> comparator;
+    private boolean hiddenFile;
+    private boolean imageListEnable;
 
     public FileSearcher setExtension(String ext) {
         this.ext = ext;
@@ -57,6 +59,11 @@ public class FileSearcher {
         return this;
     }
 
+    public FileSearcher setImageListEnable(boolean b) {
+        this.imageListEnable = b;
+        return this;
+    }
+
     public Result search(String path) {
         File file = new File(path);
         if (file == null)
@@ -70,7 +77,6 @@ public class FileSearcher {
         ArrayList<ExplorerItem> fileList = new ArrayList<ExplorerItem>();
         ArrayList<ExplorerItem> directoryList = new ArrayList<ExplorerItem>();
         ArrayList<ExplorerItem> normalList = new ArrayList<ExplorerItem>();
-        ArrayList<ExplorerItem> imageList = new ArrayList<ExplorerItem>();
         Result result = new Result();
 
         // 파일로 아이템을 만듬
@@ -127,7 +133,7 @@ public class FileSearcher {
             }
         }
 
-        if(comparator == null) {
+        if (comparator == null) {
             comparator = new FileHelper.NameAscComparator();
         }
         // 디렉토리 우선 정렬 및 가나다 정렬
@@ -137,17 +143,20 @@ public class FileSearcher {
         fileList.addAll(directoryList);
         fileList.addAll(normalList);
 
-        // 이미지는 마지막에 모아서 처리한다.
-        imageList.clear();
-        for (int i = 0; i < normalList.size(); i++) {
-            if (normalList.get(i).type == ExplorerItem.FileType.IMAGE) {
-                imageList.add(normalList.get(i));
+        if(imageListEnable) {
+            ArrayList<ExplorerItem> imageList = new ArrayList<ExplorerItem>();
+
+            // 이미지는 마지막에 모아서 처리한다.
+            for (int i = 0; i < normalList.size(); i++) {
+                if (normalList.get(i).type == ExplorerItem.FileType.IMAGE) {
+                    imageList.add(normalList.get(i));
+                }
             }
+
+            result.imageList = imageList;
         }
 
         result.fileList = fileList;
-        result.imageList = imageList;
         return result;
     }
-
 }

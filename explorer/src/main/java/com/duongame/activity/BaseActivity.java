@@ -11,6 +11,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
@@ -64,7 +65,7 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     protected abstract int getMenuResId();
 
-    protected abstract BaseFragment getExplorerFragment();
+    protected abstract ExplorerFragment getExplorerFragment();
 
     protected abstract BaseFragment getCurrentFragment();
 
@@ -151,7 +152,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         if (id == R.id.action_view_type) {
-            ExplorerFragment fragment = (ExplorerFragment) getExplorerFragment();
+            ExplorerFragment fragment = getExplorerFragment();
             if (fragment != null) {
                 if (fragment.getViewType() == ExplorerFragment.SWITCH_GRID) {
                     fragment.changeViewType(ExplorerFragment.SWITCH_LIST);
@@ -165,7 +166,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         }
 
         if (id == R.id.action_sort) {
-            ExplorerFragment fragment = (ExplorerFragment) getExplorerFragment();
+            ExplorerFragment fragment = getExplorerFragment();
             if (fragment != null) {
                 fragment.sortFileWithDialog();
             }
@@ -228,9 +229,21 @@ public abstract class BaseActivity extends AppCompatActivity {
             setContentView(getLayoutResId());
         }
 
+        initBottomUI();
+    }
+
+    void initBottomUI() {
         // 최초에는 하단으로 숨겨둠
         bottom = (LinearLayout) findViewById(R.id.bottom);
         bottom.setTranslationY(UnitHelper.dpToPx(48));
+
+        Button btnDelete = (Button) bottom.findViewById(R.id.btn_delete);
+        btnDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getExplorerFragment().deleteFileWithDialog();
+            }
+        });
     }
 
     @Override
@@ -314,5 +327,9 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     public void hideBottomUI() {
         bottom.animate().translationYBy(bottom.getHeight());
+    }
+
+    public void updateSelectedFileCount(int count) {
+
     }
 }
