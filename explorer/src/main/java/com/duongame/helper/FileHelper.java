@@ -164,10 +164,10 @@ public class FileHelper {
         }
     }
 
-    public static class SizeDescComparator implements Comparator<ExplorerItem> {
+    public static class SizeAscComparator implements Comparator<ExplorerItem> {
         @Override
         public int compare(ExplorerItem lhs, ExplorerItem rhs) {
-            long ret = rhs.size - lhs.size;
+            long ret = lhs.size - rhs.size;
             if(ret == 0) {
                 return lhs.name.compareToIgnoreCase(rhs.name);
             } else {
@@ -179,10 +179,10 @@ public class FileHelper {
         }
     }
 
-    public static class SizeAscComparator implements Comparator<ExplorerItem> {
+    public static class SizeDescComparator implements Comparator<ExplorerItem> {
         @Override
         public int compare(ExplorerItem lhs, ExplorerItem rhs) {
-            long ret = lhs.size - rhs.size;
+            long ret = rhs.size - lhs.size;
             if(ret == 0) {
                 return rhs.name.compareToIgnoreCase(lhs.name);
             } else {
