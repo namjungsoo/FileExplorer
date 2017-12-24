@@ -26,7 +26,6 @@ import com.duongame.helper.JLog;
 import net.lingala.zip4j.exception.ZipException;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -512,7 +511,7 @@ public class BitmapLoader {
         return page;
     }
 
-    //HACK: 이것을 사용하지 말것
+    //HACK: 이것을 사용하지 말것 -> GIF 일때는 이것을 사용하여야 한다.
     // 왼쪽 오른쪽을 자른 비트맵을 리턴한다
     public static Bitmap splitBitmapSide(Bitmap bitmap, ExplorerItem item) {
         // 이미 캐시된 페이지가 있으면

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
@@ -23,6 +24,7 @@ import com.duongame.db.BookDB;
 import com.duongame.db.BookLoader;
 import com.duongame.fragment.BaseFragment;
 import com.duongame.fragment.ExplorerFragment;
+import com.duongame.helper.AppHelper;
 import com.duongame.helper.PreferenceHelper;
 import com.duongame.helper.ToastHelper;
 import com.duongame.helper.UnitHelper;
@@ -191,6 +193,11 @@ public abstract class BaseActivity extends AppCompatActivity {
             return true;
         }
 
+        // ActionBar의 backbutton
+        if (id == android.R.id.home) {
+            onBackPressed();
+            return true;
+        }
         return super.onOptionsItemSelected(item);
     }
 
@@ -323,13 +330,21 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     public void showBottomUI() {
         bottom.animate().translationYBy(-bottom.getHeight());
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
     }
 
     public void hideBottomUI() {
         bottom.animate().translationYBy(bottom.getHeight());
+
+        // 원래 타이틀로 돌려준다.
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setTitle(AppHelper.getAppName(this));
+        actionBar.setDisplayHomeAsUpEnabled(false);
     }
 
     public void updateSelectedFileCount(int count) {
-
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setTitle(""+count);
     }
 }

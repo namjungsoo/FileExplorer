@@ -359,7 +359,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
                 //TODO: TEXT "파일 이름 변경은 하나의 파일 선택시에만 가능합니다."
             }
         } else {// 선택 모드로 진입 + 현재 파일 선택
-            onSelectMode(item);
+            onSelectMode(item, position);
         }
     }
 
@@ -693,15 +693,14 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
         return viewType;
     }
 
-    void onSelectMode(ExplorerItem item) {
+    void onSelectMode(ExplorerItem item, int position) {
         selectMode = true;
 
-        // 현재 위치의 아이템을 선택으로 설정
-        item.selected = true;
-        JLog.e(TAG, "onAdapterItemLongClick item=" + item.hashCode() + " " + item.selected);
-
         // UI 상태만 리프레시
+        // 왜냐하면 전체 체크박스를 나오게 해야 하기 때문이다.
         softRefresh();
+
+        onSelectItemClick(item, position);
 
         // 하단 UI 표시
         ((BaseActivity) getActivity()).showBottomUI();
@@ -727,10 +726,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
 
         // 선택된 파일 카운트 업데이트
         int count = getSelectedFileCount();
-        BaseActivity baseActivity = (BaseActivity) this.getActivity();
-        if (baseActivity != null) {
-            baseActivity.updateSelectedFileCount(count);
-        }
+        ((BaseActivity) getActivity()).updateSelectedFileCount(count);
     }
 
     void onRunItemClick(ExplorerItem item) {
