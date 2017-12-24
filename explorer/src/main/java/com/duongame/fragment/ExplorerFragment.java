@@ -33,6 +33,7 @@ import com.duongame.adapter.ExplorerListAdapter;
 import com.duongame.adapter.ExplorerScrollListener;
 import com.duongame.bitmap.BitmapCacheManager;
 import com.duongame.db.BookLoader;
+import com.duongame.dialog.SortDialog;
 import com.duongame.helper.AlertHelper;
 import com.duongame.helper.AppHelper;
 import com.duongame.helper.ExtSdCardHelper;
@@ -45,6 +46,7 @@ import com.duongame.view.DividerItemDecoration;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Comparator;
 
 import static android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION;
 import static android.view.View.GONE;
@@ -85,8 +87,13 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
     private String extSdCard = null;
     private SearchTask searchTask = null;
 
+    // 선택
     private boolean selectMode = false;
     private DividerItemDecoration itemDecoration = null;
+
+    // 정렬
+    private int sortType;
+    private int sortDirection;
 
     @Nullable
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
@@ -98,6 +105,8 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
         initViewType();
 
         PermissionManager.checkStoragePermissions(getActivity());
+        sortType = PreferenceHelper.getSortType(getActivity());
+        sortDirection = PreferenceHelper.getSortDirection(getActivity());
 
         extSdCard = ExtSdCardHelper.getExternalSdCardPath();
         if (extSdCard != null) {
@@ -366,6 +375,25 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
         return count;
     }
 
+    public void sortFileWithDialog() {
+        SortDialog dialog = new SortDialog();
+        dialog.setTypeAndDirection(sortType, sortDirection);
+        dialog.setOnSortListener(new SortDialog.OnSortListener() {
+            @Override
+            public void onSort(int type, int dir) {
+                sortType = type;
+                sortDirection = dir;
+
+                PreferenceHelper.setSortType(getActivity(), sortType);
+                PreferenceHelper.setSortDirection(getActivity(), sortDirection);
+
+                updateFileList(application.getLastPath());
+            }
+        });
+
+        dialog.show(getActivity().getFragmentManager(), "sort");
+    }
+
     void renameFileWithDialog(final ExplorerItem item) {
         View view = getActivity().getLayoutInflater().inflate(R.layout.dialog_rename, null, false);
         final EditText editFileName = (EditText) view.findViewById(R.id.file_name);
@@ -416,29 +444,9 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
             return;
 
         if (selectMode) {
-            item.selected = !item.selected;
-
-            // 아이템을 찾아서 UI를 업데이트 해주어야 함
-            adapter.notifyItemChanged(position);
+            onSelectItemClick(item, position);
         } else {
-            switch (item.type) {
-                case FOLDER:
-                    onClickDirectory(item);
-                    break;
-                case IMAGE:
-                    onClickImage(item);
-                    break;
-                case APK:
-                    onClickApk(item);
-                    break;
-
-                case PDF:
-                case TEXT:
-                case ZIP:
-                    //TODO: 나중에 이미지 preview를 만들자.
-                    onClickBook(item);
-                    break;
-            }
+            onRunItemClick(item);
         }
     }
 
@@ -492,17 +500,48 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
 
         boolean pathChanged;
         String path;
+        Comparator<ExplorerItem> comparator;
 
         public SearchTask(boolean pathChanged) {
             this.pathChanged = pathChanged;
         }
 
+        void updateComparator() {
+            if (sortDirection == 0) {// ascending
+                switch (sortType) {
+                    case 0:
+                        comparator = new FileHelper.NameAscComparator();
+                        break;
+                    case 1:
+                        comparator = new FileHelper.ExtAscComparator();
+                        break;
+                    case 2:
+                        comparator = new FileHelper.SizeAscComparator();
+                        break;
+                }
+            } else {
+                switch (sortType) {// descending
+                    case 0:
+                        comparator = new FileHelper.NameDescComparator();
+                        break;
+                    case 1:
+                        comparator = new FileHelper.ExtDescComparator();
+                        break;
+                    case 2:
+                        comparator = new FileHelper.SizeDescComparator();
+                        break;
+                }
+            }
+        }
+
         @Override
         protected Void doInBackground(String... params) {
             path = params[0];
+            updateComparator();
             searchResult = fileSearcher
                     .setRecursiveDirectory(false)
                     .setExcludeDirectory(false)
+                    .setComparator(comparator)
                     .search(path);
             if (searchResult != null) {
                 fileList = searchResult.fileList;
@@ -676,7 +715,33 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
         ((BaseActivity) getActivity()).hideBottomUI();
     }
 
-    void onSelectItemClick(ExplorerItem item) {
+    // 이건 뭐지?
+    // 아이템이 선택될때마다 선택된 아이템의 갯수를 업데이트하기위해서 여기에다가 모음
+    void onSelectItemClick(ExplorerItem item, int position) {
+        item.selected = !item.selected;
 
+        // 아이템을 찾아서 UI를 업데이트 해주어야 함
+        adapter.notifyItemChanged(position);
+    }
+
+    void onRunItemClick(ExplorerItem item) {
+        switch (item.type) {
+            case FOLDER:
+                onClickDirectory(item);
+                break;
+            case IMAGE:
+                onClickImage(item);
+                break;
+            case APK:
+                onClickApk(item);
+                break;
+
+            case PDF:
+            case TEXT:
+            case ZIP:
+                //TODO: 나중에 이미지 preview를 만들자.
+                onClickBook(item);
+                break;
+        }
     }
 }

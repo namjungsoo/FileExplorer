@@ -27,6 +27,9 @@ public class PreferenceHelper {
     private static final String EXIT_COUNT = "exit_count";
     private static final String HIDE_COMPLETED = "hide_completed";
 
+    private static final String SORT_TYPE = "sort_type";
+    private static final String SORT_DIRECTION = "sort_direction";
+
     private static SharedPreferences pref = null;
 
     private static void checkPrefManager(Context context) {
@@ -158,6 +161,30 @@ public class PreferenceHelper {
         checkPrefManager(context);
         final SharedPreferences.Editor editor = pref.edit();
         editor.putBoolean(HIDE_COMPLETED, hide);
+        editor.commit();
+    }
+
+    public static int getSortType(Context context) {
+        checkPrefManager(context);
+        return pref.getInt(SORT_TYPE, 0);
+    }
+
+    public static void setSortType(Context context, int count) {
+        checkPrefManager(context);
+        final SharedPreferences.Editor editor = pref.edit();
+        editor.putInt(SORT_TYPE, count);
+        editor.commit();
+    }
+
+    public static int getSortDirection(Context context) {
+        checkPrefManager(context);
+        return pref.getInt(SORT_DIRECTION, 0);
+    }
+
+    public static void setSortDirection(Context context, int count) {
+        checkPrefManager(context);
+        final SharedPreferences.Editor editor = pref.edit();
+        editor.putInt(SORT_DIRECTION, count);
         editor.commit();
     }
 

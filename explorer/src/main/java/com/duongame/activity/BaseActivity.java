@@ -138,6 +138,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         // 메뉴를 흰색으로 변경
         this.menu = menu;
 
+        menu.getItem(1).getIcon().setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP);
         updateViewTypeMenuIcon();
         return true;
     }
@@ -163,6 +164,13 @@ public abstract class BaseActivity extends AppCompatActivity {
             return false;
         }
 
+        if (id == R.id.action_sort) {
+            ExplorerFragment fragment = (ExplorerFragment) getExplorerFragment();
+            if (fragment != null) {
+                fragment.sortFileWithDialog();
+            }
+        }
+
         if (id == R.id.action_open_lastbook) {
             BookLoader.openLastBookDirect(this);
             return true;
@@ -172,12 +180,14 @@ public abstract class BaseActivity extends AppCompatActivity {
             clearCache();
 
             ToastHelper.showToast(this, getResources().getString(R.string.msg_clear_cache));
+            return true;
         }
 
         if (id == R.id.action_clear_history) {
             clearHistory();
 
             ToastHelper.showToast(this, getResources().getString(R.string.msg_clear_history));
+            return true;
         }
 
         return super.onOptionsItemSelected(item);
@@ -219,7 +229,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         }
 
         // 최초에는 하단으로 숨겨둠
-        bottom = (LinearLayout)findViewById(R.id.bottom);
+        bottom = (LinearLayout) findViewById(R.id.bottom);
         bottom.setTranslationY(UnitHelper.dpToPx(48));
     }
 

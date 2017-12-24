@@ -9,5 +9,5 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="9dp"
         android:layout_marginRight="9dp"
-        android:selectAllOnFocus="true"/>
+        android:selectAllOnFocus="true" />
 </FrameLayout>

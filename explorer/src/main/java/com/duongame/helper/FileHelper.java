@@ -164,7 +164,7 @@ public class FileHelper {
         }
     }
 
-    public static class SizeAscComparator implements Comparator<ExplorerItem> {
+    public static class SizeDescComparator implements Comparator<ExplorerItem> {
         @Override
         public int compare(ExplorerItem lhs, ExplorerItem rhs) {
             long ret = rhs.size - lhs.size;
@@ -179,7 +179,7 @@ public class FileHelper {
         }
     }
 
-    public static class SizeDescComparator implements Comparator<ExplorerItem> {
+    public static class SizeAscComparator implements Comparator<ExplorerItem> {
         @Override
         public int compare(ExplorerItem lhs, ExplorerItem rhs) {
             long ret = lhs.size - rhs.size;

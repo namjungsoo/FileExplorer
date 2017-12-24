@@ -15,8 +15,6 @@ import com.duongame.adapter.ExplorerItem;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
 
 /**
  * Created by namjungsoo on 2017-12-07.
@@ -38,6 +36,8 @@ public class DeleteDialog extends DialogFragment {
 
     }
 
+    // 삭제할 파일과 폴더를 입력해야 한다.
+    // 폴더 삭제도 가능한지 확인해봐야 한다.
     public void setFileList(ArrayList<ExplorerItem> fileList) {
         this.fileList = fileList;
     }
