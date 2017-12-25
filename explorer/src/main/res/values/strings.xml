@@ -47,8 +47,8 @@
     <string name="copy">Copy</string>
     <string name="cut">Cut</string>
     <string name="paste">Paste</string>
-    <string name="zip">Zip</string>
-    <string name="unzip">Unzip</string>
+    <string name="archive">Archive</string>
+    <string name="unarchive">Unarchive</string>
     <string name="delete">Del</string>
 
     <string name="new_folder">New folder</string>
