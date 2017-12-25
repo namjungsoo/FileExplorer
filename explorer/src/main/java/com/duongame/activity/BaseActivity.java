@@ -141,9 +141,26 @@ public abstract class BaseActivity extends AppCompatActivity {
         // 메뉴를 흰색으로 변경
         this.menu = menu;
 
-        menu.getItem(1).getIcon().setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP);
+        MenuItem item;
+        item = menu.findItem(R.id.action_sort);
+        item.getIcon().setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP);
+        item = menu.findItem(R.id.action_new_folder);
+        item.getIcon().setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP);
+        item = menu.findItem(R.id.action_select_all);
+        item.getIcon().setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP);
+
+        updateSelectMenuIcon(false);
         updateViewTypeMenuIcon();
         return true;
+    }
+
+    void updateSelectMenuIcon(boolean selectMode) {
+        MenuItem item;
+        item = menu.findItem(R.id.action_select_all);
+        item.setVisible(selectMode);
+
+        item = menu.findItem(R.id.action_new_folder);
+        item.setVisible(!selectMode);
     }
 
     @Override
@@ -272,8 +289,11 @@ public abstract class BaseActivity extends AppCompatActivity {
         }
 
         if (resId > 0) {
-            menu.getItem(0).setIcon(resId);
-            menu.getItem(0).getIcon().setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP);
+            MenuItem item = menu.findItem(R.id.action_view_type);
+            if(item != null) {
+                item.setIcon(resId);
+                item.getIcon().setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP);
+            }
         }
     }
 
@@ -332,6 +352,8 @@ public abstract class BaseActivity extends AppCompatActivity {
         bottom.animate().translationYBy(-bottom.getHeight());
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
+
+        updateSelectMenuIcon(true);
     }
 
     public void hideBottomUI() {
@@ -341,6 +363,8 @@ public abstract class BaseActivity extends AppCompatActivity {
         ActionBar actionBar = getSupportActionBar();
         actionBar.setTitle(AppHelper.getAppName(this));
         actionBar.setDisplayHomeAsUpEnabled(false);
+
+        updateSelectMenuIcon(false);
     }
 
     public void updateSelectedFileCount(int count) {

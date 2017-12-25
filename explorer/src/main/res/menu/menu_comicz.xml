@@ -3,17 +3,31 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="pro.myapplication.MainActivity">
 
+    <!-- 폴더 추가 -->
+    <item
+        android:id="@+id/action_new_folder"
+        android:icon="@drawable/newfolder"
+        android:title="@string/newfolder"
+        app:showAsAction="always" />
+
+    <!-- 전체 선택 -->
+    <item
+        android:id="@+id/action_select_all"
+        android:icon="@drawable/selectall"
+        android:title="@string/selectall"
+        app:showAsAction="always" />
+
     <item
         android:id="@+id/action_view_type"
         android:icon="@drawable/list"
-        android:title="ViewType"
-        app:showAsAction="ifRoom" />
+        android:title="@string/viewtype"
+        app:showAsAction="always" />
 
     <item
         android:id="@+id/action_sort"
         android:icon="@drawable/sort"
-        android:title="Sort"
-        app:showAsAction="ifRoom" />
+        android:title="@string/sort"
+        app:showAsAction="always" />
 
     <item
         android:id="@+id/action_clear_cache"

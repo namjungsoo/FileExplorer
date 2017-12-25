@@ -51,6 +51,10 @@
     <string name="unzip">Unzip</string>
     <string name="delete">Del</string>
 
+    <string name="newfolder">New folder</string>
+    <string name="selectall">Select all</string>
+    <string name="viewtype">View type</string>
+
     <string name="msg_file_sort">Please select a file sort method.</string>
     <string name="file_ext">File extension</string>
     <string name="file_size">File size</string>
