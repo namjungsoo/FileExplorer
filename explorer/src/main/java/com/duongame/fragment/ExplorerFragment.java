@@ -19,7 +19,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.ViewSwitcher;
 
@@ -103,7 +102,6 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
         rootView = inflater.inflate(R.layout.fragment_explorer, container, false);
 
         initUI();
-        initBottomUI();
         initViewType();
 
         PermissionManager.checkStoragePermissions(getActivity());
@@ -173,21 +171,6 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
                 PreferenceHelper.setLastTop(getActivity(), top);
             }
         }).start();
-    }
-
-    void initBottomUI() {
-        LinearLayout bottom = ((BaseActivity) getActivity()).getBottomUI();
-        if (bottom == null)
-            return;
-
-        // 삭제 버튼
-        Button btnDelete = (Button) bottom.findViewById(R.id.btn_delete);
-        btnDelete.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
     }
 
     void initUI() {

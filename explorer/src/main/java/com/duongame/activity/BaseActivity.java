@@ -13,7 +13,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
@@ -277,7 +277,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         bottom = (LinearLayout) findViewById(R.id.bottom);
         bottom.setTranslationY(UnitHelper.dpToPx(48));
 
-        Button btnDelete = (Button) bottom.findViewById(R.id.btn_delete);
+        ImageButton btnDelete = (ImageButton) bottom.findViewById(R.id.btn_delete);
         btnDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

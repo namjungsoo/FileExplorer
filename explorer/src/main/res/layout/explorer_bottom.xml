@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/bottom"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -9,34 +8,64 @@
     android:background="@color/colorPrimary"
     android:orientation="horizontal">
 
-    <Button
+    <ImageButton
         android:layout_width="72dp"
-        android:layout_height="wrap_content"
+        android:layout_height="48dp"
+        android:background="@null"
         android:enabled="false"
-        android:text="@string/copy" />
+        android:padding="8dp"
 
-    <Button
+        android:scaleType="fitCenter"
+        android:src="@drawable/copy"
+        android:text="@string/copy"
+        android:tint="@android:color/white" />
+
+    <ImageButton
         android:layout_width="72dp"
-        android:layout_height="wrap_content"
+        android:layout_height="48dp"
+        android:background="@null"
         android:enabled="false"
-        android:text="@string/cut" />
+        android:padding="8dp"
 
-    <Button
+        android:scaleType="fitCenter"
+        android:src="@drawable/cut"
+        android:text="@string/cut"
+        android:tint="@android:color/white" />
+
+    <ImageButton
         android:layout_width="72dp"
-        android:layout_height="wrap_content"
+        android:layout_height="48dp"
+        android:background="@null"
         android:enabled="false"
-        android:text="@string/paste" />
+        android:padding="8dp"
 
-    <!-- 모든 선택된 파일이 zip일때 unzip으로 동작한다. -->
-    <Button
+        android:scaleType="fitCenter"
+        android:src="@drawable/paste"
+        android:text="@string/paste"
+        android:tint="@android:color/white" />
+
+    <!-- zip하는것 밖에 없다. unzip은 zip파일을 그냥 실행시키면 된다. -->
+    <ImageButton
         android:layout_width="72dp"
-        android:layout_height="wrap_content"
+        android:layout_height="48dp"
+        android:background="@null"
         android:enabled="false"
-        android:text="@string/zip" />
+        android:padding="8dp"
 
-    <Button
+        android:scaleType="fitCenter"
+        android:src="@drawable/archive"
+        android:text="@string/zip"
+        android:tint="@android:color/white" />
+
+    <ImageButton
         android:id="@+id/btn_delete"
         android:layout_width="72dp"
-        android:layout_height="wrap_content"
-        android:text="@string/delete" />
+        android:layout_height="48dp"
+        android:background="@null"
+        android:padding="8dp"
+
+        android:scaleType="fitCenter"
+        android:src="@drawable/delete"
+        android:text="@string/delete"
+        android:tint="@android:color/white" />
 </LinearLayout>
