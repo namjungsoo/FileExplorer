@@ -1,5 +1,6 @@
 package com.duongame.activity;
 
+import android.animation.ValueAnimator;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
@@ -25,6 +26,7 @@ import com.duongame.db.BookLoader;
 import com.duongame.fragment.BaseFragment;
 import com.duongame.fragment.ExplorerFragment;
 import com.duongame.helper.AppHelper;
+import com.duongame.helper.JLog;
 import com.duongame.helper.PreferenceHelper;
 import com.duongame.helper.ToastHelper;
 import com.duongame.helper.UnitHelper;
@@ -51,8 +53,9 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected Tracker mTracker;
 
     // admob
-    protected View mainView;
+    protected View acitivityView;
     protected AdView adView;
+    protected View mainView;
 
     protected Menu menu;
     protected LinearLayout bottom;
@@ -238,7 +241,9 @@ public abstract class BaseActivity extends AppCompatActivity {
     private void initContentView() {
         if (BuildConfig.SHOW_AD) {
             final LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            mainView = inflater.inflate(getLayoutResId(), null, true);
+            acitivityView = inflater.inflate(getLayoutResId(), null, true);
+
+            mainView = acitivityView.findViewById(R.id.activity_main);
 
             final RelativeLayout layout = new RelativeLayout(this);
             layout.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT));
@@ -254,10 +259,10 @@ public abstract class BaseActivity extends AppCompatActivity {
             // mainview layout params
             params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
             params.addRule(RelativeLayout.ABOVE, adView.getId());
-            mainView.setLayoutParams(params);
+            acitivityView.setLayoutParams(params);
 
             layout.addView(adView);
-            layout.addView(mainView);
+            layout.addView(acitivityView);
 
             setContentView(layout);
         } else {
@@ -360,7 +365,17 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
     public void showBottomUI() {
-        bottom.animate().translationYBy(-bottom.getHeight());
+        final int defaultHeight = mainView.getHeight();
+
+        bottom.animate().translationYBy(-bottom.getHeight()).setUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                int offset = (int) ((float) animation.getAnimatedValue() * bottom.getHeight());
+                JLog.e("TAG", "" + animation.getAnimatedValue() + " " + offset + " " + mainView.getHeight());
+                mainView.getLayoutParams().height = defaultHeight - offset;
+                mainView.requestLayout();
+            }
+        });
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
 
@@ -368,7 +383,17 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
     public void hideBottomUI() {
-        bottom.animate().translationYBy(bottom.getHeight());
+        final int defaultHeight = mainView.getHeight();
+
+        bottom.animate().translationYBy(bottom.getHeight()).setUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                int offset = (int) ((float) animation.getAnimatedValue() * bottom.getHeight());
+                JLog.e("TAG", "" + animation.getAnimatedValue() + " " + offset + " " + mainView.getHeight());
+                mainView.getLayoutParams().height = defaultHeight + offset;
+                mainView.requestLayout();
+            }
+        });
 
         // 원래 타이틀로 돌려준다.
         ActionBar actionBar = getSupportActionBar();

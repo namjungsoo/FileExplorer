@@ -1,39 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/activity_main"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".activity.ComicActivity">
+    android:layout_height="match_parent">
 
-    <!-- AppBarLayout is a wrapper for a Toolbar in order to apply scrolling effects. -->
-    <!-- Note that AppBarLayout expects to be the first child nested within a CoordinatorLayout -->
-    <android.support.design.widget.AppBarLayout
-        android:id="@+id/appBar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:theme="@style/ThemeOverlay.AppCompat.ActionBar">
-
-        <!-- Toolbar is the actual app bar with text and the action items
-        app:layout_scrollFlags="scroll|enterAlways" -->
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
-            app:layout_scrollFlags="scroll|enterAlways"
-            app:popupTheme="@style/ThemeOverlay.AppCompat.Dark"
-            app:theme="@style/ThemeOverlay.AppCompat.Dark" />
-    </android.support.design.widget.AppBarLayout>
-
-    <fragment
-        android:id="@+id/fragment_explorer"
-        android:name="com.duongame.fragment.ExplorerFragment"
+    <android.support.design.widget.CoordinatorLayout
+        android:id="@+id/activity_main"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+        tools:context=".activity.ComicActivity">
+
+        <!-- AppBarLayout is a wrapper for a Toolbar in order to apply scrolling effects. -->
+        <!-- Note that AppBarLayout expects to be the first child nested within a CoordinatorLayout -->
+        <android.support.design.widget.AppBarLayout
+            android:id="@+id/appBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:theme="@style/ThemeOverlay.AppCompat.ActionBar">
+
+            <!-- Toolbar is the actual app bar with text and the action items
+            app:layout_scrollFlags="scroll|enterAlways" -->
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="?attr/colorPrimary"
+                app:layout_scrollFlags="scroll|enterAlways"
+                app:popupTheme="@style/ThemeOverlay.AppCompat.Dark"
+                app:theme="@style/ThemeOverlay.AppCompat.Dark" />
+        </android.support.design.widget.AppBarLayout>
+
+        <fragment
+            android:id="@+id/fragment_explorer"
+            android:name="com.duongame.fragment.ExplorerFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+    </android.support.design.widget.CoordinatorLayout>
 
     <include layout="@layout/explorer_bottom" />
 
-</android.support.design.widget.CoordinatorLayout>
+</FrameLayout>

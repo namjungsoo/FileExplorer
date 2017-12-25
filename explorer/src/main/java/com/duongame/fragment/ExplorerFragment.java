@@ -269,7 +269,8 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
             adapter.setSelectMode(selectMode);
             adapter.setOnItemClickListener(this);
             // 코믹z가 아닐때 롱클릭 활성화 (임시)
-            if (!AppHelper.isComicz(getContext())) {
+            //if (!AppHelper.isComicz(getContext()))
+            {
                 adapter.setOnLongItemClickListener(this);
             }
         }
