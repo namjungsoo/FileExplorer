@@ -68,6 +68,8 @@
     <string name="toast_file_rename">The file name has been changed.</string>
     <string name="toast_multi_rename_error">Renaming files is only possible when selecting one file.</string>
     <string name="toast_new_folder">A new folder has been created.</string>
+    <string name="toast_select_all">Select the entire file.</string>
+    <string name="toast_deselect_all">Deselect the entire file.</string>
 
     <string name="warn_file_delete">Are you sure you want to delete the %d selected files?</string>
     <string name="msg_file_delete">The selected file is being deleted.</string>

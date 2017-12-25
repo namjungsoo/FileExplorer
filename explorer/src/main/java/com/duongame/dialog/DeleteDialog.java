@@ -140,6 +140,8 @@ public class DeleteDialog extends DialogFragment {
                     }
                 } catch (SecurityException e) {
                     // 지울수 없는 파일
+                    ToastHelper.showToast(getActivity(), R.string.toast_error);
+                    return null;
                 }
             }
             return null;

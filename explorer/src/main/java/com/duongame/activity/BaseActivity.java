@@ -215,6 +215,11 @@ public abstract class BaseActivity extends AppCompatActivity {
             return true;
         }
 
+        if (id == R.id.action_select_all) {
+            getExplorerFragment().selectAll();
+            return true;
+        }
+
         // ActionBar의 backbutton
         if (id == android.R.id.home) {
             onBackPressed();

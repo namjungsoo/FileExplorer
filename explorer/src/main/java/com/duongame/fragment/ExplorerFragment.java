@@ -765,6 +765,10 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
         adapter.notifyItemChanged(position);
 
         // 선택된 파일 카운트 업데이트
+        updateSelectedFileCount();
+    }
+
+    void updateSelectedFileCount() {
         int count = getSelectedFileCount();
         ((BaseActivity) getActivity()).updateSelectedFileCount(count);
     }
@@ -825,5 +829,25 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
                     }
                 }, null);
 
+    }
+
+    public void selectAll() {
+        // 전체가 선택된 상태라면 전부 선택 초기화를 해줌
+        if(fileList.size() == getSelectedFileCount()) {
+            for(int i=0; i<fileList.size(); i++) {
+                fileList.get(i).selected = false;
+            }
+            ToastHelper.showToast(getActivity(), R.string.toast_deselect_all);
+        } else {
+            for(int i=0; i<fileList.size(); i++) {
+                fileList.get(i).selected = true;
+            }
+            ToastHelper.showToast(getActivity(), R.string.toast_select_all);
+        }
+
+        updateSelectedFileCount();
+
+        // 그런다음에 화면 UI를 업데이트를 해준다.
+        softRefresh();
     }
 }
