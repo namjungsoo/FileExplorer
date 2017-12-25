@@ -16,7 +16,7 @@
     <string name="right">يسار</string>
     <string name="both">كلا</string>
     <string name="file_name">اسم الملف</string>
-    <string name="backpressed">لإنهاء، اضغط على الزر مرة أخرى.</string>
+    <string name="back_pressed">لإنهاء، اضغط على الزر مرة أخرى.</string>
     <string name="action_settings">إعدادات</string>
     <string name="no_contents">لا محتويات</string>
     <string-array name="search_file">

@@ -210,11 +210,17 @@ public abstract class BaseActivity extends AppCompatActivity {
             return true;
         }
 
+        if (id == R.id.action_new_folder) {
+            getExplorerFragment().newFolderWithDialog();
+            return true;
+        }
+
         // ActionBar의 backbutton
         if (id == android.R.id.home) {
             onBackPressed();
             return true;
         }
+
         return super.onOptionsItemSelected(item);
     }
 
@@ -290,7 +296,7 @@ public abstract class BaseActivity extends AppCompatActivity {
 
         if (resId > 0) {
             MenuItem item = menu.findItem(R.id.action_view_type);
-            if(item != null) {
+            if (item != null) {
                 item.setIcon(resId);
                 item.getIcon().setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP);
             }
@@ -369,6 +375,6 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     public void updateSelectedFileCount(int count) {
         ActionBar actionBar = getSupportActionBar();
-        actionBar.setTitle(""+count);
+        actionBar.setTitle("" + count);
     }
 }

@@ -6,21 +6,21 @@
     <!-- 폴더 추가 -->
     <item
         android:id="@+id/action_new_folder"
-        android:icon="@drawable/newfolder"
-        android:title="@string/newfolder"
+        android:icon="@drawable/new_folder"
+        android:title="@string/new_folder"
         app:showAsAction="always" />
 
     <!-- 전체 선택 -->
     <item
         android:id="@+id/action_select_all"
-        android:icon="@drawable/selectall"
-        android:title="@string/selectall"
+        android:icon="@drawable/select_all"
+        android:title="@string/select_all"
         app:showAsAction="always" />
 
     <item
         android:id="@+id/action_view_type"
         android:icon="@drawable/list"
-        android:title="@string/viewtype"
+        android:title="@string/view_type"
         app:showAsAction="always" />
 
     <item

@@ -16,7 +16,7 @@
     <string name="right">右</string>
     <string name="both">両面</string>
     <string name="file_name">ファイル名</string>
-    <string name="backpressed">終了するには、戻るボタンをもう一度押してください。</string>
+    <string name="back_pressed">終了するには、戻るボタンをもう一度押してください。</string>
     <string name="action_settings">設定</string>
     <string name="no_contents">結果はありません。</string>
     <string-array name="search_file">

@@ -16,7 +16,7 @@
     <string name="right">右邊</string>
     <string name="both">雙方</string>
     <string name="file_name">文件名</string>
-    <string name="backpressed">要退出，請再次按返回按鈕。</string>
+    <string name="back_pressed">要退出，請再次按返回按鈕。</string>
     <string name="action_settings">設置</string>
     <string name="no_contents">沒有內容</string>
     <string-array name="search_file">

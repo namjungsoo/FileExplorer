@@ -41,6 +41,7 @@ import com.duongame.helper.ExtSdCardHelper;
 import com.duongame.helper.FileHelper;
 import com.duongame.helper.JLog;
 import com.duongame.helper.PreferenceHelper;
+import com.duongame.helper.ToastHelper;
 import com.duongame.manager.PermissionManager;
 import com.duongame.manager.PositionManager;
 import com.duongame.view.DividerItemDecoration;
@@ -200,7 +201,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
         home.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                updateFileList(null);
+                updateFileList(application.getInitialPath());
             }
         });
 
@@ -356,7 +357,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
             if (getSelectedFileCount() == 1) {
                 renameFileWithDialog(item);
             } else {
-                //TODO: TEXT "파일 이름 변경은 하나의 파일 선택시에만 가능합니다."
+                ToastHelper.showToast(getActivity(), R.string.toast_multi_rename_error);
             }
         } else {// 선택 모드로 진입 + 현재 파일 선택
             onSelectMode(item, position);
@@ -395,6 +396,45 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
         dialog.show(getActivity().getFragmentManager(), "sort");
     }
 
+    // Zip 압축을 풀때 기존에 폴더가 있으면 새로운 폴더명으로 풀어준다.
+    // 폴더를 생성할때는 새로운 폴더명이 있으면 있다고 확인을 한다.
+    void getNewFolderName() {
+
+    }
+
+    public void newFolderWithDialog() {
+        View view = getActivity().getLayoutInflater().inflate(R.layout.dialog_rename, null, false);
+        final EditText editFileName = (EditText) view.findViewById(R.id.file_name);
+        editFileName.setText(R.string.new_folder);
+
+        AlertHelper.showAlert(getActivity(),
+                AppHelper.getAppName(getContext()),
+                getString(R.string.msg_new_folder),
+                view, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        String newFolder = editFileName.getText().toString();
+                        newFolder(newFolder);
+                    }
+                }
+                , null, null);
+
+    }
+
+    void newFolder(String newFolder) {
+        String path = application.getLastPath();
+        File folder = new File(path + "/" + newFolder);
+        if (folder.exists()) {
+            ToastHelper.showToast(getActivity(), R.string.toast_error);
+        } else {
+            folder.mkdir();
+            ToastHelper.showToast(getActivity(), R.string.toast_new_folder);
+        }
+
+        // 파일 리스트 리프레시를 요청해야함
+        onRefresh();
+    }
+
     void renameFileWithDialog(final ExplorerItem item) {
         View view = getActivity().getLayoutInflater().inflate(R.layout.dialog_rename, null, false);
         final EditText editFileName = (EditText) view.findViewById(R.id.file_name);
@@ -430,9 +470,9 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
             // 정보 변경 반영
             adapter.notifyItemChanged(item.position);
 
-            //TODO: TEXT "파일 이름이 변경되었습니다."
+            ToastHelper.showToast(getActivity(), R.string.toast_file_rename);
         } catch (Exception e) {
-            //TODO: TEXT "에러가 발생하였습니다."
+            ToastHelper.showToast(getActivity(), R.string.toast_error);
         }
     }
 
@@ -743,9 +783,16 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
 
             case PDF:
             case TEXT:
-            case ZIP:
                 //TODO: 나중에 읽던 책의 현재위치 이미지의 preview를 만들자.
                 onClickBook(item);
+                break;
+
+            case ZIP:
+                if (AppHelper.isComicz(getActivity())) {
+                    onClickBook(item);
+                } else {
+                    // 파일 탐색기에서는 ZIP파일 관리를 해주자.
+                }
                 break;
         }
     }

@@ -226,7 +226,6 @@ public class ExplorerAdapter extends RecyclerView.Adapter<ExplorerAdapter.Explor
         } else {
             viewHolder.icon.setImageBitmap(bitmap);
         }
-
     }
 
     void setIconPdf(final ExplorerViewHolder viewHolder, ExplorerItem item) {

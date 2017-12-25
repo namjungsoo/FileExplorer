@@ -47,7 +47,7 @@ public class BaseFragment extends Fragment {
             lastBackPressed = current;
 
             // 토스트를 띄운다.
-            ToastHelper.showToast(getActivity(), R.string.backpressed);
+            ToastHelper.showToast(getActivity(), R.string.back_pressed);
         }
     }
 }
