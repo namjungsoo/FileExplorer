@@ -59,6 +59,11 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     protected Menu menu;
     protected LinearLayout bottom;
+    ImageButton btnCopy;
+    ImageButton btnCut;
+    ImageButton btnPaste;
+    ImageButton btnArchive;
+    ImageButton btnDelete;
 
     protected boolean showReview;
 
@@ -277,7 +282,45 @@ public abstract class BaseActivity extends AppCompatActivity {
         bottom = (LinearLayout) findViewById(R.id.bottom);
         bottom.setTranslationY(UnitHelper.dpToPx(48));
 
-        ImageButton btnDelete = (ImageButton) bottom.findViewById(R.id.btn_delete);
+        btnCopy = (ImageButton) bottom.findViewById(R.id.btn_copy);
+        btnCopy.setEnabled(false);
+        btnCopy.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+//                getExplorerFragment().deleteFileWithDialog();
+            }
+        });
+
+        btnCut = (ImageButton) bottom.findViewById(R.id.btn_cut);
+        btnCut.setEnabled(false);
+        btnCut.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+//                getExplorerFragment().deleteFileWithDialog();
+            }
+        });
+
+        btnPaste = (ImageButton) bottom.findViewById(R.id.btn_paste);
+        btnPaste.setEnabled(false);
+        btnPaste.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+//                getExplorerFragment().deleteFileWithDialog();
+            }
+        });
+
+
+        btnArchive = (ImageButton) bottom.findViewById(R.id.btn_archive);
+        btnArchive.setEnabled(false);
+        btnArchive.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+//                getExplorerFragment().deleteFileWithDialog();
+            }
+        });
+
+
+        btnDelete = (ImageButton) bottom.findViewById(R.id.btn_delete);
         btnDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

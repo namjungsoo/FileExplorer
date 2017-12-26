@@ -9,10 +9,10 @@
     android:orientation="horizontal">
 
     <ImageButton
+        android:id="@+id/btn_copy"
         android:layout_width="72dp"
         android:layout_height="48dp"
-        android:background="@null"
-        android:enabled="false"
+        android:background="?attr/selectableItemBackgroundBorderless"
         android:padding="8dp"
 
         android:scaleType="fitCenter"
@@ -20,10 +20,10 @@
         android:text="@string/copy" />
 
     <ImageButton
+        android:id="@+id/btn_cut"
         android:layout_width="72dp"
         android:layout_height="48dp"
-        android:background="@null"
-        android:enabled="false"
+        android:background="?attr/selectableItemBackgroundBorderless"
         android:padding="8dp"
 
         android:scaleType="fitCenter"
@@ -31,10 +31,10 @@
         android:text="@string/cut" />
 
     <ImageButton
+        android:id="@+id/btn_paste"
         android:layout_width="72dp"
         android:layout_height="48dp"
-        android:background="@null"
-        android:enabled="false"
+        android:background="?attr/selectableItemBackgroundBorderless"
         android:padding="8dp"
 
         android:scaleType="fitCenter"
@@ -43,10 +43,10 @@
 
     <!-- zip하는것 밖에 없다. unzip은 zip파일을 그냥 실행시키면 된다. -->
     <ImageButton
+        android:id="@+id/btn_archive"
         android:layout_width="72dp"
         android:layout_height="48dp"
-        android:background="@null"
-        android:enabled="false"
+        android:background="?attr/selectableItemBackgroundBorderless"
         android:padding="8dp"
 
         android:scaleType="fitCenter"
@@ -57,7 +57,7 @@
         android:id="@+id/btn_delete"
         android:layout_width="72dp"
         android:layout_height="48dp"
-        android:background="@null"
+        android:background="?attr/selectableItemBackgroundBorderless"
         android:padding="8dp"
 
         android:scaleType="fitCenter"
