@@ -59,6 +59,7 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     protected Menu menu;
     protected LinearLayout bottom;
+
     ImageButton btnCopy;
     ImageButton btnCut;
     ImageButton btnPaste;
@@ -157,18 +158,22 @@ public abstract class BaseActivity extends AppCompatActivity {
         item = menu.findItem(R.id.action_select_all);
         item.getIcon().setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP);
 
-        updateSelectMenuIcon(false);
+        updateSelectMenuIcon(false, false);
         updateViewTypeMenuIcon();
         return true;
     }
 
-    void updateSelectMenuIcon(boolean selectMode) {
-        MenuItem item;
-        item = menu.findItem(R.id.action_select_all);
-        item.setVisible(selectMode);
+    void updateSelectMenuIcon(boolean selectMode, boolean pasteMode) {
+        MenuItem itemSelectAll = menu.findItem(R.id.action_select_all);
+        MenuItem itemNewFolder = menu.findItem(R.id.action_new_folder);
 
-        item = menu.findItem(R.id.action_new_folder);
-        item.setVisible(!selectMode);
+        if (pasteMode) {
+            itemSelectAll.setVisible(false);
+            itemNewFolder.setVisible(true);
+        } else {
+            itemSelectAll.setVisible(selectMode);
+            itemNewFolder.setVisible(!selectMode);
+        }
     }
 
     @Override
@@ -287,7 +292,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         btnCopy.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                getExplorerFragment().deleteFileWithDialog();
+            getExplorerFragment().saveSelectedFile(false);
             }
         });
 
@@ -296,7 +301,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         btnCut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                getExplorerFragment().deleteFileWithDialog();
+            getExplorerFragment().saveSelectedFile(true);
             }
         });
 
@@ -305,7 +310,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         btnPaste.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                getExplorerFragment().deleteFileWithDialog();
+                getExplorerFragment().pasteFileWithDialog();
             }
         });
 
@@ -321,6 +326,7 @@ public abstract class BaseActivity extends AppCompatActivity {
 
 
         btnDelete = (ImageButton) bottom.findViewById(R.id.btn_delete);
+        btnDelete.setEnabled(false);
         btnDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -422,7 +428,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
 
-        updateSelectMenuIcon(true);
+        updateSelectMenuIcon(true, false);
     }
 
     public void hideBottomUI() {
@@ -443,11 +449,38 @@ public abstract class BaseActivity extends AppCompatActivity {
         actionBar.setTitle(AppHelper.getAppName(this));
         actionBar.setDisplayHomeAsUpEnabled(false);
 
-        updateSelectMenuIcon(false);
+        updateSelectMenuIcon(false, false);
     }
 
     public void updateSelectedFileCount(int count) {
         ActionBar actionBar = getSupportActionBar();
         actionBar.setTitle("" + count);
+
+        if (count > 0) {
+            btnArchive.setEnabled(true);
+            btnCopy.setEnabled(true);
+            btnCut.setEnabled(true);
+            btnDelete.setEnabled(true);
+            btnPaste.setEnabled(false);
+        } else {
+            btnArchive.setEnabled(false);
+            btnCopy.setEnabled(false);
+            btnCut.setEnabled(false);
+            btnDelete.setEnabled(false);
+            btnPaste.setEnabled(false);
+        }
+    }
+
+    public void updatePasteMode() {
+        btnArchive.setEnabled(false);
+        btnCopy.setEnabled(false);
+        btnCut.setEnabled(false);
+        btnDelete.setEnabled(false);
+        btnPaste.setEnabled(true);
+
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setTitle(R.string.paste);
+
+        updateSelectMenuIcon(false, true);
     }
 }

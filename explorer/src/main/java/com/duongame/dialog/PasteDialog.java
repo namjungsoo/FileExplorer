@@ -21,10 +21,13 @@ import java.io.File;
 import java.util.ArrayList;
 
 /**
- * Created by namjungsoo on 2017-12-07.
+ * Created by namjungsoo on 2017-12-26.
  */
 
-public class DeleteDialog extends DialogFragment {
+// 메세지를 설정
+// Toast로 붙여넣을지 결정
+// FileChannel로 퍼센트를 표시 (copy일 경우)
+public class PasteDialog extends DialogFragment {
     ArrayList<ExplorerItem> fileList;
 
     ProgressBar eachProgress;
@@ -34,11 +37,17 @@ public class DeleteDialog extends DialogFragment {
     TextView eachText;
     TextView totalText;
 
-    DeleteTask task;
+    PasteTask task;
     DialogInterface.OnDismissListener onDismissListener;
 
-    public DeleteDialog() {
+    boolean cut;
 
+    public PasteDialog() {
+
+    }
+
+    public void setIsCut(boolean cut) {
+        this.cut = cut;
     }
 
     public void setOnDismissListener(DialogInterface.OnDismissListener listener) {
@@ -82,7 +91,7 @@ public class DeleteDialog extends DialogFragment {
                     });
 
             // task를 실행한다.
-            task = new DeleteTask();
+            task = new PasteTask();
             task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
 
@@ -90,7 +99,7 @@ public class DeleteDialog extends DialogFragment {
         return builder.create();
     }
 
-    class DeleteTask extends AsyncTask<Void, Integer, Void> {
+    class PasteTask extends AsyncTask<Void, Integer, Void> {
         ArrayList<ExplorerItem> deleteList;
 
         @Override
@@ -168,11 +177,12 @@ public class DeleteDialog extends DialogFragment {
         @Override
         protected void onPostExecute(Void result) {
             ToastHelper.showToast(getActivity(), R.string.toast_file_delete);
-            DeleteDialog.this.dismiss();
+            PasteDialog.this.dismiss();
 
             if (onDismissListener != null) {
                 onDismissListener.onDismiss(getDialog());
             }
         }
     }
+
 }

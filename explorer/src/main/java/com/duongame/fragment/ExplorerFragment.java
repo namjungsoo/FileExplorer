@@ -33,6 +33,7 @@ import com.duongame.adapter.ExplorerScrollListener;
 import com.duongame.bitmap.BitmapCacheManager;
 import com.duongame.db.BookLoader;
 import com.duongame.dialog.DeleteDialog;
+import com.duongame.dialog.PasteDialog;
 import com.duongame.dialog.SortDialog;
 import com.duongame.helper.AlertHelper;
 import com.duongame.helper.AppHelper;
@@ -68,6 +69,10 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
     private ExplorerAdapter adapter;
     private ArrayList<ExplorerItem> fileList;
 
+    // 붙이기 관련
+    private ArrayList<ExplorerItem> selectedFileList;
+    private boolean cut;
+
     // 패스 관련
     private TextView textPath;
     private HorizontalScrollView scrollPath;
@@ -90,6 +95,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
 
     // 선택
     private boolean selectMode = false;
+    private boolean pasteMode = false;// 붙여넣기 모드는 뒤로가기 버튼이 있고
     private DividerItemDecoration itemDecoration = null;
 
     // 정렬
@@ -382,8 +388,8 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
 
     // Zip 압축을 풀때 기존에 폴더가 있으면 새로운 폴더명으로 풀어준다.
     // 폴더를 생성할때는 새로운 폴더명이 있으면 있다고 확인을 한다.
-    void getNewFolderName() {
-
+    String getNewFolderName() {
+        return null;
     }
 
     public void newFolderWithDialog() {
@@ -571,6 +577,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
                     .search(path);
             if (searchResult != null) {
                 fileList = searchResult.fileList;
+                application.setImageList(searchResult.imageList);
                 adapter.setFileList(fileList);
             }
             return null;
@@ -702,7 +709,9 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
     @Override
     public void onBackPressed() {
         // 선택모드이면 선택모드를 취소하는 방향으로
-        if (selectMode) {
+
+        // 둘다 normal mode로 돌아간다.
+        if (pasteMode || selectMode) {
             onNormalMode();
         } else {
             if (!application.isInitialPath(application.getLastPath())) {
@@ -732,6 +741,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
 
     void onNormalMode() {
         selectMode = false;
+        pasteMode = false;
 
         // 다시 리프레시를 해야지 체크박스를 새로 그린다.
         softRefresh();
@@ -817,13 +827,13 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
 
     public void selectAll() {
         // 전체가 선택된 상태라면 전부 선택 초기화를 해줌
-        if(fileList.size() == getSelectedFileCount()) {
-            for(int i=0; i<fileList.size(); i++) {
+        if (fileList.size() == getSelectedFileCount()) {
+            for (int i = 0; i < fileList.size(); i++) {
                 fileList.get(i).selected = false;
             }
             ToastHelper.showToast(getActivity(), R.string.toast_deselect_all);
         } else {
-            for(int i=0; i<fileList.size(); i++) {
+            for (int i = 0; i < fileList.size(); i++) {
                 fileList.get(i).selected = true;
             }
             ToastHelper.showToast(getActivity(), R.string.toast_select_all);
@@ -833,5 +843,39 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
 
         // 그런다음에 화면 UI를 업데이트를 해준다.
         softRefresh();
+    }
+
+    public void saveSelectedFile(boolean cut) {
+        // Toast 메세지를 표시
+        // 선택된 파일을 목록을 작성
+        selectedFileList = new ArrayList<>();
+        for (int i = 0; i < fileList.size(); i++) {
+            ExplorerItem item = fileList.get(i);
+            if (item.selected) {
+                selectedFileList.add(item);
+            }
+        }
+        this.cut = cut;
+
+        // 붙이기 모드로 바꿈
+        pasteMode = true;
+        selectMode = false;
+
+        ((BaseActivity) getActivity()).updatePasteMode();
+    }
+
+    public void pasteFileWithDialog() {
+        PasteDialog dialog = new PasteDialog();
+        dialog.setIsCut(cut);
+        dialog.setFileList(selectedFileList);
+        dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+                // 끝나면 노말모드로 돌아간다.
+                onRefresh();
+                onNormalMode();
+            }
+        });
+        dialog.show(getActivity().getFragmentManager(), "paste");
     }
 }
