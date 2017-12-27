@@ -91,7 +91,7 @@ public class FileSearcher {
             Date dateSource = new Date(eachFile.lastModified());
 
             //String date = dateFormat.format(dateSource);
-            String date = DateHelper.getExplorerDate(dateSource);
+            String date = DateHelper.getExplorerDateString(dateSource);
             long size = eachFile.length();
 
             ExplorerItem.FileType type = getFileType(eachFile);

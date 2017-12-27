@@ -57,6 +57,7 @@
 
     <string name="msg_file_sort">Please select a file sort method.</string>
     <string name="file_ext">File extension</string>
+    <string name="file_date">File date</string>
     <string name="file_size">File size</string>
     <string name="ascending">Ascending</string>
     <string name="descending">Descending</string>

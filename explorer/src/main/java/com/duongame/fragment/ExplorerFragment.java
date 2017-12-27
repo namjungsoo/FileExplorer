@@ -546,6 +546,9 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
                         comparator = new FileHelper.ExtAscComparator();
                         break;
                     case 2:
+                        comparator = new FileHelper.DateAscComparator();
+                        break;
+                    case 3:
                         comparator = new FileHelper.SizeAscComparator();
                         break;
                 }
@@ -558,6 +561,9 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
                         comparator = new FileHelper.ExtDescComparator();
                         break;
                     case 2:
+                        comparator = new FileHelper.DateDescComparator();
+                        break;
+                    case 3:
                         comparator = new FileHelper.SizeDescComparator();
                         break;
                 }

@@ -7,6 +7,7 @@ import com.duongame.adapter.ExplorerItem;
 import java.io.File;
 import java.text.DecimalFormat;
 import java.util.Comparator;
+import java.util.Date;
 
 /**
  * Created by namjungsoo on 2016-11-19.
@@ -131,6 +132,24 @@ public class FileHelper {
         @Override
         public int compare(ExplorerItem lhs, ExplorerItem rhs) {
             return rhs.name.compareToIgnoreCase(lhs.name);
+        }
+    }
+
+    public static class DateAscComparator implements Comparator<ExplorerItem> {
+        @Override
+        public int compare(ExplorerItem lhs, ExplorerItem rhs) {
+            Date lhsDate = DateHelper.getDateFromExplorerDate(lhs.date);
+            Date rhsDate = DateHelper.getDateFromExplorerDate(rhs.date);
+            return lhsDate.compareTo(rhsDate);
+        }
+    }
+
+    public static class DateDescComparator implements Comparator<ExplorerItem> {
+        @Override
+        public int compare(ExplorerItem lhs, ExplorerItem rhs) {
+            Date lhsDate = DateHelper.getDateFromExplorerDate(lhs.date);
+            Date rhsDate = DateHelper.getDateFromExplorerDate(rhs.date);
+            return rhsDate.compareTo(lhsDate);
         }
     }
 

@@ -76,10 +76,11 @@ public class SortDialog extends DialogFragment {
 //        sortDir = PreferenceHelper.getSortDirection(getActivity());
 
         RadioGroup type = (RadioGroup) view.findViewById(R.id.sort_type);
-        RadioButton[] types = new RadioButton[3];
+        RadioButton[] types = new RadioButton[4];
         types[0] = (RadioButton) view.findViewById(R.id.sort_name);
         types[1] = (RadioButton) view.findViewById(R.id.sort_ext);
-        types[2] = (RadioButton) view.findViewById(R.id.sort_size);
+        types[2] = (RadioButton) view.findViewById(R.id.sort_date);
+        types[3] = (RadioButton) view.findViewById(R.id.sort_size);
 
         RadioGroup direction = (RadioGroup) view.findViewById(R.id.sort_direction);
         RadioButton[] dirs = new RadioButton[2];
@@ -99,8 +100,11 @@ public class SortDialog extends DialogFragment {
                     case R.id.sort_ext:
                         sortType = 1;
                         break;
-                    case R.id.sort_size:
+                    case R.id.sort_date:
                         sortType = 2;
+                        break;
+                    case R.id.sort_size:
+                        sortType = 3;
                         break;
                 }
             }

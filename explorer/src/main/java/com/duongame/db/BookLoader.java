@@ -229,7 +229,7 @@ public class BookLoader {
     public static void updateBookHolder(Context context, HistoryRecyclerAdapter.HistoryViewHolder holder, Book book) {
         holder.name.setText(book.name);
         holder.size.setText(FileHelper.getMinimizedSize(book.size));
-        holder.date.setText(DateHelper.getDBDate(book.date));
+        holder.date.setText(DateHelper.getExplorerDateString(book.date));
         holder.page.setText(getPageText(book));
         holder.percent.setText(getPercentText(book));
         holder.progressBar.setMax(100);
