@@ -1,15 +1,15 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 25
+    compileSdkVersion 27
     buildToolsVersion '26.0.2'
 
     defaultConfig {
         applicationId 'com.duongame'
         buildConfigField "boolean", "SHOW_AD", "true"
         buildConfigField "boolean", "PREVIEW_ZIP", "false"
-        minSdkVersion 21
-        targetSdkVersion 25
+        minSdkVersion 14
+        targetSdkVersion 27
         versionCode 1
         versionName "1.0.0"
     }
@@ -79,8 +79,8 @@ dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
 
     //android
-    implementation 'com.android.support:appcompat-v7:25.4.0'
-    implementation 'com.android.support:design:25.4.0'
+    implementation 'com.android.support:appcompat-v7:27.0.2'
+    implementation 'com.android.support:design:27.0.2'
 
     //zip
     implementation 'net.lingala.zip4j:zip4j:1.2.4'
@@ -97,13 +97,16 @@ dependencies {
     annotationProcessor 'com.github.bumptech.glide:compiler:4.1.1'
 
     //firebase
-    implementation 'com.google.firebase:firebase-crash:11.6.0'
-    implementation 'com.google.firebase:firebase-core:11.6.0'
+    implementation 'com.google.firebase:firebase-crash:11.8.0'
+    implementation 'com.google.firebase:firebase-core:11.8.0'
 
-    implementation 'com.google.android.gms:play-services-analytics:11.6.0'
-    implementation 'com.google.android.gms:play-services-ads:11.6.0'
+    implementation 'com.google.android.gms:play-services-analytics:11.8.0'
+    implementation 'com.google.android.gms:play-services-ads:11.8.0'
 
     implementation 'joda-time:joda-time:2.9.9'
+
+    //FileUtils
+    compile group: 'commons-io', name: 'commons-io', version: '2.6'
 }
 
 // ADD THIS AT THE BOTTOM
