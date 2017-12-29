@@ -32,8 +32,6 @@ import com.duongame.adapter.ExplorerListAdapter;
 import com.duongame.adapter.ExplorerScrollListener;
 import com.duongame.bitmap.BitmapCacheManager;
 import com.duongame.db.BookLoader;
-import com.duongame.dialog.DeleteDialog;
-import com.duongame.dialog.PasteDialog;
 import com.duongame.dialog.SortDialog;
 import com.duongame.helper.AlertHelper;
 import com.duongame.helper.AppHelper;
@@ -44,9 +42,12 @@ import com.duongame.helper.PreferenceHelper;
 import com.duongame.helper.ToastHelper;
 import com.duongame.manager.PermissionManager;
 import com.duongame.manager.PositionManager;
+import com.duongame.task.file.DeleteTask;
+import com.duongame.task.file.PasteTask;
 import com.duongame.view.DividerItemDecoration;
 
 import java.io.File;
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Comparator;
 
@@ -97,6 +98,8 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
     private boolean selectMode = false;
     private boolean pasteMode = false;// 붙여넣기 모드는 뒤로가기 버튼이 있고
     private DividerItemDecoration itemDecoration = null;
+
+    private String capturePath;
 
     // 정렬
     private int sortType;
@@ -417,7 +420,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
         if (folder.exists()) {
             ToastHelper.showToast(getActivity(), R.string.toast_error);
         } else {
-            folder.mkdir();
+            folder.mkdirs();
             ToastHelper.showToast(getActivity(), R.string.toast_new_folder);
         }
 
@@ -526,19 +529,24 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
         onAdapterItemLongClick(position);
     }
 
-    class SearchTask extends AsyncTask<String, Void, Void> {
-
+    static class SearchTask extends AsyncTask<String, Void, Void> {
+        WeakReference<ExplorerFragment> fragmentWeakReference;
         boolean pathChanged;
         String path;
         Comparator<ExplorerItem> comparator;
 
-        public SearchTask(boolean pathChanged) {
+        SearchTask(ExplorerFragment fragment, boolean pathChanged) {
             this.pathChanged = pathChanged;
+            fragmentWeakReference = new WeakReference<ExplorerFragment>(fragment);
         }
 
         void updateComparator() {
-            if (sortDirection == 0) {// ascending
-                switch (sortType) {
+            ExplorerFragment fragment = fragmentWeakReference.get();
+            if (fragment == null)
+                return;
+
+            if (fragment.sortDirection == 0) {// ascending
+                switch (fragment.sortType) {
                     case 0:
                         comparator = new FileHelper.NameAscComparator();
                         break;
@@ -553,7 +561,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
                         break;
                 }
             } else {
-                switch (sortType) {// descending
+                switch (fragment.sortType) {// descending
                     case 0:
                         comparator = new FileHelper.NameDescComparator();
                         break;
@@ -574,17 +582,27 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
         protected Void doInBackground(String... params) {
             path = params[0];
             updateComparator();
-            searchResult = fileSearcher
+
+            ExplorerFragment fragment = fragmentWeakReference.get();
+            if (fragment == null)
+                return null;
+
+            fragment.searchResult = fragment.fileSearcher
                     .setRecursiveDirectory(false)
                     .setExcludeDirectory(false)
                     .setComparator(comparator)
                     .setHiddenFile(false)
                     .setImageListEnable(true)
                     .search(path);
-            if (searchResult != null) {
-                fileList = searchResult.fileList;
-                application.setImageList(searchResult.imageList);
-                adapter.setFileList(fileList);
+
+            fragment = fragmentWeakReference.get();
+            if (fragment == null)
+                return null;
+
+            if (fragment.searchResult != null) {
+                fragment.fileList = fragment.searchResult.fileList;
+                fragment.application.setImageList(fragment.searchResult.imageList);
+                fragment.adapter.setFileList(fragment.fileList);
             }
             return null;
         }
@@ -595,40 +613,44 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
             if (isCancelled())
                 return;
 
+            ExplorerFragment fragment = fragmentWeakReference.get();
+            if (fragment == null)
+                return;
+
             JLog.e(TAG, "SearchTask isCancelled");
-            adapter.notifyDataSetChanged();
+            fragment.adapter.notifyDataSetChanged();
 
             // SearchTask가 resume
             if (pathChanged) {
-                if (fileList != null && fileList.size() > 0) {
-                    currentView.scrollToPosition(0);
-                    currentView.invalidate();
+                if (fragment.fileList != null && fragment.fileList.size() > 0) {
+                    fragment.currentView.scrollToPosition(0);
+                    fragment.currentView.invalidate();
                 }
                 JLog.e(TAG, "SearchTask pathChanged");
             }
 
             // 성공했을때 현재 패스를 업데이트
-            application.setLastPath(path);
-            textPath.setText(path);
-            textPath.requestLayout();
+            fragment.application.setLastPath(path);
+            fragment.textPath.setText(path);
+            fragment.textPath.requestLayout();
             JLog.e(TAG, "SearchTask requestLayout");
 
-            if (switcherContents != null) {
+            if (fragment.switcherContents != null) {
                 JLog.e(TAG, "SearchTask switcherContents != null");
-                if (fileList == null || fileList.size() <= 0) {
-                    switcherContents.setDisplayedChild(1);
+                if (fragment.fileList == null || fragment.fileList.size() <= 0) {
+                    fragment.switcherContents.setDisplayedChild(1);
                     JLog.e(TAG, "SearchTask setDisplayedChild(1)");
 
                     // 퍼미션이 있으면 퍼미션 버튼을 보이지 않게 함
                     if (PermissionManager.checkStoragePermissions()) {
-                        permButton.setVisibility(GONE);
-                        textNoFiles.setVisibility(View.VISIBLE);
+                        fragment.permButton.setVisibility(GONE);
+                        fragment.textNoFiles.setVisibility(View.VISIBLE);
                     } else {
-                        permButton.setVisibility(View.VISIBLE);
-                        textNoFiles.setVisibility(GONE);
+                        fragment.permButton.setVisibility(View.VISIBLE);
+                        fragment.textNoFiles.setVisibility(GONE);
                     }
                 } else {
-                    switcherContents.setDisplayedChild(0);
+                    fragment.switcherContents.setDisplayedChild(0);
                     JLog.e(TAG, "SearchTask setDisplayedChild()");
                 }
             }
@@ -657,7 +679,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
         if (searchTask != null) {
             searchTask.cancel(true);
         }
-        searchTask = new SearchTask(isPathChanged);
+        searchTask = new SearchTask(this, isPathChanged);
         searchTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, path);
         JLog.e(TAG, "updateFileList executeOnExecutor");
 
@@ -811,16 +833,15 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
                 new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        DeleteDialog deleteDialog = new DeleteDialog();
-                        deleteDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                        DeleteTask task = new DeleteTask(getActivity());
+                        task.setFileList(fileList);
+                        task.setOnDismissListener(new DialogInterface.OnDismissListener() {
                             @Override
                             public void onDismiss(DialogInterface dialog) {
                                 onRefresh();
-                                //onNormalMode();// 삭제후에는 노말모드로 돌아간다.
                             }
                         });
-                        deleteDialog.setFileList(fileList);
-                        deleteDialog.show(getActivity().getFragmentManager(), "delete");
+                        task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                     }
                 }, new DialogInterface.OnClickListener() {
                     @Override
@@ -851,7 +872,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
         softRefresh();
     }
 
-    public void saveSelectedFile(boolean cut) {
+    public void captureSelectedFile(boolean cut) {
         // Toast 메세지를 표시
         // 선택된 파일을 목록을 작성
         selectedFileList = new ArrayList<>();
@@ -862,6 +883,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
             }
         }
         this.cut = cut;
+        capturePath = application.getLastPath();
 
         // 붙이기 모드로 바꿈
         pasteMode = true;
@@ -871,17 +893,20 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
     }
 
     public void pasteFileWithDialog() {
-        PasteDialog dialog = new PasteDialog();
-        dialog.setIsCut(cut);
-        dialog.setFileList(selectedFileList);
-        dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+        String pastePath = application.getLastPath();
+
+        PasteTask task = new PasteTask(getActivity());
+        task.setIsCut(cut);// cut or copy
+        task.setFileList(selectedFileList);
+        task.setPath(capturePath, pastePath);
+        task.setOnDismissListener(new DialogInterface.OnDismissListener() {
             @Override
             public void onDismiss(DialogInterface dialog) {
-                // 끝나면 노말모드로 돌아간다.
                 onRefresh();
                 onNormalMode();
             }
         });
-        dialog.show(getActivity().getFragmentManager(), "paste");
+        task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
+
 }

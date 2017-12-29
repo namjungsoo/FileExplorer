@@ -19,6 +19,7 @@ import com.duongame.db.BookLoader;
 import com.duongame.helper.PreferenceHelper;
 import com.duongame.view.DividerItemDecoration;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
 /**
@@ -29,11 +30,7 @@ public class HistoryFragment extends BaseFragment {
     private final static String TAG = "HistoryFragment";
     private final static boolean DEBUG = false;
 
-    private ViewGroup rootView;
-
-    private RecyclerView recyclerView;
     private ViewSwitcher switcherContents;
-    private Switch switchHide;
 
     private HistoryRecyclerAdapter recyclerAdapter;
     private ArrayList<Book> bookList;
@@ -42,12 +39,11 @@ public class HistoryFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, final ViewGroup container,
                              Bundle savedInstanceState) {
-        rootView = (ViewGroup) inflater.inflate(R.layout.fragment_history, container, false);
-        //listView = (ListView) rootView.findViewById(R.id.list_history);
-        recyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_history);
+        ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_history, container, false);
+        RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_history);
         isHideCompleted = PreferenceHelper.getHideCompleted(getActivity());
 
-        switchHide = (Switch) rootView.findViewById(R.id.switch_hide);
+        Switch switchHide = (Switch) rootView.findViewById(R.id.switch_hide);
         switchHide.setChecked(isHideCompleted);
         switchHide.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -76,43 +72,61 @@ public class HistoryFragment extends BaseFragment {
         return rootView;
     }
 
-    class RefreshTask extends AsyncTask<Void, Void, Void> {
+    static class RefreshTask extends AsyncTask<Void, Void, Void> {
+
+        WeakReference<HistoryFragment> fragmentWeakReferencea;
+
+        RefreshTask(HistoryFragment fragment) {
+            fragmentWeakReferencea = new WeakReference<HistoryFragment>(fragment);
+        }
 
         @Override
         protected Void doInBackground(Void... params) {
-            bookList = new ArrayList<>();
-            ArrayList<Book> historyList = BookDB.getBooks(getActivity());
+            HistoryFragment fragment = fragmentWeakReferencea.get();
+            if (fragment == null)
+                return null;
+
+            fragment.bookList = new ArrayList<>();
+            ArrayList<Book> historyList = BookDB.getBooks(fragment.getActivity());
+
+            fragment = fragmentWeakReferencea.get();
+            if (fragment == null)
+                return null;
 
             for (int i = 0; i < historyList.size(); i++) {
                 Book book = historyList.get(i);
-                if (isHideCompleted) {
+                if (fragment.isHideCompleted) {
                     if (book.percent < 100) {
-                        bookList.add(book);
+                        fragment.bookList.add(book);
                     }
                 } else {
-                    bookList.add(book);
+                    fragment.bookList.add(book);
                 }
             }
 
-            if (recyclerAdapter != null) {
-                recyclerAdapter.setBookList(bookList);
+            if (fragment.recyclerAdapter != null) {
+                fragment.recyclerAdapter.setBookList(fragment.bookList);
             }
             return null;
         }
 
         @Override
         protected void onPostExecute(Void result) {
-            if (recyclerAdapter != null)
-                recyclerAdapter.notifyDataSetChanged();
+            HistoryFragment fragment = fragmentWeakReferencea.get();
+            if (fragment == null)
+                return;
+
+            if (fragment.recyclerAdapter != null)
+                fragment.recyclerAdapter.notifyDataSetChanged();
 
             // 결과가 있을때 없을때를 구분해서 SWICTH 함
-            if (bookList != null && bookList.size() > 0) {
-                if (switcherContents != null) {
-                    switcherContents.setDisplayedChild(0);
+            if (fragment.bookList != null && fragment.bookList.size() > 0) {
+                if (fragment.switcherContents != null) {
+                    fragment.switcherContents.setDisplayedChild(0);
                 }
             } else {
-                if (switcherContents != null) {
-                    switcherContents.setDisplayedChild(1);
+                if (fragment.switcherContents != null) {
+                    fragment.switcherContents.setDisplayedChild(1);
                 }
             }
         }
@@ -120,7 +134,7 @@ public class HistoryFragment extends BaseFragment {
 
     @Override
     public void onRefresh() {
-        RefreshTask task = new RefreshTask();
+        RefreshTask task = new RefreshTask(this);
         task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 

@@ -10,7 +10,7 @@ import android.widget.ImageView;
 import com.duongame.R;
 import com.duongame.bitmap.BitmapCacheManager;
 import com.duongame.helper.JLog;
-import com.duongame.task.LoadGifTask;
+import com.duongame.task.bitmap.LoadGifTask;
 import com.duongame.task.bitmap.LoadBitmapTask;
 import com.duongame.task.bitmap.RemoveAndPreloadBitmapTask;
 import com.duongame.activity.PagerActivity;

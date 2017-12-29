@@ -72,9 +72,6 @@ public class SortDialog extends DialogFragment {
     // pref에서 초기값을 읽어서 셋팅한다.
     // 값이 변했을 경우 적용해준다.
     void initUI(View view) {
-//        sortType = PreferenceHelper.getSortType(getActivity());
-//        sortDir = PreferenceHelper.getSortDirection(getActivity());
-
         RadioGroup type = (RadioGroup) view.findViewById(R.id.sort_type);
         RadioButton[] types = new RadioButton[4];
         types[0] = (RadioButton) view.findViewById(R.id.sort_name);

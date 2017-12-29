@@ -1,4 +1,4 @@
-package com.duongame.task;
+package com.duongame.task.bitmap;
 
 import android.os.AsyncTask;
 

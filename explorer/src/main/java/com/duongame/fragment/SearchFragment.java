@@ -22,6 +22,7 @@ import com.duongame.db.BookLoader;
 import com.duongame.helper.FileSearcher;
 import com.duongame.view.DividerItemDecoration;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
 /**
@@ -29,12 +30,10 @@ import java.util.ArrayList;
  */
 
 public class SearchFragment extends BaseFragment {
-    private ViewGroup rootView;
     private ViewSwitcher switcherContents;
     private RecyclerView recyclerView;
 
     private Spinner spinnerType;
-    private Button buttonSearch;
     private EditText editKeyword;
     private ProgressBar progressBar;
     private ArrayList<ExplorerItem> fileList;
@@ -42,27 +41,39 @@ public class SearchFragment extends BaseFragment {
 
     private FileSearcher fileSearcher;
 
-    class SearchTask extends AsyncTask<Void, Void, Boolean> {
+    static class SearchTask extends AsyncTask<Void, Void, Boolean> {
+        WeakReference<SearchFragment> fragmentWeakReference;
         String keyword;
         String ext;
 
-        public SearchTask(String keyword, String ext) {
+        SearchTask(SearchFragment fragment, String keyword, String ext) {
+            fragmentWeakReference = new WeakReference<SearchFragment>(fragment);
             this.keyword = keyword;
             this.ext = ext;
         }
 
         @Override
         protected Boolean doInBackground(Void... params) {
-            searchResult = fileSearcher.setKeyword(keyword)
+            SearchFragment fragment = fragmentWeakReference.get();
+            if(fragment == null) {
+                return false;
+            }
+
+            fragment.searchResult = fragment.fileSearcher.setKeyword(keyword)
                 .setExtension(ext)
                 .setRecursiveDirectory(true)
                 .setExcludeDirectory(true)
                 .setImageListEnable(false)
-                .search(application.getInitialPath());
-            fileList = searchResult.fileList;
+                .search(fragment.application.getInitialPath());
 
-            if (fileList != null && fileList.size() > 0) {
-                adapter = new SearchRecyclerAdapter(getActivity(), fileList);
+            fragment = fragmentWeakReference.get();
+            if(fragment == null) {
+                return false;
+            }
+
+            fragment.fileList = fragment.searchResult.fileList;
+            if (fragment.fileList != null && fragment.fileList.size() > 0) {
+                fragment.adapter = new SearchRecyclerAdapter(fragment.getActivity(), fragment.fileList);
                 return true;
             }
             return false;
@@ -70,30 +81,39 @@ public class SearchFragment extends BaseFragment {
 
         @Override
         protected void onPostExecute(Boolean result) {
-            if (result.booleanValue()) {
-                adapter.setOnItemClickListener(new SearchRecyclerAdapter.OnItemClickListener() {
+            SearchFragment fragment = fragmentWeakReference.get();
+            if(fragment == null) {
+                return;
+            }
+
+            if (result) {
+                fragment.adapter.setOnItemClickListener(new SearchRecyclerAdapter.OnItemClickListener() {
                     @Override
                     public void onItemClick(int position) {
-                        if (fileList != null) {
-                            ExplorerItem item = fileList.get(position);
-                            BookLoader.load(getActivity(), item, false);
+                        SearchFragment fragment = fragmentWeakReference.get();
+                        if(fragment == null) {
+                            return;
+                        }
+                        if (fragment.fileList != null) {
+                            ExplorerItem item = fragment.fileList.get(position);
+                            BookLoader.load(fragment.getActivity(), item, false);
                         }
                     }
                 });
-                recyclerView.setAdapter(adapter);
+                fragment.recyclerView.setAdapter(fragment.adapter);
 
-                switcherContents.setDisplayedChild(0);
+                fragment.switcherContents.setDisplayedChild(0);
             } else {
-                switcherContents.setDisplayedChild(1);
+                fragment.switcherContents.setDisplayedChild(1);
             }
-            progressBar.setVisibility(View.GONE);
+            fragment.progressBar.setVisibility(View.GONE);
         }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        rootView = (ViewGroup) inflater.inflate(R.layout.fragment_search, container, false);
+        ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_search, container, false);
         switcherContents = (ViewSwitcher) rootView.findViewById(R.id.switcher_contents);
 
         recyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_search);
@@ -104,17 +124,18 @@ public class SearchFragment extends BaseFragment {
         editKeyword = (EditText) rootView.findViewById(R.id.edit_keyword);
         progressBar = (ProgressBar) rootView.findViewById(R.id.progress_search);
 
-        buttonSearch = (Button) rootView.findViewById(R.id.btn_search);
+        Button buttonSearch = (Button) rootView.findViewById(R.id.btn_search);
         buttonSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.hideSoftInputFromWindow(editKeyword.getWindowToken(), 0);
+                if(imm != null)
+                    imm.hideSoftInputFromWindow(editKeyword.getWindowToken(), 0);
 
                 String type = "." + spinnerType.getSelectedItem().toString().toLowerCase();
                 String keyword = editKeyword.getText().toString();
 
-                SearchTask task = new SearchTask(keyword, type);
+                SearchTask task = new SearchTask(SearchFragment.this, keyword, type);
                 task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
                 progressBar.setVisibility(View.VISIBLE);

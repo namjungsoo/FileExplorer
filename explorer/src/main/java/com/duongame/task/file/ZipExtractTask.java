@@ -1,4 +1,4 @@
-package com.duongame.task;
+package com.duongame.task.file;
 
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
@@ -30,7 +30,7 @@ public class ZipExtractTask extends AsyncTask<String, Integer, Void> {
     private int extract;// 압축 풀린 이미지 파일의 갯수
 
     private final Object mPauseWorkLock = new Object();
-    protected boolean mPauseWork = false;
+    private boolean mPauseWork = false;
 
     public ZipExtractTask(ZipFile zipFile, ArrayList<ExplorerItem> imageList, ZipLoader.ZipLoaderListener listener, int extract, ArrayList<ExplorerItem> zipImageList) {
         this.zipFile = zipFile;

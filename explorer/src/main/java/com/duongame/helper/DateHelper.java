@@ -11,7 +11,7 @@ import java.util.Date;
 
 public class DateHelper {
     //FIX:
-    // Thread-safe 문제를 해결함
+    // Thread-safe 문제를 해결함. YodaTime을 사용하면 해결됨.
     private static final DateTimeFormatter explorerFormat = DateTimeFormat.forPattern("yy-MM-dd(E) hh:mm:ss a");
     private static final DateTimeFormatter dbFormat = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss");
 

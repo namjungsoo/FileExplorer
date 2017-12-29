@@ -20,9 +20,6 @@ import com.felipecsl.gifimageview.library.GifImageView;
 // +뷰페이저
 // +하단 툴박스
 public class PagerActivity extends ViewerActivity {
-    private final static String TAG = "PagerActivity";
-    private final static int OFFLINE_PAGE_LIMIT = 1;
-
     // 파일의 정보
     protected String path;
     protected String name;
@@ -67,8 +64,6 @@ public class PagerActivity extends ViewerActivity {
                 final int page = seekBar.getProgress();
 
                 int current = pager.getCurrentItem();
-                int diff = Math.abs(current - page);
-
                 if (Math.abs(current - page) > 2) {
                     // 모든 로딩 중인 태스크를 정리하고 비트맵을 리사이클을 한다.
                     pagerAdapter.stopAllTasks();

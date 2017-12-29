@@ -6,7 +6,7 @@ import android.os.AsyncTask;
 
 import com.duongame.adapter.ExplorerItem;
 import com.duongame.helper.FileHelper;
-import com.duongame.task.ZipExtractTask;
+import com.duongame.task.file.ZipExtractTask;
 
 import net.lingala.zip4j.core.ZipFile;
 import net.lingala.zip4j.exception.ZipException;

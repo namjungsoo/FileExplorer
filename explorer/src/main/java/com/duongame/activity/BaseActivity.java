@@ -53,7 +53,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected Tracker mTracker;
 
     // admob
-    protected View acitivityView;
+    protected View activityView;
     protected AdView adView;
     protected View mainView;
 
@@ -251,9 +251,9 @@ public abstract class BaseActivity extends AppCompatActivity {
     private void initContentView() {
         if (BuildConfig.SHOW_AD) {
             final LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            acitivityView = inflater.inflate(getLayoutResId(), null, true);
+            activityView = inflater.inflate(getLayoutResId(), null, true);
 
-            mainView = acitivityView.findViewById(R.id.activity_main);
+            mainView = activityView.findViewById(R.id.activity_main);
 
             final RelativeLayout layout = new RelativeLayout(this);
             layout.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT));
@@ -269,10 +269,10 @@ public abstract class BaseActivity extends AppCompatActivity {
             // mainview layout params
             params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
             params.addRule(RelativeLayout.ABOVE, adView.getId());
-            acitivityView.setLayoutParams(params);
+            activityView.setLayoutParams(params);
 
             layout.addView(adView);
-            layout.addView(acitivityView);
+            layout.addView(activityView);
 
             setContentView(layout);
         } else {
@@ -292,7 +292,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         btnCopy.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-            getExplorerFragment().saveSelectedFile(false);
+            getExplorerFragment().captureSelectedFile(false);
             }
         });
 
@@ -301,7 +301,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         btnCut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-            getExplorerFragment().saveSelectedFile(true);
+            getExplorerFragment().captureSelectedFile(true);
             }
         });
 

@@ -6,6 +6,7 @@ import android.view.View;
 
 import com.duongame.activity.PagerActivity;
 
+import java.lang.ref.WeakReference;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
@@ -16,21 +17,39 @@ public class PagerOnTouchListener extends BaseOnTouchListener {
     private final static String TAG = PagerOnTouchListener.class.getSimpleName();
     private final static int DOUBLE_TAP_INTERVAL_MS = 150;
 
-    private PagerActivity activity;
+    private WeakReference<PagerActivity> activityWeakReference;
     private long actionUpTime;
     private long actionDownTime;
     private AtomicBoolean isTaskRunning = new AtomicBoolean(false);
 
     public PagerOnTouchListener(PagerActivity activity) {
         super(activity);
-        this.activity = activity;
+        activityWeakReference = new WeakReference<PagerActivity>(activity);
     }
 
-    class PagingTask extends AsyncTask<Void, Void, Void> {
+    long getActionUpTime() {
+        return actionUpTime;
+    }
+
+    long getActionDownTime() {
+        return actionDownTime;
+    }
+
+    WeakReference<PagerActivity> getActivityWeakReference() {
+        return activityWeakReference;
+    }
+
+    AtomicBoolean getIsTaskRunning() {
+        return isTaskRunning;
+    }
+
+    static class PagingTask extends AsyncTask<Void, Void, Void> {
         int page;
+        PagerOnTouchListener listener;
 
-        public PagingTask(int page) {
+        PagingTask(int page, PagerOnTouchListener listener) {
             this.page = page;
+            this.listener = listener;
         }
 
         @Override
@@ -46,15 +65,23 @@ public class PagerOnTouchListener extends BaseOnTouchListener {
 
         @Override
         protected void onPostExecute(Void result) {
-            if (actionDownTime < actionUpTime) {
-                activity.getPager().setCurrentItem(page, true);
+            if (listener.getActionDownTime() < listener.getActionUpTime()) {
+                PagerActivity activity = listener.getActivityWeakReference().get();
+                if (activity != null) {
+                    activity.getPager().setCurrentItem(page, true);
+                }
             }
 
-            isTaskRunning.set(false);
+            listener.getIsTaskRunning().set(false);
         }
     }
 
-    class FullscreenTask extends AsyncTask<Void, Void, Void> {
+    static class FullscreenTask extends AsyncTask<Void, Void, Void> {
+        PagerOnTouchListener listener;
+
+        FullscreenTask(PagerOnTouchListener listener) {
+            this.listener = listener;
+        }
 
         @Override
         protected Void doInBackground(Void... params) {
@@ -68,11 +95,14 @@ public class PagerOnTouchListener extends BaseOnTouchListener {
 
         @Override
         protected void onPostExecute(Void result) {
-            if (actionDownTime < actionUpTime) {
-                activity.setFullscreen(!activity.getFullscreen());
+            if (listener.getActionDownTime() < listener.getActionUpTime()) {
+                PagerActivity activity = listener.getActivityWeakReference().get();
+                if (activity != null) {
+                    activity.setFullscreen(!activity.getFullscreen());
+                }
             }
 
-            isTaskRunning.set(false);
+            listener.getIsTaskRunning().set(false);
         }
     }
 
@@ -93,8 +123,12 @@ public class PagerOnTouchListener extends BaseOnTouchListener {
 
     @Override
     protected boolean handleActionUp() {
-        if (!isBeingDragged && activity.getPagerIdle()) {
+        PagerActivity activity = activityWeakReference.get();
+        if (activity == null) {
+            return false;
+        }
 
+        if (!isBeingDragged && activity.getPagerIdle()) {
             // 터치 영역을 확인하여 좌/중/우를 확인하자.
             int width = activity.getPager().getWidth();
             int height = activity.getPager().getHeight();
@@ -107,7 +141,7 @@ public class PagerOnTouchListener extends BaseOnTouchListener {
                 if (page > 0) {
                     if (!isTaskRunning.getAndSet(true)) {
                         actionUpTime = System.currentTimeMillis();
-                        PagingTask task = new PagingTask(page - 1);
+                        PagingTask task = new PagingTask(page - 1, this);
                         task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                     }
                 }
@@ -118,14 +152,14 @@ public class PagerOnTouchListener extends BaseOnTouchListener {
                 if (page < count + 1) {
                     if (!isTaskRunning.getAndSet(true)) {
                         actionUpTime = System.currentTimeMillis();
-                        PagingTask task = new PagingTask(page + 1);
+                        PagingTask task = new PagingTask(page + 1, this);
                         task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                     }
                 }
             } else {
                 if (!isTaskRunning.getAndSet(true)) {
                     actionUpTime = System.currentTimeMillis();
-                    FullscreenTask task = new FullscreenTask();
+                    FullscreenTask task = new FullscreenTask(this);
                     task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                 }
             }

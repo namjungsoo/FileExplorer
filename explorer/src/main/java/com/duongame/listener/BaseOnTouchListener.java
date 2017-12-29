@@ -26,18 +26,18 @@ public abstract class BaseOnTouchListener implements View.OnTouchListener {
         AXIS_BOTH
     }
 
-    protected Axis touchAxis = AXIS_X;
+    Axis touchAxis = AXIS_X;
 
     // touch
-    protected boolean isBeingDragged = false;
-    protected PointF lastMotionPt = new PointF();
-    protected PointF initialMotionPt = new PointF();
+    boolean isBeingDragged = false;
+    PointF lastMotionPt = new PointF();
+    private PointF initialMotionPt = new PointF();
 
     // configuration
-    protected VelocityTracker velocityTracker = null;
-    protected int touchSlop = 0;
+    private VelocityTracker velocityTracker = null;
+    private int touchSlop = 0;
 
-    protected void startDragXIfNeeded(MotionEvent ev) {
+    private void startDragXIfNeeded(MotionEvent ev) {
         final float x = ev.getX(0);
         final float xSignedDiff = x - initialMotionPt.x;
         final float xDiff = Math.abs(xSignedDiff);
@@ -48,7 +48,7 @@ public abstract class BaseOnTouchListener implements View.OnTouchListener {
         isBeingDragged = true;
     }
 
-    protected void startDragYIfNeeded(MotionEvent ev) {
+    private void startDragYIfNeeded(MotionEvent ev) {
         final float y = ev.getY(0);
         final float ySignedDiff = y - initialMotionPt.y;
         final float yDiff = Math.abs(ySignedDiff);
@@ -59,7 +59,7 @@ public abstract class BaseOnTouchListener implements View.OnTouchListener {
         isBeingDragged = true;
     }
 
-    public BaseOnTouchListener(Activity activity) {
+    BaseOnTouchListener(Activity activity) {
         final ViewConfiguration configuration = ViewConfiguration.get(activity);
         touchSlop = configuration.getScaledTouchSlop() >> 1;
     }
@@ -103,6 +103,9 @@ public abstract class BaseOnTouchListener implements View.OnTouchListener {
                 // 내가 캡쳐 했으면 true
                 if (handleActionUp()) {
                     return true;
+                }
+                else {
+                    v.performClick();
                 }
                 break;
             }

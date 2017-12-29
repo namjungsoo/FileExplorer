@@ -65,6 +65,11 @@
     <string name="msg_file_rename">Please enter the name of the file to change.</string>
     <string name="msg_new_folder">Please enter the name of the new folder you want to create.</string>
 
+    <string name="overwrite">Overwrite</string>
+    <string name="skip">Skip</string>
+    <string name="msg_overwrite">This file already exists. Do you want to overwrite?</string>
+
+    <string name="toast_cancel">The request has been canceled.</string>
     <string name="toast_error">An error has occurred.</string>
     <string name="toast_file_rename">The file name has been changed.</string>
     <string name="toast_multi_rename_error">Renaming files is only possible when selecting one file.</string>
@@ -72,10 +77,13 @@
     <string name="toast_select_all">Select the entire file.</string>
     <string name="toast_deselect_all">Deselect the entire file.</string>
 
+
     <string name="warn_file_delete">Are you sure you want to delete the %d selected files?</string>
     <string name="msg_file_delete">The selected file is being deleted.</string>
     <string name="toast_file_delete">The selected file has been deleted.</string>
 
+    <string name="msg_file_paste_copy">Paste the file to copy here.</string>
+    <string name="msg_file_paste_cut">Paste the file to be moved here.</string>
 </resources>
 <!--<string name="dialog_review_title">Please support Comic Viewer</string>-->
 <!--<string name="dialog_review_content">Are you enjoying Comic Viewer? Please leave a review for us!</string>-->

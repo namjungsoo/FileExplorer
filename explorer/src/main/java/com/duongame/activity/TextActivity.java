@@ -17,18 +17,17 @@ import com.duongame.db.Book;
 import com.duongame.db.BookDB;
 import com.duongame.db.TextBook;
 import com.duongame.helper.FileHelper;
-import com.duongame.manager.FontManager;
 import com.duongame.listener.TextOnTouchListener;
+import com.duongame.manager.FontManager;
 
 import org.mozilla.universalchardet.UniversalDetector;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
 import static com.duongame.db.TextBook.LINES_PER_PAGE;
@@ -133,7 +132,7 @@ public class TextActivity extends ViewerActivity {
             textName.setText(name);
 
             progressBar.setVisibility(View.VISIBLE);
-            final LoadTextTask task = new LoadTextTask();
+            final LoadTextTask task = new LoadTextTask(this);
             task.execute(path);
         }
     }
@@ -255,8 +254,7 @@ public class TextActivity extends ViewerActivity {
             textPage.setText(text);
         }
 
-        int max = count;
-        seekPage.setMax(max);
+        seekPage.setMax(count);
 
         // 이미지가 1개일 경우 처리
         if (position == 0 && count == 0) {
@@ -268,7 +266,13 @@ public class TextActivity extends ViewerActivity {
         }
     }
 
-    public class LoadTextTask extends AsyncTask<String, Integer, Void> {
+    static class LoadTextTask extends AsyncTask<String, Integer, Void> {
+        WeakReference<TextActivity> activityWeakReference;
+
+        LoadTextTask(TextActivity activity) {
+            activityWeakReference = new WeakReference<TextActivity>(activity);
+        }
+
         private String checkEncoding(String fileName) {
             byte[] buf = new byte[4096];
             final FileInputStream fileInputStream;
@@ -324,24 +328,26 @@ public class TextActivity extends ViewerActivity {
                 // 파일 전체의 라인을 얻는다.
                 String line;
                 while ((line = bufferedReader.readLine()) != null) {
-                    lineList.add(line);
+                    TextActivity activity = activityWeakReference.get();
+                    if (activity != null) {
+                        activity.lineList.add(line);
 
-                    // 라인 갯수가 1000개씩 딱딱 맞다면, 해당페이지의 정보를 textview에 업데이트 한다.
-                    if (lineList.size() == (page + 1) * LINES_PER_PAGE) {
-                        publishProgress(page);
+                        // 라인 갯수가 1000개씩 딱딱 맞다면, 해당페이지의 정보를 textview에 업데이트 한다.
+                        if (activity.lineList.size() == (activity.page + 1) * LINES_PER_PAGE) {
+                            publishProgress(activity.page);
+                        }
                     }
                 }
 
-                // 남은 자료가 마지막것보다 작지만 나머지를 보내야 할때는 publish 한다.
-                final int size = lineList.size();
-                if (size > page * LINES_PER_PAGE && size < (page + 1) * LINES_PER_PAGE) {
-                    publishProgress(page);
+                TextActivity activity = activityWeakReference.get();
+                if (activity != null) {
+                    // 남은 자료가 마지막것보다 작지만 나머지를 보내야 할때는 publish 한다.
+                    final int size = activity.lineList.size();
+                    if (size > activity.page * LINES_PER_PAGE && size < (activity.page + 1) * LINES_PER_PAGE) {
+                        publishProgress(activity.page);
+                    }
                 }
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
             return null;
@@ -349,18 +355,24 @@ public class TextActivity extends ViewerActivity {
 
         @Override
         protected void onProgressUpdate(Integer... progress) {
-            updateTextView();
+            TextActivity activity = activityWeakReference.get();
+            if (activity != null) {
+                activity.updateTextView();
+            }
         }
 
         @Override
         protected void onPostExecute(Void result) {
             super.onPostExecute(result);
 
-            textInfo.setText("" + lineList.size() + " lines");
-            scrollText.getViewTreeObserver().addOnGlobalLayoutListener(onGlobalLayoutListener);
-            updateScrollInfo(page);
+            TextActivity activity = activityWeakReference.get();
+            if (activity != null) {
+                activity.textInfo.setText("" + activity.lineList.size() + " lines");
+                activity.scrollText.getViewTreeObserver().addOnGlobalLayoutListener(activity.onGlobalLayoutListener);
+                activity.updateScrollInfo(activity.page);
 
-            progressBar.setVisibility(View.GONE);
+                activity.progressBar.setVisibility(View.GONE);
+            }
         }
     }
 
@@ -385,7 +397,7 @@ public class TextActivity extends ViewerActivity {
     // 저장되었던 스크롤 위치를 계산함
     int getScrollY() {
         int maxScroll = scrollText.getChildAt(0).getHeight() - scrollText.getHeight();
-        int scrollY = 0;
+        int scrollY;
 
         if (useScrollV2) {
             scrollY = maxScroll * TextActivity.this.scroll / (LINES_PER_PAGE * 10);

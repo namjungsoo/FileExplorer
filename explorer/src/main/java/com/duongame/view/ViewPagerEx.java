@@ -36,4 +36,10 @@ public class ViewPagerEx extends android.support.v4.view.ViewPager {
         }
         return false;
     }
+
+    @Override
+    public boolean performClick() {
+        return super.performClick();
+    }
+
 }

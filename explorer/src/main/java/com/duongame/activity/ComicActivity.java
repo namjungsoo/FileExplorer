@@ -15,7 +15,6 @@ public class ComicActivity extends BaseActivity {
     // viewpager
     private ViewPager pager;
     private ComicPagerAdapter adapter;
-    private TabLayout tab;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,8 +41,7 @@ public class ComicActivity extends BaseActivity {
     @Override
     protected BaseFragment getCurrentFragment() {
         final int position = pager.getCurrentItem();
-        final BaseFragment fragment = (BaseFragment) adapter.getItem(position);
-        return fragment;
+        return (BaseFragment) adapter.getItem(position);
     }
 
     private void initTabs() {
@@ -51,7 +49,7 @@ public class ComicActivity extends BaseActivity {
         adapter = new ComicPagerAdapter(getSupportFragmentManager(), this);
         pager.setAdapter(adapter);
         pager.setOffscreenPageLimit(3);
-        tab = (TabLayout) findViewById(R.id.tab);
+        TabLayout tab = (TabLayout) findViewById(R.id.tab);
         tab.setupWithViewPager(pager);
     }
 }
