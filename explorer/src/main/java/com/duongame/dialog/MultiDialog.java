@@ -97,4 +97,12 @@ public abstract class MultiDialog extends DialogFragment {
     }
 
     protected abstract void onCustomizeButtons(AlertDialog.Builder builder);
+
+    @Override
+    public void onDismiss(DialogInterface dialog) {
+        super.onDismiss(dialog);
+        if(onDismissListener != null) {
+            onDismissListener.onDismiss(dialog);
+        }
+    }
 }

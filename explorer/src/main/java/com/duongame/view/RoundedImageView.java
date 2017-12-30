@@ -29,10 +29,10 @@ public class RoundedImageView extends android.support.v7.widget.AppCompatImageVi
     private int radiusDp = 0;
 
     public void setRadiusDp(int radius) {
-        if (this.radiusDp != radius) {
-            this.radiusDp = radius;
-            clipPath = null;
-        }
+//        if (this.radiusDp != radius) {
+//            this.radiusDp = radius;
+//            clipPath = null;
+//        }
     }
 
     public int getRadiusDp() {

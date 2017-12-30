@@ -733,6 +733,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
     @Override
     public void onRefresh() {
         // 외부 resume시에 들어올수도 있으므로 pref에서 읽는다.
+        JLog.e(TAG, "onRefresh");
         updateFileList(PreferenceHelper.getLastPath(getContext()));
     }
 
@@ -840,6 +841,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
                         task.setOnDismissListener(new DialogInterface.OnDismissListener() {
                             @Override
                             public void onDismiss(DialogInterface dialog) {
+                                JLog.e(TAG, "onDismiss");
                                 onRefresh();
                             }
                         });

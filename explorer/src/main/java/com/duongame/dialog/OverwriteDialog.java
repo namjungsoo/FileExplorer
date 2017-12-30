@@ -24,6 +24,7 @@ public class OverwriteDialog extends DialogFragment {
 
     private String path;
     private Object lock;
+    private OnFinishListener onFinishListener;
 
     public void setPath(String path) {
         this.path = path;
@@ -32,8 +33,6 @@ public class OverwriteDialog extends DialogFragment {
     public interface OnFinishListener {
         void onFinish(boolean applyAll, boolean skip, boolean cancel);
     }
-
-    OnFinishListener onFinishListener;
 
     public void setOnFinishListener(OnFinishListener listener) {
         onFinishListener = listener;
