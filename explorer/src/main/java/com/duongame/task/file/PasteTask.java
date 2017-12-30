@@ -10,6 +10,7 @@ import com.duongame.dialog.OverwriteDialog;
 import com.duongame.dialog.PasteDialog;
 import com.duongame.helper.FileHelper;
 import com.duongame.helper.FileSearcher;
+import com.duongame.helper.JLog;
 import com.duongame.helper.ToastHelper;
 
 import org.apache.commons.io.FileUtils;
@@ -73,10 +74,11 @@ public class PasteTask extends AsyncTask<Void, PasteTask.Progress, Void> {
     protected void onPreExecute() {
         super.onPreExecute();
 
+        JLog.w("PasteTask", "onPreExecute");
         dialogWeakReference = new WeakReference<PasteDialog>(new PasteDialog());
         PasteDialog dialog = dialogWeakReference.get();
         if (dialog != null) {
-            dialog = new PasteDialog();
+            JLog.w("PasteTask", "dialog.hashCode " + dialog.hashCode());
 
             // 확인 버튼이 눌려쥐면 task를 종료한다.
             dialog.setOnPositiveClickListener(new DialogInterface.OnClickListener() {
@@ -95,13 +97,12 @@ public class PasteTask extends AsyncTask<Void, PasteTask.Progress, Void> {
         }
     }
 
-    @Override
-    protected Void doInBackground(Void... voids) {
+    void makePasteList() {
         pasteList = new ArrayList<>();
+
+        // fileList에는 선택된 파일만 들어옴
         for (int i = 0; i < fileList.size(); i++) {
             ExplorerItem item = fileList.get(i);
-            if (!item.selected)
-                continue;
 
             if (item.type == ExplorerItem.FileType.FOLDER) {
                 // 폴더의 경우 하위 모든 아이템을 찾은뒤에 더한다.
@@ -130,7 +131,9 @@ public class PasteTask extends AsyncTask<Void, PasteTask.Progress, Void> {
                 pasteList.add(item);
             }
         }
+    }
 
+    void processTask() {
         for (int i = 0; i < pasteList.size(); i++) {
             // 파일을 하나하나 지운다.
             try {
@@ -142,12 +145,13 @@ public class PasteTask extends AsyncTask<Void, PasteTask.Progress, Void> {
                         if (activity != null) {
                             ToastHelper.showToast(activity, R.string.toast_cancel);
                         }
-                        return null;
+                        return;
                     }
 
                     Progress progress = new Progress();
                     progress.index = i;
                     progress.percent = 100;
+
                     publishProgress(progress);
                 }
             } catch (SecurityException e) {
@@ -156,16 +160,23 @@ public class PasteTask extends AsyncTask<Void, PasteTask.Progress, Void> {
                 if (activity != null) {
                     ToastHelper.showToast(activity, R.string.toast_error);
                 }
-                return null;
+                return;
             } catch (InterruptedException e) {
                 // 지울수 없는 파일
                 Activity activity = activityWeakReference.get();
                 if (activity != null) {
                     ToastHelper.showToast(activity, R.string.toast_error);
                 }
-                return null;
+                return;
             }
         }
+    }
+
+    @Override
+    protected Void doInBackground(Void... voids) {
+        makePasteList();
+        processTask();
+
         return null;
     }
 
@@ -222,7 +233,9 @@ public class PasteTask extends AsyncTask<Void, PasteTask.Progress, Void> {
             // 팝업을 띄운다.
             // 그리고 대기한다.
             alertOverwrite(destPath);
-            wait();
+            synchronized (lock) {
+                lock.wait();
+            }
 
             if (cancel) {
                 return false;
@@ -244,6 +257,7 @@ public class PasteTask extends AsyncTask<Void, PasteTask.Progress, Void> {
     @Override
     protected void onProgressUpdate(Progress... values) {
         Progress progress = values[0];
+        JLog.w("PasteTask", "onProgressUpdate " + progress.index);
 
         String name = pasteList.get(progress.index).name;
         int size = pasteList.size();
@@ -252,6 +266,8 @@ public class PasteTask extends AsyncTask<Void, PasteTask.Progress, Void> {
 
         PasteDialog dialog = dialogWeakReference.get();
         if (dialog != null) {
+            JLog.w("PasteTask", "dialog.hashCode " + dialog.hashCode());
+
             dialog.getFileName().setText(name);
 
             dialog.getEachProgress().setProgress(progress.percent);
@@ -262,11 +278,14 @@ public class PasteTask extends AsyncTask<Void, PasteTask.Progress, Void> {
                 dialog.getTotalText().setText(String.format(activity.getString(R.string.total_text), progress.index + 1, size, percent));
                 dialog.getEachText().setText(String.format(activity.getString(R.string.each_text), 100));
             }
+        } else {
+            JLog.e("PasteTask", "dialog is null");
         }
     }
 
     @Override
     protected void onPostExecute(Void result) {
+        JLog.w("PasteTask", "onPostExecute");
         Activity activity = activityWeakReference.get();
         if (activity != null) {
             ToastHelper.showToast(activity, R.string.toast_file_delete);

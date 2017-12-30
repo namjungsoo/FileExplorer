@@ -95,6 +95,8 @@ public class OverwriteDialog extends DialogFragment {
             onFinishListener.onFinish(applyAll, skip, cancel);
         }
 
-        lock.notifyAll();
+        if(lock != null) {
+            lock.notifyAll();
+        }
     }
 }

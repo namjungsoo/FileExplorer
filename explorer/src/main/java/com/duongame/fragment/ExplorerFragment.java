@@ -183,6 +183,10 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
         }).start();
     }
 
+    public boolean isPasteMode() {
+        return pasteMode;
+    }
+
     void initUI() {
         switcherContents = (ViewSwitcher) rootView.findViewById(R.id.switcher_contents);
         switcherViewType = (ViewSwitcher) rootView.findViewById(R.id.switcher);
@@ -759,6 +763,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
 
     void onSelectMode(ExplorerItem item, int position) {
         selectMode = true;
+        pasteMode = false;
 
         // UI 상태만 리프레시
         // 왜냐하면 전체 체크박스를 나오게 해야 하기 때문이다.
@@ -768,6 +773,14 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
 
         // 하단 UI 표시
         ((BaseActivity) getActivity()).showBottomUI();
+    }
+
+    public void onPasteMode() {
+        selectMode = false;
+        pasteMode = true;
+
+        // 다시 리프레시를 해야지 체크박스를 새로 그린다.
+        softRefresh();
     }
 
     void onNormalMode() {
@@ -890,8 +903,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
         capturePath = application.getLastPath();
 
         // 붙이기 모드로 바꿈
-        pasteMode = true;
-        selectMode = false;
+        onPasteMode();
 
         ((BaseActivity) getActivity()).updatePasteMode();
     }
@@ -906,6 +918,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
         task.setOnDismissListener(new DialogInterface.OnDismissListener() {
             @Override
             public void onDismiss(DialogInterface dialog) {
+                // 현재 파일 리스트를 업데이트하고, 일반모드로 돌아가야 함
                 onRefresh();
                 onNormalMode();
             }

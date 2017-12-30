@@ -9,7 +9,6 @@ import com.duongame.adapter.ExplorerItem;
 import com.duongame.dialog.DeleteDialog;
 import com.duongame.helper.FileHelper;
 import com.duongame.helper.FileSearcher;
-import com.duongame.helper.JLog;
 import com.duongame.helper.ToastHelper;
 
 import java.io.File;
@@ -153,7 +152,7 @@ public class DeleteTask extends AsyncTask<Void, Integer, Void> {
 
     @Override
     protected void onPostExecute(Void result) {
-        JLog.e("TAG", "onPostExecute");
+//        JLog.e("TAG", "onPostExecute");
         Activity activity = activityWeakReference.get();
         if (activity != null) {
             ToastHelper.showToast(activity, R.string.toast_file_delete);
@@ -161,7 +160,7 @@ public class DeleteTask extends AsyncTask<Void, Integer, Void> {
 
         DeleteDialog dialog = dialogWeakReference.get();
         if(dialog != null) {
-            JLog.e("TAG", "dialog.dismiss");
+//            JLog.e("TAG", "dialog.dismiss");
             dialog.dismiss();
         }
     }

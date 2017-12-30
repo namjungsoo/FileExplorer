@@ -138,6 +138,22 @@ public abstract class BaseActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         final BaseFragment fragment = getCurrentFragment();
+        final ExplorerFragment explorerFragment = getExplorerFragment();
+
+        // 탐색기일 경우에는 붙이기 모드에서만 상단의 바를 활성화 함
+        if(fragment == explorerFragment) {
+            if(explorerFragment.isPasteMode()) {
+                explorerFragment.gotoUpDirectory();
+            } else {
+                defaultBackPressed();
+            }
+        } else {// 탐색기가 아닐 경우에는 무조건 종료 처리를 위해서 호출함
+            defaultBackPressed();
+        }
+    }
+
+    void defaultBackPressed() {
+        final BaseFragment fragment = getCurrentFragment();
         if (fragment != null)
             fragment.onBackPressed();
     }
@@ -235,11 +251,20 @@ public abstract class BaseActivity extends AppCompatActivity {
 
         // ActionBar의 backbutton
         if (id == android.R.id.home) {
-            onBackPressed();
+            defaultBackPressed();
             return true;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    void onPasteModeBackPressed() {
+        if(getExplorerFragment().isPasteMode()) {
+            onBackPressed();
+        } else {
+            // 붙이기 모드는 상단 홈버튼을 통해서만 취소가 가능하고, 백버튼은 폴더를 이동해야 한다.
+            getExplorerFragment().gotoUpDirectory();
+        }
     }
 
     private void initToolbar() {
@@ -420,7 +445,7 @@ public abstract class BaseActivity extends AppCompatActivity {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
                 int offset = (int) ((float) animation.getAnimatedValue() * bottom.getHeight());
-                JLog.e("TAG", "" + animation.getAnimatedValue() + " " + offset + " " + mainView.getHeight());
+//                JLog.e("TAG", "" + animation.getAnimatedValue() + " " + offset + " " + mainView.getHeight());
                 mainView.getLayoutParams().height = defaultHeight - offset;
                 mainView.requestLayout();
             }
@@ -438,7 +463,7 @@ public abstract class BaseActivity extends AppCompatActivity {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
                 int offset = (int) ((float) animation.getAnimatedValue() * bottom.getHeight());
-                JLog.e("TAG", "" + animation.getAnimatedValue() + " " + offset + " " + mainView.getHeight());
+//                JLog.e("TAG", "" + animation.getAnimatedValue() + " " + offset + " " + mainView.getHeight());
                 mainView.getLayoutParams().height = defaultHeight + offset;
                 mainView.requestLayout();
             }

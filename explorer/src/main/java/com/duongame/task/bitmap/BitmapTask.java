@@ -8,9 +8,6 @@ import com.duongame.adapter.ExplorerItem;
 import com.duongame.bitmap.BitmapCacheManager;
 import com.duongame.bitmap.BitmapLoader;
 import com.duongame.helper.FileHelper;
-import com.duongame.helper.JLog;
-
-import java.io.IOException;
 
 /**
  * Created by namjungsoo on 2016-12-17.
@@ -167,7 +164,7 @@ public class BitmapTask extends AsyncTask<ExplorerItem, Void, Bitmap> {
             count += RETRY_INTERVAL_MS;
             if (count == RETRY_INTERVAL_MS * RETRY_COUNT)
                 return false;
-            JLog.e(TAG, "waitImageExtracting");
+//            JLog.e(TAG, "waitImageExtracting");
             Thread.sleep(RETRY_INTERVAL_MS);
         } catch (InterruptedException e) {
             e.printStackTrace();

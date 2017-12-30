@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.duongame.R;
 import com.duongame.helper.AppHelper;
+import com.duongame.helper.JLog;
 
 /**
  * Created by namjungsoo on 2017-12-29.
@@ -73,6 +74,7 @@ public abstract class MultiDialog extends DialogFragment {
 
     @Override
     public Dialog onCreateDialog(Bundle bundle) {
+        JLog.w("TAG", "onCreateDialog");
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         View view = getActivity().getLayoutInflater().inflate(R.layout.dialog_multi, null, false);
 
@@ -88,8 +90,9 @@ public abstract class MultiDialog extends DialogFragment {
 
         builder.setTitle(AppHelper.getAppName(getActivity()))
                 .setIcon(AppHelper.getIconResId(getActivity()))
-                .setMessage(R.string.msg_file_delete)
-                .setView(view);
+                .setMessage(messageResId)
+                .setView(view)
+                .setCancelable(false);
 
         onCustomizeButtons(builder);
 
