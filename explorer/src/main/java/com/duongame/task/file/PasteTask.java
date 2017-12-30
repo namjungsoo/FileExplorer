@@ -6,6 +6,7 @@ import android.os.AsyncTask;
 
 import com.duongame.R;
 import com.duongame.adapter.ExplorerItem;
+import com.duongame.dialog.OverwriteDialog;
 import com.duongame.dialog.PasteDialog;
 import com.duongame.helper.FileHelper;
 import com.duongame.helper.FileSearcher;
@@ -41,8 +42,12 @@ public class PasteTask extends AsyncTask<Void, PasteTask.Progress, Void> {
 
     private DialogInterface.OnDismissListener onDismissListener;
 
+    private Object lock;
+    private boolean applyAll, skip, cancel;
+
     public PasteTask(Activity activity) {
         activityWeakReference = new WeakReference<Activity>(activity);
+        lock = new Object();
     }
 
     public void setOnDismissListener(DialogInterface.OnDismissListener listener) {
@@ -165,6 +170,25 @@ public class PasteTask extends AsyncTask<Void, PasteTask.Progress, Void> {
     }
 
     void alertOverwrite(String path) {
+        final Activity activity = activityWeakReference.get();
+        if (activity != null) {
+            activity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    OverwriteDialog dialog = new OverwriteDialog();
+                    dialog.setLock(lock);
+                    dialog.setOnFinishListener(new OverwriteDialog.OnFinishListener() {
+                        @Override
+                        public void onFinish(boolean applyAll, boolean skip, boolean cancel) {
+                            PasteTask.this.applyAll = applyAll;
+                            PasteTask.this.skip = skip;
+                            PasteTask.this.cancel = cancel;
+                        }
+                    });
+                    dialog.show(activity.getFragmentManager(), "overwrite");
+                }
+            });
+        }
     }
 
     void workDirect(File src, File dest) {
@@ -194,26 +218,26 @@ public class PasteTask extends AsyncTask<Void, PasteTask.Progress, Void> {
         File dest = new File(destPath);
 
         // 대상 파일이 있는 경우 팝업을 물어보고 지우거나/스킵하거나/덮어씌운다.
-//        if (!applyAll && dest.exists()) {
-//            // 팝업을 띄운다.
-//            // 그리고 대기한다.
-//            alertOverwrite(destPath);
-//            wait();
-//
-//            if (cancel) {
-//                return false;
-//            }
-//
-//            if (!skip) {
-//                // 파일을 지워 주어야 함
-//                dest.delete();
-//            }
-//        }
-//
-//        // skip이 아니면, 위에서 이미 지웠으니 무조건 overwrite이다.
-//        if (!skip) {
-//            workDirect(src, dest);
-//        }
+        if (!applyAll && dest.exists()) {
+            // 팝업을 띄운다.
+            // 그리고 대기한다.
+            alertOverwrite(destPath);
+            wait();
+
+            if (cancel) {
+                return false;
+            }
+
+            if (!skip) {
+                // 파일을 지워 주어야 함
+                dest.delete();
+            }
+        }
+
+        // skip이 아니면, 위에서 이미 지웠으니 무조건 overwrite이다.
+        if (!skip) {
+            workDirect(src, dest);
+        }
         return true;
     }
 

@@ -23,9 +23,24 @@ public class OverwriteDialog extends DialogFragment {
     private boolean cancel;
 
     private String path;
+    private Object lock;
 
     public void setPath(String path) {
         this.path = path;
+    }
+
+    public interface OnFinishListener {
+        void onFinish(boolean applyAll, boolean skip, boolean cancel);
+    }
+
+    OnFinishListener onFinishListener;
+
+    public void setOnFinishListener(OnFinishListener listener) {
+        onFinishListener = listener;
+    }
+
+    public void setLock(Object lock) {
+        this.lock = lock;
     }
 
     @Override
@@ -40,6 +55,7 @@ public class OverwriteDialog extends DialogFragment {
                 }
             }
         });
+
         TextView fileName = (TextView) view.findViewById(R.id.file_name);
         fileName.setText(path);
 
@@ -48,27 +64,38 @@ public class OverwriteDialog extends DialogFragment {
                 .setMessage(R.string.msg_overwrite)
                 .setView(view)
                 .setIcon(AppHelper.getIconResId(getActivity()))
+                // 덮어쓰기
                 .setPositiveButton(R.string.overwrite, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         skip = false;
-                        notifyAll();
+                        finish();
                     }
                 })
+                // 취소
                 .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         cancel = true;
-                        notifyAll();
+                        finish();
                     }
                 })
+                // 건너뛰기
                 .setNeutralButton(R.string.skip, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         skip = true;
-                        notifyAll();
+                        finish();
                     }
                 });
         return builder.create();
+    }
+
+    void finish() {
+        if(onFinishListener != null) {
+            onFinishListener.onFinish(applyAll, skip, cancel);
+        }
+
+        lock.notifyAll();
     }
 }

@@ -37,6 +37,7 @@ import com.duongame.helper.AlertHelper;
 import com.duongame.helper.AppHelper;
 import com.duongame.helper.ExtSdCardHelper;
 import com.duongame.helper.FileHelper;
+import com.duongame.helper.FileSearcher;
 import com.duongame.helper.JLog;
 import com.duongame.helper.PreferenceHelper;
 import com.duongame.helper.ToastHelper;
@@ -599,11 +600,12 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
             if (fragment == null)
                 return null;
 
-            if (fragment.searchResult != null) {
-                fragment.fileList = fragment.searchResult.fileList;
-                fragment.application.setImageList(fragment.searchResult.imageList);
-                fragment.adapter.setFileList(fragment.fileList);
+            if (fragment.searchResult == null) {
+                fragment.searchResult = new FileSearcher.Result();
             }
+            fragment.fileList = fragment.searchResult.fileList;
+            fragment.application.setImageList(fragment.searchResult.imageList);
+            fragment.adapter.setFileList(fragment.fileList);
             return null;
         }
 

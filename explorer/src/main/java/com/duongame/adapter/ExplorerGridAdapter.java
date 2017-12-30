@@ -23,6 +23,9 @@ public class ExplorerGridAdapter extends ExplorerAdapter {
         if (viewHolder == null)
             return;
 
+        if(fileList == null)
+            return;
+
         ExplorerItem item = fileList.get(position);
         if (item == null)
             return;
