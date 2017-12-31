@@ -44,6 +44,7 @@ import com.duongame.manager.PermissionManager;
 import com.duongame.manager.PositionManager;
 import com.duongame.task.file.DeleteTask;
 import com.duongame.task.file.PasteTask;
+import com.duongame.task.file.UnzipTask;
 import com.duongame.view.DividerItemDecoration;
 
 import java.io.File;
@@ -341,6 +342,57 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
         BookLoader.load(getActivity(), item, false);
     }
 
+    void onClickZip(ExplorerItem item) {
+        unzipWithDialog(item);
+    }
+
+    void unzipWithDialog(final ExplorerItem item) {
+        View view = getActivity().getLayoutInflater().inflate(R.layout.dialog_single, null, false);
+        final EditText editFileName = (EditText) view.findViewById(R.id.file_name);
+
+        // zip파일의 이름을 기준으로 함
+        String base = item.name.substring(0, item.name.lastIndexOf("."));
+
+        // path/zipname 폴더가 있는지 확인
+        final String newPath = FileHelper.getNewFileName(application.getLastPath() + "/" + base);
+        String newName = newPath.replace(application.getLastPath() + "/", "");
+
+        // 새로나온 폴더의 이름을 edit에 반영함
+        editFileName.setText(newName);
+
+        AlertHelper.showAlert(getActivity(),
+                AppHelper.getAppName(getActivity()),
+                getString(R.string.msg_file_unzip),
+                view,
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        String name = editFileName.getText().toString();
+                        String path = application.getLastPath();
+                        String targetPath = path + "/" + name;
+
+                        UnzipTask task = new UnzipTask(getActivity());
+                        task.setPath(targetPath);
+
+                        // 여러 파일을 동시에 풀수있도록 함
+                        ArrayList<ExplorerItem> zipList = new ArrayList<>();
+                        zipList.add(item);
+
+                        task.setFileList(zipList);
+                        task.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                            @Override
+                            public void onDismiss(DialogInterface dialog) {
+//                                JLog.e(TAG, "onDismiss");
+                                onRefresh();
+                            }
+                        });
+
+                        task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                    }
+                }, null, null);
+
+    }
+
     void onAdapterItemLongClick(int position) {
 //        JLog.e(TAG, "onAdapterItemLongClick=" + position);
 
@@ -400,7 +452,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
     }
 
     public void newFolderWithDialog() {
-        View view = getActivity().getLayoutInflater().inflate(R.layout.dialog_rename, null, false);
+        View view = getActivity().getLayoutInflater().inflate(R.layout.dialog_single, null, false);
         final EditText editFileName = (EditText) view.findViewById(R.id.file_name);
 
         String base = getString(R.string.new_folder);
@@ -438,7 +490,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
     }
 
     void renameFileWithDialog(final ExplorerItem item) {
-        View view = getActivity().getLayoutInflater().inflate(R.layout.dialog_rename, null, false);
+        View view = getActivity().getLayoutInflater().inflate(R.layout.dialog_single, null, false);
         final EditText editFileName = (EditText) view.findViewById(R.id.file_name);
         editFileName.setText(item.name);
 
@@ -838,6 +890,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
                     onClickBook(item);
                 } else {
                     // 파일 탐색기에서는 ZIP파일 관리를 해주자.
+                    onClickZip(item);
                 }
                 break;
         }

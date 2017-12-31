@@ -3,6 +3,7 @@ package com.duongame.task.file;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
+import android.view.View;
 
 import com.duongame.R;
 import com.duongame.adapter.ExplorerItem;
@@ -29,12 +30,7 @@ import java.util.ArrayList;
  * Created by namjungsoo on 2017-12-29.
  */
 
-public class PasteTask extends AsyncTask<Void, PasteTask.Progress, Void> {
-    class Progress {
-        int percent;
-        int index;
-    }
-
+public class PasteTask extends AsyncTask<Void, FileHelper.Progress, Void> {
     private ArrayList<ExplorerItem> fileList;
     private ArrayList<ExplorerItem> pasteList;
 
@@ -205,7 +201,7 @@ public class PasteTask extends AsyncTask<Void, PasteTask.Progress, Void> {
 
     void updateProgress(int i, int percent) {
         // progress를 기입해야 한다.
-        Progress progress = new Progress();
+        FileHelper.Progress progress = new FileHelper.Progress();
         progress.index = i;
         progress.percent = 100;
 
@@ -352,7 +348,7 @@ public class PasteTask extends AsyncTask<Void, PasteTask.Progress, Void> {
 //                JLog.e("TAG", "WritableCallbackByteChannel write i=" + index + " percent=" + percent);
 
                 // callback 영역
-                Progress progress = new Progress();
+                FileHelper.Progress progress = new FileHelper.Progress();
                 progress.index = index;
                 progress.percent = percent;
 
@@ -373,14 +369,13 @@ public class PasteTask extends AsyncTask<Void, PasteTask.Progress, Void> {
     }
 
     @Override
-    protected void onProgressUpdate(Progress... values) {
-        Progress progress = values[0];
+    protected void onProgressUpdate(FileHelper.Progress... values) {
+        FileHelper.Progress progress = values[0];
 //        JLog.w("PasteTask", "onProgressUpdate " + progress.index);
 
         String name = pasteList.get(progress.index).name;
         int size = pasteList.size();
-        float total = ((float) progress.index + 1) / size;
-        int percent = (int) (total * 100);
+        int totalPercent = progress.index * 100 / size;
 
         PasteDialog dialog = dialogWeakReference.get();
         if (dialog != null) {
@@ -389,12 +384,14 @@ public class PasteTask extends AsyncTask<Void, PasteTask.Progress, Void> {
             dialog.getFileName().setText(name);
 
             dialog.getEachProgress().setProgress(progress.percent);
-            dialog.getTotalProgress().setProgress(percent);
+            dialog.getTotalProgress().setProgress(totalPercent);
 
             Activity activity = activityWeakReference.get();
             if (activity != null) {
-                dialog.getTotalText().setText(String.format(activity.getString(R.string.total_text), progress.index + 1, size, percent));
-                dialog.getEachText().setText(String.format(activity.getString(R.string.each_text), 100));
+                dialog.getEachText().setVisibility(View.VISIBLE);
+                dialog.getEachText().setText(String.format(activity.getString(R.string.each_text), progress.percent));
+                dialog.getTotalText().setVisibility(View.VISIBLE);
+                dialog.getTotalText().setText(String.format(activity.getString(R.string.total_text), progress.index, size, totalPercent));
             }
         } else {
 //            JLog.e("PasteTask", "dialog is null");
@@ -403,11 +400,14 @@ public class PasteTask extends AsyncTask<Void, PasteTask.Progress, Void> {
 
     @Override
     protected void onPostExecute(Void result) {
+        super.onPostExecute(result);
+
 //        JLog.w("PasteTask", "onPostExecute");
         Activity activity = activityWeakReference.get();
         if (activity != null) {
             ToastHelper.showToast(activity, R.string.toast_file_delete);
         }
+
         PasteDialog dialog = dialogWeakReference.get();
         if (dialog != null) {
             dialog.dismiss();

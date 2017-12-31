@@ -26,7 +26,8 @@
         android:layout_gravity="right"
         android:layout_marginRight="9dp"
         android:text="@string/each_text"
-        android:textSize="9sp" />
+        android:textSize="9sp"
+        android:visibility="invisible" />
 
     <ProgressBar
         android:id="@+id/total_progress"
@@ -43,6 +44,7 @@
         android:layout_gravity="right"
         android:layout_marginRight="9dp"
         android:text="@string/total_text"
-        android:textSize="9sp" />
+        android:textSize="9sp"
+        android:visibility="invisible" />
 
 </LinearLayout>

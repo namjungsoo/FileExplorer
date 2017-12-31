@@ -87,6 +87,8 @@ public class OverwriteDialog extends DialogFragment {
                         finish();
                     }
                 });
+
+        setCancelable(false);
         return builder.create();
     }
 

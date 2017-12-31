@@ -160,6 +160,7 @@ public class ZipExtractTask extends AsyncTask<String, Integer, Void> {
 
     @Override
     protected void onPostExecute(Void result) {
+        super.onPostExecute(result);
         if (listener != null) {
             listener.onFinish(zipImageList, imageList.size());
         }

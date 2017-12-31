@@ -3,6 +3,7 @@ package com.duongame.task.file;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
+import android.view.View;
 
 import com.duongame.R;
 import com.duongame.adapter.ExplorerItem;
@@ -22,6 +23,7 @@ import java.util.ArrayList;
 public class DeleteTask extends AsyncTask<Void, Integer, Void> {
     private ArrayList<ExplorerItem> fileList;
     private ArrayList<ExplorerItem> deleteList;
+
     private WeakReference<DeleteDialog> dialogWeakReference;
     private WeakReference<Activity> activityWeakReference;
 
@@ -144,7 +146,9 @@ public class DeleteTask extends AsyncTask<Void, Integer, Void> {
 
             Activity activity = activityWeakReference.get();
             if (activity != null) {
+                dialog.getEachText().setVisibility(View.VISIBLE);
                 dialog.getEachText().setText(String.format(activity.getString(R.string.each_text), 100));
+                dialog.getTotalText().setVisibility(View.VISIBLE);
                 dialog.getTotalText().setText(String.format(activity.getString(R.string.total_text), progress + 1, size, percent));
             }
         }
@@ -152,6 +156,8 @@ public class DeleteTask extends AsyncTask<Void, Integer, Void> {
 
     @Override
     protected void onPostExecute(Void result) {
+        super.onPostExecute(result);
+
 //        JLog.e("TAG", "onPostExecute");
         Activity activity = activityWeakReference.get();
         if (activity != null) {
@@ -159,7 +165,7 @@ public class DeleteTask extends AsyncTask<Void, Integer, Void> {
         }
 
         DeleteDialog dialog = dialogWeakReference.get();
-        if(dialog != null) {
+        if (dialog != null) {
 //            JLog.e("TAG", "dialog.dismiss");
             dialog.dismiss();
         }

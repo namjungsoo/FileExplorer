@@ -90,11 +90,12 @@ public abstract class MultiDialog extends DialogFragment {
         builder.setTitle(AppHelper.getAppName(getActivity()))
                 .setIcon(AppHelper.getIconResId(getActivity()))
                 .setMessage(messageResId)
-                .setView(view)
-                .setCancelable(false);
+                .setView(view);
 
         onCustomizeButtons(builder);
 
+        // dialog가 아니라 fragment에 속성을 주어야 한다.
+        setCancelable(false);
         return builder.create();
     }
 
