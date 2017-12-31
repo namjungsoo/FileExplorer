@@ -445,12 +445,6 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
         dialog.show(getActivity().getFragmentManager(), "sort");
     }
 
-    // Zip 압축을 풀때 기존에 폴더가 있으면 새로운 폴더명으로 풀어준다.
-    // 폴더를 생성할때는 새로운 폴더명이 있으면 있다고 확인을 한다.
-    String getNewFolderName() {
-        return null;
-    }
-
     public void newFolderWithDialog() {
         View view = getActivity().getLayoutInflater().inflate(R.layout.dialog_single, null, false);
         final EditText editFileName = (EditText) view.findViewById(R.id.file_name);
@@ -965,9 +959,19 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
         ((BaseActivity) getActivity()).updatePasteMode();
     }
 
-    public void pasteFileWithDialog() {
-        String pastePath = application.getLastPath();
+    void warnMoveToSameLocation() {
+        // 이동 불가
+        AlertHelper.showAlert(getActivity(),
+                AppHelper.getAppName(getActivity()),
+                getString(R.string.warn_move_same_folder), null, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        // 동일한 위치이므로 그냥 종료 함
+                    }
+                }, null, null);
+    }
 
+    void runPasteTask(String pastePath) {
         PasteTask task = new PasteTask(getActivity());
         task.setIsCut(cut);// cut or copy
         task.setFileList(selectedFileList);
@@ -983,4 +987,25 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
         task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
+    public void pasteFileWithDialog() {
+        final String pastePath = application.getLastPath();
+
+        // 복사될 폴더와 이동할 폴더가 같다면
+        if (capturePath.equals(pastePath)) {
+            if (cut) {
+                warnMoveToSameLocation();
+            } else {
+                // 사본 생성
+                AlertHelper.showAlert(getActivity(),
+                        AppHelper.getAppName(getActivity()),
+                        getString(R.string.warn_copy_same_folder), null, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                runPasteTask(pastePath);
+                            }
+                        }, null, null);
+            }
+        }
+
+    }
 }

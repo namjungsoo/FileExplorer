@@ -37,6 +37,7 @@ public class PasteTask extends AsyncTask<Void, FileHelper.Progress, Void> {
     private String capturePath;
     private String pastePath;
     private boolean cut;
+    private boolean makeCopy;
 
     // 생성자에서 사용
     private WeakReference<PasteDialog> dialogWeakReference;
@@ -65,6 +66,9 @@ public class PasteTask extends AsyncTask<Void, FileHelper.Progress, Void> {
     public void setPath(String capturePath, String pastePath) {
         this.capturePath = capturePath;
         this.pastePath = pastePath;
+        if (capturePath.equals(pastePath)) {
+            makeCopy = true;
+        }
     }
 
     public void setIsCut(boolean cut) {
@@ -172,7 +176,6 @@ public class PasteTask extends AsyncTask<Void, FileHelper.Progress, Void> {
     protected Void doInBackground(Void... voids) {
         makePasteList();
         processTask();
-
         return null;
     }
 
@@ -239,6 +242,8 @@ public class PasteTask extends AsyncTask<Void, FileHelper.Progress, Void> {
 
     boolean work(int i, String srcPath) throws InterruptedException {
         File src = new File(srcPath);
+
+        // 원본의 패스를 없애고 파일명과 확장자만 얻어옴
         String bodyPath = srcPath.replace(capturePath, "");
         String destPath = pastePath + bodyPath;
 
@@ -246,6 +251,10 @@ public class PasteTask extends AsyncTask<Void, FileHelper.Progress, Void> {
         String parentPath = FileHelper.getParentPath(destPath);
         File parent = new File(parentPath);
         parent.mkdirs();
+
+        // 사본 생성 모드이면 새로운 파일 이름을 얻음
+        if(makeCopy)
+            destPath = FileHelper.getNewFileName(destPath);
 
         File dest = new File(destPath);
 
@@ -405,7 +414,10 @@ public class PasteTask extends AsyncTask<Void, FileHelper.Progress, Void> {
 //        JLog.w("PasteTask", "onPostExecute");
         Activity activity = activityWeakReference.get();
         if (activity != null) {
-            ToastHelper.showToast(activity, R.string.toast_file_delete);
+            if (cut)
+                ToastHelper.showToast(activity, R.string.toast_file_paste_cut);
+            else
+                ToastHelper.showToast(activity, R.string.toast_file_paste_copy);
         }
 
         PasteDialog dialog = dialogWeakReference.get();

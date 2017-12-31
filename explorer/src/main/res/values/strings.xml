@@ -77,13 +77,17 @@
     <string name="toast_select_all">Select the entire file.</string>
     <string name="toast_deselect_all">Deselect the entire file.</string>
 
-
     <string name="warn_file_delete">Are you sure you want to delete the %d selected files?</string>
     <string name="msg_file_delete">The selected file is being deleted.</string>
     <string name="toast_file_delete">The selected file has been deleted.</string>
 
     <string name="msg_file_paste_copy">Paste the file to copy here.</string>
     <string name="msg_file_paste_cut">Paste the file to be moved here.</string>
+    <string name="toast_file_paste_copy">The files have been copied.</string>
+    <string name="toast_file_paste_cut">The files have been moved.</string>
+
+    <string name="warn_move_same_folder">You can not move to the same location.</string>
+    <string name="warn_copy_same_folder">Copying to the same location creates a copy with a different name.</string>
 
     <string name="msg_file_unzip">Unzipping selected files.</string>
     <string name="toast_file_unzip">The files have been unzipped.</string>

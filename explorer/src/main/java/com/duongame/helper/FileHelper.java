@@ -31,6 +31,8 @@ public class FileHelper {
         return formatter.format(size);
     }
 
+    // Zip 압축을 풀때 기존에 폴더가 있으면 새로운 폴더명으로 풀어준다.
+    // 폴더를 생성할때는 새로운 폴더명이 있으면 있다고 확인을 한다.
     public static String getNewFileName(String path) {
         File file = new File(path);
         if (!file.exists())
@@ -58,12 +60,12 @@ public class FileHelper {
     private static String makeCandidateFileName(String base, String ext, int index) {
         StringBuilder builder = new StringBuilder();
         builder.append(base);
-        if (ext != null) {
-            builder.append(ext);
-        }
         builder.append(" (")
                 .append(index)
                 .append(")");
+        if (ext != null) {
+            builder.append(ext);
+        }
         return builder.toString();
     }
 
