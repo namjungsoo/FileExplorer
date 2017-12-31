@@ -18,7 +18,6 @@ import com.duongame.BuildConfig;
 import com.duongame.GlideApp;
 import com.duongame.R;
 import com.duongame.bitmap.BitmapCacheManager;
-import com.duongame.helper.JLog;
 import com.duongame.task.thumbnail.LoadApkThumbnailTask;
 import com.duongame.task.thumbnail.LoadPdfThumbnailTask;
 import com.duongame.task.thumbnail.LoadVideoThumbnailTask;
@@ -189,7 +188,7 @@ public class ExplorerAdapter extends RecyclerView.Adapter<ExplorerAdapter.Explor
 
     protected void updateCheckBox(ExplorerViewHolder viewHolder, ExplorerItem item) {
         if (getSelectMode()) {
-            JLog.e(TAG, "updateCheckBox position=" + item.position + " item=" + item.hashCode() + " " + item.selected);
+//            JLog.e(TAG, "updateCheckBox position=" + item.position + " item=" + item.hashCode() + " " + item.selected);
             viewHolder.check.setVisibility(View.VISIBLE);
             viewHolder.check.setChecked(item.selected);
         } else {

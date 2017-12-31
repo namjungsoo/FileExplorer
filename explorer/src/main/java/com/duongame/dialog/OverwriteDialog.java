@@ -96,7 +96,9 @@ public class OverwriteDialog extends DialogFragment {
         }
 
         if(lock != null) {
-            lock.notifyAll();
+            synchronized (lock) {
+                lock.notifyAll();
+            }
         }
     }
 }

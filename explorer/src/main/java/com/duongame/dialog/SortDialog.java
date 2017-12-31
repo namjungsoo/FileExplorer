@@ -11,7 +11,6 @@ import android.widget.RadioGroup;
 
 import com.duongame.R;
 import com.duongame.helper.AppHelper;
-import com.duongame.helper.JLog;
 
 /**
  * Created by namjungsoo on 2017-12-23.
@@ -52,7 +51,7 @@ public class SortDialog extends DialogFragment {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             // 확인이므로 pref에 저장하고 소팅을 새로 해줌
-                            JLog.e(TAG, "ok");
+//                            JLog.e(TAG, "ok");
                             if (onSortListener != null) {
                                 onSortListener.onSort(sortType, sortDir);
                             }
@@ -61,7 +60,7 @@ public class SortDialog extends DialogFragment {
                     .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            JLog.e(TAG, "cancel");
+//                            JLog.e(TAG, "cancel");
                         }
                     });
 

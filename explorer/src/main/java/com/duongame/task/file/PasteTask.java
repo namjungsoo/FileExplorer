@@ -10,14 +10,19 @@ import com.duongame.dialog.OverwriteDialog;
 import com.duongame.dialog.PasteDialog;
 import com.duongame.helper.FileHelper;
 import com.duongame.helper.FileSearcher;
-import com.duongame.helper.JLog;
 import com.duongame.helper.ToastHelper;
 
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
+import java.nio.ByteBuffer;
+import java.nio.channels.FileChannel;
+import java.nio.channels.WritableByteChannel;
 import java.util.ArrayList;
 
 /**
@@ -43,7 +48,7 @@ public class PasteTask extends AsyncTask<Void, PasteTask.Progress, Void> {
 
     private DialogInterface.OnDismissListener onDismissListener;
 
-    private Object lock;
+    private final Object lock;
     private boolean applyAll, skip, cancel;
 
     public PasteTask(Activity activity) {
@@ -74,11 +79,11 @@ public class PasteTask extends AsyncTask<Void, PasteTask.Progress, Void> {
     protected void onPreExecute() {
         super.onPreExecute();
 
-        JLog.w("PasteTask", "onPreExecute");
+//        JLog.w("PasteTask", "onPreExecute");
         dialogWeakReference = new WeakReference<PasteDialog>(new PasteDialog());
         PasteDialog dialog = dialogWeakReference.get();
         if (dialog != null) {
-            JLog.w("PasteTask", "dialog.hashCode " + dialog.hashCode());
+//            JLog.w("PasteTask", "dialog.hashCode " + dialog.hashCode());
 
             // 확인 버튼이 눌려쥐면 task를 종료한다.
             dialog.setOnPositiveClickListener(new DialogInterface.OnClickListener() {
@@ -126,6 +131,7 @@ public class PasteTask extends AsyncTask<Void, PasteTask.Progress, Void> {
                     pasteList.addAll(result.fileList);
                 }
 
+                // 폴더 자기 자신도 더함
                 pasteList.add(item);
             } else {
                 pasteList.add(item);
@@ -140,19 +146,13 @@ public class PasteTask extends AsyncTask<Void, PasteTask.Progress, Void> {
                 if (isCancelled()) {
                     break;
                 } else {
-                    if (!work(pasteList.get(i).path)) {
+                    if (!work(i, pasteList.get(i).path)) {
                         Activity activity = activityWeakReference.get();
                         if (activity != null) {
                             ToastHelper.showToast(activity, R.string.toast_cancel);
                         }
                         return;
                     }
-
-                    Progress progress = new Progress();
-                    progress.index = i;
-                    progress.percent = 100;
-
-                    publishProgress(progress);
                 }
             } catch (SecurityException e) {
                 // 지울수 없는 파일
@@ -180,13 +180,14 @@ public class PasteTask extends AsyncTask<Void, PasteTask.Progress, Void> {
         return null;
     }
 
-    void alertOverwrite(String path) {
+    void alertOverwrite(final String path) {
         final Activity activity = activityWeakReference.get();
         if (activity != null) {
             activity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
                     OverwriteDialog dialog = new OverwriteDialog();
+                    dialog.setPath(path);
                     dialog.setLock(lock);
                     dialog.setOnFinishListener(new OverwriteDialog.OnFinishListener() {
                         @Override
@@ -202,21 +203,45 @@ public class PasteTask extends AsyncTask<Void, PasteTask.Progress, Void> {
         }
     }
 
-    void workDirect(File src, File dest) {
+    void updateProgress(int i, int percent) {
+        // progress를 기입해야 한다.
+        Progress progress = new Progress();
+        progress.index = i;
+        progress.percent = 100;
+
+        publishProgress(progress);
+    }
+
+    void workDirect(int i, File src, File dest) throws IOException {
         if (cut) {
             // 이동한다.
-            try {
-                FileUtils.moveFile(src, dest);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            FileUtils.moveFile(src, dest);
+            updateProgress(i, 100);
         } else {
             // 복사한다.
-            // progress를 기입해야 한다.
+//            JLog.e("TAG", "workDirect copy");
+            FileInputStream inputStream = new FileInputStream(src);
+            FileChannel inputChannel = inputStream.getChannel();
+
+            FileOutputStream outputStream = new FileOutputStream(dest);
+            FileChannel outputChannel = outputStream.getChannel();
+
+//            ReadableCallbackByteChannel readableCallbackByteChannel = new ReadableCallbackByteChannel(inputChannel, src.length(), i);
+//            JLog.e("TAG", "workDirect transferFrom");
+//            outputChannel.transferFrom(readableCallbackByteChannel, 0, src.length());
+
+//            JLog.e("TAG", "maxMemory=" + Runtime.getRuntime().maxMemory() + " freeMemory=" + Runtime.getRuntime().freeMemory());
+            WritableCallbackByteChannel writableCallbackByteChannel = new WritableCallbackByteChannel(outputChannel, src.length(), i);
+//            JLog.e("TAG", "workDirect transferTo");
+            long position = 0;
+            final long blockSize = (4 * 1024 * 1024);
+            while (inputChannel.transferTo(position, blockSize, writableCallbackByteChannel) > 0) {
+                position += blockSize;
+            }
         }
     }
 
-    boolean work(String srcPath) throws InterruptedException {
+    boolean work(int i, String srcPath) throws InterruptedException {
         File src = new File(srcPath);
         String bodyPath = srcPath.replace(capturePath, "");
         String destPath = pastePath + bodyPath;
@@ -249,15 +274,108 @@ public class PasteTask extends AsyncTask<Void, PasteTask.Progress, Void> {
 
         // skip이 아니면, 위에서 이미 지웠으니 무조건 overwrite이다.
         if (!skip) {
-            workDirect(src, dest);
+            try {
+                workDirect(i, src, dest);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+                return false;
+            } catch (IOException e) {
+                e.printStackTrace();
+                return false;
+            }
         }
         return true;
+    }
+
+//    class ReadableCallbackByteChannel implements ReadableByteChannel {
+//        ReadableByteChannel rbc;
+//        long sizeRead;
+//        long size;
+//        int index;
+//
+//        ReadableCallbackByteChannel(ReadableByteChannel rbc, long size, int i) {
+//            this.rbc = rbc;
+//            this.size = size;
+//            index = i;
+//        }
+//
+//        @Override
+//        public int read(ByteBuffer src) throws IOException {
+//            int n;
+//            int percent;
+//            if ((n = rbc.read(src)) > 0) {
+//                sizeRead += n;
+//                percent = (int) (sizeRead * 100 / size);
+//                JLog.e("TAG", "WritableCallbackByteChannel write i=" + index + " percent=" + percent);
+//
+//                // callback 영역
+//                Progress progress = new Progress();
+//                progress.index = index;
+//                progress.percent = percent;
+//
+//                publishProgress(progress);
+//            }
+//            return n;
+//        }
+//
+//        @Override
+//        public boolean isOpen() {
+//            return rbc.isOpen();
+//        }
+//
+//        @Override
+//        public void close() throws IOException {
+//            rbc.close();
+//        }
+//    }
+
+    class WritableCallbackByteChannel implements WritableByteChannel {
+
+        private WritableByteChannel wbc;
+        private long sizeWritten;
+        private long size;
+        private int index;
+
+        WritableCallbackByteChannel(WritableByteChannel wbc, long size, int i) {
+            this.wbc = wbc;
+            this.size = size;
+            index = i;
+        }
+
+        @Override
+        public int write(ByteBuffer src) throws IOException {
+            int n;
+            int percent;
+            if ((n = wbc.write(src)) > 0) {
+                sizeWritten += n;
+                percent = (int) (sizeWritten * 100 / size);
+//                JLog.e("TAG", "WritableCallbackByteChannel write i=" + index + " percent=" + percent);
+
+                // callback 영역
+                Progress progress = new Progress();
+                progress.index = index;
+                progress.percent = percent;
+
+                publishProgress(progress);
+            }
+            return n;
+        }
+
+        @Override
+        public boolean isOpen() {
+            return wbc.isOpen();
+        }
+
+        @Override
+        public void close() throws IOException {
+            wbc.close();
+        }
     }
 
     @Override
     protected void onProgressUpdate(Progress... values) {
         Progress progress = values[0];
-        JLog.w("PasteTask", "onProgressUpdate " + progress.index);
+//        JLog.w("PasteTask", "onProgressUpdate " + progress.index);
 
         String name = pasteList.get(progress.index).name;
         int size = pasteList.size();
@@ -266,7 +384,7 @@ public class PasteTask extends AsyncTask<Void, PasteTask.Progress, Void> {
 
         PasteDialog dialog = dialogWeakReference.get();
         if (dialog != null) {
-            JLog.w("PasteTask", "dialog.hashCode " + dialog.hashCode());
+//            JLog.w("PasteTask", "dialog.hashCode " + dialog.hashCode());
 
             dialog.getFileName().setText(name);
 
@@ -279,13 +397,13 @@ public class PasteTask extends AsyncTask<Void, PasteTask.Progress, Void> {
                 dialog.getEachText().setText(String.format(activity.getString(R.string.each_text), 100));
             }
         } else {
-            JLog.e("PasteTask", "dialog is null");
+//            JLog.e("PasteTask", "dialog is null");
         }
     }
 
     @Override
     protected void onPostExecute(Void result) {
-        JLog.w("PasteTask", "onPostExecute");
+//        JLog.w("PasteTask", "onPostExecute");
         Activity activity = activityWeakReference.get();
         if (activity != null) {
             ToastHelper.showToast(activity, R.string.toast_file_delete);

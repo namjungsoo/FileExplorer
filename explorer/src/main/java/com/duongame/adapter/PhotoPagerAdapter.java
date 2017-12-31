@@ -8,14 +8,13 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 
 import com.duongame.R;
-import com.duongame.bitmap.BitmapCacheManager;
-import com.duongame.helper.JLog;
-import com.duongame.task.bitmap.LoadGifTask;
-import com.duongame.task.bitmap.LoadBitmapTask;
-import com.duongame.task.bitmap.RemoveAndPreloadBitmapTask;
 import com.duongame.activity.PagerActivity;
 import com.duongame.attacher.ImageViewAttacher;
+import com.duongame.bitmap.BitmapCacheManager;
 import com.duongame.listener.PagerOnTouchListener;
+import com.duongame.task.bitmap.LoadBitmapTask;
+import com.duongame.task.bitmap.LoadGifTask;
+import com.duongame.task.bitmap.RemoveAndPreloadBitmapTask;
 import com.felipecsl.gifimageview.library.GifImageView;
 
 import java.util.ArrayList;
@@ -41,7 +40,7 @@ public class PhotoPagerAdapter extends ViewerPagerAdapter {
 
     @Override
     public Object instantiateItem(final ViewGroup container, final int position) {
-        JLog.e(TAG, "instantiateItem " + position);
+//        JLog.e(TAG, "instantiateItem " + position);
 
         final FrameLayout rootView = (FrameLayout) context.getLayoutInflater().inflate(R.layout.viewer_page, container, false);
         final ImageView imageView = (ImageView) rootView.findViewById(R.id.image_viewer);
@@ -135,7 +134,7 @@ public class PhotoPagerAdapter extends ViewerPagerAdapter {
 
     @Override
     public void setPrimaryItem(final ViewGroup container, final int position, Object object) {
-        JLog.e(TAG, "setPrimaryItem " + position);
+//        JLog.e(TAG, "setPrimaryItem " + position);
 
         final int width = container.getWidth();
         final int height = container.getHeight();

@@ -21,7 +21,6 @@ import android.provider.MediaStore;
 import com.duongame.R;
 import com.duongame.adapter.ExplorerItem;
 import com.duongame.helper.FileHelper;
-import com.duongame.helper.JLog;
 
 import net.lingala.zip4j.exception.ZipException;
 
@@ -448,54 +447,54 @@ public class BitmapLoader {
 
             switch (item.side) {
                 case LEFT:
-                    JLog.e(TAG, "samplesize " + options.inSampleSize);
+//                    JLog.e(TAG, "samplesize " + options.inSampleSize);
 
                     decoder = BitmapRegionDecoder.newInstance(item.path, false);
                     if (decoder != null) {
                         Rect rect = new Rect(0, 0, decoder.getWidth() >> 1, decoder.getHeight());
-                        JLog.e(TAG, "rect " + rect + " " + rect.width() + " " + rect.height());
+//                        JLog.e(TAG, "rect " + rect + " " + rect.width() + " " + rect.height());
                         page = decoder.decodeRegion(rect, options);
 
                         Rect rectOther = new Rect(decoder.getWidth() >> 1, 0, decoder.getWidth(), decoder.getHeight());
-                        JLog.e(TAG, "rectOther " + rectOther + " " + rectOther.width() + " " + rectOther.height());
+//                        JLog.e(TAG, "rectOther " + rectOther + " " + rectOther.width() + " " + rectOther.height());
                         pageOther = decoder.decodeRegion(rectOther, options);
 
                         decoder.recycle();
                     }
 
-                    JLog.e(TAG, "page " + page.getWidth() + " " + page.getHeight());
-                    JLog.e(TAG, "pageOther " + pageOther.getWidth() + " " + pageOther.getHeight());
+//                    JLog.e(TAG, "page " + page.getWidth() + " " + page.getHeight());
+//                    JLog.e(TAG, "pageOther " + pageOther.getWidth() + " " + pageOther.getHeight());
                     break;
 
                 case RIGHT:
-                    JLog.e(TAG, "samplesize " + options.inSampleSize);
+//                    JLog.e(TAG, "samplesize " + options.inSampleSize);
 
                     decoder = BitmapRegionDecoder.newInstance(item.path, false);
                     if (decoder != null) {
                         Rect rect = new Rect(decoder.getWidth() >> 1, 0, decoder.getWidth(), decoder.getHeight());
-                        JLog.e(TAG, "rect " + rect + " " + rect.width() + " " + rect.height());
+//                        JLog.e(TAG, "rect " + rect + " " + rect.width() + " " + rect.height());
                         page = decoder.decodeRegion(rect, options);
 
                         Rect rectOther = new Rect(0, 0, decoder.getWidth() >> 1, decoder.getHeight());
-                        JLog.e(TAG, "rectOther " + rectOther + " " + rectOther.width() + " " + rectOther.height());
+//                        JLog.e(TAG, "rectOther " + rectOther + " " + rectOther.width() + " " + rectOther.height());
                         pageOther = decoder.decodeRegion(rectOther, options);
 
                         decoder.recycle();
                     }
 
-                    JLog.e(TAG, "page " + page.getWidth() + " " + page.getHeight());
-                    JLog.e(TAG, "pageOther " + pageOther.getWidth() + " " + pageOther.getHeight());
+//                    JLog.e(TAG, "page " + page.getWidth() + " " + page.getHeight());
+//                    JLog.e(TAG, "pageOther " + pageOther.getWidth() + " " + pageOther.getHeight());
                     break;
 
                 default:
-                    JLog.e(TAG, "default " + item.path + " " + item.side);
+//                    JLog.e(TAG, "default " + item.path + " " + item.side);
                     break;
             }
 
 //            decoder.recycle();
 //            decoderOther.recycle();
         } catch (Exception e) {
-            JLog.e(TAG, e.getMessage());
+//            JLog.e(TAG, e.getMessage());
 
             if (decoder != null) {
                 decoder.recycle();

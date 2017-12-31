@@ -148,13 +148,13 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
     @Override
     public void onStart() {
         super.onStart();
-        JLog.e(TAG, "onStart");
+//        JLog.e(TAG, "onStart");
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        JLog.e(TAG, "onStop");
+//        JLog.e(TAG, "onStop");
     }
 
     @Override
@@ -343,7 +343,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
     }
 
     void onAdapterItemLongClick(int position) {
-        JLog.e(TAG, "onAdapterItemLongClick=" + position);
+//        JLog.e(TAG, "onAdapterItemLongClick=" + position);
 
         ExplorerItem item = fileList.get(position);
         if (item == null)
@@ -455,7 +455,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
     void renameFile(ExplorerItem item, String newName) {
         try {
             String newPath = FileHelper.getParentPath(item.path) + "/" + newName;
-            JLog.e(TAG, item.path + " " + newPath);
+//            JLog.e(TAG, item.path + " " + newPath);
 
             // 파일이름을 변경
             new File(item.path).renameTo(new File(newPath));
@@ -475,7 +475,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
     }
 
     void onAdapterItemClick(int position) {
-        JLog.e(TAG, "onAdapterItemClick=" + position);
+//        JLog.e(TAG, "onAdapterItemClick=" + position);
 
         ExplorerItem item = fileList.get(position);
         if (item == null)
@@ -615,7 +615,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
 
         @Override
         protected void onPostExecute(Void result) {
-            JLog.e(TAG, "SearchTask onPostExecute");
+//            JLog.e(TAG, "SearchTask onPostExecute");
             if (isCancelled())
                 return;
 
@@ -623,7 +623,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
             if (fragment == null)
                 return;
 
-            JLog.e(TAG, "SearchTask isCancelled");
+//            JLog.e(TAG, "SearchTask isCancelled");
             fragment.adapter.notifyDataSetChanged();
 
             // SearchTask가 resume
@@ -632,20 +632,20 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
                     fragment.currentView.scrollToPosition(0);
                     fragment.currentView.invalidate();
                 }
-                JLog.e(TAG, "SearchTask pathChanged");
+//                JLog.e(TAG, "SearchTask pathChanged");
             }
 
             // 성공했을때 현재 패스를 업데이트
             fragment.application.setLastPath(path);
             fragment.textPath.setText(path);
             fragment.textPath.requestLayout();
-            JLog.e(TAG, "SearchTask requestLayout");
+//            JLog.e(TAG, "SearchTask requestLayout");
 
             if (fragment.switcherContents != null) {
-                JLog.e(TAG, "SearchTask switcherContents != null");
+//                JLog.e(TAG, "SearchTask switcherContents != null");
                 if (fragment.fileList == null || fragment.fileList.size() <= 0) {
                     fragment.switcherContents.setDisplayedChild(1);
-                    JLog.e(TAG, "SearchTask setDisplayedChild(1)");
+//                    JLog.e(TAG, "SearchTask setDisplayedChild(1)");
 
                     // 퍼미션이 있으면 퍼미션 버튼을 보이지 않게 함
                     if (PermissionManager.checkStoragePermissions()) {
@@ -657,14 +657,14 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
                     }
                 } else {
                     fragment.switcherContents.setDisplayedChild(0);
-                    JLog.e(TAG, "SearchTask setDisplayedChild()");
+//                    JLog.e(TAG, "SearchTask setDisplayedChild()");
                 }
             }
         }
     }
 
     public void updateFileList(final String path, boolean isPathChanged) {
-        JLog.e(TAG, "updateFileList");
+//        JLog.e(TAG, "updateFileList");
         if (adapter == null) {
             return;
         }
@@ -672,13 +672,13 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
         // 선택모드인지 설정해준다.
         adapter.setSelectMode(selectMode);
 
-        JLog.e(TAG, "updateFileList adapter");
+//        JLog.e(TAG, "updateFileList adapter");
         // 썸네일이 꽉찼을때는 비워준다.
         if (BitmapCacheManager.getThumbnailCount() > MAX_THUMBNAILS) {
             BitmapCacheManager.removeAllThumbnails();
         }
 
-        JLog.e(TAG, "updateFileList BitmapCacheManager");
+//        JLog.e(TAG, "updateFileList BitmapCacheManager");
         //FIX:
         //SearchTask task = new SearchTask(isPathChanged(path));
         //task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, path);
@@ -687,7 +687,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
         }
         searchTask = new SearchTask(this, isPathChanged);
         searchTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, path);
-        JLog.e(TAG, "updateFileList executeOnExecutor");
+//        JLog.e(TAG, "updateFileList executeOnExecutor");
 
         // 가장 오른쪽으로 스크롤
         scrollPath.post(new Runnable() {
@@ -737,7 +737,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
     @Override
     public void onRefresh() {
         // 외부 resume시에 들어올수도 있으므로 pref에서 읽는다.
-        JLog.e(TAG, "onRefresh");
+//        JLog.e(TAG, "onRefresh");
         updateFileList(PreferenceHelper.getLastPath(getContext()));
     }
 
@@ -854,7 +854,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
                         task.setOnDismissListener(new DialogInterface.OnDismissListener() {
                             @Override
                             public void onDismiss(DialogInterface dialog) {
-                                JLog.e(TAG, "onDismiss");
+//                                JLog.e(TAG, "onDismiss");
                                 onRefresh();
                             }
                         });
