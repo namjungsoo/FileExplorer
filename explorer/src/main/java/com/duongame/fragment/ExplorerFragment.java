@@ -38,7 +38,6 @@ import com.duongame.helper.AppHelper;
 import com.duongame.helper.ExtSdCardHelper;
 import com.duongame.helper.FileHelper;
 import com.duongame.helper.FileSearcher;
-import com.duongame.helper.JLog;
 import com.duongame.helper.PreferenceHelper;
 import com.duongame.helper.ToastHelper;
 import com.duongame.manager.PermissionManager;
@@ -403,7 +402,12 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
     public void newFolderWithDialog() {
         View view = getActivity().getLayoutInflater().inflate(R.layout.dialog_rename, null, false);
         final EditText editFileName = (EditText) view.findViewById(R.id.file_name);
-        editFileName.setText(R.string.new_folder);
+
+        String base = getString(R.string.new_folder);
+        String newName = FileHelper.getNewFileName(application.getLastPath() + "/" + base);
+        newName = newName.replace(application.getLastPath() + "/", "");
+
+        editFileName.setText(newName);
 
         AlertHelper.showAlert(getActivity(),
                 AppHelper.getAppName(getContext()),

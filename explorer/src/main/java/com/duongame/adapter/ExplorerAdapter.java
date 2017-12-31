@@ -18,6 +18,7 @@ import com.duongame.BuildConfig;
 import com.duongame.GlideApp;
 import com.duongame.R;
 import com.duongame.bitmap.BitmapCacheManager;
+import com.duongame.helper.JLog;
 import com.duongame.task.thumbnail.LoadApkThumbnailTask;
 import com.duongame.task.thumbnail.LoadPdfThumbnailTask;
 import com.duongame.task.thumbnail.LoadVideoThumbnailTask;
@@ -148,6 +149,7 @@ public class ExplorerAdapter extends RecyclerView.Adapter<ExplorerAdapter.Explor
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                JLog.e(TAG, "onClick " + holder.position);
                 if (onItemClickListener != null) {
                     onItemClickListener.onItemClick(holder.position);
                 }

@@ -14,7 +14,6 @@ import static com.duongame.listener.BaseOnTouchListener.Axis.AXIS_Y;
  * Created by namjungsoo on 2017-01-22.
  */
 
-
 // Base OnTouchListener
 public abstract class BaseOnTouchListener implements View.OnTouchListener {
     private final static String TAG = BaseOnTouchListener.class.getSimpleName();

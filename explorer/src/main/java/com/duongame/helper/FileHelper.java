@@ -25,6 +25,42 @@ public class FileHelper {
         return formatter.format(size);
     }
 
+    public static String getNewFileName(String path) {
+        File file = new File(path);
+        if (!file.exists())
+            return path;
+
+        String base, ext = null;
+        if (file.isDirectory()) {
+            base = path;
+        } else {
+            base = path.substring(0, path.lastIndexOf("."));
+            ext = path.substring(path.lastIndexOf("."));
+        }
+
+        int index = 1;
+
+        while (true) {
+            String candidate = makeCandidateFileName(base, ext, index);
+            File newFile = new File(candidate);
+            if (!newFile.exists())
+                return candidate;
+            index++;
+        }
+    }
+
+    private static String makeCandidateFileName(String base, String ext, int index) {
+        StringBuilder builder = new StringBuilder();
+        builder.append(base);
+        if (ext != null) {
+            builder.append(ext);
+        }
+        builder.append(" (")
+                .append(index)
+                .append(")");
+        return builder.toString();
+    }
+
     public static String getMinimizedSize(long size) {
         if (size < 0)
             return "";
@@ -160,7 +196,7 @@ public class FileHelper {
             String rhsExt = rhs.getExt();
 
             int ret = lhsExt.compareToIgnoreCase(rhsExt);
-            if(ret == 0) {
+            if (ret == 0) {
                 return lhs.name.compareToIgnoreCase(rhs.name);
             } else {
                 return ret;
@@ -175,7 +211,7 @@ public class FileHelper {
             String rhsExt = rhs.getExt();
 
             int ret = rhsExt.compareToIgnoreCase(lhsExt);
-            if(ret == 0) {
+            if (ret == 0) {
                 return rhs.name.compareToIgnoreCase(lhs.name);
             } else {
                 return ret;
@@ -187,10 +223,10 @@ public class FileHelper {
         @Override
         public int compare(ExplorerItem lhs, ExplorerItem rhs) {
             long ret = lhs.size - rhs.size;
-            if(ret == 0) {
+            if (ret == 0) {
                 return lhs.name.compareToIgnoreCase(rhs.name);
             } else {
-                if(ret < 0)
+                if (ret < 0)
                     return -1;
                 else
                     return 1;
@@ -202,10 +238,10 @@ public class FileHelper {
         @Override
         public int compare(ExplorerItem lhs, ExplorerItem rhs) {
             long ret = rhs.size - lhs.size;
-            if(ret == 0) {
+            if (ret == 0) {
                 return rhs.name.compareToIgnoreCase(lhs.name);
             } else {
-                if(ret < 0)
+                if (ret < 0)
                     return -1;
                 else
                     return 1;
