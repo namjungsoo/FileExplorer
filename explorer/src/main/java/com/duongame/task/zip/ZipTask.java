@@ -12,6 +12,8 @@ import com.duongame.helper.FileHelper;
 import com.duongame.helper.FileSearcher;
 import com.duongame.helper.ToastHelper;
 
+import org.apache.commons.compress.archivers.sevenz.SevenZArchiveEntry;
+import org.apache.commons.compress.archivers.sevenz.SevenZOutputFile;
 import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
 import org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream;
 import org.apache.commons.io.IOUtils;
@@ -90,15 +92,43 @@ public class ZipTask extends AsyncTask<Void, FileHelper.Progress, Boolean> {
         publishProgress(progress);
     }
 
+    boolean archive7z() {
+        try {
+            SevenZOutputFile sevenZOutputFile = new SevenZOutputFile(new File(path));
+            byte[] buffer = new byte[1024];
+
+            for (int i = 0; i < zipList.size(); i++) {
+                updateProgress(i, zipList.get(i).name);
+
+                FileInputStream inputStream = new FileInputStream(zipList.get(i).path);
+
+                SevenZArchiveEntry entry = sevenZOutputFile.createArchiveEntry(new File(zipList.get(i).path), zipList.get(i).name);
+                sevenZOutputFile.putArchiveEntry(entry);
+
+                int count = 0;
+                while ((count = inputStream.read(buffer)) > 0) {
+                    sevenZOutputFile.write(buffer, 0, count);
+                }
+
+                sevenZOutputFile.closeArchiveEntry();
+            }
+
+            sevenZOutputFile.close();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+        return true;
+    }
+
     boolean archiveZip() {
         try {
             ZipArchiveOutputStream stream = new ZipArchiveOutputStream(new File(path));
             for (int i = 0; i < zipList.size(); i++) {
                 updateProgress(i, zipList.get(i).name);
 
-                String entryName = zipList.get(i).path.replace(currentPath, "");
-
-                ZipArchiveEntry entry = new ZipArchiveEntry(entryName);
+                ZipArchiveEntry entry = new ZipArchiveEntry(zipList.get(i).name);
                 FileInputStream inputStream = new FileInputStream(zipList.get(i).path);
 
                 stream.putArchiveEntry(entry);
@@ -136,7 +166,7 @@ public class ZipTask extends AsyncTask<Void, FileHelper.Progress, Boolean> {
                 if (result != null && result.fileList != null) {
                     for (int j = 0; j < result.fileList.size(); j++) {
 
-                        // 선택된 폴더의 최상위 폴더의 폴더명을 적어줌
+                        // 선택된 폴더의 최상위 폴더의 폴더명을 제외한 나머지가 name임
                         ExplorerItem subItem = result.fileList.get(j);
                         if (subItem.path.startsWith(item.path)) {
                             subItem.name = subItem.path.replace(FileHelper.getParentPath(item.path) + "/", "");

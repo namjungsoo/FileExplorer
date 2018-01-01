@@ -88,7 +88,7 @@ public class DeleteTask extends AsyncTask<Void, Integer, Boolean> {
                 if (result != null && result.fileList != null) {
                     for (int j = 0; j < result.fileList.size(); j++) {
 
-                        // 선택된 폴더의 최상위 폴더의 폴더명을 적어줌
+                        // 선택된 폴더의 최상위 폴더의 폴더명을 제외한 나머지가 name임
                         ExplorerItem subItem = result.fileList.get(j);
                         if (subItem.path.startsWith(item.path)) {
                             subItem.name = subItem.path.replace(FileHelper.getParentPath(item.path) + "/", "");

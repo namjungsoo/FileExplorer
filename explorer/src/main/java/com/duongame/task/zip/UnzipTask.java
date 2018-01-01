@@ -11,6 +11,8 @@ import com.duongame.dialog.UnzipDialog;
 import com.duongame.helper.FileHelper;
 import com.duongame.helper.ToastHelper;
 
+import org.apache.commons.compress.archivers.sevenz.SevenZArchiveEntry;
+import org.apache.commons.compress.archivers.sevenz.SevenZFile;
 import org.apache.commons.compress.archivers.zip.ZipArchiveInputStream;
 import org.apache.commons.io.IOUtils;
 
@@ -104,8 +106,56 @@ public class UnzipTask extends AsyncTask<Void, FileHelper.Progress, Boolean> {
         publishProgress(progress);
     }
 
+    boolean unarchive7z(ExplorerItem item, int i) throws IOException {
+        SevenZFile sevenZFile;
+        SevenZArchiveEntry entry;
+
+        sevenZFile = new SevenZFile(new File(item.path));
+        entry = sevenZFile.getNextEntry();
+        int size = 0;
+
+        while (entry != null) {
+            if (isCancelled())
+                return false;
+
+            size++;
+            entry = sevenZFile.getNextEntry();
+        }
+        sevenZFile.close();
+
+        sevenZFile = new SevenZFile(new File(item.path));
+        entry = sevenZFile.getNextEntry();
+
+        int j = 0;
+        while (entry != null) {
+            if (isCancelled())
+                return false;
+
+            updateProgress(i, j, size, entry.getName());
+
+            String target = path + "/" + entry.getName();
+
+            // 하위 폴더가 없을때 만들어줌
+            new File(target).getParentFile().mkdirs();
+
+
+            // 파일 복사 부분
+            FileOutputStream outputStream = new FileOutputStream(target);
+            byte[] content = new byte[(int)entry.getSize()];
+            sevenZFile.read(content, 0, content.length);
+            outputStream.write(content);
+            outputStream.close();
+
+
+            entry = sevenZFile.getNextEntry();
+            j++;
+        }
+
+        sevenZFile.close();
+        return true;
+    }
+
     boolean unarchiveZip(ExplorerItem item, int i) throws IOException {
-        // common compress
         ZipArchiveInputStream stream;
         ZipEntry entry;
 
@@ -113,6 +163,7 @@ public class UnzipTask extends AsyncTask<Void, FileHelper.Progress, Boolean> {
         entry = (ZipEntry) stream.getNextEntry();
         int size = 0;
 
+        // 파일 갯수를 세기
         while (entry != null) {
             if (isCancelled())
                 return false;
@@ -137,10 +188,13 @@ public class UnzipTask extends AsyncTask<Void, FileHelper.Progress, Boolean> {
             // 하위 폴더가 없을때 만들어줌
             new File(target).getParentFile().mkdirs();
 
+
+            // 파일 복사 부분 
             FileOutputStream outputStream = new FileOutputStream(target);
             IOUtils.copy(stream, outputStream);
-
             outputStream.close();
+
+
             entry = (ZipEntry) stream.getNextEntry();
             j++;
         }
