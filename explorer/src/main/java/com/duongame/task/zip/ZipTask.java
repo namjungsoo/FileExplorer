@@ -14,12 +14,19 @@ import com.duongame.helper.ToastHelper;
 
 import org.apache.commons.compress.archivers.sevenz.SevenZArchiveEntry;
 import org.apache.commons.compress.archivers.sevenz.SevenZOutputFile;
+import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
+import org.apache.commons.compress.archivers.tar.TarArchiveOutputStream;
 import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
 import org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream;
+import org.apache.commons.compress.compressors.bzip2.BZip2CompressorOutputStream;
+import org.apache.commons.compress.compressors.gzip.GzipCompressorOutputStream;
 import org.apache.commons.io.IOUtils;
 
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -53,12 +60,8 @@ public class ZipTask extends AsyncTask<Void, FileHelper.Progress, Boolean> {
     }
 
     // 압축 대상 파일의 패스
-    public void setZipPath(String path) {
-        this.path = path;
-    }
-
     public void setPath(String path) {
-        this.currentPath = path;
+        this.path = path;
     }
 
     @Override
@@ -91,6 +94,96 @@ public class ZipTask extends AsyncTask<Void, FileHelper.Progress, Boolean> {
         progress.percent = i * 100 / zipList.size();
         publishProgress(progress);
     }
+
+    boolean archiveTar() {
+        String tar = path.replace(".gz", "");
+        TarArchiveOutputStream stream = null;
+        try {
+            stream = new TarArchiveOutputStream(new FileOutputStream(tar));
+            for (int i = 0; i < zipList.size(); i++) {
+                updateProgress(i, zipList.get(i).name);
+
+                TarArchiveEntry entry = new TarArchiveEntry(zipList.get(i).name);
+                FileInputStream inputStream = new FileInputStream(zipList.get(i).path);
+
+                stream.putArchiveEntry(entry);
+                IOUtils.copy(inputStream, stream);
+                stream.closeArchiveEntry();
+            }
+
+            stream.finish();
+            stream.close();
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            return false;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+
+        return true;
+    }
+
+    //region Tar를 먼저 수행하는 압축
+    boolean archiveGzip() {
+        if (!archiveTar())
+            return false;
+
+        String tar = path.replace(".gz", "");
+
+        try {
+            // gzip 압축
+            FileInputStream inputStream = new FileInputStream(new File(tar));
+            BufferedOutputStream outputStream = new BufferedOutputStream(new FileOutputStream(path));
+            GzipCompressorOutputStream stream = new GzipCompressorOutputStream(outputStream);
+
+            IOUtils.copy(inputStream, stream);
+
+            stream.close();
+            inputStream.close();
+
+            // tar 삭제
+            new File(tar).delete();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            return false;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+        return true;
+    }
+
+    boolean archiveBzip2() {
+        if (!archiveTar())
+            return false;
+
+        String tar = path.replace(".bz2", "");
+
+        try {
+            // gzip 압축
+            FileInputStream inputStream = new FileInputStream(new File(tar));
+            BufferedOutputStream outputStream = new BufferedOutputStream(new FileOutputStream(path));
+            BZip2CompressorOutputStream stream = new BZip2CompressorOutputStream(outputStream);
+
+            IOUtils.copy(inputStream, stream);
+
+            stream.close();
+            inputStream.close();
+
+            // tar 삭제
+            new File(tar).delete();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            return false;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+        return true;
+    }
+    //endregion
 
     boolean archive7z() {
         try {
@@ -188,7 +281,21 @@ public class ZipTask extends AsyncTask<Void, FileHelper.Progress, Boolean> {
     protected Boolean doInBackground(Void... voids) {
         // 선택된 파일이 폴더인 경우에 전체 폴더 확장을 해야한다.
         makeZipList();
-        return archiveZip();
+
+        ExplorerItem.CompressType type = FileHelper.getCompressType(path);
+        switch (type) {
+            case ZIP:
+                return archiveZip();
+            case SEVENZIP:
+                return archive7z();
+            case GZIP:
+                return archiveGzip();
+            case BZIP2:
+                return archiveBzip2();
+            case TAR:
+                return archiveTar();
+        }
+        return false;
     }
 
     @Override

@@ -89,6 +89,23 @@ public class FileHelper {
         }
     }
 
+    public static ExplorerItem.CompressType getCompressType(String path) {
+        String lower = path.toLowerCase();
+        if (lower.endsWith(".zip"))
+            return ExplorerItem.CompressType.ZIP;
+        if (lower.endsWith(".rar"))
+            return ExplorerItem.CompressType.RAR;
+        if (lower.endsWith(".7z"))
+            return ExplorerItem.CompressType.SEVENZIP;
+        if (lower.endsWith(".tar"))
+            return ExplorerItem.CompressType.TAR;
+        if (lower.endsWith(".gz"))
+            return ExplorerItem.CompressType.GZIP;
+        if (lower.endsWith(".bz2"))
+            return ExplorerItem.CompressType.BZIP2;
+        return ExplorerItem.CompressType.OTHER;
+    }
+
     //region Extension
     public static ExplorerItem.FileType getFileType(File eachFile) {
         ExplorerItem.FileType type = eachFile.isDirectory() ? ExplorerItem.FileType.FOLDER : ExplorerItem.FileType.FILE;
@@ -96,7 +113,12 @@ public class FileHelper {
 
         if (FileHelper.isImage(eachFile.getName())) {
             type = ExplorerItem.FileType.IMAGE;
-        } else if (lower.endsWith(".zip"))
+        } else if (lower.endsWith(".zip")
+                || lower.endsWith(".rar")
+                || lower.endsWith(".7z")
+                || lower.endsWith(".tar")
+                || lower.endsWith(".gz")
+                || lower.endsWith(".bz2"))
             type = ExplorerItem.FileType.ZIP;
         else if (lower.endsWith(".pdf"))
             type = ExplorerItem.FileType.PDF;

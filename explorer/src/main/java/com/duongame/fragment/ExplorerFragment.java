@@ -1021,7 +1021,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
 
         ZipTask task = new ZipTask(getActivity());
         task.setPath(path);
-        task.setZipPath(zipPath);
+        task.setPath(zipPath);
 
         // 여러 파일을 동시에 풀수있도록 함
         ArrayList<ExplorerItem> zipList = new ArrayList<>();

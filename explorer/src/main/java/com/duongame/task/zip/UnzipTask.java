@@ -10,12 +10,20 @@ import com.duongame.adapter.ExplorerItem;
 import com.duongame.dialog.UnzipDialog;
 import com.duongame.helper.FileHelper;
 import com.duongame.helper.ToastHelper;
+import com.github.junrar.Archive;
+import com.github.junrar.exception.RarException;
+import com.github.junrar.rarfile.FileHeader;
 
 import org.apache.commons.compress.archivers.sevenz.SevenZArchiveEntry;
 import org.apache.commons.compress.archivers.sevenz.SevenZFile;
+import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
+import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
 import org.apache.commons.compress.archivers.zip.ZipArchiveInputStream;
+import org.apache.commons.compress.compressors.bzip2.BZip2CompressorOutputStream;
+import org.apache.commons.compress.compressors.gzip.GzipCompressorOutputStream;
 import org.apache.commons.io.IOUtils;
 
+import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -29,13 +37,10 @@ import java.util.zip.ZipEntry;
  */
 
 /*
-7가지 파일을 테스트 해야 한다.
+6가지 파일을 테스트 해야 한다.
 --
 zip
-jar
-tar
-tar.gz
-tar.bz2
+tar/tar.gz/tar.bz2
 gz
 bz2
 7z
@@ -106,6 +111,148 @@ public class UnzipTask extends AsyncTask<Void, FileHelper.Progress, Boolean> {
         publishProgress(progress);
     }
 
+    boolean unarchiveRar(ExplorerItem item, int i) throws IOException {
+        try {
+            Archive archive;
+            FileHeader header;
+
+            // 파일 갯수 세기
+            archive = new Archive(new File(item.path));
+            header = archive.nextFileHeader();
+            int size = 0;
+
+            while (header != null) {
+                if (isCancelled())
+                    return false;
+
+                size++;
+                header = archive.nextFileHeader();
+            }
+            archive.close();
+
+
+            archive = new Archive(new File(item.path));
+            header = archive.nextFileHeader();
+
+            int j = 0;
+            while (header != null) {
+                if (isCancelled())
+                    return false;
+
+                updateProgress(i, j, size, header.getFileNameString());
+
+                // 하위 폴더가 없을때 만들어줌
+                String target = path + "/" + header.getFileNameString();
+                new File(target).getParentFile().mkdirs();
+
+
+                // 파일 복사 부분
+                FileOutputStream os = new FileOutputStream(target);
+                archive.extractFile(header, os);
+                os.close();
+
+
+                header = archive.nextFileHeader();
+            }
+        } catch (RarException e) {
+            e.printStackTrace();
+            return false;
+        }
+        return true;
+    }
+
+    boolean unarchiveGzip(ExplorerItem item, int i) throws IOException {
+        String tar;
+        if(item.path.toLowerCase().endsWith(".tgz")) {
+            tar = item.path.replace(".tgz", ".tar");
+        } else {
+            tar = item.path.replace(".gz", "");
+        }
+
+        BufferedInputStream inputStream = new BufferedInputStream(new FileInputStream(item.path));
+        GzipCompressorOutputStream stream = new GzipCompressorOutputStream(new FileOutputStream(tar));
+        IOUtils.copy(inputStream, stream);
+
+        if (tar.toLowerCase().endsWith(".tar")) {
+            if (!unarchiveTar(tar, i))
+                return false;
+            // tar 파일 삭제
+            new File(tar).delete();
+        }
+        return true;
+    }
+
+    boolean unarchiveBzip2(ExplorerItem item, int i) throws IOException {
+        String tar;
+        if(item.path.toLowerCase().endsWith(".tbz2")) {
+            tar = item.path.replace(".tbz2", ".tar");
+        } else {
+            tar = item.path.replace(".bz2", "");
+        }
+
+        BufferedInputStream inputStream = new BufferedInputStream(new FileInputStream(item.path));
+        BZip2CompressorOutputStream stream = new BZip2CompressorOutputStream(new FileOutputStream(tar));
+        IOUtils.copy(inputStream, stream);
+
+        if (tar.toLowerCase().endsWith(".tar")) {
+            if (!unarchiveTar(tar, i))
+                return false;
+
+            // tar 파일 삭제
+            new File(tar).delete();
+        }
+
+        return true;
+    }
+
+    boolean unarchiveTar(String path, int i) throws IOException {
+        TarArchiveInputStream stream;
+        TarArchiveEntry entry;
+
+        stream = new TarArchiveInputStream(new FileInputStream(path));
+        entry = (TarArchiveEntry) stream.getNextEntry();
+        int size = 0;
+
+        // 파일 갯수를 세기
+        while (entry != null) {
+            if (isCancelled())
+                return false;
+
+            size++;
+            entry = (TarArchiveEntry) stream.getNextEntry();
+        }
+        stream.close();
+
+
+        stream = new TarArchiveInputStream(new FileInputStream(path));
+        entry = (TarArchiveEntry) stream.getNextEntry();
+
+        int j = 0;
+        while (entry != null) {
+            if (isCancelled())
+                return false;
+
+            updateProgress(i, j, size, entry.getName());
+
+            // 하위 폴더가 없을때 만들어줌
+            String target = path + "/" + entry.getName();
+            new File(target).getParentFile().mkdirs();
+
+            // 파일 복사 부분
+            FileOutputStream outputStream = new FileOutputStream(target);
+            IOUtils.copy(stream, outputStream);
+            outputStream.close();
+
+
+            entry = (TarArchiveEntry) stream.getNextEntry();
+            j++;
+        }
+
+        stream.close();
+
+        return true;
+    }
+
     boolean unarchive7z(ExplorerItem item, int i) throws IOException {
         SevenZFile sevenZFile;
         SevenZArchiveEntry entry;
@@ -133,15 +280,14 @@ public class UnzipTask extends AsyncTask<Void, FileHelper.Progress, Boolean> {
 
             updateProgress(i, j, size, entry.getName());
 
-            String target = path + "/" + entry.getName();
-
             // 하위 폴더가 없을때 만들어줌
+            String target = path + "/" + entry.getName();
             new File(target).getParentFile().mkdirs();
 
 
             // 파일 복사 부분
             FileOutputStream outputStream = new FileOutputStream(target);
-            byte[] content = new byte[(int)entry.getSize()];
+            byte[] content = new byte[(int) entry.getSize()];
             sevenZFile.read(content, 0, content.length);
             outputStream.write(content);
             outputStream.close();
@@ -183,9 +329,8 @@ public class UnzipTask extends AsyncTask<Void, FileHelper.Progress, Boolean> {
 
             updateProgress(i, j, size, entry.getName());
 
-            String target = path + "/" + entry.getName();
-
             // 하위 폴더가 없을때 만들어줌
+            String target = path + "/" + entry.getName();
             new File(target).getParentFile().mkdirs();
 
 

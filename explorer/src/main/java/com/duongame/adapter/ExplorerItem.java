@@ -37,6 +37,30 @@ public class ExplorerItem implements Cloneable {
         }
     }
 
+    public enum CompressType {
+        ZIP(0),
+        SEVENZIP(1),
+        GZIP(2),
+        BZIP2(3),
+        RAR(4),
+        TAR(5),
+        OTHER(6);
+
+        private int value;
+
+        CompressType(int value) {
+            this.value = value;
+        }
+
+        public int getValue() {
+            return  value;
+        }
+
+        public void setValue(int value) {
+            this.value = value;
+        }
+    }
+
     public enum Side {
         SIDE_ALL(0),
         LEFT(1),
