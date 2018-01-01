@@ -1,4 +1,4 @@
-package com.duongame.task.file;
+package com.duongame.task.zip;
 
 import android.app.Activity;
 import android.content.DialogInterface;
@@ -11,22 +11,36 @@ import com.duongame.dialog.UnzipDialog;
 import com.duongame.helper.FileHelper;
 import com.duongame.helper.ToastHelper;
 
-import net.lingala.zip4j.core.ZipFile;
-import net.lingala.zip4j.exception.ZipException;
-import net.lingala.zip4j.model.FileHeader;
+import org.apache.commons.compress.archivers.zip.ZipArchiveInputStream;
+import org.apache.commons.io.IOUtils;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.zip.ZipEntry;
 
 /**
  * Created by namjungsoo on 2017-12-31.
  */
 
-public class UnzipTask extends AsyncTask<Void, FileHelper.Progress, Void> {
+/*
+7가지 파일을 테스트 해야 한다.
+--
+zip
+jar
+tar
+tar.gz
+tar.bz2
+gz
+bz2
+7z
+rar
+ */
+public class UnzipTask extends AsyncTask<Void, FileHelper.Progress, Boolean> {
     private ArrayList<ExplorerItem> fileList;
-    private List<FileHeader> zipList;
 
     private WeakReference<UnzipDialog> dialogWeakReference;
     private WeakReference<Activity> activityWeakReference;
@@ -37,7 +51,7 @@ public class UnzipTask extends AsyncTask<Void, FileHelper.Progress, Void> {
     private String path;
 
     public UnzipTask(Activity activity) {
-        activityWeakReference = new WeakReference<Activity>(activity);
+        activityWeakReference = new WeakReference<>(activity);
     }
 
     public void setOnDismissListener(DialogInterface.OnDismissListener listener) {
@@ -62,7 +76,7 @@ public class UnzipTask extends AsyncTask<Void, FileHelper.Progress, Void> {
             file.mkdirs();
 
         // Dialog의 초기화를 진행한다.
-        dialogWeakReference = new WeakReference<UnzipDialog>(new UnzipDialog());
+        dialogWeakReference = new WeakReference<>(new UnzipDialog());
         UnzipDialog dialog = dialogWeakReference.get();
         if (dialog != null) {
             dialog.setOnPositiveClickListener(new DialogInterface.OnClickListener() {
@@ -80,38 +94,69 @@ public class UnzipTask extends AsyncTask<Void, FileHelper.Progress, Void> {
         }
     }
 
+    void updateProgress(int i, int j, int size, String name) {
+        FileHelper.Progress progress = new FileHelper.Progress();
+        progress.index = i;
+        progress.percent = (j + 1) * 100 / size;
+        progress.fileName = name;
+        publishProgress(progress);
+    }
+
+    boolean unarchiveZip(ExplorerItem item, int i) throws IOException {
+        // common compress
+        ZipArchiveInputStream stream;
+        ZipEntry entry;
+
+        stream = new ZipArchiveInputStream(new FileInputStream(item.path));
+        entry = (ZipEntry) stream.getNextEntry();
+        int size = 0;
+
+        while (entry != null) {
+            if(isCancelled())
+                return false;
+
+            size++;
+            entry = (ZipEntry) stream.getNextEntry();
+        }
+        stream.close();
+
+        stream = new ZipArchiveInputStream(new FileInputStream(item.path));
+        entry = (ZipEntry) stream.getNextEntry();
+
+        int j = 0;
+        while (entry != null) {
+            if(isCancelled())
+                return false;
+
+            String target = path + "/" + entry.getName();
+            FileOutputStream outputStream = new FileOutputStream(target);
+            IOUtils.copy(stream, outputStream);
+
+            outputStream.close();
+            updateProgress(i, i, size, entry.getName());
+            entry = (ZipEntry) stream.getNextEntry();
+            j++;
+        }
+
+        stream.close();
+        return true;
+    }
+
     @Override
-    protected Void doInBackground(Void... voids) {
+    protected Boolean doInBackground(Void... voids) {
         // 파일의 갯수만큼 루프를 돌아서 unzip 해준다.
         for (int i = 0; i < fileList.size(); i++) {
             ExplorerItem item = fileList.get(i);
 
             try {
-                ZipFile zipFile = new ZipFile(item.path);
-                zipFile.setFileNameCharset("EUC-KR");
-
-                zipList = zipFile.getFileHeaders();
-                for (int j = 0; j < zipList.size(); j++) {
-                    if (isCancelled())
-                        return null;
-
-                    zipFile.extractFile(zipList.get(j), path);
-                    FileHelper.Progress progress = new FileHelper.Progress();
-                    progress.index = i;
-                    progress.percent = (j + 1) * 100 / zipList.size();
-                    progress.fileName = zipList.get(j).getFileName();
-                    publishProgress(progress);
-                }
-
-                // 여기까지 오면 파일이 끝난것임
-            } catch (ZipException e) {
+                if(!unarchiveZip(item, i))
+                    return false;
+            } catch (IOException e) {
                 e.printStackTrace();
-
-                // 에러를 표시하고 종료한다.
-                return null;
+                return false;
             }
         }
-        return null;
+        return true;
     }
 
     @Override
@@ -140,12 +185,15 @@ public class UnzipTask extends AsyncTask<Void, FileHelper.Progress, Void> {
     }
 
     @Override
-    protected void onPostExecute(Void result) {
+    protected void onPostExecute(Boolean result) {
         super.onPostExecute(result);
 
         Activity activity = activityWeakReference.get();
         if (activity != null) {
-            ToastHelper.showToast(activity, R.string.toast_file_unzip);
+            if (result)
+                ToastHelper.showToast(activity, R.string.toast_file_unzip);
+            else
+                ToastHelper.showToast(activity, R.string.toast_cancel);
         }
 
         UnzipDialog dialog = dialogWeakReference.get();

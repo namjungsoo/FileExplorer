@@ -6,17 +6,13 @@ import android.os.AsyncTask;
 
 import com.duongame.adapter.ExplorerItem;
 import com.duongame.helper.FileHelper;
-import com.duongame.task.file.ZipExtractTask;
+import com.duongame.task.zip.UnzipBookTask;
 
 import net.lingala.zip4j.core.ZipFile;
 import net.lingala.zip4j.exception.ZipException;
 import net.lingala.zip4j.model.FileHeader;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.nio.channels.FileChannel;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -29,7 +25,7 @@ public class ZipLoader {
     private static final String TAG = "ZipLoader";
 
     private String zipEncoding = "EUC-KR";
-    private ZipExtractTask task;
+    private UnzipBookTask task;
     private ZipFile zipFile;
     private ZipLoaderListener listener;
     private List<FileHeader> zipHeaders;
@@ -76,15 +72,15 @@ public class ZipLoader {
         }
     }
 
-    public void copy(File src, File dst) throws IOException {
-        FileInputStream inStream = new FileInputStream(src);
-        FileOutputStream outStream = new FileOutputStream(dst);
-        FileChannel inChannel = inStream.getChannel();
-        FileChannel outChannel = outStream.getChannel();
-        inChannel.transferTo(0, inChannel.size(), outChannel);
-        inStream.close();
-        outStream.close();
-    }
+//    public void copy(File src, File dst) throws IOException {
+//        FileInputStream inStream = new FileInputStream(src);
+//        FileOutputStream outStream = new FileOutputStream(dst);
+//        FileChannel inChannel = inStream.getChannel();
+//        FileChannel outChannel = outStream.getChannel();
+//        inChannel.transferTo(0, inChannel.size(), outChannel);
+//        inStream.close();
+//        outStream.close();
+//    }
 
     private void filterImageList(ArrayList<ExplorerItem> imageList) {
         for (FileHeader header : zipHeaders) {
@@ -131,7 +127,7 @@ public class ZipLoader {
 
         firstList.add(item);
 
-        task = new ZipExtractTask(zipFile, imageList, listener, extract, null);
+        task = new UnzipBookTask(zipFile, imageList, listener, extract, null);
         task.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, extractPath);
 
         return firstList;
@@ -148,7 +144,7 @@ public class ZipLoader {
             try {
                 final ExplorerItem item = (ExplorerItem) imageList.get(i);
                 if(isFileExtracted(item.path, zipHeaders)) {
-                    ZipExtractTask.processItem(i, item, side, firstList);
+                    UnzipBookTask.processItem(i, item, side, firstList);
                 } else {
                     // 에러이므로 여기서 중단한다.
                     extract = i;
@@ -160,7 +156,7 @@ public class ZipLoader {
         }
 
         // 읽어보고 나머지 리스트에 대해서 추가해줌
-        task = new ZipExtractTask(zipFile, imageList, listener, extract, (ArrayList<ExplorerItem>) firstList.clone());
+        task = new UnzipBookTask(zipFile, imageList, listener, extract, (ArrayList<ExplorerItem>) firstList.clone());
         task.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, extractPath);
         return firstList;
     }

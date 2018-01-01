@@ -345,7 +345,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         btnArchive.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                getExplorerFragment().deleteFileWithDialog();
+                getExplorerFragment().zipFileWithDialog();
             }
         });
 

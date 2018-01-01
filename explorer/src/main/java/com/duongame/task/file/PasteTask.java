@@ -30,7 +30,7 @@ import java.util.ArrayList;
  * Created by namjungsoo on 2017-12-29.
  */
 
-public class PasteTask extends AsyncTask<Void, FileHelper.Progress, Void> {
+public class PasteTask extends AsyncTask<Void, FileHelper.Progress, Boolean> {
     private ArrayList<ExplorerItem> fileList;
     private ArrayList<ExplorerItem> pasteList;
 
@@ -139,19 +139,15 @@ public class PasteTask extends AsyncTask<Void, FileHelper.Progress, Void> {
         }
     }
 
-    void processTask() {
+    boolean processTask() {
         for (int i = 0; i < pasteList.size(); i++) {
             // 파일을 하나하나 지운다.
             try {
                 if (isCancelled()) {
-                    break;
+                    return false;
                 } else {
                     if (!work(i, pasteList.get(i).path)) {
-                        Activity activity = activityWeakReference.get();
-                        if (activity != null) {
-                            ToastHelper.showToast(activity, R.string.toast_cancel);
-                        }
-                        return;
+                        return false;
                     }
                 }
             } catch (SecurityException e) {
@@ -160,23 +156,23 @@ public class PasteTask extends AsyncTask<Void, FileHelper.Progress, Void> {
                 if (activity != null) {
                     ToastHelper.showToast(activity, R.string.toast_error);
                 }
-                return;
+                return false;
             } catch (InterruptedException e) {
                 // 지울수 없는 파일
                 Activity activity = activityWeakReference.get();
                 if (activity != null) {
                     ToastHelper.showToast(activity, R.string.toast_error);
                 }
-                return;
+                return false;
             }
         }
+        return true;
     }
 
     @Override
-    protected Void doInBackground(Void... voids) {
+    protected Boolean doInBackground(Void... voids) {
         makePasteList();
-        processTask();
-        return null;
+        return processTask();
     }
 
     void alertOverwrite(final String path) {
@@ -253,7 +249,7 @@ public class PasteTask extends AsyncTask<Void, FileHelper.Progress, Void> {
         parent.mkdirs();
 
         // 사본 생성 모드이면 새로운 파일 이름을 얻음
-        if(makeCopy)
+        if (makeCopy)
             destPath = FileHelper.getNewFileName(destPath);
 
         File dest = new File(destPath);
@@ -408,16 +404,20 @@ public class PasteTask extends AsyncTask<Void, FileHelper.Progress, Void> {
     }
 
     @Override
-    protected void onPostExecute(Void result) {
+    protected void onPostExecute(Boolean result) {
         super.onPostExecute(result);
 
 //        JLog.w("PasteTask", "onPostExecute");
         Activity activity = activityWeakReference.get();
         if (activity != null) {
-            if (cut)
-                ToastHelper.showToast(activity, R.string.toast_file_paste_cut);
-            else
-                ToastHelper.showToast(activity, R.string.toast_file_paste_copy);
+            if (result) {
+                if (cut)
+                    ToastHelper.showToast(activity, R.string.toast_file_paste_cut);
+                else
+                    ToastHelper.showToast(activity, R.string.toast_file_paste_copy);
+            } else {
+                ToastHelper.showToast(activity, R.string.toast_cancel);
+            }
         }
 
         PasteDialog dialog = dialogWeakReference.get();

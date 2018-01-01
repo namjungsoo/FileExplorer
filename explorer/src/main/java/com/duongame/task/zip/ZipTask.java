@@ -1,4 +1,4 @@
-package com.duongame.task.file;
+package com.duongame.task.zip;
 
 import android.app.Activity;
 import android.content.DialogInterface;
@@ -7,30 +7,37 @@ import android.view.View;
 
 import com.duongame.R;
 import com.duongame.adapter.ExplorerItem;
-import com.duongame.dialog.DeleteDialog;
+import com.duongame.dialog.ZipDialog;
 import com.duongame.helper.FileHelper;
 import com.duongame.helper.FileSearcher;
 import com.duongame.helper.ToastHelper;
 
+import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
+import org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream;
+import org.apache.commons.io.IOUtils;
+
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
 /**
- * Created by namjungsoo on 2017-12-29.
+ * Created by namjungsoo on 2017-12-31.
  */
 
-public class DeleteTask extends AsyncTask<Void, Integer, Boolean> {
+public class ZipTask extends AsyncTask<Void, FileHelper.Progress, Boolean> {
     private ArrayList<ExplorerItem> fileList;
-    private ArrayList<ExplorerItem> deleteList;
+    private ArrayList<ExplorerItem> zipList;
 
-    private WeakReference<DeleteDialog> dialogWeakReference;
+    private WeakReference<ZipDialog> dialogWeakReference;
     private WeakReference<Activity> activityWeakReference;
 
-    // 생성자에서 사용
     private DialogInterface.OnDismissListener onDismissListener;
+    private String path;
+    private String currentPath;
 
-    public DeleteTask(Activity activity) {
+    public ZipTask(Activity activity) {
         activityWeakReference = new WeakReference<Activity>(activity);
     }
 
@@ -38,42 +45,72 @@ public class DeleteTask extends AsyncTask<Void, Integer, Boolean> {
         onDismissListener = listener;
     }
 
-    // 삭제할 파일과 폴더를 입력해야 한다.
-    // 폴더 삭제도 가능한지 확인해봐야 한다.
+    // 압축할 파일의 목록
     public void setFileList(ArrayList<ExplorerItem> fileList) {
         this.fileList = fileList;
+    }
+
+    // 압축 대상 파일의 패스
+    public void setZipPath(String path) {
+        this.path = path;
+    }
+
+    public void setPath(String path) {
+        this.currentPath = path;
     }
 
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
 
-        dialogWeakReference = new WeakReference<DeleteDialog>(new DeleteDialog());
-        DeleteDialog dialog = dialogWeakReference.get();
+        // Dialog의 초기화를 진행한다.
+        dialogWeakReference = new WeakReference<>(new ZipDialog());
+        ZipDialog dialog = dialogWeakReference.get();
         if (dialog != null) {
-            // 확인 버튼이 눌려쥐면 task를 종료한다.
             dialog.setOnPositiveClickListener(new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    DeleteTask.this.cancel(true);
+                    ZipTask.this.cancel(true);
                 }
             });
             dialog.setOnDismissListener(onDismissListener);
 
             Activity activity = activityWeakReference.get();
             if (activity != null) {
-                dialog.show(activity.getFragmentManager(), "delete");
+                dialog.show(activity.getFragmentManager(), "zip");
             }
         }
     }
 
-    @Override
-    protected Boolean doInBackground(Void... voids) {
-        deleteList = new ArrayList<>();
+    boolean archiveZip() {
+        try {
+            ZipArchiveOutputStream stream = new ZipArchiveOutputStream(new File(path));
+            for(int i=0; i<fileList.size(); i++) {
+                String entryName = fileList.get(i).path.replace(currentPath, "");
+
+                ZipArchiveEntry entry = new ZipArchiveEntry(entryName);
+                FileInputStream inputStream = new FileInputStream(fileList.get(i).path);
+
+                stream.putArchiveEntry(entry);
+                IOUtils.copy(inputStream, stream);
+                stream.closeArchiveEntry();
+            }
+            stream.finish();
+            stream.close();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+        return true;
+    }
+
+    void makeZipList() {
+        zipList = new ArrayList<>();
+
+        // fileList에는 선택된 파일만 들어옴
         for (int i = 0; i < fileList.size(); i++) {
             ExplorerItem item = fileList.get(i);
-            if (!item.selected)
-                continue;
 
             if (item.type == ExplorerItem.FileType.FOLDER) {
                 // 폴더의 경우 하위 모든 아이템을 찾은뒤에 더한다.
@@ -94,62 +131,44 @@ public class DeleteTask extends AsyncTask<Void, Integer, Boolean> {
                             subItem.name = subItem.path.replace(FileHelper.getParentPath(item.path) + "/", "");
                         }
                     }
-                    deleteList.addAll(result.fileList);
+                    zipList.addAll(result.fileList);
                 }
 
-                deleteList.add(item);
+                // 폴더 자기 자신도 더함
+                // zip은 더하지 않음
+//                zipList.add(item);
             } else {
-                deleteList.add(item);
+                zipList.add(item);
             }
         }
-
-        for (int i = 0; i < deleteList.size(); i++) {
-            // 파일을 하나하나 지운다.
-            try {
-                if (isCancelled()) {
-                    return false;
-                } else {
-                    work(deleteList.get(i).path);
-                    publishProgress(i);
-                }
-            } catch (SecurityException e) {
-                // 지울수 없는 파일
-                Activity activity = activityWeakReference.get();
-                if (activity != null) {
-                    ToastHelper.showToast(activity, R.string.toast_error);
-                }
-                return false;
-            }
-        }
-        return true;
-    }
-
-    void work(String path) {
-        new File(path).delete();
     }
 
     @Override
-    protected void onProgressUpdate(Integer... values) {
-        int progress = values[0];
+    protected Boolean doInBackground(Void... voids) {
+        // 선택된 파일이 폴더인 경우에 전체 폴더 확장을 해야한다.
+        makeZipList();
+        return archiveZip();
+    }
 
-        String name = deleteList.get(progress).name;
-        int size = deleteList.size();
-        float total = ((float) progress + 1) / size;
-        int percent = (int) (total * 100);
+    @Override
+    protected void onProgressUpdate(FileHelper.Progress... values) {
+        FileHelper.Progress progress = values[0];
 
-        DeleteDialog dialog = dialogWeakReference.get();
+        ZipDialog dialog = dialogWeakReference.get();
         if (dialog != null) {
-            dialog.getFileName().setText(name);
-
+            dialog.getFileName().setText(progress.fileName);
             dialog.getEachProgress().setProgress(100);
-            dialog.getTotalProgress().setProgress(percent);
+
+            // 들어온 퍼센트를 바로 토탈로 표시한다.
+            int totalPercent = progress.percent;
+            dialog.getTotalProgress().setProgress(totalPercent);
 
             Activity activity = activityWeakReference.get();
             if (activity != null) {
                 dialog.getEachText().setVisibility(View.VISIBLE);
                 dialog.getEachText().setText(String.format(activity.getString(R.string.each_text), 100));
                 dialog.getTotalText().setVisibility(View.VISIBLE);
-                dialog.getTotalText().setText(String.format(activity.getString(R.string.total_text), progress + 1, size, percent));
+                dialog.getTotalText().setText(String.format(activity.getString(R.string.total_text), progress.index, zipList.size(), totalPercent));
             }
         }
     }
@@ -157,19 +176,16 @@ public class DeleteTask extends AsyncTask<Void, Integer, Boolean> {
     @Override
     protected void onPostExecute(Boolean result) {
         super.onPostExecute(result);
-
-//        JLog.e("TAG", "onPostExecute");
         Activity activity = activityWeakReference.get();
         if (activity != null) {
             if (result)
-                ToastHelper.showToast(activity, R.string.toast_file_delete);
+                ToastHelper.showToast(activity, R.string.toast_file_zip);
             else
                 ToastHelper.showToast(activity, R.string.toast_cancel);
         }
 
-        DeleteDialog dialog = dialogWeakReference.get();
+        ZipDialog dialog = dialogWeakReference.get();
         if (dialog != null) {
-//            JLog.e("TAG", "dialog.dismiss");
             dialog.dismiss();
         }
     }

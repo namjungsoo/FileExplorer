@@ -1,4 +1,4 @@
-package com.duongame.task.file;
+package com.duongame.task.zip;
 
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
@@ -19,7 +19,7 @@ import static com.duongame.adapter.ExplorerItem.Side.RIGHT;
  * Created by namjungsoo on 2016-12-16.
  */
 
-public class ZipExtractTask extends AsyncTask<String, Integer, Void> {
+public class UnzipBookTask extends AsyncTask<String, Integer, Void> {
     private ArrayList<ExplorerItem> imageList;// zip안의 이미지 파일의 갯수
     private ArrayList<ExplorerItem> zipImageList;// 잘려진 zip 파일의 이미지 갯수. 파일갯수와 다름
 
@@ -32,7 +32,7 @@ public class ZipExtractTask extends AsyncTask<String, Integer, Void> {
     private final Object mPauseWorkLock = new Object();
     private boolean mPauseWork = false;
 
-    public ZipExtractTask(ZipFile zipFile, ArrayList<ExplorerItem> imageList, ZipLoader.ZipLoaderListener listener, int extract, ArrayList<ExplorerItem> zipImageList) {
+    public UnzipBookTask(ZipFile zipFile, ArrayList<ExplorerItem> imageList, ZipLoader.ZipLoaderListener listener, int extract, ArrayList<ExplorerItem> zipImageList) {
         this.zipFile = zipFile;
         this.imageList = imageList;
         this.listener = listener;

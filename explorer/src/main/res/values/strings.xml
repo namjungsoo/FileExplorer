@@ -91,6 +91,18 @@
 
     <string name="msg_file_unzip">Unzipping selected files.</string>
     <string name="toast_file_unzip">The files have been unzipped.</string>
+
+    <string name="msg_file_zip">The selected files will be zipped.</string>
+    <string name="toast_file_zip">The files have been zipped.</string>
+
+    <string-array name="zip_type">
+        <item>.zip</item>
+        <item>.7z</item>
+        <item>.tar</item>
+        <item>.tar.gz</item>
+        <item>.tar.bz2</item>
+    </string-array>
+
 </resources>
 <!--<string name="dialog_review_title">Please support Comic Viewer</string>-->
 <!--<string name="dialog_review_content">Are you enjoying Comic Viewer? Please leave a review for us!</string>-->

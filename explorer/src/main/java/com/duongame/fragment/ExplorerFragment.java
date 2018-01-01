@@ -15,10 +15,12 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageButton;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.ViewSwitcher;
 
@@ -44,7 +46,8 @@ import com.duongame.manager.PermissionManager;
 import com.duongame.manager.PositionManager;
 import com.duongame.task.file.DeleteTask;
 import com.duongame.task.file.PasteTask;
-import com.duongame.task.file.UnzipTask;
+import com.duongame.task.zip.UnzipTask;
+import com.duongame.task.zip.ZipTask;
 import com.duongame.view.DividerItemDecoration;
 
 import java.io.File;
@@ -346,6 +349,30 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
         unzipWithDialog(item);
     }
 
+    void runUnzipTask(ExplorerItem item, String name) {
+        //String name = editFileName.getText().toString();
+        String path = application.getLastPath();
+        String targetPath = path + "/" + name;
+
+        UnzipTask task = new UnzipTask(getActivity());
+        task.setPath(targetPath);
+
+        // 여러 파일을 동시에 풀수있도록 함
+        ArrayList<ExplorerItem> zipList = new ArrayList<>();
+        zipList.add(item);
+
+        task.setFileList(zipList);
+        task.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+//                                JLog.e(TAG, "onDismiss");
+                onRefresh();
+            }
+        });
+
+        task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
     void unzipWithDialog(final ExplorerItem item) {
         View view = getActivity().getLayoutInflater().inflate(R.layout.dialog_single, null, false);
         final EditText editFileName = (EditText) view.findViewById(R.id.file_name);
@@ -367,27 +394,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
                 new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        String name = editFileName.getText().toString();
-                        String path = application.getLastPath();
-                        String targetPath = path + "/" + name;
-
-                        UnzipTask task = new UnzipTask(getActivity());
-                        task.setPath(targetPath);
-
-                        // 여러 파일을 동시에 풀수있도록 함
-                        ArrayList<ExplorerItem> zipList = new ArrayList<>();
-                        zipList.add(item);
-
-                        task.setFileList(zipList);
-                        task.setOnDismissListener(new DialogInterface.OnDismissListener() {
-                            @Override
-                            public void onDismiss(DialogInterface dialog) {
-//                                JLog.e(TAG, "onDismiss");
-                                onRefresh();
-                            }
-                        });
-
-                        task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                        runUnzipTask(item, editFileName.getText().toString());
                     }
                 }, null, null);
 
@@ -1006,6 +1013,75 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
                         }, null, null);
             }
         }
+    }
 
+    void runZipTask(String name, String ext) {
+        String path = application.getLastPath();
+        String zipPath = path + "/" + name + ext;
+
+        ZipTask task = new ZipTask(getActivity());
+        task.setPath(path);
+        task.setZipPath(zipPath);
+
+        // 여러 파일을 동시에 풀수있도록 함
+        ArrayList<ExplorerItem> zipList = new ArrayList<>();
+        for(int i=0; i<fileList.size(); i++) {
+            if(fileList.get(i).selected) {
+                zipList.add(fileList.get(i));
+            }
+        }
+
+        task.setFileList(zipList);
+        task.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+                onRefresh();
+            }
+        });
+
+        task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
+    public void zipFileWithDialog() {
+        final String path = application.getLastPath();
+
+        View view = getActivity().getLayoutInflater().inflate(R.layout.dialog_zip, null, false);
+        final EditText editFileName = (EditText) view.findViewById(R.id.file_name);
+        final Spinner spinner = (Spinner) view.findViewById(R.id.zip_type);
+
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                // zip파일의 이름을 현재 패스 기준으로 함
+                String base = path.substring(path.lastIndexOf("/") + 1);
+                String ext = spinner.getSelectedItem().toString();
+                final String newPath = FileHelper.getNewFileName(application.getLastPath() + "/" + base + ext);
+
+                String newName = newPath.replace(application.getLastPath() + "/", "");
+                newName = newName.replace(ext, "");
+
+                // 새로나온 폴더의 이름을 edit에 반영함
+                editFileName.setText(newName);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+
+        AlertHelper.showAlert(getActivity(),
+                AppHelper.getAppName(getActivity()),
+                getString(R.string.msg_file_unzip),
+                view,
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        String name = editFileName.getText().toString();
+                        String ext = spinner.getSelectedItem().toString();
+
+                        runZipTask(name, ext);
+                    }
+                }, null, null);
     }
 }
