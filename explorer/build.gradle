@@ -3,7 +3,10 @@ apply plugin: 'com.android.application'
 android {
     compileSdkVersion 27
     buildToolsVersion '26.0.2'
-
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_7
+        targetCompatibility JavaVersion.VERSION_1_7
+    }
     defaultConfig {
         applicationId 'com.duongame'
         buildConfigField "boolean", "SHOW_AD", "true"
@@ -110,7 +113,7 @@ dependencies {
     // https://mvnrepository.com/artifact/org.apache.commons/commons-compress
     implementation group: 'org.apache.commons', name: 'commons-compress', version: '1.15'
 
-    implementation group: 'com.github.junrar', name: 'junrar', version: '0.7'
+    //implementation group: 'com.github.junrar', name: 'junrar', version: '0.7'
 }
 
 // ADD THIS AT THE BOTTOM

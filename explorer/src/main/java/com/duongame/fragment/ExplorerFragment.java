@@ -373,7 +373,29 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
         task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
+    boolean isNeedFolder(String path) {
+        String lowerPath = path.toLowerCase();
+        boolean needFolder = true;
+        if (lowerPath.endsWith(".gz")) {
+            String checkTar = lowerPath.replace(".gz", "");
+            if (!checkTar.endsWith(".tar"))
+                needFolder = false;
+        } else if (lowerPath.endsWith(".bz2")) {
+            String checkTar = lowerPath.replace(".bz2", "");
+            if (!checkTar.endsWith(".tar"))
+                needFolder = false;
+        }
+        return needFolder;
+    }
+
     void unzipWithDialog(final ExplorerItem item) {
+        boolean needFolder = isNeedFolder(item.path);
+
+        if (!needFolder) {
+            runUnzipTask(item, null);
+            return;
+        }
+
         View view = getActivity().getLayoutInflater().inflate(R.layout.dialog_single, null, false);
         final EditText editFileName = (EditText) view.findViewById(R.id.file_name);
 
@@ -386,6 +408,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
 
         // 새로나온 폴더의 이름을 edit에 반영함
         editFileName.setText(newName);
+
 
         AlertHelper.showAlert(getActivity(),
                 AppHelper.getAppName(getActivity()),
@@ -1025,8 +1048,8 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
 
         // 여러 파일을 동시에 풀수있도록 함
         ArrayList<ExplorerItem> zipList = new ArrayList<>();
-        for(int i=0; i<fileList.size(); i++) {
-            if(fileList.get(i).selected) {
+        for (int i = 0; i < fileList.size(); i++) {
+            if (fileList.get(i).selected) {
                 zipList.add(fileList.get(i));
             }
         }

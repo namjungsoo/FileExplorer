@@ -10,20 +10,16 @@ import com.duongame.adapter.ExplorerItem;
 import com.duongame.dialog.UnzipDialog;
 import com.duongame.helper.FileHelper;
 import com.duongame.helper.ToastHelper;
-import com.github.junrar.Archive;
-import com.github.junrar.exception.RarException;
-import com.github.junrar.rarfile.FileHeader;
 
 import org.apache.commons.compress.archivers.sevenz.SevenZArchiveEntry;
 import org.apache.commons.compress.archivers.sevenz.SevenZFile;
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
 import org.apache.commons.compress.archivers.zip.ZipArchiveInputStream;
-import org.apache.commons.compress.compressors.bzip2.BZip2CompressorOutputStream;
-import org.apache.commons.compress.compressors.gzip.GzipCompressorOutputStream;
+import org.apache.commons.compress.compressors.bzip2.BZip2CompressorInputStream;
+import org.apache.commons.compress.compressors.gzip.GzipCompressorInputStream;
 import org.apache.commons.io.IOUtils;
 
-import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -78,9 +74,11 @@ public class UnzipTask extends AsyncTask<Void, FileHelper.Progress, Boolean> {
         super.onPreExecute();
 
         // 폴더를 생성
-        File file = new File(path);
-        if (!file.exists())
-            file.mkdirs();
+        if (path != null) {
+            File file = new File(path);
+            if (!file.exists())
+                file.mkdirs();
+        }
 
         // Dialog의 초기화를 진행한다.
         dialogWeakReference = new WeakReference<>(new UnzipDialog());
@@ -112,66 +110,66 @@ public class UnzipTask extends AsyncTask<Void, FileHelper.Progress, Boolean> {
     }
 
     boolean unarchiveRar(ExplorerItem item, int i) throws IOException {
-        try {
-            Archive archive;
-            FileHeader header;
-
-            // 파일 갯수 세기
-            archive = new Archive(new File(item.path));
-            header = archive.nextFileHeader();
-            int size = 0;
-
-            while (header != null) {
-                if (isCancelled())
-                    return false;
-
-                size++;
-                header = archive.nextFileHeader();
-            }
-            archive.close();
-
-
-            archive = new Archive(new File(item.path));
-            header = archive.nextFileHeader();
-
-            int j = 0;
-            while (header != null) {
-                if (isCancelled())
-                    return false;
-
-                updateProgress(i, j, size, header.getFileNameString());
-
-                // 하위 폴더가 없을때 만들어줌
-                String target = path + "/" + header.getFileNameString();
-                new File(target).getParentFile().mkdirs();
-
-
-                // 파일 복사 부분
-                FileOutputStream os = new FileOutputStream(target);
-                archive.extractFile(header, os);
-                os.close();
-
-
-                header = archive.nextFileHeader();
-            }
-        } catch (RarException e) {
-            e.printStackTrace();
-            return false;
-        }
+//        try {
+//            Archive archive;
+//            FileHeader header;
+//
+//            // 파일 갯수 세기
+//            archive = new Archive(new File(item.path));
+//            header = archive.nextFileHeader();
+//            int size = 0;
+//
+//            while (header != null) {
+//                if (isCancelled())
+//                    return false;
+//
+//                size++;
+//                header = archive.nextFileHeader();
+//            }
+//            archive.close();
+//
+//
+//            archive = new Archive(new File(item.path));
+//            header = archive.nextFileHeader();
+//
+//            int j = 0;
+//            while (header != null) {
+//                if (isCancelled())
+//                    return false;
+//
+//                updateProgress(i, j, size, header.getFileNameString());
+//
+//                // 하위 폴더가 없을때 만들어줌
+//                String target = path + "/" + header.getFileNameString();
+//                new File(target).getParentFile().mkdirs();
+//
+//
+//                // 파일 복사 부분
+//                FileOutputStream os = new FileOutputStream(target);
+//                archive.extractFile(header, os);
+//                os.close();
+//
+//
+//                header = archive.nextFileHeader();
+//            }
+//        } catch (RarException e) {
+//            e.printStackTrace();
+//            return false;
+//        }
         return true;
     }
 
     boolean unarchiveGzip(ExplorerItem item, int i) throws IOException {
         String tar;
-        if(item.path.toLowerCase().endsWith(".tgz")) {
+        if (item.path.toLowerCase().endsWith(".tgz")) {
             tar = item.path.replace(".tgz", ".tar");
         } else {
             tar = item.path.replace(".gz", "");
         }
 
-        BufferedInputStream inputStream = new BufferedInputStream(new FileInputStream(item.path));
-        GzipCompressorOutputStream stream = new GzipCompressorOutputStream(new FileOutputStream(tar));
-        IOUtils.copy(inputStream, stream);
+        GzipCompressorInputStream stream = new GzipCompressorInputStream(new FileInputStream(item.path));
+        FileOutputStream outputStream = new FileOutputStream(tar);
+        IOUtils.copy(stream, outputStream);
 
         if (tar.toLowerCase().endsWith(".tar")) {
             if (!unarchiveTar(tar, i))
@@ -184,15 +182,15 @@ public class UnzipTask extends AsyncTask<Void, FileHelper.Progress, Boolean> {
 
     boolean unarchiveBzip2(ExplorerItem item, int i) throws IOException {
         String tar;
-        if(item.path.toLowerCase().endsWith(".tbz2")) {
+        if (item.path.toLowerCase().endsWith(".tbz2")) {
             tar = item.path.replace(".tbz2", ".tar");
         } else {
             tar = item.path.replace(".bz2", "");
         }
 
-        BufferedInputStream inputStream = new BufferedInputStream(new FileInputStream(item.path));
-        BZip2CompressorOutputStream stream = new BZip2CompressorOutputStream(new FileOutputStream(tar));
-        IOUtils.copy(inputStream, stream);
+        BZip2CompressorInputStream stream = new BZip2CompressorInputStream(new FileInputStream(item.path));
+        FileOutputStream outputStream = new FileOutputStream(tar);
+        IOUtils.copy(stream, outputStream);
 
         if (tar.toLowerCase().endsWith(".tar")) {
             if (!unarchiveTar(tar, i))
@@ -355,8 +353,33 @@ public class UnzipTask extends AsyncTask<Void, FileHelper.Progress, Boolean> {
             ExplorerItem item = fileList.get(i);
 
             try {
-                if (!unarchiveZip(item, i))
-                    return false;
+                ExplorerItem.CompressType type = FileHelper.getCompressType(item.path);
+                switch (type) {
+                    case ZIP:
+                        if (!unarchiveZip(item, i))
+                            return false;
+                        break;
+                    case SEVENZIP:
+                        if (!unarchive7z(item, i))
+                            return false;
+                        break;
+                    case GZIP:
+                        if (!unarchiveGzip(item, i))
+                            return false;
+                        break;
+                    case BZIP2:
+                        if (!unarchiveBzip2(item, i))
+                            return false;
+                        break;
+                    case RAR:
+                        if (!unarchiveRar(item, i))
+                            return false;
+                        break;
+                    case TAR:
+                        if (!unarchiveTar(item.path, i))
+                            return false;
+                        break;
+                }
             } catch (IOException e) {
                 e.printStackTrace();
                 return false;
