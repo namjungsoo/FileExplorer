@@ -1036,6 +1036,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
             @Override
             public void onDismiss(DialogInterface dialog) {
                 onRefresh();
+                onNormalMode();
             }
         });
 

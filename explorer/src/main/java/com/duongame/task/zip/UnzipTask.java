@@ -94,11 +94,13 @@ public class UnzipTask extends AsyncTask<Void, FileHelper.Progress, Boolean> {
         }
     }
 
+    //TODO: ZIP 현재는 1개 파일만 선택해서 압축을 풀으므로 i는 무시된다.
     void updateProgress(int i, int j, int size, String name) {
         FileHelper.Progress progress = new FileHelper.Progress();
-        progress.index = i;
-        progress.percent = (j + 1) * 100 / size;
+        progress.index = j;
+        progress.percent = 100;
         progress.fileName = name;
+        progress.size = size;
         publishProgress(progress);
     }
 
@@ -112,7 +114,7 @@ public class UnzipTask extends AsyncTask<Void, FileHelper.Progress, Boolean> {
         int size = 0;
 
         while (entry != null) {
-            if(isCancelled())
+            if (isCancelled())
                 return false;
 
             size++;
@@ -125,15 +127,20 @@ public class UnzipTask extends AsyncTask<Void, FileHelper.Progress, Boolean> {
 
         int j = 0;
         while (entry != null) {
-            if(isCancelled())
+            if (isCancelled())
                 return false;
 
+            updateProgress(i, j, size, entry.getName());
+
             String target = path + "/" + entry.getName();
+
+            // 하위 폴더가 없을때 만들어줌
+            new File(target).getParentFile().mkdirs();
+
             FileOutputStream outputStream = new FileOutputStream(target);
             IOUtils.copy(stream, outputStream);
 
             outputStream.close();
-            updateProgress(i, i, size, entry.getName());
             entry = (ZipEntry) stream.getNextEntry();
             j++;
         }
@@ -149,7 +156,7 @@ public class UnzipTask extends AsyncTask<Void, FileHelper.Progress, Boolean> {
             ExplorerItem item = fileList.get(i);
 
             try {
-                if(!unarchiveZip(item, i))
+                if (!unarchiveZip(item, i))
                     return false;
             } catch (IOException e) {
                 e.printStackTrace();
@@ -159,6 +166,7 @@ public class UnzipTask extends AsyncTask<Void, FileHelper.Progress, Boolean> {
         return true;
     }
 
+    //TODO: ZIP 현재는 파일 한개씩 밖에 풀수가 없다.
     @Override
     protected void onProgressUpdate(FileHelper.Progress... values) {
         FileHelper.Progress progress = values[0];
@@ -168,10 +176,8 @@ public class UnzipTask extends AsyncTask<Void, FileHelper.Progress, Boolean> {
             dialog.getFileName().setText(progress.fileName);
 
             dialog.getEachProgress().setProgress(100);
-            //int totalPercent = progress.index * 100 / fileList.size();
-            //
-            // 앞에꺼까지 퍼센트 + 현재 퍼센트
-            int totalPercent = (int) (progress.index * (100.0f / fileList.size())) + (int) (progress.percent / (float) fileList.size());
+
+            int totalPercent = progress.index * 100 / progress.size;
             dialog.getTotalProgress().setProgress(totalPercent);
 
             Activity activity = activityWeakReference.get();
@@ -179,7 +185,7 @@ public class UnzipTask extends AsyncTask<Void, FileHelper.Progress, Boolean> {
                 dialog.getEachText().setVisibility(View.VISIBLE);
                 dialog.getEachText().setText(String.format(activity.getString(R.string.each_text), 100));
                 dialog.getTotalText().setVisibility(View.VISIBLE);
-                dialog.getTotalText().setText(String.format(activity.getString(R.string.total_text), progress.index, fileList.size(), totalPercent));
+                dialog.getTotalText().setText(String.format(activity.getString(R.string.total_text), progress.index, progress.size, totalPercent));
             }
         }
     }

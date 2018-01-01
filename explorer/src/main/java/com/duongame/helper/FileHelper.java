@@ -23,6 +23,7 @@ public class FileHelper {
         public int percent;
         public int index;
         public String fileName;
+        public int size;
     }
 
     public static String getCommaSize(long size) {

@@ -82,19 +82,30 @@ public class ZipTask extends AsyncTask<Void, FileHelper.Progress, Boolean> {
         }
     }
 
+    void updateProgress(int i, String name) {
+        FileHelper.Progress progress = new FileHelper.Progress();
+        progress.index = i;
+        progress.fileName = name;
+        progress.percent = i * 100 / zipList.size();
+        publishProgress(progress);
+    }
+
     boolean archiveZip() {
         try {
             ZipArchiveOutputStream stream = new ZipArchiveOutputStream(new File(path));
-            for(int i=0; i<fileList.size(); i++) {
-                String entryName = fileList.get(i).path.replace(currentPath, "");
+            for (int i = 0; i < zipList.size(); i++) {
+                updateProgress(i, zipList.get(i).name);
+
+                String entryName = zipList.get(i).path.replace(currentPath, "");
 
                 ZipArchiveEntry entry = new ZipArchiveEntry(entryName);
-                FileInputStream inputStream = new FileInputStream(fileList.get(i).path);
+                FileInputStream inputStream = new FileInputStream(zipList.get(i).path);
 
                 stream.putArchiveEntry(entry);
                 IOUtils.copy(inputStream, stream);
                 stream.closeArchiveEntry();
             }
+
             stream.finish();
             stream.close();
 
