@@ -229,7 +229,7 @@ public class PasteTask extends AsyncTask<Void, FileHelper.Progress, Boolean> {
             WritableCallbackByteChannel writableCallbackByteChannel = new WritableCallbackByteChannel(outputChannel, src.length(), i);
 //            JLog.e("TAG", "workDirect transferTo");
             long position = 0;
-            final long blockSize = (4 * 1024 * 1024);
+            final long blockSize = 8 * 1024;// 8kb
             while (inputChannel.transferTo(position, blockSize, writableCallbackByteChannel) > 0) {
                 position += blockSize;
             }

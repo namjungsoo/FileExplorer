@@ -12,8 +12,6 @@ import com.duongame.helper.FileHelper;
 import com.duongame.helper.FileSearcher;
 import com.duongame.helper.ToastHelper;
 
-import org.apache.commons.compress.archivers.sevenz.SevenZArchiveEntry;
-import org.apache.commons.compress.archivers.sevenz.SevenZOutputFile;
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveOutputStream;
 import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
@@ -21,6 +19,8 @@ import org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream;
 import org.apache.commons.compress.compressors.bzip2.BZip2CompressorOutputStream;
 import org.apache.commons.compress.compressors.gzip.GzipCompressorOutputStream;
 import org.apache.commons.io.IOUtils;
+import org.sevenzip4j.SevenZipArchiveOutputStream;
+import org.sevenzip4j.archive.SevenZipEntry;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -28,6 +28,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
@@ -185,33 +186,70 @@ public class ZipTask extends AsyncTask<Void, FileHelper.Progress, Boolean> {
     }
     //endregion
 
+    private void setSevenZipEntryAttributes(File file, SevenZipEntry sevenEntry) {
+        sevenEntry.setName(file.getName());
+        sevenEntry.setSize(file.length());
+        sevenEntry.setLastWriteTime(file.lastModified());
+        sevenEntry.setReadonly(!file.canWrite());
+        sevenEntry.setHidden(file.isHidden());
+        sevenEntry.setDirectory(file.isDirectory());
+        sevenEntry.setArchive(true);
+        sevenEntry.setSystem(false);
+    }
+
     boolean archive7z() {
-        try {
-            SevenZOutputFile sevenZOutputFile = new SevenZOutputFile(new File(path));
-            byte[] buffer = new byte[1024];
+//        try {
+//            SevenZipArchiveOutputStream stream = new SevenZipArchiveOutputStream(new File(path));
+//
+//            for (int i = 0; i < zipList.size(); i++) {
+//                updateProgress(i, zipList.get(i).name);
+//
+//                File file = new File(zipList.get(i).path);
+//                SevenZipEntry sevenEntry = new SevenZipEntry();
+//                setSevenZipEntryAttributes(file, sevenEntry);
+//                stream.putNextEntry(sevenEntry);
+//
+//                FileInputStream inputStream = new FileInputStream(file);
+//                byte[] buf = new [8*1024];
+//                int len = 0;
+//                while((len = inputStream.read(buf)) != -1) {
+//                    stream.write(buf, 0, len);
+//                }
+//            }
+//
+//            stream.finish();
+//            stream.close();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//            return false;
+//        }
 
-            for (int i = 0; i < zipList.size(); i++) {
-                updateProgress(i, zipList.get(i).name);
-
-                FileInputStream inputStream = new FileInputStream(zipList.get(i).path);
-
-                SevenZArchiveEntry entry = sevenZOutputFile.createArchiveEntry(new File(zipList.get(i).path), zipList.get(i).name);
-                sevenZOutputFile.putArchiveEntry(entry);
-
-                int count = 0;
-                while ((count = inputStream.read(buffer)) > 0) {
-                    sevenZOutputFile.write(buffer, 0, count);
-                }
-
-                sevenZOutputFile.closeArchiveEntry();
-            }
-
-            sevenZOutputFile.close();
-
-        } catch (IOException e) {
-            e.printStackTrace();
-            return false;
-        }
+//        try {
+//            SevenZOutputFile sevenZOutputFile = new SevenZOutputFile(new File(path));
+//            byte[] buffer = new byte[1024];
+//
+//            for (int i = 0; i < zipList.size(); i++) {
+//                updateProgress(i, zipList.get(i).name);
+//
+//                FileInputStream inputStream = new FileInputStream(zipList.get(i).path);
+//
+//                SevenZArchiveEntry entry = sevenZOutputFile.createArchiveEntry(new File(zipList.get(i).path), zipList.get(i).name);
+//                sevenZOutputFile.putArchiveEntry(entry);
+//
+//                int count = 0;
+//                while ((count = inputStream.read(buffer)) > 0) {
+//                    sevenZOutputFile.write(buffer, 0, count);
+//                }
+//
+//                sevenZOutputFile.closeArchiveEntry();
+//            }
+//
+//            sevenZOutputFile.close();
+//
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//            return false;
+//        }
         return true;
     }
 

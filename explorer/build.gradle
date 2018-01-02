@@ -11,7 +11,7 @@ android {
         applicationId 'com.duongame'
         buildConfigField "boolean", "SHOW_AD", "true"
         buildConfigField "boolean", "PREVIEW_ZIP", "false"
-        minSdkVersion 14
+        minSdkVersion 15
         targetSdkVersion 27
         versionCode 1
         versionName "1.0.0"
@@ -40,6 +40,9 @@ android {
             versionCode 1
             versionName "1.0.0"
             addManifestPlaceholders([APP_NAME: "@string/file_name_free"])
+
+            //resValue "string", "app_name", "@string/file_name_free"
+            //addManifestPlaceholders([APP_NAME: "@string/app_name"])
         }
         // 코믹제트
         comicz {
@@ -52,6 +55,9 @@ android {
             versionCode 21
             versionName "1.1.8"
             addManifestPlaceholders([APP_NAME: "@string/comicz_name_free"])
+
+            //resValue "string", "app_name", "@string/comicz_name_free"
+            //addManifestPlaceholders([APP_NAME: "@string/app_name"])
         }
 
         // 유료
@@ -79,7 +85,8 @@ android {
 }
 
 dependencies {
-    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    //implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation files('libs/sevenzip4j.jar')
 
     //android
     implementation 'com.android.support:appcompat-v7:27.0.2'
@@ -114,6 +121,8 @@ dependencies {
     implementation group: 'org.apache.commons', name: 'commons-compress', version: '1.15'
 
     //implementation group: 'com.github.junrar', name: 'junrar', version: '0.7'
+    //Junrar-Android
+    implementation 'com.github.GrenderG:junrar-android:1.0.1'
 }
 
 // ADD THIS AT THE BOTTOM
