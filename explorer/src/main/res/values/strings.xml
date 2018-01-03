@@ -95,9 +95,8 @@
     <string name="msg_file_zip">The selected files will be zipped.</string>
     <string name="toast_file_zip">The files have been zipped.</string>
 
-    <string-array name="zip_type">
+    <string-array name="compress_type">
         <item>.zip</item>
-        <item>.7z</item>
         <item>.tar</item>
         <item>.tar.gz</item>
         <item>.tar.bz2</item>

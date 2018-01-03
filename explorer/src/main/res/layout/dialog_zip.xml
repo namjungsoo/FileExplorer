@@ -18,6 +18,6 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="4dp"
         android:layout_marginRight="4dp"
-        android:entries="@array/zip_type"
+        android:entries="@array/compress_type"
         android:spinnerMode="dropdown"/>
 </LinearLayout>

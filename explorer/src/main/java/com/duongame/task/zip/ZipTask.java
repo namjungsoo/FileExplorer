@@ -325,8 +325,9 @@ public class ZipTask extends AsyncTask<Void, FileHelper.Progress, Boolean> {
         switch (type) {
             case ZIP:
                 return archiveZip();
-            case SEVENZIP:
-                return archive7z();
+                // 구현이 완료될때까지 막아둠 
+//            case SEVENZIP:
+//                return archive7z();
             case GZIP:
                 return archiveGzip();
             case BZIP2:
