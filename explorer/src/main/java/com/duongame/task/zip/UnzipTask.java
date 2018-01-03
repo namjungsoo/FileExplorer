@@ -10,9 +10,9 @@ import com.duongame.adapter.ExplorerItem;
 import com.duongame.dialog.UnzipDialog;
 import com.duongame.helper.FileHelper;
 import com.duongame.helper.ToastHelper;
+import com.hzy.lib7z.ExtractCallback;
+import com.hzy.lib7z.Z7Extractor;
 
-import org.apache.commons.compress.archivers.sevenz.SevenZArchiveEntry;
-import org.apache.commons.compress.archivers.sevenz.SevenZFile;
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
 import org.apache.commons.compress.archivers.zip.ZipArchiveInputStream;
@@ -52,6 +52,7 @@ public class UnzipTask extends AsyncTask<Void, FileHelper.Progress, Boolean> {
     private DialogInterface.OnDismissListener onDismissListener;
 
     private String path;
+    private boolean z7success;
 
     public UnzipTask(Activity activity) {
         activityWeakReference = new WeakReference<>(activity);
@@ -251,52 +252,89 @@ public class UnzipTask extends AsyncTask<Void, FileHelper.Progress, Boolean> {
         return true;
     }
 
-    boolean unarchive7z(ExplorerItem item, int i) throws IOException {
-        SevenZFile sevenZFile;
-        SevenZArchiveEntry entry;
+    boolean unarchive7z(ExplorerItem item, final int i) throws IOException {
+        // un7z를 사용함
+        Z7Extractor extractor = new Z7Extractor();
 
-        sevenZFile = new SevenZFile(new File(item.path));
-        entry = sevenZFile.getNextEntry();
-        int size = 0;
+        extractor.extractFile(item.path, path, new ExtractCallback() {
+            int count;
+            int j;
 
-        while (entry != null) {
-            if (isCancelled())
-                return false;
+            @Override
+            public void onStart() {
 
-            size++;
-            entry = sevenZFile.getNextEntry();
-        }
-        sevenZFile.close();
+            }
 
-        sevenZFile = new SevenZFile(new File(item.path));
-        entry = sevenZFile.getNextEntry();
+            @Override
+            public void onGetFileNum(int fileNum) {
+                count = fileNum;
+            }
 
-        int j = 0;
-        while (entry != null) {
-            if (isCancelled())
-                return false;
+            @Override
+            public void onProgress(String name, long size) {
+                updateProgress(i, j, count, name);
+                j++;
+            }
 
-            updateProgress(i, j, size, entry.getName());
+            @Override
+            public void onError(int errorCode, String message) {
+                z7success = false;
+            }
 
-            // 하위 폴더가 없을때 만들어줌
-            String target = path + "/" + entry.getName();
-            new File(target).getParentFile().mkdirs();
+            @Override
+            public void onSucceed() {
+                z7success = true;
+            }
+        });
 
+        return z7success;
 
-            // 파일 복사 부분
-            FileOutputStream outputStream = new FileOutputStream(target);
-            byte[] content = new byte[(int) entry.getSize()];
-            sevenZFile.read(content, 0, content.length);
-            outputStream.write(content);
-            outputStream.close();
-
-
-            entry = sevenZFile.getNextEntry();
-            j++;
-        }
-
-        sevenZFile.close();
-        return true;
+        // apache common compress는 android에서 지원안됨
+//        SevenZFile sevenZFile;
+//        SevenZArchiveEntry entry;
+//
+//        sevenZFile = new SevenZFile(new File(item.path));
+//        entry = sevenZFile.getNextEntry();
+//        int size = 0;
+//
+//        while (entry != null) {
+//            if (isCancelled())
+//                return false;
+//
+//            size++;
+//            entry = sevenZFile.getNextEntry();
+//        }
+//        sevenZFile.close();
+//
+//        sevenZFile = new SevenZFile(new File(item.path));
+//        entry = sevenZFile.getNextEntry();
+//
+//        int j = 0;
+//        while (entry != null) {
+//            if (isCancelled())
+//                return false;
+//
+//            updateProgress(i, j, size, entry.getName());
+//
+//            // 하위 폴더가 없을때 만들어줌
+//            String target = path + "/" + entry.getName();
+//            new File(target).getParentFile().mkdirs();
+//
+//
+//            // 파일 복사 부분
+//            FileOutputStream outputStream = new FileOutputStream(target);
+//            byte[] content = new byte[(int) entry.getSize()];
+//            sevenZFile.read(content, 0, content.length);
+//            outputStream.write(content);
+//            outputStream.close();
+//
+//
+//            entry = sevenZFile.getNextEntry();
+//            j++;
+//        }
+//
+//        sevenZFile.close();
+//        return true;
     }
 
     boolean unarchiveZip(ExplorerItem item, int i) throws IOException {

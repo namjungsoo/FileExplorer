@@ -3,10 +3,14 @@ apply plugin: 'com.android.application'
 android {
     compileSdkVersion 27
     buildToolsVersion '26.0.2'
+    //NDK
+    publishNonDefault true
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_7
         targetCompatibility JavaVersion.VERSION_1_7
     }
+
     defaultConfig {
         applicationId 'com.duongame'
         buildConfigField "boolean", "SHOW_AD", "true"
@@ -15,13 +19,40 @@ android {
         targetSdkVersion 27
         versionCode 1
         versionName "1.0.0"
+        //NDK
+        ndk {
+            abiFilters 'armeabi', 'armeabi-v7a', 'arm64-v8a', 'x86'
+        }
+        externalNativeBuild {
+            cmake {
+                arguments '-DANDROID_PLATFORM=android-18'
+            }
+        }
     }
+
     buildTypes {
+        //NDK
+        debug {
+            externalNativeBuild {
+                cmake {
+                    cFlags.add('-DNATIVE_LOG')
+                }
+            }
+        }
+
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+    //NDK
+    externalNativeBuild {
+        cmake {
+            path 'src/main/cpp/CMakeLists.txt'
+        }
+    }
+
     flavorDimensions("project", "edition")
 
     productFlavors {
@@ -70,8 +101,8 @@ android {
             applicationIdSuffix '.free'
             dimension "edition"
         }
-
     }
+
     variantFilter { variant ->
         // 메인일 경우에 현재 사용하지 않으므로 무시하라
         if (variant.getFlavors().get(1).name.equals('main')) {

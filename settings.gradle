@@ -1,1 +1,1 @@
-include ':explorer', ':un7z'
+include ':explorer'

@@ -28,7 +28,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
@@ -198,32 +197,34 @@ public class ZipTask extends AsyncTask<Void, FileHelper.Progress, Boolean> {
     }
 
     boolean archive7z() {
-//        try {
-//            SevenZipArchiveOutputStream stream = new SevenZipArchiveOutputStream(new File(path));
-//
-//            for (int i = 0; i < zipList.size(); i++) {
-//                updateProgress(i, zipList.get(i).name);
-//
-//                File file = new File(zipList.get(i).path);
-//                SevenZipEntry sevenEntry = new SevenZipEntry();
-//                setSevenZipEntryAttributes(file, sevenEntry);
-//                stream.putNextEntry(sevenEntry);
-//
-//                FileInputStream inputStream = new FileInputStream(file);
-//                byte[] buf = new [8*1024];
-//                int len = 0;
-//                while((len = inputStream.read(buf)) != -1) {
-//                    stream.write(buf, 0, len);
-//                }
-//            }
-//
-//            stream.finish();
-//            stream.close();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//            return false;
-//        }
+        try {
+            // sevenzip4j
+            SevenZipArchiveOutputStream stream = new SevenZipArchiveOutputStream(new File(path));
 
+            for (int i = 0; i < zipList.size(); i++) {
+                updateProgress(i, zipList.get(i).name);
+
+                File file = new File(zipList.get(i).path);
+                SevenZipEntry sevenEntry = new SevenZipEntry();
+                setSevenZipEntryAttributes(file, sevenEntry);
+                stream.putNextEntry(sevenEntry);
+
+                FileInputStream inputStream = new FileInputStream(file);
+                byte[] buf = new byte[8*1024];
+                int len = 0;
+                while((len = inputStream.read(buf)) != -1) {
+                    stream.write(buf, 0, len);
+                }
+            }
+
+            stream.finish();
+            stream.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+
+        // apache common compress는 android에서 지원안됨
 //        try {
 //            SevenZOutputFile sevenZOutputFile = new SevenZOutputFile(new File(path));
 //            byte[] buffer = new byte[1024];
