@@ -26,6 +26,7 @@ public class DeleteTask extends AsyncTask<Void, Integer, Boolean> {
 
     private WeakReference<DeleteDialog> dialogWeakReference;
     private WeakReference<Activity> activityWeakReference;
+    private boolean cancelled;
 
     // 생성자에서 사용
     private DialogInterface.OnDismissListener onDismissListener;
@@ -107,6 +108,7 @@ public class DeleteTask extends AsyncTask<Void, Integer, Boolean> {
             // 파일을 하나하나 지운다.
             try {
                 if (isCancelled()) {
+                    cancelled = true;
                     return false;
                 } else {
                     work(deleteList.get(i).path);
@@ -114,10 +116,6 @@ public class DeleteTask extends AsyncTask<Void, Integer, Boolean> {
                 }
             } catch (SecurityException e) {
                 // 지울수 없는 파일
-                Activity activity = activityWeakReference.get();
-                if (activity != null) {
-                    ToastHelper.showToast(activity, R.string.toast_error);
-                }
                 return false;
             }
         }
@@ -163,8 +161,12 @@ public class DeleteTask extends AsyncTask<Void, Integer, Boolean> {
         if (activity != null) {
             if (result)
                 ToastHelper.showToast(activity, R.string.toast_file_delete);
-            else
-                ToastHelper.showToast(activity, R.string.toast_cancel);
+            else {
+                if(cancelled)
+                    ToastHelper.showToast(activity, R.string.toast_cancel);
+                else
+                    ToastHelper.showToast(activity, R.string.toast_error);
+            }
         }
 
         DeleteDialog dialog = dialogWeakReference.get();

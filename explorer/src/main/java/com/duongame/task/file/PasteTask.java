@@ -50,6 +50,8 @@ public class PasteTask extends AsyncTask<Void, FileHelper.Progress, Boolean> {
     private final Object lock;
     private boolean applyAll, skip, cancel;
 
+    private boolean cancelled;
+
     public PasteTask(Activity activity) {
         activityWeakReference = new WeakReference<Activity>(activity);
         lock = new Object();
@@ -146,6 +148,7 @@ public class PasteTask extends AsyncTask<Void, FileHelper.Progress, Boolean> {
             // 파일을 하나하나 지운다.
             try {
                 if (isCancelled()) {
+                    cancelled = true;
                     return false;
                 } else {
                     if (!work(i, pasteList.get(i).path)) {
@@ -154,17 +157,9 @@ public class PasteTask extends AsyncTask<Void, FileHelper.Progress, Boolean> {
                 }
             } catch (SecurityException e) {
                 // 지울수 없는 파일
-                Activity activity = activityWeakReference.get();
-                if (activity != null) {
-                    ToastHelper.showToast(activity, R.string.toast_error);
-                }
                 return false;
             } catch (InterruptedException e) {
                 // 지울수 없는 파일
-                Activity activity = activityWeakReference.get();
-                if (activity != null) {
-                    ToastHelper.showToast(activity, R.string.toast_error);
-                }
                 return false;
             }
         }
@@ -417,7 +412,10 @@ public class PasteTask extends AsyncTask<Void, FileHelper.Progress, Boolean> {
                 else
                     ToastHelper.showToast(activity, R.string.toast_file_paste_copy);
             } else {
-                ToastHelper.showToast(activity, R.string.toast_cancel);
+                if(cancelled)
+                    ToastHelper.showToast(activity, R.string.toast_cancel);
+                else
+                    ToastHelper.showToast(activity, R.string.toast_error);
             }
         }
 
