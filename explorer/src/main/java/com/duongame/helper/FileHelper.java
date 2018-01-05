@@ -18,6 +18,7 @@ public class FileHelper {
     private static final long MEGA = 1024 * 1024;
     private static final long KILO = 1024;
     private static final long GIGA = 1024 * 1024 * 1024;
+    public static final int BLOCK_SIZE = 8 * (int)KILO;
 
     public static class Progress {
         public int percent;

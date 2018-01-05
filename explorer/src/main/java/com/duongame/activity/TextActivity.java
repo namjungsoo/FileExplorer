@@ -31,6 +31,7 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
 import static com.duongame.db.TextBook.LINES_PER_PAGE;
+import static com.duongame.helper.FileHelper.BLOCK_SIZE;
 
 /**
  * Created by namjungsoo on 2016-11-18.
@@ -274,7 +275,7 @@ public class TextActivity extends ViewerActivity {
         }
 
         private String checkEncoding(String fileName) {
-            byte[] buf = new byte[4096];
+            byte[] buf = new byte[BLOCK_SIZE];
             final FileInputStream fileInputStream;
             try {
                 fileInputStream = new FileInputStream(fileName);

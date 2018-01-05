@@ -18,7 +18,6 @@ import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
 import org.apache.commons.compress.archivers.zip.ZipArchiveInputStream;
 import org.apache.commons.compress.compressors.bzip2.BZip2CompressorInputStream;
 import org.apache.commons.compress.compressors.gzip.GzipCompressorInputStream;
-import org.apache.commons.io.IOUtils;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -27,6 +26,8 @@ import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.zip.ZipEntry;
+
+import static com.duongame.helper.FileHelper.BLOCK_SIZE;
 
 /**
  * Created by namjungsoo on 2017-12-31.
@@ -111,6 +112,7 @@ public class UnzipTask extends AsyncTask<Void, FileHelper.Progress, Boolean> {
     }
 
     boolean unarchiveRar(ExplorerItem item, int i) throws IOException {
+        // 현재 동작안되고 다운됨
 //        try {
 //            Archive archive;
 //            FileHeader header;
@@ -162,6 +164,7 @@ public class UnzipTask extends AsyncTask<Void, FileHelper.Progress, Boolean> {
 
     boolean unarchiveGzip(ExplorerItem item, int i) throws IOException {
         String tar;
+        byte[] buf = new byte[BLOCK_SIZE];
         if (item.path.toLowerCase().endsWith(".tgz")) {
             tar = item.path.replace(".tgz", ".tar");
         } else {
@@ -170,11 +173,16 @@ public class UnzipTask extends AsyncTask<Void, FileHelper.Progress, Boolean> {
 
         GzipCompressorInputStream stream = new GzipCompressorInputStream(new FileInputStream(item.path));
         FileOutputStream outputStream = new FileOutputStream(tar);
-        IOUtils.copy(stream, outputStream);
+
+        int nread = 0;
+        while((nread = stream.read(buf)) > 0) {
+            outputStream.write(buf, 0, nread);
+        }
 
         if (tar.toLowerCase().endsWith(".tar")) {
             if (!unarchiveTar(tar, i))
                 return false;
+
             // tar 파일 삭제
             new File(tar).delete();
         }
@@ -182,6 +190,7 @@ public class UnzipTask extends AsyncTask<Void, FileHelper.Progress, Boolean> {
     }
 
     boolean unarchiveBzip2(ExplorerItem item, int i) throws IOException {
+        byte[] buf = new byte[BLOCK_SIZE];
         String tar;
         if (item.path.toLowerCase().endsWith(".tbz2")) {
             tar = item.path.replace(".tbz2", ".tar");
@@ -191,7 +200,11 @@ public class UnzipTask extends AsyncTask<Void, FileHelper.Progress, Boolean> {
 
         BZip2CompressorInputStream stream = new BZip2CompressorInputStream(new FileInputStream(item.path));
         FileOutputStream outputStream = new FileOutputStream(tar);
-        IOUtils.copy(stream, outputStream);
+
+        int nread = 0;
+        while((nread = stream.read(buf)) > 0) {
+            outputStream.write(buf, 0, nread);
+        }
 
         if (tar.toLowerCase().endsWith(".tar")) {
             if (!unarchiveTar(tar, i))
@@ -207,6 +220,7 @@ public class UnzipTask extends AsyncTask<Void, FileHelper.Progress, Boolean> {
     boolean unarchiveTar(String path, int i) throws IOException {
         TarArchiveInputStream stream;
         TarArchiveEntry entry;
+        byte[] buf = new byte[BLOCK_SIZE];
 
         stream = new TarArchiveInputStream(new FileInputStream(path));
         entry = (TarArchiveEntry) stream.getNextEntry();
@@ -221,7 +235,6 @@ public class UnzipTask extends AsyncTask<Void, FileHelper.Progress, Boolean> {
             entry = (TarArchiveEntry) stream.getNextEntry();
         }
         stream.close();
-
 
         stream = new TarArchiveInputStream(new FileInputStream(path));
         entry = (TarArchiveEntry) stream.getNextEntry();
@@ -239,9 +252,11 @@ public class UnzipTask extends AsyncTask<Void, FileHelper.Progress, Boolean> {
 
             // 파일 복사 부분
             FileOutputStream outputStream = new FileOutputStream(target);
-            IOUtils.copy(stream, outputStream);
+            int nread = 0;
+            while((nread = stream.read(buf)) > 0) {
+                outputStream.write(buf, 0, nread);
+            }
             outputStream.close();
-
 
             entry = (TarArchiveEntry) stream.getNextEntry();
             j++;
@@ -288,53 +303,6 @@ public class UnzipTask extends AsyncTask<Void, FileHelper.Progress, Boolean> {
         });
 
         return z7success;
-
-        // apache common compress는 android에서 지원안됨
-//        SevenZFile sevenZFile;
-//        SevenZArchiveEntry entry;
-//
-//        sevenZFile = new SevenZFile(new File(item.path));
-//        entry = sevenZFile.getNextEntry();
-//        int size = 0;
-//
-//        while (entry != null) {
-//            if (isCancelled())
-//                return false;
-//
-//            size++;
-//            entry = sevenZFile.getNextEntry();
-//        }
-//        sevenZFile.close();
-//
-//        sevenZFile = new SevenZFile(new File(item.path));
-//        entry = sevenZFile.getNextEntry();
-//
-//        int j = 0;
-//        while (entry != null) {
-//            if (isCancelled())
-//                return false;
-//
-//            updateProgress(i, j, size, entry.getName());
-//
-//            // 하위 폴더가 없을때 만들어줌
-//            String target = path + "/" + entry.getName();
-//            new File(target).getParentFile().mkdirs();
-//
-//
-//            // 파일 복사 부분
-//            FileOutputStream outputStream = new FileOutputStream(target);
-//            byte[] content = new byte[(int) entry.getSize()];
-//            sevenZFile.read(content, 0, content.length);
-//            outputStream.write(content);
-//            outputStream.close();
-//
-//
-//            entry = sevenZFile.getNextEntry();
-//            j++;
-//        }
-//
-//        sevenZFile.close();
-//        return true;
     }
 
     boolean unarchiveZip(ExplorerItem item, int i) throws IOException {
@@ -359,6 +327,7 @@ public class UnzipTask extends AsyncTask<Void, FileHelper.Progress, Boolean> {
         entry = (ZipEntry) stream.getNextEntry();
 
         int j = 0;
+        byte[] buf = new byte[BLOCK_SIZE];
         while (entry != null) {
             if (isCancelled())
                 return false;
@@ -372,7 +341,12 @@ public class UnzipTask extends AsyncTask<Void, FileHelper.Progress, Boolean> {
 
             // 파일 복사 부분 
             FileOutputStream outputStream = new FileOutputStream(target);
-            IOUtils.copy(stream, outputStream);
+
+            int nread = 0;
+            while((nread = stream.read(buf)) > 0) {
+                outputStream.write(buf, 0, nread);
+            }
+
             outputStream.close();
 
 

@@ -26,6 +26,8 @@ import java.nio.channels.FileChannel;
 import java.nio.channels.WritableByteChannel;
 import java.util.ArrayList;
 
+import static com.duongame.helper.FileHelper.BLOCK_SIZE;
+
 /**
  * Created by namjungsoo on 2017-12-29.
  */
@@ -229,9 +231,8 @@ public class PasteTask extends AsyncTask<Void, FileHelper.Progress, Boolean> {
             WritableCallbackByteChannel writableCallbackByteChannel = new WritableCallbackByteChannel(outputChannel, src.length(), i);
 //            JLog.e("TAG", "workDirect transferTo");
             long position = 0;
-            final long blockSize = 8 * 1024;// 8kb
-            while (inputChannel.transferTo(position, blockSize, writableCallbackByteChannel) > 0) {
-                position += blockSize;
+            while (inputChannel.transferTo(position, BLOCK_SIZE, writableCallbackByteChannel) > 0) {
+                position += BLOCK_SIZE;
             }
         }
     }

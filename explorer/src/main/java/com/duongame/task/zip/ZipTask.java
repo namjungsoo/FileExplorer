@@ -18,8 +18,6 @@ import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
 import org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream;
 import org.apache.commons.compress.compressors.bzip2.BZip2CompressorOutputStream;
 import org.apache.commons.compress.compressors.gzip.GzipCompressorOutputStream;
-import org.apache.commons.io.IOUtils;
-import org.sevenzip4j.SevenZipArchiveOutputStream;
 import org.sevenzip4j.archive.SevenZipEntry;
 
 import java.io.BufferedOutputStream;
@@ -30,6 +28,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+
+import static com.duongame.helper.FileHelper.BLOCK_SIZE;
 
 /**
  * Created by namjungsoo on 2017-12-31.
@@ -100,6 +100,8 @@ public class ZipTask extends AsyncTask<Void, FileHelper.Progress, Boolean> {
         TarArchiveOutputStream stream = null;
         try {
             stream = new TarArchiveOutputStream(new FileOutputStream(tar));
+            byte[] buf = new byte[BLOCK_SIZE];
+
             for (int i = 0; i < zipList.size(); i++) {
                 updateProgress(i, zipList.get(i).name);
 
@@ -107,7 +109,12 @@ public class ZipTask extends AsyncTask<Void, FileHelper.Progress, Boolean> {
                 FileInputStream inputStream = new FileInputStream(zipList.get(i).path);
 
                 stream.putArchiveEntry(entry);
-                IOUtils.copy(inputStream, stream);
+
+                int nread = 0;
+                while((nread = inputStream.read(buf)) > 0) {
+                    stream.write(buf, 0, nread);
+                }
+
                 stream.closeArchiveEntry();
             }
 
@@ -135,10 +142,15 @@ public class ZipTask extends AsyncTask<Void, FileHelper.Progress, Boolean> {
         try {
             // gzip 압축
             FileInputStream inputStream = new FileInputStream(new File(tar));
+            byte[] buf = new byte[BLOCK_SIZE];
+
             BufferedOutputStream outputStream = new BufferedOutputStream(new FileOutputStream(path));
             GzipCompressorOutputStream stream = new GzipCompressorOutputStream(outputStream);
 
-            IOUtils.copy(inputStream, stream);
+            int nread = 0;
+            while((nread = inputStream.read(buf)) > 0) {
+                stream.write(buf, 0, nread);
+            }
 
             stream.close();
             inputStream.close();
@@ -164,10 +176,15 @@ public class ZipTask extends AsyncTask<Void, FileHelper.Progress, Boolean> {
         try {
             // gzip 압축
             FileInputStream inputStream = new FileInputStream(new File(tar));
+            byte[] buf = new byte[BLOCK_SIZE];
+
             BufferedOutputStream outputStream = new BufferedOutputStream(new FileOutputStream(path));
             BZip2CompressorOutputStream stream = new BZip2CompressorOutputStream(outputStream);
 
-            IOUtils.copy(inputStream, stream);
+            int nread = 0;
+            while((nread = inputStream.read(buf)) > 0) {
+                stream.write(buf, 0, nread);
+            }
 
             stream.close();
             inputStream.close();
@@ -196,33 +213,34 @@ public class ZipTask extends AsyncTask<Void, FileHelper.Progress, Boolean> {
         sevenEntry.setSystem(false);
     }
 
+    // 현재 지원 안됨
     boolean archive7z() {
-        try {
-            // sevenzip4j
-            SevenZipArchiveOutputStream stream = new SevenZipArchiveOutputStream(new File(path));
-
-            for (int i = 0; i < zipList.size(); i++) {
-                updateProgress(i, zipList.get(i).name);
-
-                File file = new File(zipList.get(i).path);
-                SevenZipEntry sevenEntry = new SevenZipEntry();
-                setSevenZipEntryAttributes(file, sevenEntry);
-                stream.putNextEntry(sevenEntry);
-
-                FileInputStream inputStream = new FileInputStream(file);
-                byte[] buf = new byte[8*1024];
-                int len = 0;
-                while((len = inputStream.read(buf)) != -1) {
-                    stream.write(buf, 0, len);
-                }
-            }
-
-            stream.finish();
-            stream.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-            return false;
-        }
+//        try {
+//            // sevenzip4j
+//            SevenZipArchiveOutputStream stream = new SevenZipArchiveOutputStream(new File(path));
+//
+//            byte[] buf = new byte[BLOCK_SIZE];
+//            for (int i = 0; i < zipList.size(); i++) {
+//                updateProgress(i, zipList.get(i).name);
+//
+//                File file = new File(zipList.get(i).path);
+//                SevenZipEntry sevenEntry = new SevenZipEntry();
+//                setSevenZipEntryAttributes(file, sevenEntry);
+//                stream.putNextEntry(sevenEntry);
+//
+//                FileInputStream inputStream = new FileInputStream(file);
+//                int nread = 0;
+//                while((nread = inputStream.read(buf)) > 0) {
+//                    stream.write(buf, 0, nread);
+//                }
+//            }
+//
+//            stream.finish();
+//            stream.close();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//            return false;
+//        }
 
         // apache common compress는 android에서 지원안됨
 //        try {
@@ -257,6 +275,8 @@ public class ZipTask extends AsyncTask<Void, FileHelper.Progress, Boolean> {
     boolean archiveZip() {
         try {
             ZipArchiveOutputStream stream = new ZipArchiveOutputStream(new File(path));
+            byte[] buf = new byte[BLOCK_SIZE];
+
             for (int i = 0; i < zipList.size(); i++) {
                 updateProgress(i, zipList.get(i).name);
 
@@ -264,7 +284,12 @@ public class ZipTask extends AsyncTask<Void, FileHelper.Progress, Boolean> {
                 FileInputStream inputStream = new FileInputStream(zipList.get(i).path);
 
                 stream.putArchiveEntry(entry);
-                IOUtils.copy(inputStream, stream);
+
+                int nread = 0;
+                while((nread = inputStream.read(buf)) > 0) {
+                    stream.write(buf, 0, nread);
+                }
+
                 stream.closeArchiveEntry();
             }
 
@@ -325,7 +350,7 @@ public class ZipTask extends AsyncTask<Void, FileHelper.Progress, Boolean> {
         switch (type) {
             case ZIP:
                 return archiveZip();
-                // 구현이 완료될때까지 막아둠 
+                // 구현이 완료될때까지 막아둠
 //            case SEVENZIP:
 //                return archive7z();
             case GZIP:

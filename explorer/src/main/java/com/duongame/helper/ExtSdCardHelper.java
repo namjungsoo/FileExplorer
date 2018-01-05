@@ -4,6 +4,8 @@ import java.io.InputStream;
 import java.util.HashSet;
 import java.util.Locale;
 
+import static com.duongame.helper.FileHelper.BLOCK_SIZE;
+
 /**
  * Created by namjungsoo on 2017-01-22.
  */
@@ -18,7 +20,7 @@ public class ExtSdCardHelper {
                     .redirectErrorStream(true).start();
             process.waitFor();
             final InputStream is = process.getInputStream();
-            final byte[] buffer = new byte[1024];
+            final byte[] buffer = new byte[BLOCK_SIZE];
             while (is.read(buffer) != -1) {
                 s = s + new String(buffer);
             }
