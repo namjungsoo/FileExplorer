@@ -33,6 +33,10 @@ public class FileHelper {
         return formatter.format(size);
     }
 
+    public static String getFileName(String path) {
+        return path.substring(path.lastIndexOf("/") + 1);
+    }
+
     // Zip 압축을 풀때 기존에 폴더가 있으면 새로운 폴더명으로 풀어준다.
     // 폴더를 생성할때는 새로운 폴더명이 있으면 있다고 확인을 한다.
     public static String getNewFileName(String path) {

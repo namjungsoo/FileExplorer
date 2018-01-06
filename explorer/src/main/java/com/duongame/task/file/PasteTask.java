@@ -25,6 +25,7 @@ import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 import java.nio.channels.WritableByteChannel;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import static com.duongame.helper.FileHelper.BLOCK_SIZE;
 
@@ -51,6 +52,7 @@ public class PasteTask extends AsyncTask<Void, FileHelper.Progress, Boolean> {
     private boolean applyAll, skip, cancel;
 
     private boolean cancelled;
+    private HashMap<String, String> srcNewFolderMap;
 
     public PasteTask(Activity activity) {
         activityWeakReference = new WeakReference<Activity>(activity);
@@ -72,6 +74,7 @@ public class PasteTask extends AsyncTask<Void, FileHelper.Progress, Boolean> {
         this.pastePath = pastePath;
         if (capturePath.equals(pastePath)) {
             makeCopy = true;
+            srcNewFolderMap = new HashMap<>();
         }
     }
 
@@ -106,7 +109,43 @@ public class PasteTask extends AsyncTask<Void, FileHelper.Progress, Boolean> {
         }
     }
 
-    void makePasteList() {
+    FileSearcher.Result searchFile(String path) {
+        FileSearcher searcher = new FileSearcher();
+        FileSearcher.Result result = searcher.setRecursiveDirectory(true)
+                .setHiddenFile(true)
+                .setExcludeDirectory(false)
+                .setImageListEnable(false)
+                .search(path);
+        return result;
+    }
+
+    void prepareFolder(FileSearcher.Result result, String path) {
+        // 폴더 하위 파일의 경우에는 폴더 이름과 파일명을 적어줌
+        if (result != null && result.fileList != null) {
+            for (int j = 0; j < result.fileList.size(); j++) {
+                prepareLocalPathToName(result, path, j);
+            }
+            // 7ztest/_DSC5307.jpg
+            pasteList.addAll(result.fileList);
+        }
+    }
+
+    void prepareLocalPathToName(FileSearcher.Result result, String path, int j) {
+        // 선택된 폴더의 최상위 폴더의 폴더명을 제외한 나머지가 name임
+        ExplorerItem subItem = result.fileList.get(j);
+        if (!subItem.path.startsWith(path))
+            return;
+
+        // 상대 패스를 만들어 줌
+        // 이거는 Download
+        // item.path는 7ztest
+        String parentPath = FileHelper.getParentPath(path);
+
+        // 이 결과를 이름에 박아둠
+        subItem.name = subItem.path.replace(FileHelper.getParentPath(path) + "/", "");
+    }
+
+    void preparePasteList() {
         pasteList = new ArrayList<>();
 
         // fileList에는 선택된 파일만 들어옴
@@ -115,25 +154,9 @@ public class PasteTask extends AsyncTask<Void, FileHelper.Progress, Boolean> {
 
             if (item.type == ExplorerItem.FileType.FOLDER) {
                 // 폴더의 경우 하위 모든 아이템을 찾은뒤에 더한다.
-                FileSearcher searcher = new FileSearcher();
-                FileSearcher.Result result = searcher.setRecursiveDirectory(true)
-                        .setHiddenFile(true)
-                        .setExcludeDirectory(false)
-                        .setImageListEnable(false)
-                        .search(item.path);
+                FileSearcher.Result result = searchFile(item.path);
 
-                // 폴더 하위 파일의 경우에는 폴더 이름과 파일명을 적어줌
-                if (result != null && result.fileList != null) {
-                    for (int j = 0; j < result.fileList.size(); j++) {
-
-                        // 선택된 폴더의 최상위 폴더의 폴더명을 제외한 나머지가 name임
-                        ExplorerItem subItem = result.fileList.get(j);
-                        if (subItem.path.startsWith(item.path)) {
-                            subItem.name = subItem.path.replace(FileHelper.getParentPath(item.path) + "/", "");
-                        }
-                    }
-                    pasteList.addAll(result.fileList);
-                }
+                prepareFolder(result, item.path);
 
                 // 폴더 자기 자신도 더함
                 pasteList.add(item);
@@ -151,7 +174,7 @@ public class PasteTask extends AsyncTask<Void, FileHelper.Progress, Boolean> {
                     cancelled = true;
                     return false;
                 } else {
-                    if (!work(i, pasteList.get(i).path)) {
+                    if (!process(i, pasteList.get(i).path)) {
                         return false;
                     }
                 }
@@ -168,7 +191,7 @@ public class PasteTask extends AsyncTask<Void, FileHelper.Progress, Boolean> {
 
     @Override
     protected Boolean doInBackground(Void... voids) {
-        makePasteList();
+        preparePasteList();
         return processTask();
     }
 
@@ -204,14 +227,14 @@ public class PasteTask extends AsyncTask<Void, FileHelper.Progress, Boolean> {
         publishProgress(progress);
     }
 
-    void workDirect(int i, File src, File dest) throws IOException {
+    void processInternal(int i, File src, File dest) throws IOException {
         if (cut) {
             // 이동한다.
             FileUtils.moveFile(src, dest);
             updateProgress(i, 100);
         } else {
             // 복사한다.
-//            JLog.e("TAG", "workDirect copy");
+//            JLog.e("TAG", "processInternal copy");
             FileInputStream inputStream = new FileInputStream(src);
             FileChannel inputChannel = inputStream.getChannel();
 
@@ -219,12 +242,12 @@ public class PasteTask extends AsyncTask<Void, FileHelper.Progress, Boolean> {
             FileChannel outputChannel = outputStream.getChannel();
 
 //            ReadableCallbackByteChannel readableCallbackByteChannel = new ReadableCallbackByteChannel(inputChannel, src.length(), i);
-//            JLog.e("TAG", "workDirect transferFrom");
+//            JLog.e("TAG", "processInternal transferFrom");
 //            outputChannel.transferFrom(readableCallbackByteChannel, 0, src.length());
 
 //            JLog.e("TAG", "maxMemory=" + Runtime.getRuntime().maxMemory() + " freeMemory=" + Runtime.getRuntime().freeMemory());
             WritableCallbackByteChannel writableCallbackByteChannel = new WritableCallbackByteChannel(outputChannel, src.length(), i);
-//            JLog.e("TAG", "workDirect transferTo");
+//            JLog.e("TAG", "processInternal transferTo");
             long position = 0;
             while (inputChannel.transferTo(position, BLOCK_SIZE, writableCallbackByteChannel) > 0) {
                 position += BLOCK_SIZE;
@@ -232,24 +255,7 @@ public class PasteTask extends AsyncTask<Void, FileHelper.Progress, Boolean> {
         }
     }
 
-    boolean work(int i, String srcPath) throws InterruptedException {
-        File src = new File(srcPath);
-
-        // 원본의 패스를 없애고 파일명과 확장자만 얻어옴
-        String bodyPath = srcPath.replace(capturePath, "");
-        String destPath = pastePath + bodyPath;
-
-        // 대상 폴더의 상위폴더까지 무조건 생성
-        String parentPath = FileHelper.getParentPath(destPath);
-        File parent = new File(parentPath);
-        parent.mkdirs();
-
-        // 사본 생성 모드이면 새로운 파일 이름을 얻음
-        if (makeCopy)
-            destPath = FileHelper.getNewFileName(destPath);
-
-        File dest = new File(destPath);
-
+    boolean checkOverwrite(File dest, String destPath) throws InterruptedException {
         // 대상 파일이 있는 경우 팝업을 물어보고 지우거나/스킵하거나/덮어씌운다.
         if (!applyAll && dest.exists()) {
             // 팝업을 띄운다.
@@ -268,11 +274,70 @@ public class PasteTask extends AsyncTask<Void, FileHelper.Progress, Boolean> {
                 dest.delete();
             }
         }
+        return true;
+    }
+
+    void processParentFolder(String destPath) {
+        // 대상 폴더의 상위폴더까지 무조건 생성
+        String parentPath = FileHelper.getParentPath(destPath);
+        File parent = new File(parentPath);
+        parent.mkdirs();
+    }
+
+    String processDestPath(String srcPath) {
+        // 원본의 패스를 없애고 파일명과 확장자만 얻어옴
+        String relativePath = srcPath.replace(capturePath + "/", "");// 상대적인 패스
+
+        // makeCopy일때 상대패스가 폴더를 포함하면
+        if (makeCopy) {// 이때는 pastePath와 capturePath가 같다.
+            if (relativePath.contains("/")) {
+                // 첫번째 폴더명과 이후의 패스를 분리함
+                String subPath = relativePath.substring(relativePath.indexOf("/") + 1);
+
+                // 첫번째 패스만을 골라낸다.
+                String copyPath = capturePath + "/" + relativePath.substring(0, relativePath.indexOf("/"));
+
+                String newPath;
+                if (srcNewFolderMap.containsKey(copyPath)) {
+                    newPath = srcNewFolderMap.get(copyPath);
+                } else {
+                    // 첫번째 패스의 새로운 패스를 찾는다.
+                    newPath = FileHelper.getNewFileName(copyPath);
+                    srcNewFolderMap.put(copyPath, newPath);
+                }
+
+                // 새로운 패스 + 이후의 패스
+                return newPath + "/" + subPath;
+            } else {
+                return FileHelper.getNewFileName(pastePath + relativePath);
+            }
+        } else {
+            return pastePath + relativePath;// 대상 패스 + 상대적인 패스
+        }
+    }
+
+    // srcPath는 pasteList로부터 가져온 패스의 원본
+    boolean process(int i, String srcPath) throws InterruptedException {
+        File src = new File(srcPath);
+        String destPath = processDestPath(srcPath);
+
+        // 1 depth의 폴더가 이미 있을 경우에는 폴더를 새로 만들어줌
+        // 그리고 이하의 모든 패스를 변경하여야 함
+        processParentFolder(destPath);
+
+        // 사본 생성 모드이면 새로운 파일 이름을 얻음
+        // 여기서 하지 않고 paste list 생성쪽에서 진행함
+//        if (makeCopy)
+//            destPath = FileHelper.getNewFileName(destPath);
+
+        File dest = new File(destPath);
+        if (!checkOverwrite(dest, destPath))
+            return false;
 
         // skip이 아니면, 위에서 이미 지웠으니 무조건 overwrite이다.
         if (!skip) {
             try {
-                workDirect(i, src, dest);
+                processInternal(i, src, dest);
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
                 return false;
@@ -412,7 +477,7 @@ public class PasteTask extends AsyncTask<Void, FileHelper.Progress, Boolean> {
                 else
                     ToastHelper.showToast(activity, R.string.toast_file_paste_copy);
             } else {
-                if(cancelled)
+                if (cancelled)
                     ToastHelper.showToast(activity, R.string.toast_cancel);
                 else
                     ToastHelper.showToast(activity, R.string.toast_error);
