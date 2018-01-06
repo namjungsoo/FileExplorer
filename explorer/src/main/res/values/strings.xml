@@ -44,6 +44,7 @@
     <string name="each_text">%d%%</string>
     <string name="total_text">%1$d/%2$d (%3$d%%)</string>
 
+    <!-- 새로운 부분 -->
     <string name="copy">Copy</string>
     <string name="cut">Cut</string>
     <string name="paste">Paste</string>
@@ -103,5 +104,3 @@
     </string-array>
 
 </resources>
-<!--<string name="dialog_review_title">Please support Comic Viewer</string>-->
-<!--<string name="dialog_review_content">Are you enjoying Comic Viewer? Please leave a review for us!</string>-->
