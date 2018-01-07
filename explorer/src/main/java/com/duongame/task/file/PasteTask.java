@@ -11,6 +11,7 @@ import com.duongame.dialog.OverwriteDialog;
 import com.duongame.dialog.PasteDialog;
 import com.duongame.helper.FileHelper;
 import com.duongame.helper.FileSearcher;
+import com.duongame.helper.JLog;
 import com.duongame.helper.ToastHelper;
 
 import org.apache.commons.io.FileUtils;
@@ -21,9 +22,6 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
-import java.nio.ByteBuffer;
-import java.nio.channels.FileChannel;
-import java.nio.channels.WritableByteChannel;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -222,7 +220,7 @@ public class PasteTask extends AsyncTask<Void, FileHelper.Progress, Boolean> {
         // progress를 기입해야 한다.
         FileHelper.Progress progress = new FileHelper.Progress();
         progress.index = i;
-        progress.percent = 100;
+        progress.percent = percent;
 
         publishProgress(progress);
     }
@@ -235,23 +233,28 @@ public class PasteTask extends AsyncTask<Void, FileHelper.Progress, Boolean> {
         } else {
             // 복사한다.
 //            JLog.e("TAG", "processInternal copy");
+
             FileInputStream inputStream = new FileInputStream(src);
-            FileChannel inputChannel = inputStream.getChannel();
-
             FileOutputStream outputStream = new FileOutputStream(dest);
-            FileChannel outputChannel = outputStream.getChannel();
 
-//            ReadableCallbackByteChannel readableCallbackByteChannel = new ReadableCallbackByteChannel(inputChannel, src.length(), i);
-//            JLog.e("TAG", "processInternal transferFrom");
-//            outputChannel.transferFrom(readableCallbackByteChannel, 0, src.length());
+            byte[] buf = new byte[BLOCK_SIZE];
+            int nRead = 0;
+            long totalRead = 0;
 
-//            JLog.e("TAG", "maxMemory=" + Runtime.getRuntime().maxMemory() + " freeMemory=" + Runtime.getRuntime().freeMemory());
-            WritableCallbackByteChannel writableCallbackByteChannel = new WritableCallbackByteChannel(outputChannel, src.length(), i);
-//            JLog.e("TAG", "processInternal transferTo");
-            long position = 0;
-            while (inputChannel.transferTo(position, BLOCK_SIZE, writableCallbackByteChannel) > 0) {
-                position += BLOCK_SIZE;
+            long srcLength = src.length();
+
+            while ((nRead = inputStream.read(buf)) > 0) {
+                outputStream.write(buf, 0, nRead);
+                totalRead += nRead;
+
+                long percent = totalRead * 100 / srcLength;
+                JLog.e("TAG", "percent=" + percent + " totalRead=" + totalRead + " srcLength=" + srcLength);
+
+                updateProgress(i, (int) percent);
             }
+
+            outputStream.close();
+            inputStream.close();
         }
     }
 
@@ -309,10 +312,10 @@ public class PasteTask extends AsyncTask<Void, FileHelper.Progress, Boolean> {
                 // 새로운 패스 + 이후의 패스
                 return newPath + "/" + subPath;
             } else {
-                return FileHelper.getNewFileName(pastePath + relativePath);
+                return FileHelper.getNewFileName(pastePath + "/" + relativePath);
             }
         } else {
-            return pastePath + relativePath;// 대상 패스 + 상대적인 패스
+            return pastePath + "/" + relativePath;// 대상 패스 + 상대적인 패스
         }
     }
 
@@ -347,91 +350,6 @@ public class PasteTask extends AsyncTask<Void, FileHelper.Progress, Boolean> {
             }
         }
         return true;
-    }
-
-//    class ReadableCallbackByteChannel implements ReadableByteChannel {
-//        ReadableByteChannel rbc;
-//        long sizeRead;
-//        long size;
-//        int index;
-//
-//        ReadableCallbackByteChannel(ReadableByteChannel rbc, long size, int i) {
-//            this.rbc = rbc;
-//            this.size = size;
-//            index = i;
-//        }
-//
-//        @Override
-//        public int read(ByteBuffer src) throws IOException {
-//            int n;
-//            int percent;
-//            if ((n = rbc.read(src)) > 0) {
-//                sizeRead += n;
-//                percent = (int) (sizeRead * 100 / size);
-//                JLog.e("TAG", "WritableCallbackByteChannel write i=" + index + " percent=" + percent);
-//
-//                // callback 영역
-//                Progress progress = new Progress();
-//                progress.index = index;
-//                progress.percent = percent;
-//
-//                publishProgress(progress);
-//            }
-//            return n;
-//        }
-//
-//        @Override
-//        public boolean isOpen() {
-//            return rbc.isOpen();
-//        }
-//
-//        @Override
-//        public void close() throws IOException {
-//            rbc.close();
-//        }
-//    }
-
-    class WritableCallbackByteChannel implements WritableByteChannel {
-
-        private WritableByteChannel wbc;
-        private long sizeWritten;
-        private long size;
-        private int index;
-
-        WritableCallbackByteChannel(WritableByteChannel wbc, long size, int i) {
-            this.wbc = wbc;
-            this.size = size;
-            index = i;
-        }
-
-        @Override
-        public int write(ByteBuffer src) throws IOException {
-            int n;
-            int percent;
-            if ((n = wbc.write(src)) > 0) {
-                sizeWritten += n;
-                percent = (int) (sizeWritten * 100 / size);
-//                JLog.e("TAG", "WritableCallbackByteChannel write i=" + index + " percent=" + percent);
-
-                // callback 영역
-                FileHelper.Progress progress = new FileHelper.Progress();
-                progress.index = index;
-                progress.percent = percent;
-
-                publishProgress(progress);
-            }
-            return n;
-        }
-
-        @Override
-        public boolean isOpen() {
-            return wbc.isOpen();
-        }
-
-        @Override
-        public void close() throws IOException {
-            wbc.close();
-        }
     }
 
     @Override

@@ -174,9 +174,9 @@ public class UnzipTask extends AsyncTask<Void, FileHelper.Progress, Boolean> {
         GzipCompressorInputStream stream = new GzipCompressorInputStream(new FileInputStream(item.path));
         FileOutputStream outputStream = new FileOutputStream(tar);
 
-        int nread = 0;
-        while((nread = stream.read(buf)) > 0) {
-            outputStream.write(buf, 0, nread);
+        int nRead = 0;
+        while((nRead = stream.read(buf)) > 0) {
+            outputStream.write(buf, 0, nRead);
         }
 
         if (tar.toLowerCase().endsWith(".tar")) {
@@ -201,9 +201,9 @@ public class UnzipTask extends AsyncTask<Void, FileHelper.Progress, Boolean> {
         BZip2CompressorInputStream stream = new BZip2CompressorInputStream(new FileInputStream(item.path));
         FileOutputStream outputStream = new FileOutputStream(tar);
 
-        int nread = 0;
-        while((nread = stream.read(buf)) > 0) {
-            outputStream.write(buf, 0, nread);
+        int nRead = 0;
+        while((nRead = stream.read(buf)) > 0) {
+            outputStream.write(buf, 0, nRead);
         }
 
         if (tar.toLowerCase().endsWith(".tar")) {
@@ -252,9 +252,9 @@ public class UnzipTask extends AsyncTask<Void, FileHelper.Progress, Boolean> {
 
             // 파일 복사 부분
             FileOutputStream outputStream = new FileOutputStream(target);
-            int nread = 0;
-            while((nread = stream.read(buf)) > 0) {
-                outputStream.write(buf, 0, nread);
+            int nRead = 0;
+            while((nRead = stream.read(buf)) > 0) {
+                outputStream.write(buf, 0, nRead);
             }
             outputStream.close();
 
@@ -342,9 +342,9 @@ public class UnzipTask extends AsyncTask<Void, FileHelper.Progress, Boolean> {
             // 파일 복사 부분 
             FileOutputStream outputStream = new FileOutputStream(target);
 
-            int nread = 0;
-            while((nread = stream.read(buf)) > 0) {
-                outputStream.write(buf, 0, nread);
+            int nRead = 0;
+            while((nRead = stream.read(buf)) > 0) {
+                outputStream.write(buf, 0, nRead);
             }
 
             outputStream.close();

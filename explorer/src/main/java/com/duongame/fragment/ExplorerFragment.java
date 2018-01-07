@@ -1035,6 +1035,8 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
                             }
                         }, null, null);
             }
+        } else {
+            runPasteTask(pastePath);
         }
     }
 

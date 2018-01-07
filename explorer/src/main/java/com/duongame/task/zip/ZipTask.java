@@ -110,9 +110,9 @@ public class ZipTask extends AsyncTask<Void, FileHelper.Progress, Boolean> {
 
                 stream.putArchiveEntry(entry);
 
-                int nread = 0;
-                while((nread = inputStream.read(buf)) > 0) {
-                    stream.write(buf, 0, nread);
+                int nRead = 0;
+                while((nRead = inputStream.read(buf)) > 0) {
+                    stream.write(buf, 0, nRead);
                 }
 
                 stream.closeArchiveEntry();
@@ -147,9 +147,9 @@ public class ZipTask extends AsyncTask<Void, FileHelper.Progress, Boolean> {
             BufferedOutputStream outputStream = new BufferedOutputStream(new FileOutputStream(path));
             GzipCompressorOutputStream stream = new GzipCompressorOutputStream(outputStream);
 
-            int nread = 0;
-            while((nread = inputStream.read(buf)) > 0) {
-                stream.write(buf, 0, nread);
+            int nRead = 0;
+            while((nRead = inputStream.read(buf)) > 0) {
+                stream.write(buf, 0, nRead);
             }
 
             stream.close();
@@ -181,9 +181,9 @@ public class ZipTask extends AsyncTask<Void, FileHelper.Progress, Boolean> {
             BufferedOutputStream outputStream = new BufferedOutputStream(new FileOutputStream(path));
             BZip2CompressorOutputStream stream = new BZip2CompressorOutputStream(outputStream);
 
-            int nread = 0;
-            while((nread = inputStream.read(buf)) > 0) {
-                stream.write(buf, 0, nread);
+            int nRead = 0;
+            while((nRead = inputStream.read(buf)) > 0) {
+                stream.write(buf, 0, nRead);
             }
 
             stream.close();
@@ -285,9 +285,9 @@ public class ZipTask extends AsyncTask<Void, FileHelper.Progress, Boolean> {
 
                 stream.putArchiveEntry(entry);
 
-                int nread = 0;
-                while((nread = inputStream.read(buf)) > 0) {
-                    stream.write(buf, 0, nread);
+                int nRead = 0;
+                while((nRead = inputStream.read(buf)) > 0) {
+                    stream.write(buf, 0, nRead);
                 }
 
                 stream.closeArchiveEntry();

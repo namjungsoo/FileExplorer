@@ -284,9 +284,9 @@ public class TextActivity extends ViewerActivity {
                 final UniversalDetector detector = new UniversalDetector(null);
 
                 // (2)
-                int nread;
-                while ((nread = fileInputStream.read(buf)) > 0 && !detector.isDone()) {
-                    detector.handleData(buf, 0, nread);
+                int nRead;
+                while ((nRead = fileInputStream.read(buf)) > 0 && !detector.isDone()) {
+                    detector.handleData(buf, 0, nRead);
                 }
                 // (3)
                 detector.dataEnd();
