@@ -29,6 +29,8 @@ import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
+import static com.duongame.adapter.ExplorerItem.CompressType.BZIP2;
+import static com.duongame.adapter.ExplorerItem.CompressType.GZIP;
 import static com.duongame.helper.FileHelper.BLOCK_SIZE;
 
 /**
@@ -44,7 +46,7 @@ public class ZipTask extends AsyncTask<Void, FileHelper.Progress, Boolean> {
 
     private DialogInterface.OnDismissListener onDismissListener;
     private String path;
-    private String currentPath;
+    ExplorerItem.CompressType type = FileHelper.getCompressType(path);
 
     public ZipTask(Activity activity) {
         activityWeakReference = new WeakReference<Activity>(activity);
@@ -62,6 +64,7 @@ public class ZipTask extends AsyncTask<Void, FileHelper.Progress, Boolean> {
     // 압축 대상 파일의 패스
     public void setPath(String path) {
         this.path = path;
+        type = FileHelper.getCompressType(path);
     }
 
     @Override
@@ -87,11 +90,12 @@ public class ZipTask extends AsyncTask<Void, FileHelper.Progress, Boolean> {
         }
     }
 
-    void updateProgress(int i, String name) {
+    void updateProgress(int i, String name, int percent) {
         FileHelper.Progress progress = new FileHelper.Progress();
         progress.index = i;
         progress.fileName = name;
-        progress.percent = i * 100 / zipList.size();
+        //progress.percent = i * 100 / zipList.count();
+        progress.percent = percent;
         publishProgress(progress);
     }
 
@@ -103,16 +107,22 @@ public class ZipTask extends AsyncTask<Void, FileHelper.Progress, Boolean> {
             byte[] buf = new byte[BLOCK_SIZE];
 
             for (int i = 0; i < zipList.size(); i++) {
-                updateProgress(i, zipList.get(i).name);
 
                 TarArchiveEntry entry = new TarArchiveEntry(zipList.get(i).name);
+                File src = new File(zipList.get(i).path);
                 FileInputStream inputStream = new FileInputStream(zipList.get(i).path);
 
                 stream.putArchiveEntry(entry);
 
+                long srcLength = src.length();
+                long totalRead = 0;
                 int nRead = 0;
-                while((nRead = inputStream.read(buf)) > 0) {
+                while ((nRead = inputStream.read(buf)) > 0) {
                     stream.write(buf, 0, nRead);
+
+                    totalRead += nRead;
+                    long percent = totalRead * 100 / srcLength;
+                    updateProgress(i, zipList.get(i).name, (int) percent);
                 }
 
                 stream.closeArchiveEntry();
@@ -141,22 +151,29 @@ public class ZipTask extends AsyncTask<Void, FileHelper.Progress, Boolean> {
 
         try {
             // gzip 압축
-            FileInputStream inputStream = new FileInputStream(new File(tar));
+            File src = new File(tar);
+            FileInputStream inputStream = new FileInputStream(src);
             byte[] buf = new byte[BLOCK_SIZE];
 
             BufferedOutputStream outputStream = new BufferedOutputStream(new FileOutputStream(path));
             GzipCompressorOutputStream stream = new GzipCompressorOutputStream(outputStream);
 
+            long srcLength = src.length();
+            long totalRead = 0;
             int nRead = 0;
-            while((nRead = inputStream.read(buf)) > 0) {
+            while ((nRead = inputStream.read(buf)) > 0) {
                 stream.write(buf, 0, nRead);
+
+                totalRead += nRead;
+                long percent = totalRead * 100 / srcLength;
+                updateProgress(zipList.size(), path, (int) percent);
             }
 
             stream.close();
             inputStream.close();
 
             // tar 삭제
-            new File(tar).delete();
+            src.delete();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
             return false;
@@ -175,22 +192,29 @@ public class ZipTask extends AsyncTask<Void, FileHelper.Progress, Boolean> {
 
         try {
             // gzip 압축
-            FileInputStream inputStream = new FileInputStream(new File(tar));
+            File src = new File(tar);
+            FileInputStream inputStream = new FileInputStream(src);
             byte[] buf = new byte[BLOCK_SIZE];
 
             BufferedOutputStream outputStream = new BufferedOutputStream(new FileOutputStream(path));
             BZip2CompressorOutputStream stream = new BZip2CompressorOutputStream(outputStream);
 
+            long srcLength = src.length();
+            long totalRead = 0;
             int nRead = 0;
-            while((nRead = inputStream.read(buf)) > 0) {
+            while ((nRead = inputStream.read(buf)) > 0) {
                 stream.write(buf, 0, nRead);
+
+                totalRead += nRead;
+                long percent = totalRead * 100 / srcLength;
+                updateProgress(zipList.size(), path, (int) percent);
             }
 
             stream.close();
             inputStream.close();
 
             // tar 삭제
-            new File(tar).delete();
+            src.delete();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
             return false;
@@ -274,20 +298,26 @@ public class ZipTask extends AsyncTask<Void, FileHelper.Progress, Boolean> {
 
     boolean archiveZip() {
         try {
-            ZipArchiveOutputStream stream = new ZipArchiveOutputStream(new File(path));
+            File src = new File(path);
+            ZipArchiveOutputStream stream = new ZipArchiveOutputStream(src);
             byte[] buf = new byte[BLOCK_SIZE];
 
             for (int i = 0; i < zipList.size(); i++) {
-                updateProgress(i, zipList.get(i).name);
 
                 ZipArchiveEntry entry = new ZipArchiveEntry(zipList.get(i).name);
                 FileInputStream inputStream = new FileInputStream(zipList.get(i).path);
 
                 stream.putArchiveEntry(entry);
 
+                long srcLength = src.length();
+                long totalRead = 0;
                 int nRead = 0;
-                while((nRead = inputStream.read(buf)) > 0) {
+                while ((nRead = inputStream.read(buf)) > 0) {
                     stream.write(buf, 0, nRead);
+
+                    totalRead += nRead;
+                    long percent = totalRead * 100 / srcLength;
+                    updateProgress(i, zipList.get(i).name, (int) percent);
                 }
 
                 stream.closeArchiveEntry();
@@ -346,11 +376,10 @@ public class ZipTask extends AsyncTask<Void, FileHelper.Progress, Boolean> {
         // 선택된 파일이 폴더인 경우에 전체 폴더 확장을 해야한다.
         makeZipList();
 
-        ExplorerItem.CompressType type = FileHelper.getCompressType(path);
         switch (type) {
             case ZIP:
                 return archiveZip();
-                // 구현이 완료될때까지 막아둠
+            // 구현이 완료될때까지 막아둠
 //            case SEVENZIP:
 //                return archive7z();
             case GZIP:
@@ -370,18 +399,26 @@ public class ZipTask extends AsyncTask<Void, FileHelper.Progress, Boolean> {
         ZipDialog dialog = dialogWeakReference.get();
         if (dialog != null) {
             dialog.getFileName().setText(progress.fileName);
-            dialog.getEachProgress().setProgress(100);
+            dialog.getEachProgress().setProgress(progress.percent);
 
             // 들어온 퍼센트를 바로 토탈로 표시한다.
-            int totalPercent = progress.percent;
+            //int totalPercent = progress.percent;
+            int size;
+            if (type == GZIP || type == BZIP2) {
+                size = zipList.size() + 1;
+            } else {
+                size = zipList.size();
+            }
+
+            int totalPercent = (progress.index * 100) / size;
             dialog.getTotalProgress().setProgress(totalPercent);
 
             Activity activity = activityWeakReference.get();
             if (activity != null) {
                 dialog.getEachText().setVisibility(View.VISIBLE);
-                dialog.getEachText().setText(String.format(activity.getString(R.string.each_text), 100));
+                dialog.getEachText().setText(String.format(activity.getString(R.string.each_text), progress.percent));
                 dialog.getTotalText().setVisibility(View.VISIBLE);
-                dialog.getTotalText().setText(String.format(activity.getString(R.string.total_text), progress.index, zipList.size(), totalPercent));
+                dialog.getTotalText().setText(String.format(activity.getString(R.string.total_text), progress.index, size, totalPercent));
             }
         }
     }
