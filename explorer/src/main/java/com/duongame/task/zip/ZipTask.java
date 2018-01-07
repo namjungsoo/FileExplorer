@@ -418,7 +418,7 @@ public class ZipTask extends AsyncTask<Void, FileHelper.Progress, Boolean> {
                 dialog.getEachText().setVisibility(View.VISIBLE);
                 dialog.getEachText().setText(String.format(activity.getString(R.string.each_text), progress.percent));
                 dialog.getTotalText().setVisibility(View.VISIBLE);
-                dialog.getTotalText().setText(String.format(activity.getString(R.string.total_text), progress.index, size, totalPercent));
+                dialog.getTotalText().setText(String.format(activity.getString(R.string.total_text), progress.index + 1, size, totalPercent));
             }
         }
     }

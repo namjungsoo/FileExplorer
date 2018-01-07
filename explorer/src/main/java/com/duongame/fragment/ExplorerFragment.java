@@ -358,6 +358,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
         task.setPath(targetPath);
 
         // 여러 파일을 동시에 풀수있도록 함
+        // 현재는 1개만 풀수 있음
         ArrayList<ExplorerItem> zipList = new ArrayList<>();
         zipList.add(item);
 

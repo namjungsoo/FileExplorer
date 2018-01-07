@@ -9,6 +9,7 @@ import com.duongame.R;
 import com.duongame.adapter.ExplorerItem;
 import com.duongame.dialog.UnzipDialog;
 import com.duongame.helper.FileHelper;
+import com.duongame.helper.JLog;
 import com.duongame.helper.ToastHelper;
 import com.hzy.lib7z.ExtractCallback;
 import com.hzy.lib7z.Z7Extractor;
@@ -54,6 +55,7 @@ public class UnzipTask extends AsyncTask<Void, FileHelper.Progress, Boolean> {
 
     private String path;
     private boolean z7success;
+    private int count;
 
     public UnzipTask(Activity activity) {
         activityWeakReference = new WeakReference<>(activity);
@@ -102,17 +104,17 @@ public class UnzipTask extends AsyncTask<Void, FileHelper.Progress, Boolean> {
     }
 
     //TODO: ZIP 현재는 1개 파일만 선택해서 압축을 풀으므로 i는 무시된다.
-    void updateProgress(int i, int j, int size, String name) {
+    void updateProgress(int j, int count, String name, int percent) {
         FileHelper.Progress progress = new FileHelper.Progress();
         progress.index = j;
-        progress.percent = 100;
+        progress.percent = percent;
         progress.fileName = name;
-        progress.size = size;
+        progress.count = count;
         publishProgress(progress);
     }
 
-    boolean unarchiveRar(ExplorerItem item, int i) throws IOException {
-        // 현재 동작안되고 다운됨
+//    boolean unarchiveRar(ExplorerItem item, int i) throws IOException {
+//        // 현재 동작안되고 다운됨
 //        try {
 //            Archive archive;
 //            FileHeader header;
@@ -159,10 +161,10 @@ public class UnzipTask extends AsyncTask<Void, FileHelper.Progress, Boolean> {
 //            e.printStackTrace();
 //            return false;
 //        }
-        return true;
-    }
+//        return true;
+//    }
 
-    boolean unarchiveGzip(ExplorerItem item, int i) throws IOException {
+    boolean unarchiveGzip(ExplorerItem item) throws IOException {
         String tar;
         byte[] buf = new byte[BLOCK_SIZE];
         if (item.path.toLowerCase().endsWith(".tgz")) {
@@ -170,17 +172,23 @@ public class UnzipTask extends AsyncTask<Void, FileHelper.Progress, Boolean> {
         } else {
             tar = item.path.replace(".gz", "");
         }
-
-        GzipCompressorInputStream stream = new GzipCompressorInputStream(new FileInputStream(item.path));
+        File src = new File(item.path);
+        GzipCompressorInputStream stream = new GzipCompressorInputStream(new FileInputStream(src));
         FileOutputStream outputStream = new FileOutputStream(tar);
 
+        long srcLength = src.length();
+        long totalRead = 0;
         int nRead = 0;
-        while((nRead = stream.read(buf)) > 0) {
+        while ((nRead = stream.read(buf)) > 0) {
             outputStream.write(buf, 0, nRead);
+
+            totalRead += nRead;
+            long percent = totalRead * 100 / srcLength;
+            updateProgress(0, count + 1, tar, (int) percent);
         }
 
         if (tar.toLowerCase().endsWith(".tar")) {
-            if (!unarchiveTar(tar, i))
+            if (!unarchiveTar(tar))
                 return false;
 
             // tar 파일 삭제
@@ -189,7 +197,7 @@ public class UnzipTask extends AsyncTask<Void, FileHelper.Progress, Boolean> {
         return true;
     }
 
-    boolean unarchiveBzip2(ExplorerItem item, int i) throws IOException {
+    boolean unarchiveBzip2(ExplorerItem item) throws IOException {
         byte[] buf = new byte[BLOCK_SIZE];
         String tar;
         if (item.path.toLowerCase().endsWith(".tbz2")) {
@@ -198,16 +206,23 @@ public class UnzipTask extends AsyncTask<Void, FileHelper.Progress, Boolean> {
             tar = item.path.replace(".bz2", "");
         }
 
-        BZip2CompressorInputStream stream = new BZip2CompressorInputStream(new FileInputStream(item.path));
+        File src = new File(item.path);
+        BZip2CompressorInputStream stream = new BZip2CompressorInputStream(new FileInputStream(src));
         FileOutputStream outputStream = new FileOutputStream(tar);
 
+        long srcLength = src.length();
+        long totalRead = 0;
         int nRead = 0;
-        while((nRead = stream.read(buf)) > 0) {
+        while ((nRead = stream.read(buf)) > 0) {
             outputStream.write(buf, 0, nRead);
+
+            totalRead += nRead;
+            long percent = totalRead * 100 / srcLength;
+            updateProgress(0, count + 1, tar, (int) percent);
         }
 
         if (tar.toLowerCase().endsWith(".tar")) {
-            if (!unarchiveTar(tar, i))
+            if (!unarchiveTar(tar))
                 return false;
 
             // tar 파일 삭제
@@ -217,21 +232,21 @@ public class UnzipTask extends AsyncTask<Void, FileHelper.Progress, Boolean> {
         return true;
     }
 
-    boolean unarchiveTar(String path, int i) throws IOException {
+    boolean unarchiveTar(String path) throws IOException {
         TarArchiveInputStream stream;
         TarArchiveEntry entry;
         byte[] buf = new byte[BLOCK_SIZE];
 
         stream = new TarArchiveInputStream(new FileInputStream(path));
         entry = (TarArchiveEntry) stream.getNextEntry();
-        int size = 0;
+        count = 0;
 
         // 파일 갯수를 세기
         while (entry != null) {
             if (isCancelled())
                 return false;
 
-            size++;
+            count++;
             entry = (TarArchiveEntry) stream.getNextEntry();
         }
         stream.close();
@@ -244,7 +259,6 @@ public class UnzipTask extends AsyncTask<Void, FileHelper.Progress, Boolean> {
             if (isCancelled())
                 return false;
 
-            updateProgress(i, j, size, entry.getName());
 
             // 하위 폴더가 없을때 만들어줌
             String target = path + "/" + entry.getName();
@@ -252,9 +266,15 @@ public class UnzipTask extends AsyncTask<Void, FileHelper.Progress, Boolean> {
 
             // 파일 복사 부분
             FileOutputStream outputStream = new FileOutputStream(target);
+            long srcLength = entry.getRealSize();
+            long totalRead = 0;
             int nRead = 0;
-            while((nRead = stream.read(buf)) > 0) {
+            while ((nRead = stream.read(buf)) > 0) {
                 outputStream.write(buf, 0, nRead);
+
+                totalRead += nRead;
+                long percent = totalRead * 100 / srcLength;
+                updateProgress(j, count + 1, entry.getName(), (int) percent);
             }
             outputStream.close();
 
@@ -267,7 +287,7 @@ public class UnzipTask extends AsyncTask<Void, FileHelper.Progress, Boolean> {
         return true;
     }
 
-    boolean unarchive7z(ExplorerItem item, final int i) throws IOException {
+    boolean unarchive7z(ExplorerItem item) throws IOException {
         // un7z를 사용함
         Z7Extractor extractor = new Z7Extractor();
 
@@ -283,11 +303,13 @@ public class UnzipTask extends AsyncTask<Void, FileHelper.Progress, Boolean> {
             @Override
             public void onGetFileNum(int fileNum) {
                 count = fileNum;
+                JLog.e("TAG", "7z fileNum=" + count);
             }
 
             @Override
             public void onProgress(String name, long size) {
-                updateProgress(i, j, count, name);
+                JLog.e("TAG", "7z onProgress name=" + name + " count=" + size + " j=" + j);
+                updateProgress(j, count, name, 100);
                 j++;
             }
 
@@ -305,20 +327,20 @@ public class UnzipTask extends AsyncTask<Void, FileHelper.Progress, Boolean> {
         return z7success;
     }
 
-    boolean unarchiveZip(ExplorerItem item, int i) throws IOException {
+    boolean unarchiveZip(ExplorerItem item) throws IOException {
         ZipArchiveInputStream stream;
         ZipEntry entry;
 
         stream = new ZipArchiveInputStream(new FileInputStream(item.path));
         entry = (ZipEntry) stream.getNextEntry();
-        int size = 0;
+        count = 0;
 
         // 파일 갯수를 세기
         while (entry != null) {
             if (isCancelled())
                 return false;
 
-            size++;
+            count++;
             entry = (ZipEntry) stream.getNextEntry();
         }
         stream.close();
@@ -332,7 +354,6 @@ public class UnzipTask extends AsyncTask<Void, FileHelper.Progress, Boolean> {
             if (isCancelled())
                 return false;
 
-            updateProgress(i, j, size, entry.getName());
 
             // 하위 폴더가 없을때 만들어줌
             String target = path + "/" + entry.getName();
@@ -342,9 +363,16 @@ public class UnzipTask extends AsyncTask<Void, FileHelper.Progress, Boolean> {
             // 파일 복사 부분 
             FileOutputStream outputStream = new FileOutputStream(target);
 
+            long srcLength = entry.getSize();
+            long totalRead = 0;
             int nRead = 0;
-            while((nRead = stream.read(buf)) > 0) {
+            while ((nRead = stream.read(buf)) > 0) {
                 outputStream.write(buf, 0, nRead);
+
+                totalRead += nRead;
+                long percent = totalRead * 100 / srcLength;
+
+                updateProgress(j, count, entry.getName(), (int) percent);
             }
 
             outputStream.close();
@@ -361,42 +389,43 @@ public class UnzipTask extends AsyncTask<Void, FileHelper.Progress, Boolean> {
     @Override
     protected Boolean doInBackground(Void... voids) {
         // 파일의 갯수만큼 루프를 돌아서 unzip 해준다.
-        for (int i = 0; i < fileList.size(); i++) {
-            ExplorerItem item = fileList.get(i);
+//        for (int i = 0; i < fileList.size(); i++) {
+        ExplorerItem item = fileList.get(0);
 
-            try {
-                ExplorerItem.CompressType type = FileHelper.getCompressType(item.path);
-                switch (type) {
-                    case ZIP:
-                        if (!unarchiveZip(item, i))
-                            return false;
-                        break;
-                    case SEVENZIP:
-                        if (!unarchive7z(item, i))
-                            return false;
-                        break;
-                    case GZIP:
-                        if (!unarchiveGzip(item, i))
-                            return false;
-                        break;
-                    case BZIP2:
-                        if (!unarchiveBzip2(item, i))
-                            return false;
-                        break;
-                    case RAR:
-                        if (!unarchiveRar(item, i))
-                            return false;
-                        break;
-                    case TAR:
-                        if (!unarchiveTar(item.path, i))
-                            return false;
-                        break;
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-                return false;
+        try {
+            ExplorerItem.CompressType type = FileHelper.getCompressType(item.path);
+            switch (type) {
+                case ZIP:
+                    if (!unarchiveZip(item))
+                        return false;
+                    break;
+                case SEVENZIP:
+                    if (!unarchive7z(item))
+                        return false;
+                    break;
+                case GZIP:
+                    if (!unarchiveGzip(item))
+                        return false;
+                    break;
+                case BZIP2:
+                    if (!unarchiveBzip2(item))
+                        return false;
+                    break;
+                //TODO: 현재는 풀수 없다.
+//                    case RAR:
+//                        if (!unarchiveRar(item))
+//                            return false;
+//                        break;
+                case TAR:
+                    if (!unarchiveTar(item.path))
+                        return false;
+                    break;
             }
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
         }
+//        }
         return true;
     }
 
@@ -408,18 +437,17 @@ public class UnzipTask extends AsyncTask<Void, FileHelper.Progress, Boolean> {
         UnzipDialog dialog = dialogWeakReference.get();
         if (dialog != null) {
             dialog.getFileName().setText(progress.fileName);
+            dialog.getEachProgress().setProgress(progress.percent);
 
-            dialog.getEachProgress().setProgress(100);
-
-            int totalPercent = progress.index * 100 / progress.size;
+            int totalPercent = progress.index * 100 / progress.count;
             dialog.getTotalProgress().setProgress(totalPercent);
 
             Activity activity = activityWeakReference.get();
             if (activity != null) {
                 dialog.getEachText().setVisibility(View.VISIBLE);
-                dialog.getEachText().setText(String.format(activity.getString(R.string.each_text), 100));
+                dialog.getEachText().setText(String.format(activity.getString(R.string.each_text), progress.percent));
                 dialog.getTotalText().setVisibility(View.VISIBLE);
-                dialog.getTotalText().setText(String.format(activity.getString(R.string.total_text), progress.index, progress.size, totalPercent));
+                dialog.getTotalText().setText(String.format(activity.getString(R.string.total_text), progress.index + 1, progress.count, totalPercent));
             }
         }
     }

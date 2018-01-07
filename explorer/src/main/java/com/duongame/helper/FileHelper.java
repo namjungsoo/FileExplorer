@@ -98,8 +98,8 @@ public class FileHelper {
         String lower = path.toLowerCase();
         if (lower.endsWith(".zip"))
             return ExplorerItem.CompressType.ZIP;
-        if (lower.endsWith(".rar"))
-            return ExplorerItem.CompressType.RAR;
+//        if (lower.endsWith(".rar"))
+//            return ExplorerItem.CompressType.RAR;
         if (lower.endsWith(".7z"))
             return ExplorerItem.CompressType.SEVENZIP;
         if (lower.endsWith(".tar"))
