@@ -52,6 +52,8 @@ public class PasteTask extends AsyncTask<Void, FileHelper.Progress, Boolean> {
     private boolean cancelled;
     private HashMap<String, String> srcNewFolderMap;
 
+    private ArrayList<String> createdPathList;
+
     public PasteTask(Activity activity) {
         activityWeakReference = new WeakReference<Activity>(activity);
         lock = new Object();
@@ -85,6 +87,7 @@ public class PasteTask extends AsyncTask<Void, FileHelper.Progress, Boolean> {
         super.onPreExecute();
 
 //        JLog.w("PasteTask", "onPreExecute");
+        createdPathList = new ArrayList<>();
         dialogWeakReference = new WeakReference<PasteDialog>(new PasteDialog());
         PasteDialog dialog = dialogWeakReference.get();
         if (dialog != null) {
@@ -140,7 +143,7 @@ public class PasteTask extends AsyncTask<Void, FileHelper.Progress, Boolean> {
         String parentPath = FileHelper.getParentPath(path);
 
         // 이 결과를 이름에 박아둠
-        subItem.name = subItem.path.replace(FileHelper.getParentPath(path) + "/", "");
+        subItem.name = subItem.path.replace(parentPath + "/", "");
     }
 
     void preparePasteList() {
@@ -151,13 +154,18 @@ public class PasteTask extends AsyncTask<Void, FileHelper.Progress, Boolean> {
             ExplorerItem item = fileList.get(i);
 
             if (item.type == ExplorerItem.FileType.FOLDER) {
+
                 // 폴더의 경우 하위 모든 아이템을 찾은뒤에 더한다.
                 FileSearcher.Result result = searchFile(item.path);
-
+                for (int j = 0; j < result.fileList.size(); j++) {
+                    JLog.e("TAG", "fileList j=" + j + " " + result.fileList.get(j).path);
+                }
                 prepareFolder(result, item.path);
 
                 // 폴더 자기 자신도 더함
+                // 폴더를 나중에 더할 경우 폴더를 복사할때 에러가 발생함
                 pasteList.add(item);
+
             } else {
                 pasteList.add(item);
             }
@@ -227,9 +235,18 @@ public class PasteTask extends AsyncTask<Void, FileHelper.Progress, Boolean> {
 
     void processInternal(int i, File src, File dest) throws IOException {
         if (cut) {
-            // 이동한다.
-            FileUtils.moveFile(src, dest);
-            updateProgress(i, 100);
+            if (src.isDirectory()) {
+                // src가 디렉토리 이면, 이미 하위 파일은 폴더를 생성하고 옮겼으므로 delete해준다.
+                JLog.e("TAG", "delete folder path=" + src.getPath());
+                src.delete();
+                //FileUtils.forceDelete(src);
+                JLog.e("TAG", "complete delete folder path=" + src.getPath());
+            } else {
+                JLog.e("TAG", "move folder path=" + src.getPath());
+                // 이동한다.
+                FileUtils.moveFile(src, dest);
+                updateProgress(i, 100);
+            }
         } else {
             // 복사한다.
 //            JLog.e("TAG", "processInternal copy");
@@ -287,9 +304,13 @@ public class PasteTask extends AsyncTask<Void, FileHelper.Progress, Boolean> {
         parent.mkdirs();
     }
 
-    String processDestPath(String srcPath) {
+    String getRelativePath(String srcPath) {
+        return srcPath.replace(capturePath + "/", "");// 상대적인 패스
+    }
+
+    String processDestPath(String relativePath) {
         // 원본의 패스를 없애고 파일명과 확장자만 얻어옴
-        String relativePath = srcPath.replace(capturePath + "/", "");// 상대적인 패스
+        //String relativePath = srcPath.replace(capturePath + "/", "");// 상대적인 패스
 
         // makeCopy일때 상대패스가 폴더를 포함하면
         if (makeCopy) {// 이때는 pastePath와 capturePath가 같다.
@@ -319,23 +340,50 @@ public class PasteTask extends AsyncTask<Void, FileHelper.Progress, Boolean> {
         }
     }
 
+    String getTopPath(String relativePath) {
+        int index = relativePath.indexOf("/");
+        if (index == -1)
+            return null;
+        else
+            return relativePath.substring(0, index);
+    }
+
     // srcPath는 pasteList로부터 가져온 패스의 원본
     boolean process(int i, String srcPath) throws InterruptedException {
         File src = new File(srcPath);
-        String destPath = processDestPath(srcPath);
 
-        // 1 depth의 폴더가 이미 있을 경우에는 폴더를 새로 만들어줌
+        String relativePath = getRelativePath(srcPath);
+        String destPath = processDestPath(relativePath);
+        //String destPath = processDestPath(srcPath);
+
+        // top의 폴더가 이미 있을 경우에는 폴더를 새로 만들어줌
         // 그리고 이하의 모든 패스를 변경하여야 함
+        String topPath = getTopPath(relativePath);
+        if (topPath != null) {
+            String pasteTopPath = pastePath + "/" + topPath;
+            File top = new File(pasteTopPath);
+            if (top.exists() && top.isDirectory()) {
+            } else {
+                // 존재하지 않으면 내가 만들었다고 체크해둠
+                createdPathList.add(pasteTopPath);
+            }
+        }
+
+        // 이건 그냥 모든 폴더를 만들어 주는 것
         processParentFolder(destPath);
 
-        // 사본 생성 모드이면 새로운 파일 이름을 얻음
-        // 여기서 하지 않고 paste list 생성쪽에서 진행함
-//        if (makeCopy)
-//            destPath = FileHelper.getNewFileName(destPath);
-
+        // 내가 만든 폴더에 속하면 overwrite는 테스트 하지 않음
         File dest = new File(destPath);
-        if (!checkOverwrite(dest, destPath))
-            return false;
+
+        // top path가 아닌 하위 폴더는 관여 안함
+        if (dest.isDirectory() && !destPath.equals(topPath)) {
+
+        } else {
+            if (createdPathList.indexOf(destPath) == -1) {
+                if (!checkOverwrite(dest, destPath))
+                    return false;
+            }
+        }
 
         // skip이 아니면, 위에서 이미 지웠으니 무조건 overwrite이다.
         if (!skip) {

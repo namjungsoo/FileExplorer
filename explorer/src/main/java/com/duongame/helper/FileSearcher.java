@@ -4,6 +4,7 @@ import com.duongame.adapter.ExplorerItem;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -64,6 +65,18 @@ public class FileSearcher {
         return this;
     }
 
+    public static class DirectoryPreferComparator implements Comparator<File> {
+        @Override
+        public int compare(File lhs, File rhs) {
+            if(lhs.isDirectory())
+                return -1;
+            if(rhs.isDirectory())
+                return 1;
+            return 0;
+        }
+    }
+
+
     public Result search(String path) {
         File file = new File(path);
         if (file == null)
@@ -73,6 +86,9 @@ public class FileSearcher {
         File[] files = file.listFiles();
         if (files == null)
             return null;
+
+        // 폴더를 우선하도록 정렬 해야 함
+        Collections.sort(Arrays.asList(files), new DirectoryPreferComparator());
 
         ArrayList<ExplorerItem> fileList = new ArrayList<ExplorerItem>();
         ArrayList<ExplorerItem> directoryList = new ArrayList<ExplorerItem>();
@@ -133,15 +149,21 @@ public class FileSearcher {
             }
         }
 
-        if (comparator == null) {
-            comparator = new FileHelper.NameAscComparator();
-        }
-        // 디렉토리 우선 정렬 및 가나다 정렬
-        Collections.sort(directoryList, comparator);
-        Collections.sort(normalList, comparator);
+//        if (comparator == null) {
+//            comparator = new FileHelper.NameAscComparator();
+//        }
 
-        fileList.addAll(directoryList);
-        fileList.addAll(normalList);
+        if(comparator != null) {
+            // 디렉토리 우선 정렬 및 가나다 정렬
+            Collections.sort(directoryList, comparator);
+            Collections.sort(normalList, comparator);
+            fileList.addAll(directoryList);
+            fileList.addAll(normalList);
+        } else {
+            // 삭제 리스트용이므로 파일먼저, 폴더 나중
+            fileList.addAll(normalList);
+            fileList.addAll(directoryList);
+        }
 
         if(imageListEnable) {
             ArrayList<ExplorerItem> imageList = new ArrayList<ExplorerItem>();
