@@ -39,4 +39,54 @@
     <string name="hide_completed_file">Скрыть заполненные файлы</string>
     <string name="each_text">%d%%</string>
     <string name="total_text">%1$d/%2$d (%3$d%%)</string>
+
+    <!-- 새로운 부분 -->
+    <string name="copy">копия</string>
+    <string name="cut">Порез</string>
+    <string name="paste">Вставить</string>
+    <string name="archive">Архив</string>
+    <string name="unarchive">Разархивировать</string>
+    <string name="delete">Удалить</string>
+    <string name="new_folder">Новая папка</string>
+    <string name="select_all">Выбрать все</string>
+    <string name="view_type">Тип просмотра</string>
+    <string name="msg_file_sort">Выберите способ сортировки файлов.</string>
+    <string name="file_ext">Расширение файла</string>
+    <string name="file_date">Дата файла</string>
+    <string name="file_size">Размер файла</string>
+    <string name="ascending">Восходящий</string>
+    <string name="descending">нисходящий</string>
+    <string name="msg_file_rename">Введите имя файла для изменения.</string>
+    <string name="msg_new_folder">Введите имя новой папки, которую вы хотите создать.</string>
+    <string name="overwrite">затирать</string>
+    <string name="skip">Пропускать</string>
+    <string name="msg_overwrite">Этот файл уже существует. Вы хотите перезаписать?</string>
+    <string name="toast_cancel">Запрос был отменен.</string>
+    <string name="toast_error">Произошла ошибка.</string>
+    <string name="toast_file_rename">Имя файла было изменено.</string>
+    <string name="toast_multi_rename_error">Переименование файлов возможно только при выборе одного файла.</string>
+    <string name="toast_new_folder">Создана новая папка.</string>
+    <string name="toast_select_all">Выберите весь файл.</string>
+    <string name="toast_deselect_all">Отмените выбор всего файла.</string>
+    <string name="warn_file_delete">Вы действительно хотите удалить %d выбранных файлов?</string>
+    <string name="msg_file_delete">Выбранный файл удаляется.</string>
+    <string name="toast_file_delete">Выбранный файл удален.</string>
+    <string name="msg_file_paste_copy">Вставьте файл для копирования здесь.</string>
+    <string name="msg_file_paste_cut">Вставьте файл, который нужно переместить здесь.</string>
+    <string name="toast_file_paste_copy">Файлы были скопированы.</string>
+    <string name="toast_file_paste_cut">Файлы были перемещены.</string>
+    <string name="warn_move_same_folder">Вы не можете перемещаться в одно и то же место.</string>
+    <string name="warn_copy_same_folder">Копирование в одно и то же место создает копию с другим именем.</string>
+    <string name="msg_file_unzip">Распакуйте выбранные файлы.</string>
+    <string name="toast_file_unzip">Файлы распакованы.</string>
+    <string name="msg_file_zip">Выбранные файлы будут заархивированы.</string>
+    <string name="toast_file_zip">Файлы были заархивированы.</string>
+
+    <string-array name="compress_type">
+        <item>.zip</item>
+        <item>.tar</item>
+        <item>.tar.gz</item>
+        <item>.tar.bz2</item>
+    </string-array>
+
 </resources>

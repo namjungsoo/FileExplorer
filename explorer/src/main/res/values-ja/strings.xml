@@ -39,4 +39,54 @@
     <string name="hide_completed_file">完成したファイルを隠す</string>
     <string name="each_text">%d%%</string>
     <string name="total_text">%1$d/%2$d (%3$d%%)</string>
+
+    <!-- 새로운 부분 -->
+    <string name="copy">コピー</string>
+    <string name="cut">カット</string>
+    <string name="paste">ペースト</string>
+    <string name="archive">アーカイブ</string>
+    <string name="unarchive">アーカイブ解除する</string>
+    <string name="delete">削除</string>
+    <string name="new_folder">新しいフォルダ</string>
+    <string name="select_all">すべて選択</string>
+    <string name="view_type">ビュータイプ</string>
+    <string name="msg_file_sort">ファイルの並べ替え方法を選択してください。</string>
+    <string name="file_ext">ファイル拡張子</string>
+    <string name="file_date">ファイルの日付</string>
+    <string name="file_size">ファイルサイズ</string>
+    <string name="ascending">上昇</string>
+    <string name="descending">降順</string>
+    <string name="msg_file_rename">変更するファイルの名前を入力してください。</string>
+    <string name="msg_new_folder">作成する新しいフォルダの名前を入力してください。</string>
+    <string name="overwrite">上書き</string>
+    <string name="skip">スキップ</string>
+    <string name="msg_overwrite">このファイルは既に存在します。上書きしますか？</string>
+    <string name="toast_cancel">リクエストはキャンセルされました。</string>
+    <string name="toast_error">エラーが発生しました。</string>
+    <string name="toast_file_rename">ファイル名が変更されました。</string>
+    <string name="toast_multi_rename_error">ファイル名の変更は、1つのファイルを選択する場合にのみ可能です。</string>
+    <string name="toast_new_folder">新しいフォルダが作成されました。</string>
+    <string name="toast_select_all">ファイル全体を選択します。</string>
+    <string name="toast_deselect_all">ファイル全体を選択解除します。</string>
+    <string name="warn_file_delete">選択した%d個のファイルを削除してもよろしいですか？</string>
+    <string name="msg_file_delete">選択したファイルが削除されています。</string>
+    <string name="toast_file_delete">選択したファイルが削除されました。</string>
+    <string name="msg_file_paste_copy">ここにコピーするファイルを貼り付けます。</string>
+    <string name="msg_file_paste_cut">ここに移動するファイルを貼り付けます。</string>
+    <string name="toast_file_paste_copy">ファイルがコピーされました。</string>
+    <string name="toast_file_paste_cut">ファイルは移動されました。</string>
+    <string name="warn_move_same_folder">同じ場所に移動することはできません。</string>
+    <string name="warn_copy_same_folder">同じ場所にコピーすると、別の名前のコピーが作成されます。</string>
+    <string name="msg_file_unzip">選択したファイルを解凍します。</string>
+    <string name="toast_file_unzip">ファイルは解凍されています。</string>
+    <string name="msg_file_zip">選択したファイルは圧縮されます。</string>
+    <string name="toast_file_zip">ファイルは圧縮されています。</string>
+
+    <string-array name="compress_type">
+        <item>.zip</item>
+        <item>.tar</item>
+        <item>.tar.gz</item>
+        <item>.tar.bz2</item>
+    </string-array>
+
 </resources>

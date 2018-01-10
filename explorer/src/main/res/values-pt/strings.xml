@@ -39,4 +39,54 @@
     <string name="hide_completed_file">Ocultar arquivos preenchidos</string>
     <string name="each_text">%d%%</string>
     <string name="total_text">%1$d/%2$d (%3$d%%)</string>
+
+    <!-- 새로운 부분 -->
+    <string name="copy">cópia de</string>
+    <string name="cut">Cortar</string>
+    <string name="paste">Colar</string>
+    <string name="archive">Arquivo</string>
+    <string name="unarchive">Desarchivar</string>
+    <string name="delete">Excluir</string>
+    <string name="new_folder">Nova pasta</string>
+    <string name="select_all">Selecionar tudo</string>
+    <string name="view_type">Tipo de exibição</string>
+    <string name="msg_file_sort">Selecione um método de classificação de arquivo.</string>
+    <string name="file_ext">Extensão de arquivo</string>
+    <string name="file_date">Data do arquivo</string>
+    <string name="file_size">Tamanho do arquivo</string>
+    <string name="ascending">Ascendente</string>
+    <string name="descending">descendente</string>
+    <string name="msg_file_rename">Digite o nome do arquivo para alterar.</string>
+    <string name="msg_new_folder">Digite o nome da nova pasta que deseja criar.</string>
+    <string name="overwrite">Sobrescrever</string>
+    <string name="skip">Pular</string>
+    <string name="msg_overwrite">Este arquivo já existe. Você deseja substituir?</string>
+    <string name="toast_cancel">O pedido foi cancelado.</string>
+    <string name="toast_error">Ocorreu um erro.</string>
+    <string name="toast_file_rename">O nome do arquivo foi alterado.</string>
+    <string name="toast_multi_rename_error">Renomear arquivos só é possível ao selecionar um arquivo.</string>
+    <string name="toast_new_folder">Foi criada uma nova pasta.</string>
+    <string name="toast_select_all">Selecione o arquivo inteiro.</string>
+    <string name="toast_deselect_all">Desmarque o arquivo inteiro.</string>
+    <string name="warn_file_delete">Tem certeza de que deseja excluir os arquivos %d selecionados?</string>
+    <string name="msg_file_delete">O arquivo selecionado está sendo excluído.</string>
+    <string name="toast_file_delete">O arquivo selecionado foi excluído.</string>
+    <string name="msg_file_paste_copy">Cole o arquivo para copiar aqui.</string>
+    <string name="msg_file_paste_cut">Cole o arquivo a ser movido aqui.</string>
+    <string name="toast_file_paste_copy">Os arquivos foram copiados.</string>
+    <string name="toast_file_paste_cut">Os arquivos foram movidos.</string>
+    <string name="warn_move_same_folder">Você não pode mudar para o mesmo local.</string>
+    <string name="warn_copy_same_folder">Copiar para o mesmo local cria uma cópia com um nome diferente.</string>
+    <string name="msg_file_unzip">Descompactando arquivos selecionados.</string>
+    <string name="toast_file_unzip">Os arquivos foram descompactados.</string>
+    <string name="msg_file_zip">Os arquivos selecionados serão compactados.</string>
+    <string name="toast_file_zip">Os arquivos foram compactados.</string>
+
+    <string-array name="compress_type">
+        <item>.zip</item>
+        <item>.tar</item>
+        <item>.tar.gz</item>
+        <item>.tar.bz2</item>
+    </string-array>
+
 </resources>

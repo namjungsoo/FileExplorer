@@ -39,4 +39,54 @@
     <string name="hide_completed_file">पूरी हुई फ़ाइलें छुपाएं</string>
     <string name="each_text">%d%%</string>
     <string name="total_text">%1$d/%2$d (%3$d%%)</string>
+
+    <!-- 새로운 부분 -->
+    <string name="copy">प्रतिलिपि</string>
+    <string name="cut">कट गया</string>
+    <string name="paste">चिपकाएं</string>
+    <string name="archive">पुरालेख</string>
+    <string name="unarchive">संग्रह से निकालें</string>
+    <string name="delete">हटाना</string>
+    <string name="new_folder">नया फोल्डर</string>
+    <string name="select_all">सभी का चयन करे</string>
+    <string name="view_type">देखें प्रकार</string>
+    <string name="msg_file_sort">कृपया फ़ाइल सॉर्ट विधि का चयन करें</string>
+    <string name="file_ext">दस्तावेज़ विस्तारण</string>
+    <string name="file_date">फ़ाइल की तारीख</string>
+    <string name="file_size">फाइल का आकार</string>
+    <string name="ascending">आरोही</string>
+    <string name="descending">अवरोही</string>
+    <string name="msg_file_rename">बदलने के लिए कृपया फ़ाइल का नाम दर्ज करें</string>
+    <string name="msg_new_folder">कृपया नए फ़ोल्डर का नाम दर्ज करें जिसे आप बनाना चाहते हैं।</string>
+    <string name="overwrite">ओवरराइट करें</string>
+    <string name="skip">छोड़ें</string>
+    <string name="msg_overwrite">यह फाइल पहले से मौजूद है। क्या आप इसके ऊपर लिखना चाहते हैं?</string>
+    <string name="toast_cancel">अनुरोध रद्द कर दिया गया है।</string>
+    <string name="toast_error">एक गलती हुई है।</string>
+    <string name="toast_file_rename">फ़ाइल नाम बदल दिया गया है।</string>
+    <string name="toast_multi_rename_error">एक फ़ाइल चुनते समय केवल नामकरण फाइल संभव होती है</string>
+    <string name="toast_new_folder">एक नया फ़ोल्डर बनाया गया है।</string>
+    <string name="toast_select_all">संपूर्ण फ़ाइल का चयन करें</string>
+    <string name="toast_deselect_all">संपूर्ण फ़ाइल का चयन रद्द करें</string>
+    <string name="warn_file_delete">क्या आप वाकई %d चयनित फाइलों को हटाना चाहते हैं?</string>
+    <string name="msg_file_delete">चयनित फ़ाइल को हटाया जा रहा है</string>
+    <string name="toast_file_delete">चयनित फ़ाइल हटा दी गई है</string>
+    <string name="msg_file_paste_copy">यहां कॉपी करने के लिए फ़ाइल चिपकाएं</string>
+    <string name="msg_file_paste_cut">यहां स्थानांतरित करने के लिए फ़ाइल चिपकाएं</string>
+    <string name="toast_file_paste_copy">फ़ाइलें कॉपी की गई हैं</string>
+    <string name="toast_file_paste_cut">फ़ाइलों को स्थानांतरित कर दिया गया है।</string>
+    <string name="warn_move_same_folder">आप एक ही स्थान पर नहीं जा सकते।</string>
+    <string name="warn_copy_same_folder">उसी स्थान पर प्रतिलिपि एक अलग नाम के साथ एक प्रति बनाता है।</string>
+    <string name="msg_file_unzip">चुनी हुई फ़ाइलों को अनजिप्प करना</string>
+    <string name="toast_file_unzip">फ़ाइलों को अनझिप किया गया है</string>
+    <string name="msg_file_zip">चयनित फ़ाइलों को ज़िपित किया जाएगा।</string>
+    <string name="toast_file_zip">फ़ाइलों को ज़िपित किया गया है</string>
+
+    <string-array name="compress_type">
+        <item>.zip</item>
+        <item>.tar</item>
+        <item>.tar.gz</item>
+        <item>.tar.bz2</item>
+    </string-array>
+
 </resources>

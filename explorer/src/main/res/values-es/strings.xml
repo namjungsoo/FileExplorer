@@ -39,4 +39,54 @@
     <string name="hide_completed_file">Ocultar archivos completados</string>
     <string name="each_text">%d%%</string>
     <string name="total_text">%1$d/%2$d (%3$d%%)</string>
+
+    <!-- 새로운 부분 -->
+    <string name="copy">Dupdo</string>
+    <string name="cut">Cortar</string>
+    <string name="paste">Pegar</string>
+    <string name="archive">Archivo</string>
+    <string name="unarchive">Desarchivar</string>
+    <string name="delete">Borrar</string>
+    <string name="new_folder">Nueva carpeta</string>
+    <string name="select_all">Seleccionar todo</string>
+    <string name="view_type">Tipo de vista</string>
+    <string name="msg_file_sort">Seleccione un método de clasificación de archivos.</string>
+    <string name="file_ext">Extensión de archivo</string>
+    <string name="file_date">Fecha de archivo</string>
+    <string name="file_size">Tamaño del archivo</string>
+    <string name="ascending">Ascendente</string>
+    <string name="descending">Descendente</string>
+    <string name="msg_file_rename">Por favor ingrese el nombre del archivo para cambiar.</string>
+    <string name="msg_new_folder">Por favor ingrese el nombre de la nueva carpeta que desea crear.</string>
+    <string name="overwrite">Exagerar</string>
+    <string name="skip">Omitir</string>
+    <string name="msg_overwrite">Este archivo ya existe ¿Quieres sobrescribir?</string>
+    <string name="toast_cancel">La solicitud ha sido cancelada.</string>
+    <string name="toast_error">Se ha producido un error.</string>
+    <string name="toast_file_rename">El nombre del archivo ha sido cambiado.</string>
+    <string name="toast_multi_rename_error">Cambiar el nombre de los archivos solo es posible al seleccionar un archivo.</string>
+    <string name="toast_new_folder">Se ha creado una nueva carpeta.</string>
+    <string name="toast_select_all">Seleccione el archivo completo.</string>
+    <string name="toast_deselect_all">Deseleccione todo el archivo.</string>
+    <string name="warn_file_delete">¿Seguro que quieres eliminar los %d archivos seleccionados?</string>
+    <string name="msg_file_delete">El archivo seleccionado se está borrando.</string>
+    <string name="toast_file_delete">El archivo seleccionado ha sido eliminado.</string>
+    <string name="msg_file_paste_copy">Pega el archivo para copiar aquí.</string>
+    <string name="msg_file_paste_cut">Pega el archivo que se moverá aquí.</string>
+    <string name="toast_file_paste_copy">Los archivos han sido copiados.</string>
+    <string name="toast_file_paste_cut">Los archivos han sido movidos.</string>
+    <string name="warn_move_same_folder">No puedes moverte a la misma ubicación.</string>
+    <string name="warn_copy_same_folder">Copiar a la misma ubicación crea una copia con un nombre diferente.</string>
+    <string name="msg_file_unzip">Descomprimir archivos seleccionados.</string>
+    <string name="toast_file_unzip">Los archivos se han descomprimido.</string>
+    <string name="msg_file_zip">Los archivos seleccionados serán comprimidos.</string>
+    <string name="toast_file_zip">Los archivos han sido comprimidos.</string>
+
+    <string-array name="compress_type">
+        <item>.zip</item>
+        <item>.tar</item>
+        <item>.tar.gz</item>
+        <item>.tar.bz2</item>
+    </string-array>
+
 </resources>

@@ -40,31 +40,27 @@
     <string name="each_text">%d%%</string>
     <string name="total_text">%1$d/%2$d (%3$d%%)</string>
 
+    <!-- 새로운 부분 -->
     <string name="copy">복사</string>
     <string name="cut">자르기</string>
     <string name="paste">붙이기</string>
     <string name="archive">압축하기</string>
     <string name="unarchive">압축풀기</string>
     <string name="delete">삭제</string>
-
     <string name="new_folder">새 폴더</string>
     <string name="select_all">모두 선택</string>
     <string name="view_type">보기 타입</string>
-
     <string name="msg_file_sort">정렬 방법을 선택하세요.</string>
     <string name="file_ext">파일 확장자</string>
     <string name="file_date">파일 날짜</string>
     <string name="file_size">파일 크기</string>
     <string name="ascending">오름차순</string>
     <string name="descending">내림차순</string>
-
     <string name="msg_file_rename">변경할 파일 이름을 입력하세요.</string>
     <string name="msg_new_folder">생성할 새 폴더 이름을 입력하세요.</string>
-
     <string name="overwrite">덮어쓰기</string>
     <string name="skip">뛰어넘기</string>
     <string name="msg_overwrite">파일이 이미 있습니다. 덮어쓰시겠습니까?</string>
-
     <string name="toast_cancel">요청이 취소되었습니다.</string>
     <string name="toast_error">에러가 발생하였습니다.</string>
     <string name="toast_file_rename">파일 이름이 변경되었습니다.</string>
@@ -72,22 +68,17 @@
     <string name="toast_new_folder">새 폴더가 생성되었습니다.</string>
     <string name="toast_select_all">모든 파일을 선택합니다.</string>
     <string name="toast_deselect_all">모든 파일을 선택 해제합니다.</string>
-
     <string name="warn_file_delete">선택된 %d개의 파일을 삭제하시겠습니까?</string>
     <string name="msg_file_delete">선택된 파일이 삭제중입니다.</string>
     <string name="toast_file_delete">선택된 파일이 삭제 완료되었습니다.</string>
-
     <string name="msg_file_paste_copy">복사할 파일을 현재 폴더에 붙여넣는 중입니다.</string>
     <string name="msg_file_paste_cut">이동할 파일을 현재 폴더에 붙여넣는 중입니다.</string>
     <string name="toast_file_paste_copy">파일 복사가 완료되었습니다.</string>
     <string name="toast_file_paste_cut">파일 이동이 완료되었습니다.</string>
-
     <string name="warn_move_same_folder">같은 폴더로는 파일 이동을 할 수 없습니다.</string>
     <string name="warn_copy_same_folder">같은 폴더로의 복사는 파일의 사본을 만듭니다.</string>
-
     <string name="msg_file_unzip">선택된 파일의 압축을 풉니다.</string>
     <string name="toast_file_unzip">압축 풀기가 완료되었습니다.</string>
-
     <string name="msg_file_zip">선택된 파일을 압축합니다.</string>
     <string name="toast_file_zip">압축 하기가 완료되었습니다.</string>
 
@@ -97,5 +88,6 @@
         <item>.tar.gz</item>
         <item>.tar.bz2</item>
     </string-array>
+
 
 </resources>

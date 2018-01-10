@@ -39,4 +39,54 @@
     <string name="hide_completed_file">Ausgefüllte Dateien ausblenden</string>
     <string name="each_text">%d%%</string>
     <string name="total_text">%1$d/%2$d (%3$d%%)</string>
+
+    <!-- 새로운 부분 -->
+    <string name="copy">Kopieren</string>
+    <string name="cut">Schnitt</string>
+    <string name="paste">Einfügen</string>
+    <string name="archive">Archiv</string>
+    <string name="unarchive">Unarchivieren</string>
+    <string name="delete">Löschen</string>
+    <string name="new_folder">Neuer Ordner</string>
+    <string name="select_all">Wählen Sie Alle</string>
+    <string name="view_type">Ansichtstyp</string>
+    <string name="msg_file_sort">Bitte wählen Sie eine Dateisortiermethode.</string>
+    <string name="file_ext">Dateierweiterung</string>
+    <string name="file_date">Dateidatum</string>
+    <string name="file_size">Dateigröße</string>
+    <string name="ascending">Aufsteigend</string>
+    <string name="descending">Absteigend</string>
+    <string name="msg_file_rename">Bitte geben Sie den Namen der zu ändernden Datei ein.</string>
+    <string name="msg_new_folder">Bitte geben Sie den Namen des neuen Ordners ein, den Sie erstellen möchten.</string>
+    <string name="overwrite">Überschreiben</string>
+    <string name="skip">Überspringen</string>
+    <string name="msg_overwrite">Diese Datei existiert bereits. Möchtest du überschreiben?</string>
+    <string name="toast_cancel">Die Anfrage wurde storniert.</string>
+    <string name="toast_error">Ein Fehler ist aufgetreten.</string>
+    <string name="toast_file_rename">Der Dateiname wurde geändert.</string>
+    <string name="toast_multi_rename_error">Das Umbenennen von Dateien ist nur möglich, wenn Sie eine Datei auswählen.</string>
+    <string name="toast_new_folder">Ein neuer Ordner wurde erstellt.</string>
+    <string name="toast_select_all">Wählen Sie die gesamte Datei aus.</string>
+    <string name="toast_deselect_all">Deaktivieren Sie die gesamte Datei.</string>
+    <string name="warn_file_delete">Möchten Sie die %d ausgewählten Dateien wirklich löschen?</string>
+    <string name="msg_file_delete">Die ausgewählte Datei wird gelöscht.</string>
+    <string name="toast_file_delete">Die ausgewählte Datei wurde gelöscht.</string>
+    <string name="msg_file_paste_copy">Fügen Sie die zu kopierende Datei hier ein.</string>
+    <string name="msg_file_paste_cut">Fügen Sie die zu verschiebende Datei hier ein.</string>
+    <string name="toast_file_paste_copy">Die Dateien wurden kopiert.</string>
+    <string name="toast_file_paste_cut">Die Dateien wurden verschoben.</string>
+    <string name="warn_move_same_folder">Sie können nicht zum selben Ort wechseln.</string>
+    <string name="warn_copy_same_folder">Beim Kopieren an denselben Speicherort wird eine Kopie mit einem anderen Namen erstellt.</string>
+    <string name="msg_file_unzip">Ausgewählte Dateien entpacken.</string>
+    <string name="toast_file_unzip">Die Dateien wurden entpackt.</string>
+    <string name="msg_file_zip">Die ausgewählten Dateien werden gezippt.</string>
+    <string name="toast_file_zip">Die Dateien wurden gezippt.</string>
+
+    <string-array name="compress_type">
+        <item>.zip</item>
+        <item>.tar</item>
+        <item>.tar.gz</item>
+        <item>.tar.bz2</item>
+    </string-array>
+
 </resources>

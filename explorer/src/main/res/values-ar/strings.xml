@@ -39,4 +39,54 @@
     <string name="hide_completed_file">إخفاء الملفات المكتملة</string>
     <string name="each_text">%d%%</string>
     <string name="total_text">%1$d/%2$d (%3$d%%)</string>
+
+    <!-- 새로운 부분 -->
+    <string name="copy">نسخة</string>
+    <string name="cut">قطع</string>
+    <string name="paste">معجون</string>
+    <string name="archive">الأرشيف</string>
+    <string name="unarchive">إلغاء الأرشفة</string>
+    <string name="delete">حذف</string>
+    <string name="new_folder">ملف جديد</string>
+    <string name="select_all">اختر الكل</string>
+    <string name="view_type">نوع العرض</string>
+    <string name="msg_file_sort">الرجاء تحديد طريقة تصنيف الملف.</string>
+    <string name="file_ext">امتداد الملف</string>
+    <string name="file_date">تاريخ الملف</string>
+    <string name="file_size">حجم الملف</string>
+    <string name="ascending">تصاعدي</string>
+    <string name="descending">تنازلي</string>
+    <string name="msg_file_rename">الرجاء إدخال اسم الملف المطلوب تغييره.</string>
+    <string name="msg_new_folder">الرجاء إدخال اسم المجلد الجديد الذي تريد إنشاءه.</string>
+    <string name="overwrite">اعادة الكتابة</string>
+    <string name="skip">تخطى</string>
+    <string name="msg_overwrite">هذا الملف موجود بالفعل. هل تريد الكتابة فوق؟</string>
+    <string name="toast_cancel">تم إلغاء الطلب.</string>
+    <string name="toast_error">حدث خطأ.</string>
+    <string name="toast_file_rename">تم تغيير اسم الملف.</string>
+    <string name="toast_multi_rename_error">لا يمكن إعادة تسمية الملفات إلا عند تحديد ملف واحد.</string>
+    <string name="toast_new_folder">تم إنشاء مجلد جديد.</string>
+    <string name="toast_select_all">حدد الملف بأكمله.</string>
+    <string name="toast_deselect_all">ألغ تحديد الملف بأكمله.</string>
+    <string name="warn_file_delete">هل تريد بالتأكيد حذف ٪d من الملفات المحددة؟</string>
+    <string name="msg_file_delete">يتم حذف الملف المحدد.</string>
+    <string name="toast_file_delete">تم حذف الملف المحدد.</string>
+    <string name="msg_file_paste_copy">الصق الملف لنسخه هنا.</string>
+    <string name="msg_file_paste_cut">الصق الملف المطلوب نقله هنا.</string>
+    <string name="toast_file_paste_copy">تم نسخ الملفات.</string>
+    <string name="toast_file_paste_cut">تم نقل الملفات.</string>
+    <string name="warn_move_same_folder">لا يمكنك الانتقال إلى نفس الموقع.</string>
+    <string name="warn_copy_same_folder">يؤدي النسخ إلى نفس الموقع إلى إنشاء نسخة باسم مختلف.</string>
+    <string name="msg_file_unzip">إلغاء تحديد الملفات المحددة.</string>
+    <string name="toast_file_unzip">تم فك ضغط الملفات.</string>
+    <string name="msg_file_zip">سيتم ضغط الملفات المحددة.</string>
+    <string name="toast_file_zip">تم ضغط الملفات.</string>
+
+    <string-array name="compress_type">
+        <item>.zip</item>
+        <item>.tar</item>
+        <item>.tar.gz</item>
+        <item>.tar.bz2</item>
+    </string-array>
+
 </resources>

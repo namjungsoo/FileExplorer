@@ -39,4 +39,54 @@
     <string name="hide_completed_file">隱藏完成的文件</string>
     <string name="each_text">%d%%</string>
     <string name="total_text">%1$d/%2$d (%3$d%%)</string>
+
+    <!-- 새로운 부분 -->
+    <string name="copy">複製</string>
+    <string name="cut">切</string>
+    <string name="paste">糊</string>
+    <string name="archive">檔案</string>
+    <string name="unarchive">取消封存</string>
+    <string name="delete">刪除</string>
+    <string name="new_folder">新建文件夾</string>
+    <string name="select_all">全選</string>
+    <string name="view_type">查看類型</string>
+    <string name="msg_file_sort">請選擇一個文件排序方法。</string>
+    <string name="file_ext">文件擴展名</string>
+    <string name="file_date">文件日期</string>
+    <string name="file_size">文件大小</string>
+    <string name="ascending">上升</string>
+    <string name="descending">降序</string>
+    <string name="msg_file_rename">請輸入要更改的文件的名稱。</string>
+    <string name="msg_new_folder">請輸入您要創建的新文件夾的名稱。</string>
+    <string name="overwrite">覆蓋</string>
+    <string name="skip">跳躍</string>
+    <string name="msg_overwrite">這個文件已經存在。你想覆蓋嗎？</string>
+    <string name="toast_cancel">該請求已被取消。</string>
+    <string name="toast_error">發生了錯誤。</string>
+    <string name="toast_file_rename">文件名已被更改。</string>
+    <string name="toast_multi_rename_error">只有在選擇一個文件時才能重命名文件。</string>
+    <string name="toast_new_folder">一個新的文件夾已被創建。</string>
+    <string name="toast_select_all">選擇整個文件。</string>
+    <string name="toast_deselect_all">取消選擇整個文件。</string>
+    <string name="warn_file_delete">您確定要刪除%d個選定的檔案嗎？</string>
+    <string name="msg_file_delete">所選文件正在被刪除。</string>
+    <string name="toast_file_delete">所選文件已被刪除。</string>
+    <string name="msg_file_paste_copy">粘貼文件複製到這裡。</string>
+    <string name="msg_file_paste_cut">粘貼文件在這裡移動。</string>
+    <string name="toast_file_paste_copy">這些文件已被複製。</string>
+    <string name="toast_file_paste_cut">文件已被移動。</string>
+    <string name="warn_move_same_folder">你不能移動到相同的位置。</string>
+    <string name="warn_copy_same_folder">複製到相同的位置創建具有不同名稱的副本。</string>
+    <string name="msg_file_unzip">解壓縮選定的文件。</string>
+    <string name="toast_file_unzip">這些文件已被解壓縮。</string>
+    <string name="msg_file_zip">所選文件將被壓縮。</string>
+    <string name="toast_file_zip">這些文件已被壓縮。</string>
+
+    <string-array name="compress_type">
+        <item>.zip</item>
+        <item>.tar</item>
+        <item>.tar.gz</item>
+        <item>.tar.bz2</item>
+    </string-array>
+
 </resources>
