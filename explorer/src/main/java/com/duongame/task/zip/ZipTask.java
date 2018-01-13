@@ -14,8 +14,6 @@ import com.duongame.helper.ToastHelper;
 
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveOutputStream;
-import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
-import org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream;
 import org.apache.commons.compress.compressors.bzip2.BZip2CompressorOutputStream;
 import org.apache.commons.compress.compressors.gzip.GzipCompressorOutputStream;
 import org.sevenzip4j.archive.SevenZipEntry;
@@ -28,6 +26,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
+import java.util.zip.ZipOutputStream;
 
 import static com.duongame.adapter.ExplorerItem.CompressType.BZIP2;
 import static com.duongame.adapter.ExplorerItem.CompressType.GZIP;
@@ -46,7 +47,7 @@ public class ZipTask extends AsyncTask<Void, FileHelper.Progress, Boolean> {
 
     private DialogInterface.OnDismissListener onDismissListener;
     private String path;
-    ExplorerItem.CompressType type = FileHelper.getCompressType(path);
+    private ExplorerItem.CompressType type;
 
     public ZipTask(Activity activity) {
         activityWeakReference = new WeakReference<Activity>(activity);
@@ -112,11 +113,13 @@ public class ZipTask extends AsyncTask<Void, FileHelper.Progress, Boolean> {
                 File src = new File(zipList.get(i).path);
                 FileInputStream inputStream = new FileInputStream(zipList.get(i).path);
 
-                stream.putArchiveEntry(entry);
-
                 long srcLength = src.length();
                 long totalRead = 0;
                 int nRead = 0;
+
+                entry.setSize(srcLength);
+                stream.putArchiveEntry(entry);
+
                 while ((nRead = inputStream.read(buf)) > 0) {
                     stream.write(buf, 0, nRead);
 
@@ -299,15 +302,21 @@ public class ZipTask extends AsyncTask<Void, FileHelper.Progress, Boolean> {
     boolean archiveZip() {
         try {
             File src = new File(path);
-            ZipArchiveOutputStream stream = new ZipArchiveOutputStream(src);
+
+            ZipOutputStream stream = new ZipOutputStream(new FileOutputStream(src));
+//            ZipArchiveOutputStream stream = new ZipArchiveOutputStream(src);
+
             byte[] buf = new byte[BLOCK_SIZE];
 
             for (int i = 0; i < zipList.size(); i++) {
 
-                ZipArchiveEntry entry = new ZipArchiveEntry(zipList.get(i).name);
+                ZipEntry entry = new ZipEntry(zipList.get(i).name);
+//                ZipArchiveEntry entry = new ZipArchiveEntry(zipList.get(i).name);
+
                 FileInputStream inputStream = new FileInputStream(zipList.get(i).path);
 
-                stream.putArchiveEntry(entry);
+                stream.putNextEntry(entry);
+//                stream.putArchiveEntry(entry);
 
                 long srcLength = src.length();
                 long totalRead = 0;
@@ -320,7 +329,8 @@ public class ZipTask extends AsyncTask<Void, FileHelper.Progress, Boolean> {
                     updateProgress(i, zipList.get(i).name, (int) percent);
                 }
 
-                stream.closeArchiveEntry();
+                stream.closeEntry();
+//                stream.closeArchiveEntry();
             }
 
             stream.finish();
