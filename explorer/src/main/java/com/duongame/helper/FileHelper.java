@@ -27,6 +27,14 @@ public class FileHelper {
         public int count;
     }
 
+    public static String getNameWithoutTar(String name) {
+        String tar = name.toLowerCase();
+        if(tar.endsWith(".tar")) {
+            return tar.replace(".tar", "");
+        } else {
+            return name;
+        }
+    }
     public static String getCommaSize(long size) {
         if (size < 0)
             return "";

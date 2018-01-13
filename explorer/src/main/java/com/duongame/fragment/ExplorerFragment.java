@@ -402,6 +402,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
 
         // zip파일의 이름을 기준으로 함
         String base = item.name.substring(0, item.name.lastIndexOf("."));
+        base = FileHelper.getNameWithoutTar(base);
 
         // path/zipname 폴더가 있는지 확인
         final String newPath = FileHelper.getNewFileName(application.getLastPath() + "/" + base);
