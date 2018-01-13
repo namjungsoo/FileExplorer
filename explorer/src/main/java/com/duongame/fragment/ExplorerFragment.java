@@ -411,7 +411,6 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
         // 새로나온 폴더의 이름을 edit에 반영함
         editFileName.setText(newName);
 
-
         AlertHelper.showAlert(getActivity(),
                 AppHelper.getAppName(getActivity()),
                 getString(R.string.msg_file_unzip),

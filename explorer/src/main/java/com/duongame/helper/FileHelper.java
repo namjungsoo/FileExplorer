@@ -18,7 +18,7 @@ public class FileHelper {
     private static final long MEGA = 1024 * 1024;
     private static final long KILO = 1024;
     private static final long GIGA = 1024 * 1024 * 1024;
-    public static final int BLOCK_SIZE = 8 * (int)KILO;
+    public static final int BLOCK_SIZE = 8 * (int) KILO;
 
     public static class Progress {
         public int percent;
@@ -29,12 +29,14 @@ public class FileHelper {
 
     public static String getNameWithoutTar(String name) {
         String tar = name.toLowerCase();
-        if(tar.endsWith(".tar")) {
-            return tar.replace(".tar", "");
+        if (tar.endsWith(".tar")) {
+            return name.substring(0, tar.length() - 4);
+            //return tar.replace(".tar", "");
         } else {
             return name;
         }
     }
+
     public static String getCommaSize(long size) {
         if (size < 0)
             return "";

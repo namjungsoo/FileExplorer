@@ -20,7 +20,7 @@ android {
         applicationId 'com.duongame'
         buildConfigField "boolean", "SHOW_AD", "true"
         buildConfigField "boolean", "PREVIEW_ZIP", "false"
-        minSdkVersion 21
+        minSdkVersion 14
         targetSdkVersion 27
         versionCode 1
         versionName "1.0.0"
@@ -74,9 +74,12 @@ android {
 
         // 파일탐색기
         file {
+            //admob
             buildConfigField "String", "BANNER_ID", "\"ca-app-pub-5576037828251153/8260818625\""
             buildConfigField "String", "POPUP_ID", "\"ca-app-pub-5576037828251153/2214285028\""
             buildConfigField "String", "INTERSTITIAL_ID", "\"ca-app-pub-5576037828251153/9737551820\""
+            //ga
+            buildConfigField "String", "ga_trackingId", "\"UA-61499807-14\""
             buildConfigField "boolean", "PREVIEW_ZIP", "false"
             applicationIdSuffix '.file'
             dimension "project"
@@ -89,9 +92,12 @@ android {
         }
         // 코믹제트
         comicz {
-            buildConfigField "String", "BANNER_ID", "\"ca-app-pub-5576037828251153/8260818625\""
-            buildConfigField "String", "POPUP_ID", "\"ca-app-pub-5576037828251153/2214285028\""
-            buildConfigField "String", "INTERSTITIAL_ID", "\"ca-app-pub-5576037828251153/9737551820\""
+            //admob
+            buildConfigField "String", "BANNER_ID", "\"ca-app-pub-5576037828251153/9457742767\""
+            buildConfigField "String", "POPUP_ID", "\"ca-app-pub-5576037828251153/3680115556\""
+            buildConfigField "String", "INTERSTITIAL_ID", "\"ca-app-pub-5576037828251153/6911470470\""
+            //ga
+            buildConfigField "String", "ga_trackingId", "\"UA-61499807-13\""
             buildConfigField "boolean", "PREVIEW_ZIP", "true"
             applicationIdSuffix '.comicz'
             dimension "project"
