@@ -68,7 +68,7 @@
     <string name="toast_new_folder">تم إنشاء مجلد جديد.</string>
     <string name="toast_select_all">حدد الملف بأكمله.</string>
     <string name="toast_deselect_all">ألغ تحديد الملف بأكمله.</string>
-    <string name="warn_file_delete">هل تريد بالتأكيد حذف ٪d من الملفات المحددة؟</string>
+    <string name="warn_file_delete">هل تريد بالتأكيد حذف %d من الملفات المحددة؟</string>
     <string name="msg_file_delete">يتم حذف الملف المحدد.</string>
     <string name="toast_file_delete">تم حذف الملف المحدد.</string>
     <string name="msg_file_paste_copy">الصق الملف لنسخه هنا.</string>
