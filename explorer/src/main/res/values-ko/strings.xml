@@ -19,11 +19,6 @@
     <string name="back_pressed">종료하시려면 뒤로가기 버튼을 한번 더 누르세요.</string>
     <string name="action_settings">설정</string>
     <string name="no_contents">결과가 없습니다.</string>
-    <string-array name="search_file">
-        <item>ZIP</item>
-        <item>TXT</item>
-        <item>PDF</item>
-    </string-array>
     <string name="permissions">권한 요청</string>
     <string name="no_files">파일이 없습니다.</string>
     <string name="msg_no_image_in_zip">압축(ZIP) 파일에 이미지가 없습니다.</string>
@@ -81,13 +76,4 @@
     <string name="toast_file_unzip">압축 풀기가 완료되었습니다.</string>
     <string name="msg_file_zip">선택된 파일을 압축합니다.</string>
     <string name="toast_file_zip">압축 하기가 완료되었습니다.</string>
-
-    <string-array name="compress_type">
-        <item>.zip</item>
-        <item>.tar</item>
-        <item>.tar.gz</item>
-        <item>.tar.bz2</item>
-    </string-array>
-
-
 </resources>

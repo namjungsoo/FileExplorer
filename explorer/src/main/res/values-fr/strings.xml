@@ -19,11 +19,6 @@
     <string name="back_pressed">Pour quitter, appuyez à nouveau sur le bouton de retour.</string>
     <string name="action_settings">Paramètres</string>
     <string name="no_contents">Pas de contenu</string>
-    <string-array name="search_file">
-        <item>ZIP</item>
-        <item>TXT</item>
-        <item>PDF</item>
-    </string-array>
     <string name="permissions">Demander des autorisations</string>
     <string name="no_files">Aucun fichier trouvé.</string>
     <string name="msg_no_image_in_zip">Il n\'y a pas d\'image dans le fichier compressé (ZIP).</string>
@@ -81,12 +76,4 @@
     <string name="toast_file_unzip">Les fichiers ont été décompressés.</string>
     <string name="msg_file_zip">Les fichiers sélectionnés seront compressés.</string>
     <string name="toast_file_zip">Les fichiers ont été compressés.</string>
-
-    <string-array name="compress_type">
-        <item>.zip</item>
-        <item>.tar</item>
-        <item>.tar.gz</item>
-        <item>.tar.bz2</item>
-    </string-array>
-
 </resources>

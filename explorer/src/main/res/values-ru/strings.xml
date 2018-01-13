@@ -19,11 +19,6 @@
     <string name="back_pressed">Чтобы выйти, снова нажмите кнопку «Назад».</string>
     <string name="action_settings">Настройки</string>
     <string name="no_contents">Нет содержимого</string>
-    <string-array name="search_file">
-        <item>ZIP</item>
-        <item>TXT</item>
-        <item>PDF</item>
-    </string-array>
     <string name="permissions">Запросить разрешения</string>
     <string name="no_files">Файлов не найдено.</string>
     <string name="msg_no_image_in_zip">В сжатом (ZIP) файле нет изображения.</string>
@@ -81,12 +76,4 @@
     <string name="toast_file_unzip">Файлы распакованы.</string>
     <string name="msg_file_zip">Выбранные файлы будут заархивированы.</string>
     <string name="toast_file_zip">Файлы были заархивированы.</string>
-
-    <string-array name="compress_type">
-        <item>.zip</item>
-        <item>.tar</item>
-        <item>.tar.gz</item>
-        <item>.tar.bz2</item>
-    </string-array>
-
 </resources>

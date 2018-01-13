@@ -19,11 +19,6 @@
     <string name="back_pressed">Per uscire, premere nuovamente il tasto indietro.</string>
     <string name="action_settings">Impostazioni</string>
     <string name="no_contents">Nessun contenuto</string>
-    <string-array name="search_file">
-        <item>ZIP</item>
-        <item>TXT</item>
-        <item>PDF</item>
-    </string-array>
     <string name="permissions">Richiedi autorizzazioni</string>
     <string name="no_files">Nessun file trovato.</string>
     <string name="msg_no_image_in_zip">Non c\'è alcuna immagine nel file compresso (ZIP).</string>
@@ -81,12 +76,4 @@
     <string name="toast_file_unzip">I file sono stati decompressi.</string>
     <string name="msg_file_zip">I file selezionati verranno compressi.</string>
     <string name="toast_file_zip">I file sono stati compressi.</string>
-
-    <string-array name="compress_type">
-        <item>.zip</item>
-        <item>.tar</item>
-        <item>.tar.gz</item>
-        <item>.tar.bz2</item>
-    </string-array>
-
 </resources>

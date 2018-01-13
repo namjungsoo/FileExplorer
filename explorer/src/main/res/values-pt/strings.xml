@@ -19,11 +19,6 @@
     <string name="back_pressed">Para sair, pressione o botão Voltar novamente.</string>
     <string name="action_settings">Configurações</string>
     <string name="no_contents">Sem conteúdo</string>
-    <string-array name="search_file">
-        <item>ZIP</item>
-        <item>TXT</item>
-        <item>PDF</item>
-    </string-array>
     <string name="permissions">Solicitar permissões</string>
     <string name="no_files">Nenhum arquivo encontrado.</string>
     <string name="msg_no_image_in_zip">Não há imagem no arquivo compactado (ZIP).</string>
@@ -81,12 +76,4 @@
     <string name="toast_file_unzip">Os arquivos foram descompactados.</string>
     <string name="msg_file_zip">Os arquivos selecionados serão compactados.</string>
     <string name="toast_file_zip">Os arquivos foram compactados.</string>
-
-    <string-array name="compress_type">
-        <item>.zip</item>
-        <item>.tar</item>
-        <item>.tar.gz</item>
-        <item>.tar.bz2</item>
-    </string-array>
-
 </resources>

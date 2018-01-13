@@ -232,12 +232,13 @@ public class UnzipTask extends AsyncTask<Void, FileHelper.Progress, Boolean> {
         return true;
     }
 
-    boolean unarchiveTar(String path) throws IOException {
+    boolean unarchiveTar(String tar) throws IOException {
         TarArchiveInputStream stream;
         TarArchiveEntry entry;
         byte[] buf = new byte[BLOCK_SIZE];
 
-        stream = new TarArchiveInputStream(new FileInputStream(path));
+        // 파일 갯수를 위해서 두번 오픈한다.
+        stream = new TarArchiveInputStream(new FileInputStream(tar));
         entry = (TarArchiveEntry) stream.getNextEntry();
         count = 0;
 
@@ -251,7 +252,7 @@ public class UnzipTask extends AsyncTask<Void, FileHelper.Progress, Boolean> {
         }
         stream.close();
 
-        stream = new TarArchiveInputStream(new FileInputStream(path));
+        stream = new TarArchiveInputStream(new FileInputStream(tar));
         entry = (TarArchiveEntry) stream.getNextEntry();
 
         int j = 0;
@@ -266,7 +267,7 @@ public class UnzipTask extends AsyncTask<Void, FileHelper.Progress, Boolean> {
 
             // 파일 복사 부분
             FileOutputStream outputStream = new FileOutputStream(target);
-            long srcLength = entry.getRealSize();
+            long srcLength = entry.getSize();
             long totalRead = 0;
             int nRead = 0;
             while ((nRead = stream.read(buf)) > 0) {

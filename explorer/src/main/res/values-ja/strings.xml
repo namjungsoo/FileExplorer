@@ -19,11 +19,6 @@
     <string name="back_pressed">終了するには、戻るボタンをもう一度押してください。</string>
     <string name="action_settings">設定</string>
     <string name="no_contents">結果はありません。</string>
-    <string-array name="search_file">
-        <item>ZIP</item>
-        <item>TXT</item>
-        <item>PDF</item>
-    </string-array>
     <string name="permissions">アクセス許可要求</string>
     <string name="no_files">ファイルがありません。</string>
     <string name="msg_no_image_in_zip">圧縮（ZIP）ファイルに画像がありません。</string>
@@ -81,12 +76,4 @@
     <string name="toast_file_unzip">ファイルは解凍されています。</string>
     <string name="msg_file_zip">選択したファイルは圧縮されます。</string>
     <string name="toast_file_zip">ファイルは圧縮されています。</string>
-
-    <string-array name="compress_type">
-        <item>.zip</item>
-        <item>.tar</item>
-        <item>.tar.gz</item>
-        <item>.tar.bz2</item>
-    </string-array>
-
 </resources>

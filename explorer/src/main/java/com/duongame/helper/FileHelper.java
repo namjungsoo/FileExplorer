@@ -106,16 +106,18 @@ public class FileHelper {
         String lower = path.toLowerCase();
         if (lower.endsWith(".zip"))
             return ExplorerItem.CompressType.ZIP;
+        //TODO: 현재 지원 안함
 //        if (lower.endsWith(".rar"))
 //            return ExplorerItem.CompressType.RAR;
         if (lower.endsWith(".7z"))
             return ExplorerItem.CompressType.SEVENZIP;
         if (lower.endsWith(".tar"))
             return ExplorerItem.CompressType.TAR;
-        if (lower.endsWith(".gz"))
+        if (lower.endsWith(".gz") || lower.endsWith(".tgz"))
             return ExplorerItem.CompressType.GZIP;
-        if (lower.endsWith(".bz2"))
-            return ExplorerItem.CompressType.BZIP2;
+        //TODO: 테스트 더해보고 안되면 막아야 함
+//        if (lower.endsWith(".bz2") || lower.endsWith(".tbz2"))
+//            return ExplorerItem.CompressType.BZIP2;
         return ExplorerItem.CompressType.OTHER;
     }
 
@@ -126,12 +128,7 @@ public class FileHelper {
 
         if (FileHelper.isImage(eachFile.getName())) {
             type = ExplorerItem.FileType.IMAGE;
-        } else if (lower.endsWith(".zip")
-                || lower.endsWith(".rar")
-                || lower.endsWith(".7z")
-                || lower.endsWith(".tar")
-                || lower.endsWith(".gz")
-                || lower.endsWith(".bz2"))
+        } else if (getCompressType(lower) != ExplorerItem.CompressType.OTHER)
             type = ExplorerItem.FileType.ZIP;
         else if (lower.endsWith(".pdf"))
             type = ExplorerItem.FileType.PDF;

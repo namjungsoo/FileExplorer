@@ -19,11 +19,6 @@
     <string name="back_pressed">要退出，请再次按返回按钮。</string>
     <string name="action_settings">设置</string>
     <string name="no_contents">没有内容</string>
-    <string-array name="search_file">
-        <item>ZIP</item>
-        <item>TXT</item>
-        <item>PDF</item>
-    </string-array>
     <string name="permissions">请求权限</string>
     <string name="no_files">没有找到文件。</string>
     <string name="msg_no_image_in_zip">压缩（ZIP）文件中没有图像。</string>
@@ -81,12 +76,4 @@
     <string name="toast_file_unzip">这些文件已被解压缩。</string>
     <string name="msg_file_zip">所选文件将被压缩。</string>
     <string name="toast_file_zip">这些文件已被压缩。</string>
-
-    <string-array name="compress_type">
-        <item>.zip</item>
-        <item>.tar</item>
-        <item>.tar.gz</item>
-        <item>.tar.bz2</item>
-    </string-array>
-
 </resources>

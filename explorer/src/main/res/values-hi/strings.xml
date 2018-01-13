@@ -19,11 +19,6 @@
     <string name="back_pressed">छोड़ने के लिए, वापस बटन फिर से दबाएं</string>
     <string name="action_settings">सेटिंग्स</string>
     <string name="no_contents">कोई सामग्री नहीं है</string>
-    <string-array name="search_file">
-        <item>ZIP</item>
-        <item>TXT</item>
-        <item>PDF</item>
-    </string-array>
     <string name="permissions">अनुरोध अनुमतियां</string>
     <string name="no_files">कोई फाइल नहीं मिली।</string>
     <string name="msg_no_image_in_zip">संकुचित (ZIP) फ़ाइल में कोई छवि नहीं है</string>
@@ -81,12 +76,4 @@
     <string name="toast_file_unzip">फ़ाइलों को अनझिप किया गया है</string>
     <string name="msg_file_zip">चयनित फ़ाइलों को ज़िपित किया जाएगा।</string>
     <string name="toast_file_zip">फ़ाइलों को ज़िपित किया गया है</string>
-
-    <string-array name="compress_type">
-        <item>.zip</item>
-        <item>.tar</item>
-        <item>.tar.gz</item>
-        <item>.tar.bz2</item>
-    </string-array>
-
 </resources>

@@ -19,11 +19,6 @@
     <string name="back_pressed">لإنهاء، اضغط على الزر مرة أخرى.</string>
     <string name="action_settings">إعدادات</string>
     <string name="no_contents">لا محتويات</string>
-    <string-array name="search_file">
-        <item>ZIP</item>
-        <item>TXT</item>
-        <item>PDF</item>
-    </string-array>
     <string name="permissions">طلب الأذونات</string>
     <string name="no_files">لا توجد ملفات.</string>
     <string name="msg_no_image_in_zip">لا توجد صورة في ملف مضغوط (زيب).</string>
@@ -81,12 +76,4 @@
     <string name="toast_file_unzip">تم فك ضغط الملفات.</string>
     <string name="msg_file_zip">سيتم ضغط الملفات المحددة.</string>
     <string name="toast_file_zip">تم ضغط الملفات.</string>
-
-    <string-array name="compress_type">
-        <item>.zip</item>
-        <item>.tar</item>
-        <item>.tar.gz</item>
-        <item>.tar.bz2</item>
-    </string-array>
-
 </resources>

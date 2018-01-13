@@ -19,11 +19,6 @@
     <string name="back_pressed">Zum Beenden drücken Sie die Zurück-Taste erneut.</string>
     <string name="action_settings">Einstellungen</string>
     <string name="no_contents">Kein Inhalt</string>
-    <string-array name="search_file">
-        <item>ZIP</item>
-        <item>TXT</item>
-        <item>PDF</item>
-    </string-array>
     <string name="permissions">Berechtigungen anfordern</string>
     <string name="no_files">Keine Dateien gefunden.</string>
     <string name="msg_no_image_in_zip">In der komprimierten Datei (ZIP) ist kein Bild vorhanden.</string>
@@ -81,12 +76,4 @@
     <string name="toast_file_unzip">Die Dateien wurden entpackt.</string>
     <string name="msg_file_zip">Die ausgewählten Dateien werden gezippt.</string>
     <string name="toast_file_zip">Die Dateien wurden gezippt.</string>
-
-    <string-array name="compress_type">
-        <item>.zip</item>
-        <item>.tar</item>
-        <item>.tar.gz</item>
-        <item>.tar.bz2</item>
-    </string-array>
-
 </resources>
