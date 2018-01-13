@@ -1050,7 +1050,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
         task.setPath(path);
         task.setPath(zipPath);
 
-        // 여러 파일을 동시에 풀수있도록 함
+        // 선택된 파일만 압축할 리스트에 추가해 줌
         ArrayList<ExplorerItem> zipList = new ArrayList<>();
         for (int i = 0; i < fileList.size(); i++) {
             if (fileList.get(i).selected) {
@@ -1100,7 +1100,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
 
         AlertHelper.showAlert(getActivity(),
                 AppHelper.getAppName(getActivity()),
-                getString(R.string.msg_file_unzip),
+                getString(R.string.msg_file_zip),
                 view,
                 new DialogInterface.OnClickListener() {
                     @Override
