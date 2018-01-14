@@ -34,6 +34,16 @@
     <string name="hide_completed_file">Ausgefüllte Dateien ausblenden</string>
     <string name="each_text">%d%%</string>
     <string name="total_text">%1$d/%2$d (%3$d%%)</string>
+    <string-array name="search_file">
+        <item>ZIP</item>
+        <item>TXT</item>
+        <item>PDF</item>
+    </string-array>
+    <string-array name="compress_type">
+        <item>.zip</item>
+        <item>.tar</item>
+        <item>.tar.gz</item>
+    </string-array>
 
     <!-- 새로운 부분 -->
     <string name="copy">Kopieren</string>
