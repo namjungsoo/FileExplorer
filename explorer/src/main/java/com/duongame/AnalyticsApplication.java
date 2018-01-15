@@ -20,6 +20,7 @@ public class AnalyticsApplication extends Application {
 
     /**
      * Gets the default {@link Tracker} for this {@link Application}.
+     *
      * @return tracker
      */
     synchronized public Tracker getDefaultTracker() {
@@ -27,10 +28,15 @@ public class AnalyticsApplication extends Application {
             GoogleAnalytics analytics = GoogleAnalytics.getInstance(this);
             // To enable debug logging use: adb shell setprop log.tag.GAv4 DEBUG
             //mTracker = analytics.newTracker(R.xml.global_tracker);
-            mTracker = analytics.newTracker(R.xml.analytics_tracker);
+            mTracker = analytics.newTracker(BuildConfig.GA_TRACKING_ID);
+
+            // 모두 활성화 한다. Android에 권고되는 사항이다.
+            mTracker.enableAdvertisingIdCollection(true);
+            mTracker.enableAutoActivityTracking(true);
+            mTracker.enableExceptionReporting(true);
         }
 
-        if(BuildConfig.DEBUG) {
+        if (BuildConfig.DEBUG) {
             // disable FB
             FirebaseAnalytics.getInstance(this).setAnalyticsCollectionEnabled(false);
             FirebaseCrash.setCrashCollectionEnabled(false);

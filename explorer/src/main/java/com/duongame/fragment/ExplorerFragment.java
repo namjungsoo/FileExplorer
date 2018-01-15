@@ -24,6 +24,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.ViewSwitcher;
 
+import com.duongame.AnalyticsApplication;
 import com.duongame.R;
 import com.duongame.activity.BaseActivity;
 import com.duongame.activity.PhotoActivity;
@@ -49,6 +50,8 @@ import com.duongame.task.file.PasteTask;
 import com.duongame.task.zip.UnzipTask;
 import com.duongame.task.zip.ZipTask;
 import com.duongame.view.DividerItemDecoration;
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
 
 import java.io.File;
 import java.lang.ref.WeakReference;
@@ -108,6 +111,10 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
     // 정렬
     private int sortType;
     private int sortDirection;
+
+    public Tracker getTracker() {
+        return ((AnalyticsApplication) getActivity().getApplication()).getDefaultTracker();
+    }
 
     @Nullable
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
@@ -240,6 +247,9 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
     }
 
     public void changeViewType(int viewType) {
+        // 이벤트를 보냄
+        getTracker().send(new HitBuilders.EventBuilder().setCategory("UI").setAction("ViewType").setValue(viewType).build());
+
         this.viewType = viewType;
 
         switcherViewType.setDisplayedChild(viewType);
@@ -352,7 +362,12 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
     void runUnzipTask(ExplorerItem item, String name) {
         //String name = editFileName.getText().toString();
         String path = application.getLastPath();
-        String targetPath = path + "/" + name;
+        String targetPath;
+        if (name == null) {
+            targetPath = path;
+        } else {
+            targetPath = path + "/" + name;
+        }
 
         UnzipTask task = new UnzipTask(getActivity());
         task.setPath(targetPath);
@@ -372,8 +387,12 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
         });
 
         task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+
+        // 이벤트를 보냄
+        getTracker().send(new HitBuilders.EventBuilder().setCategory("File").setAction("Unzip").build());
     }
 
+    // 폴더가 필요한 경우(gz,bz2가 아닌 경우)
     boolean isNeedFolder(String path) {
         String lowerPath = path.toLowerCase();
         boolean needFolder = true;
@@ -393,6 +412,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
         boolean needFolder = isNeedFolder(item.path);
 
         if (!needFolder) {
+            //TODO: 이거 이상한데...
             runUnzipTask(item, null);
             return;
         }
@@ -474,6 +494,9 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
         });
 
         dialog.show(getActivity().getFragmentManager(), "sort");
+
+        // 이벤트를 보냄
+        getTracker().send(new HitBuilders.EventBuilder().setCategory("File").setAction("Sort").setValue(sortType * 10 + sortDirection).build());
     }
 
     public void newFolderWithDialog() {
@@ -512,6 +535,9 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
 
         // 파일 리스트 리프레시를 요청해야함
         onRefresh();
+
+        // 이벤트를 보냄
+        getTracker().send(new HitBuilders.EventBuilder().setCategory("File").setAction("NewFolder").build());
     }
 
     void renameFileWithDialog(final ExplorerItem item) {
@@ -548,6 +574,9 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
 
             // 정보 변경 반영
             adapter.notifyItemChanged(item.position);
+
+            // 이벤트를 보냄
+            getTracker().send(new HitBuilders.EventBuilder().setCategory("File").setAction("Rename").build());
 
             ToastHelper.showToast(getActivity(), R.string.toast_file_rename);
         } catch (Exception e) {
@@ -941,6 +970,9 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
                             }
                         });
                         task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+
+                        // 이벤트를 보냄
+                        getTracker().send(new HitBuilders.EventBuilder().setCategory("File").setAction("Delete").build());
                     }
                 }, new DialogInterface.OnClickListener() {
                     @Override
@@ -969,6 +1001,9 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
 
         // 그런다음에 화면 UI를 업데이트를 해준다.
         softRefresh();
+
+        // 이벤트를 보냄
+        getTracker().send(new HitBuilders.EventBuilder().setCategory("File").setAction("SelectAll").build());
     }
 
     public void captureSelectedFile(boolean cut) {
@@ -988,6 +1023,12 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
         onPasteMode();
 
         ((BaseActivity) getActivity()).updatePasteMode();
+
+        // 이벤트를 보냄
+        if (cut)
+            getTracker().send(new HitBuilders.EventBuilder().setCategory("File").setAction("Cut").build());
+        else
+            getTracker().send(new HitBuilders.EventBuilder().setCategory("File").setAction("Copy").build());
     }
 
     void warnMoveToSameLocation() {
@@ -1016,6 +1057,9 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
             }
         });
         task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+
+        // 이벤트를 보냄
+        getTracker().send(new HitBuilders.EventBuilder().setCategory("File").setAction("Paste").build());
     }
 
     public void pasteFileWithDialog() {
@@ -1067,6 +1111,9 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
         });
 
         task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+
+        // 이벤트를 보냄
+        getTracker().send(new HitBuilders.EventBuilder().setCategory("File").setAction("Zip").setValue(FileHelper.getCompressType(ext).getValue()).build());
     }
 
     public void zipFileWithDialog() {

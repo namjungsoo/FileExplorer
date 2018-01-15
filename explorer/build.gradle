@@ -72,41 +72,36 @@ android {
             dimension "edition"
         }
 
-        // 파일탐색기
-        file {
-            //admob
-            buildConfigField "String", "BANNER_ID", "\"ca-app-pub-5576037828251153/8260818625\""
-            buildConfigField "String", "POPUP_ID", "\"ca-app-pub-5576037828251153/2214285028\""
-            buildConfigField "String", "INTERSTITIAL_ID", "\"ca-app-pub-5576037828251153/9737551820\""
-            //ga
-            buildConfigField "String", "ga_trackingId", "\"UA-61499807-14\""
-            buildConfigField "boolean", "PREVIEW_ZIP", "false"
-            applicationIdSuffix '.file'
-            dimension "project"
-            versionCode 1
-            versionName "1.0.0"
-            addManifestPlaceholders([APP_NAME: "@string/file_name_free"])
-
-            //resValue "string", "app_name", "@string/file_name_free"
-            //addManifestPlaceholders([APP_NAME: "@string/app_name"])
-        }
-        // 코믹제트
+        // 1. 코믹제트
         comicz {
             //admob
-            buildConfigField "String", "BANNER_ID", "\"ca-app-pub-5576037828251153/9457742767\""
-            buildConfigField "String", "POPUP_ID", "\"ca-app-pub-5576037828251153/3680115556\""
-            buildConfigField "String", "INTERSTITIAL_ID", "\"ca-app-pub-5576037828251153/6911470470\""
+            buildConfigField "String", "INTERSTITIAL_ID", "\"ca-app-pub-5576037828251153/9737551820\""
+            buildConfigField "String", "POPUP_ID",        "\"ca-app-pub-5576037828251153/2214285028\""
+            buildConfigField "String", "BANNER_ID",       "\"ca-app-pub-5576037828251153/8260818625\""
             //ga
-            buildConfigField "String", "ga_trackingId", "\"UA-61499807-13\""
+            buildConfigField "String", "GA_TRACKING_ID", "\"UA-61499807-13\""
             buildConfigField "boolean", "PREVIEW_ZIP", "true"
             applicationIdSuffix '.comicz'
             dimension "project"
             versionCode 21
             versionName "1.1.8"
             addManifestPlaceholders([APP_NAME: "@string/comicz_name_free"])
+        }
 
-            //resValue "string", "app_name", "@string/comicz_name_free"
-            //addManifestPlaceholders([APP_NAME: "@string/app_name"])
+        // 2. 파일탐색기
+        file {
+            //admob
+            buildConfigField "String", "INTERSTITIAL_ID", "\"ca-app-pub-5576037828251153/6911470470\""
+            buildConfigField "String", "POPUP_ID",        "\"ca-app-pub-5576037828251153/3680115556\""
+            buildConfigField "String", "BANNER_ID",       "\"ca-app-pub-5576037828251153/9457742767\""
+            //ga
+            buildConfigField "String", "GA_TRACKING_ID", "\"UA-61499807-14\""
+            buildConfigField "boolean", "PREVIEW_ZIP", "false"
+            applicationIdSuffix '.file'
+            dimension "project"
+            versionCode 2
+            versionName "1.0.1"
+            addManifestPlaceholders([APP_NAME: "@string/file_name_free"])
         }
 
         // 유료
