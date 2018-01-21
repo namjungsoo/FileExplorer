@@ -4,8 +4,6 @@ android {
     compileSdkVersion 27
     buildToolsVersion '27.0.0'
 
-    //NDK
-    publishNonDefault true
 
     lintOptions {
         abortOnError false
@@ -26,26 +24,9 @@ android {
         versionName "1.0.0"
         //multiDexEnabled true
 
-        //NDK
-        ndk {
-            abiFilters 'armeabi', 'armeabi-v7a', 'arm64-v8a', 'x86'
-        }
-        externalNativeBuild {
-            cmake {
-                arguments '-DANDROID_PLATFORM=android-18'
-            }
-        }
     }
 
     buildTypes {
-        //NDK
-        debug {
-            externalNativeBuild {
-                cmake {
-                    cFlags.add('-DNATIVE_LOG')
-                }
-            }
-        }
 
         release {
             minifyEnabled false
@@ -53,12 +34,6 @@ android {
         }
     }
 
-    //NDK
-    externalNativeBuild {
-        cmake {
-            path 'src/main/cpp/CMakeLists.txt'
-        }
-    }
 
 //    dexOptions {
 //        jumboMode true

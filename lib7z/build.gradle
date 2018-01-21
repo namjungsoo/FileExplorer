@@ -3,6 +3,8 @@ apply plugin: 'com.android.library'
 android {
     compileSdkVersion 26
 
+    //NDK
+    publishNonDefault true
 
 
     defaultConfig {
@@ -11,12 +13,35 @@ android {
         versionCode 1
         versionName "1.0"
 
+        //NDK
+        ndk {
+            abiFilters 'armeabi', 'armeabi-v7a', 'arm64-v8a', 'x86'
+        }
+        externalNativeBuild {
+            cmake {
+                arguments '-DANDROID_PLATFORM=android-18'
+            }
+        }
     }
 
     buildTypes {
+        //NDK
+        debug {
+            externalNativeBuild {
+                cmake {
+                    cFlags.add('-DNATIVE_LOG')
+                }
+            }
+        }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    //NDK
+    externalNativeBuild {
+        cmake {
+            path 'src/main/cpp/CMakeLists.txt'
         }
     }
 
