@@ -1,1 +1,1 @@
-include ':explorer'
+include ':explorer', ':lib7z'
