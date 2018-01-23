@@ -131,6 +131,7 @@ dependencies {
     //Junrar-Android
     implementation 'com.github.GrenderG:junrar-android:1.0.1'
     implementation project(':lib7z')
+    implementation project(':unrar-android')
 }
 
 // ADD THIS AT THE BOTTOM

@@ -151,7 +151,7 @@ public class UnzipTask extends AsyncTask<Void, FileHelper.Progress, Boolean> {
 //
 //                // 파일 복사 부분
 //                FileOutputStream os = new FileOutputStream(target);
-//                archive.extractFile(header, os);
+//                archive.extractAll(header, os);
 //                os.close();
 //
 //
@@ -292,7 +292,7 @@ public class UnzipTask extends AsyncTask<Void, FileHelper.Progress, Boolean> {
         // un7z를 사용함
         Z7Extractor extractor = new Z7Extractor();
 
-        extractor.extractFile(item.path, path, new ExtractCallback() {
+        extractor.extractAll(item.path, path, new ExtractCallback() {
             int count;
             int j;
 

@@ -17,7 +17,7 @@ public class Z7Extractor {
         return nGetLzmaVersion();
     }
 
-    public static boolean extractFile(String filePath, String outPath, ExtractCallback callback) {
+    public static boolean extractAll(String filePath, String outPath, ExtractCallback callback) {
         callback = callback == null ? ExtractCallback.EMPTY_CALLBACK : callback;
         File inputFile = new File(filePath);
         if (TextUtils.isEmpty(filePath) || !inputFile.exists() ||

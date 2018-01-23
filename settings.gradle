@@ -1,1 +1,1 @@
-include ':explorer', ':lib7z'
+include ':explorer', ':lib7z', ':unrar-android'
