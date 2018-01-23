@@ -25,7 +25,7 @@ public class Z7Extractor {
             callback.onError(ErrorCode.ERROR_CODE_PATH_ERROR, "File Path Error!");
             return false;
         }
-        return nExtractFile(filePath, outPath, callback, DEFAULT_IN_BUF_SIZE);
+        return nExtractAll(filePath, outPath, callback, DEFAULT_IN_BUF_SIZE);
     }
 
     public static boolean extractAsset(AssetManager assetManager, String fileName,
@@ -47,7 +47,10 @@ public class Z7Extractor {
         return outDir.exists() && outDir.isDirectory();
     }
 
-    private static native boolean nExtractFile(String filePath, String outPath,
+    private static native boolean nExtractAll(String filePath, String outPath,
+                                              ExtractCallback callback, long inBufSize);
+
+    private static native boolean nExtractFile(String filePath, String targetName, String outPath,
                                                ExtractCallback callback, long inBufSize);
 
     private static native boolean nExtractAsset(AssetManager assetManager,

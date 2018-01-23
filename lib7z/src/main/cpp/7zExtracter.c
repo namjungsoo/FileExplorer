@@ -167,8 +167,38 @@ extractStream(JNIEnv *env, ISeekInStream *seekStream, const char *destDir,
 /**
  * extract all from 7z
  */
-jboolean extractFile(JNIEnv *env, const char *srcFile, const char *destDir, jobject callback,
+jboolean extractAll(JNIEnv *env, const char *srcFile, const char *destDir, jobject callback,
                      jlong inBufSize) {
+    jclass callbackClass = (*env)->GetObjectClass(env, callback);
+    jmethodID onStart =
+            (*env)->GetMethodID(env, callbackClass, "onStart", "()V");
+    jmethodID onError =
+            (*env)->GetMethodID(env, callbackClass, "onError", "(ILjava/lang/String;)V");
+    jmethodID onSucceed =
+            (*env)->GetMethodID(env, callbackClass, "onSucceed", "()V");
+
+    CFileInStream archiveStream;
+    CallJavaVoidMethod(env, callback, onStart);
+    if (InFile_Open(&archiveStream.file, srcFile)) {
+        CallJavaIntStringMethod(env, callback, onError, SZ_ERROR_ARCHIVE, "Input File Open Error");
+        return JNI_FALSE;
+    }
+    FileInStream_CreateVTable(&archiveStream);
+    SRes res = extractStream(env, &archiveStream.vt, destDir, OPTION_EXTRACT, callback,
+                             (size_t) inBufSize);
+    File_Close(&archiveStream.file);
+    if (res == SZ_OK) {
+        CallJavaVoidMethod(env, callback, onSucceed);
+        return JNI_TRUE;
+    }
+    return JNI_FALSE;
+}
+
+/**
+ * extract target file from 7z
+ */
+jboolean extractFile(JNIEnv *env, const char *srcFile, const char *targetFile, const char *destDir, jobject callback,
+                    jlong inBufSize) {
     jclass callbackClass = (*env)->GetObjectClass(env, callback);
     jmethodID onStart =
             (*env)->GetMethodID(env, callbackClass, "onStart", "()V");

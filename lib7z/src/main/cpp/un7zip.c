@@ -11,13 +11,26 @@ FUNC(nGetLzmaVersion)(JNIEnv *env, jclass type) {
 }
 
 JNIEXPORT jboolean JNICALL
-FUNC(nExtractFile)(JNIEnv *env, jclass type, jstring filePath_,
+FUNC(nExtractAll)(JNIEnv *env, jclass type, jstring filePath_,
                    jstring outPath_, jobject callback, jlong inBufSize) {
     const char *filePath = (*env)->GetStringUTFChars(env, filePath_, 0);
     const char *outPath = (*env)->GetStringUTFChars(env, outPath_, 0);
-    jboolean res = extractFile(env, filePath, outPath, callback, inBufSize);
+    jboolean res = extractAll(env, filePath, outPath, callback, inBufSize);
     (*env)->ReleaseStringUTFChars(env, filePath_, filePath);
     (*env)->ReleaseStringUTFChars(env, outPath_, outPath);
+    return res;
+}
+
+JNIEXPORT jboolean JNICALL
+FUNC(nExtractFile)(JNIEnv *env, jclass type, jstring filePath_, jstring targetName_,
+                   jstring outPath_, jobject callback, jlong inBufSize) {
+    const char *filePath = (*env)->GetStringUTFChars(env, filePath_, 0);
+    const char *outPath = (*env)->GetStringUTFChars(env, outPath_, 0);
+    const char *targetName = (*env)->GetStringUTFChars(env, targetName_, 0);
+    jboolean res = extractFile(env, filePath, targetName, outPath, callback, inBufSize);
+    (*env)->ReleaseStringUTFChars(env, filePath_, filePath);
+    (*env)->ReleaseStringUTFChars(env, outPath_, outPath);
+    (*env)->ReleaseStringUTFChars(env, targetName_, targetName);
     return res;
 }
 
