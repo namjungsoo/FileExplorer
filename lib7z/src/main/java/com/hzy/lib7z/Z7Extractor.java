@@ -4,6 +4,7 @@ import android.content.res.AssetManager;
 import android.text.TextUtils;
 
 import java.io.File;
+import java.util.ArrayList;
 
 /**
  * Created by huzongyao on 17-11-24.
@@ -47,6 +48,8 @@ public class Z7Extractor {
         return outDir.exists() && outDir.isDirectory();
     }
 
+    public static native ArrayList<String> getHeaders(String filePath);
+    
     private static native boolean nExtractAll(String filePath, String outPath,
                                               ExtractCallback callback, long inBufSize);
 
