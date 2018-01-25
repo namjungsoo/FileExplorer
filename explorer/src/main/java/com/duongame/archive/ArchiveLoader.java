@@ -31,10 +31,6 @@ public class ArchiveLoader {
     private List<ArchiveHeader> zipHeaders;
     private IArchiveFile zipFile;
 
-    public ArchiveLoader(IArchiveFile file) {
-        this.zipFile = file;
-    }
-
     public interface ArchiveLoaderListener {
         void onSuccess(int i, ArrayList<ExplorerItem> zipImageList, int totalFileCount);
 
