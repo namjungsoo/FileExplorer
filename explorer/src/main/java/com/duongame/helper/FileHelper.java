@@ -109,8 +109,8 @@ public class FileHelper {
         if (lower.endsWith(".zip"))
             return ExplorerItem.CompressType.ZIP;
         //TODO: 현재 지원 안함
-//        if (lower.endsWith(".rar"))
-//            return ExplorerItem.CompressType.RAR;
+        if (lower.endsWith(".rar"))
+            return ExplorerItem.CompressType.RAR;
         if (lower.endsWith(".7z"))
             return ExplorerItem.CompressType.SEVENZIP;
         if (lower.endsWith(".tar"))

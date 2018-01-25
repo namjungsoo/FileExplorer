@@ -22,7 +22,7 @@ static const ISzAlloc g_Alloc = {SzAlloc, SzFree};
 
 static SRes
 extractStream(JNIEnv *env, ISeekInStream *seekStream, const char *destDir,
-              const int options, jobject callback, size_t inBufSize) {
+              const int options, jobject callback, size_t inBufSize, const char *targetName) {
     jclass callbackClass = (*env)->GetObjectClass(env, callback);
     jmethodID onGetFileNum =
             (*env)->GetMethodID(env, callbackClass, "onGetFileNum", "(I)V");
@@ -90,6 +90,14 @@ extractStream(JNIEnv *env, ISeekInStream *seekStream, const char *destDir,
             if (res != SZ_OK) {
                 break;
             }
+
+            // 타겟 파일이 있으면서 
+            if(targetName) {
+                // 파일명이 다르면 
+                if(strcmp(targetName, fileNameBuf.data))
+                    continue;
+            }                
+
             UInt64 fileSize = SzArEx_GetFileSize(&db, i);
             CallJavaStringLongMethod(env, callback, onProgress,
                                      (char *) fileNameBuf.data, fileSize);
@@ -185,7 +193,7 @@ jboolean extractAll(JNIEnv *env, const char *srcFile, const char *destDir, jobje
     }
     FileInStream_CreateVTable(&archiveStream);
     SRes res = extractStream(env, &archiveStream.vt, destDir, OPTION_EXTRACT, callback,
-                             (size_t) inBufSize);
+                             (size_t) inBufSize, NULL);
     File_Close(&archiveStream.file);
     if (res == SZ_OK) {
         CallJavaVoidMethod(env, callback, onSucceed);
@@ -215,7 +223,7 @@ jboolean extractFile(JNIEnv *env, const char *srcFile, const char *targetFile, c
     }
     FileInStream_CreateVTable(&archiveStream);
     SRes res = extractStream(env, &archiveStream.vt, destDir, OPTION_EXTRACT, callback,
-                             (size_t) inBufSize);
+                             (size_t) inBufSize, targetFile);
     File_Close(&archiveStream.file);
     if (res == SZ_OK) {
         CallJavaVoidMethod(env, callback, onSucceed);
@@ -246,7 +254,7 @@ jboolean extractAsset(JNIEnv *env, jobject assetsManager, const char *assetName,
     }
     AssetFileInStream_CreateVTable(&archiveStream);
     SRes res = extractStream(env, &archiveStream.vt, destDir, OPTION_EXTRACT, callback,
-                             (size_t) inBufSize);
+                             (size_t) inBufSize, NULL);
     AssetFile_Close(&archiveStream.assetFile);
     if (res == SZ_OK) {
         CallJavaVoidMethod(env, callback, onSucceed);

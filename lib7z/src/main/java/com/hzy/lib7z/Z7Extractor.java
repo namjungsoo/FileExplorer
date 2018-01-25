@@ -17,6 +17,18 @@ public class Z7Extractor {
         return nGetLzmaVersion();
     }
 
+    public static boolean extractFile(String filePath, String targetName, String outPath,
+                                      ExtractCallback callback) {
+        callback = callback == null ? ExtractCallback.EMPTY_CALLBACK : callback;
+        File inputFile = new File(filePath);
+        if (TextUtils.isEmpty(filePath) || !inputFile.exists() ||
+                TextUtils.isEmpty(outPath) || !prepareOutPath(outPath)) {
+            callback.onError(ErrorCode.ERROR_CODE_PATH_ERROR, "File Path Error!");
+            return false;
+        }
+        return nExtractFile(filePath, targetName, outPath, callback, DEFAULT_IN_BUF_SIZE);
+    }
+
     public static boolean extractAll(String filePath, String outPath, ExtractCallback callback) {
         callback = callback == null ? ExtractCallback.EMPTY_CALLBACK : callback;
         File inputFile = new File(filePath);
@@ -41,6 +53,7 @@ public class Z7Extractor {
     public static ArrayList<Z7Header> getHeaders(String filePath) {
         return getHeaders(filePath, DEFAULT_IN_BUF_SIZE);
     }
+
     private static boolean prepareOutPath(String outPath) {
         File outDir = new File(outPath);
         if (!outDir.exists()) {
@@ -51,7 +64,7 @@ public class Z7Extractor {
     }
 
     private static native ArrayList<Z7Header> getHeaders(String filePath, long inBufSize);
-    
+
     private static native boolean nExtractAll(String filePath, String outPath,
                                               ExtractCallback callback, long inBufSize);
 

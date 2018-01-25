@@ -145,8 +145,9 @@ FUNC(getHeaders)(JNIEnv *env, jclass type, jstring filePath_, jlong inBufSize) {
         env->SetLongField(objHeader, sizeField, headers->at(i)->size);
 
         env->CallBooleanMethod(objArrayList, add, objHeader);
+        delete headers->at(i);
     }
-
+    delete headers;
     env->ReleaseStringUTFChars(filePath_, filePath);
     return objArrayList;
 }

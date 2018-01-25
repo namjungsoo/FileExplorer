@@ -133,7 +133,6 @@ public class ZipLoader {
         return firstList;
     }
 
-
     private ArrayList<ExplorerItem> loadContinue(ArrayList<ExplorerItem> imageList, ArrayList<ExplorerItem> firstList) {
         // extract 미만의 파일들은 파일이 존재한다고 가정하고 시작한 것이다.
         if(extract > imageList.size()) // 에러인 경우이다.

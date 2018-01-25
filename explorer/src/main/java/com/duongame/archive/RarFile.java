@@ -9,36 +9,17 @@ import java.util.ArrayList;
 public class RarFile implements IArchiveFile {
     Unrar rar;
 
-    public class RarHeader implements IArchiveHeader {
-        String name;
-        long size;
-
-        public RarHeader(String name, long size) {
-            this.name = name;
-            this.size = size;
-        }
-        @Override
-        public String getName() {
-            return name;
-        }
-
-        @Override
-        public long getSize() {
-            return 0;
-        }
-    }
-
     public RarFile(String rarPath) {
         rar = new Unrar(rarPath);
     }
 
     @Override
-    public ArrayList<IArchiveHeader> getHeaders() {
+    public ArrayList<ArchiveHeader> getHeaders() {
         ArrayList<UnrarHeader> headers = rar.getHeaders();
-        ArrayList<IArchiveHeader> newHeaders = new ArrayList<>();
+        ArrayList<ArchiveHeader> newHeaders = new ArrayList<>();
 
-        for(UnrarHeader header : headers) {
-            newHeaders.add(new RarHeader(header.fileName, header.size));
+        for (UnrarHeader header : headers) {
+            newHeaders.add(new ArchiveHeader(header.fileName, header.size));
         }
 
         return newHeaders;

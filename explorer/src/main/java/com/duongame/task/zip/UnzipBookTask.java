@@ -173,5 +173,4 @@ public class UnzipBookTask extends AsyncTask<String, Integer, Void> {
             mPauseWorkLock.notifyAll();
         }
     }
-
 }

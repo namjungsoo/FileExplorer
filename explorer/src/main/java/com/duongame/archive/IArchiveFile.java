@@ -7,7 +7,7 @@ import java.util.ArrayList;
  */
 
 public interface IArchiveFile {
-    ArrayList<IArchiveHeader> getHeaders();
+    ArrayList<ArchiveHeader> getHeaders();
     boolean extractFile(String fileName, String destPath);
     boolean extractAll(String destPath);
 }
