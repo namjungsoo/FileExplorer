@@ -13,8 +13,8 @@ LOCAL_SRC_FILES := un7zip++.cpp un7zip.c 7zExtracter.c 7zFunctions.c \
 	src/Delta.c src/Lzma2Dec.c src/LzmaDec.c src/Ppmd7.c src/Ppmd7Dec.c
 
 #c 플래그
-LOCAL_CFLAGS += -w -fpermissive
+LOCAL_CFLAGS += -w -fpermissive -DNATIVE_LOG
 LOCAL_C_INCLUDES += $(LOCAL_PATH)/src
-LOCAL_LDLIBS := -landroid
+LOCAL_LDLIBS := -landroid -llog
 
 include $(BUILD_SHARED_LIBRARY)

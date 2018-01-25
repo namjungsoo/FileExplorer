@@ -18,14 +18,20 @@ import static com.duongame.helper.FileHelper.BLOCK_SIZE;
 public class ZipFile implements IArchiveFile {
     public class ZipHeader implements IArchiveHeader {
         String name;
-
-        public ZipHeader(String name) {
+        long size;
+        public ZipHeader(String name, long size) {
             this.name = name;
+            this.size = size;
         }
 
         @Override
         public String getName() {
             return name;
+        }
+
+        @Override
+        public long getSize() {
+            return size;
         }
     }
 
@@ -45,7 +51,7 @@ public class ZipFile implements IArchiveFile {
             stream = new ZipArchiveInputStream(new FileInputStream(zipPath));
             entry = (ZipEntry) stream.getNextEntry();
             while (entry != null) {
-                newHeaders.add(new ZipHeader(entry.getName()));
+                newHeaders.add(new ZipHeader(entry.getName(), entry.getSize()));
 
                 entry = (ZipEntry) stream.getNextEntry();
             }

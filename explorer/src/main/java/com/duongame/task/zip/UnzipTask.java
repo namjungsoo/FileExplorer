@@ -13,6 +13,7 @@ import com.duongame.helper.JLog;
 import com.duongame.helper.ToastHelper;
 import com.hzy.lib7z.ExtractCallback;
 import com.hzy.lib7z.Z7Extractor;
+import com.hzy.lib7z.Z7Header;
 
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
@@ -291,7 +292,7 @@ public class UnzipTask extends AsyncTask<Void, FileHelper.Progress, Boolean> {
     boolean unarchive7z(ExplorerItem item) throws IOException {
         // un7z를 사용함
         Z7Extractor extractor = new Z7Extractor();
-        ArrayList<String> headers = extractor.getHeaders(item.path);
+        ArrayList<Z7Header> headers = extractor.getHeaders(item.path);
 
         extractor.extractAll(item.path, path, new ExtractCallback() {
             int count;

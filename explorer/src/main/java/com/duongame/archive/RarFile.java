@@ -11,13 +11,20 @@ public class RarFile implements IArchiveFile {
 
     public class RarHeader implements IArchiveHeader {
         String name;
+        long size;
 
-        public RarHeader(String name) {
+        public RarHeader(String name, long size) {
             this.name = name;
+            this.size = size;
         }
         @Override
         public String getName() {
             return name;
+        }
+
+        @Override
+        public long getSize() {
+            return 0;
         }
     }
 
@@ -31,7 +38,7 @@ public class RarFile implements IArchiveFile {
         ArrayList<IArchiveHeader> newHeaders = new ArrayList<>();
 
         for(UnrarHeader header : headers) {
-            newHeaders.add(new RarHeader(header.fileName));
+            newHeaders.add(new RarHeader(header.fileName, header.size));
         }
 
         return newHeaders;

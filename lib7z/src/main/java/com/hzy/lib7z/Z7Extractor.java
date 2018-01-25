@@ -11,7 +11,6 @@ import java.util.ArrayList;
  */
 
 public class Z7Extractor {
-
     public static final long DEFAULT_IN_BUF_SIZE = 0x200000;
 
     public static String getLzmaVersion() {
@@ -39,7 +38,7 @@ public class Z7Extractor {
         return nExtractAsset(assetManager, fileName, outPath, callback, DEFAULT_IN_BUF_SIZE);
     }
 
-    public static ArrayList<String> getHeaders(String filePath) {
+    public static ArrayList<Z7Header> getHeaders(String filePath) {
         return getHeaders(filePath, DEFAULT_IN_BUF_SIZE);
     }
     private static boolean prepareOutPath(String outPath) {
@@ -51,7 +50,7 @@ public class Z7Extractor {
         return outDir.exists() && outDir.isDirectory();
     }
 
-    private static native ArrayList<String> getHeaders(String filePath, long inBufSize);
+    private static native ArrayList<Z7Header> getHeaders(String filePath, long inBufSize);
     
     private static native boolean nExtractAll(String filePath, String outPath,
                                               ExtractCallback callback, long inBufSize);

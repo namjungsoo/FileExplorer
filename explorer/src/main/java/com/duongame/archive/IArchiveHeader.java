@@ -6,4 +6,9 @@ package com.duongame.archive;
 
 public interface IArchiveHeader {
     String getName();
+    long getSize();
+
+    // 추후에 사용하자
+//    long getLongTime();
+//    int getTime();
 }

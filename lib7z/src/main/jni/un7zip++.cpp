@@ -20,9 +20,14 @@ extern "C" {
 
 static const ISzAlloc g_Alloc = {SzAlloc, SzFree};
 
-std::vector<std::string> getHeaders(ISeekInStream *seekStream, size_t inBufSize)
+struct Z7Header {
+    std::string filename;
+    long size;
+};
+
+std::vector<Z7Header*> *getHeaders(ISeekInStream *seekStream, size_t inBufSize)
 {
-    std::vector<std::string> headers;
+    std::vector<Z7Header*> *headers = new std::vector<Z7Header*>;
 
     ISzAlloc allocImp = g_Alloc;
     ISzAlloc allocTempImp = g_Alloc;
@@ -82,10 +87,17 @@ std::vector<std::string> getHeaders(ISeekInStream *seekStream, size_t inBufSize)
             if (res != SZ_OK) {
                 break;
             }
-            std::string fileName(fileNameBuf.data, fileNameBuf.data+fileNameBuf.size);
-            headers.push_back(fileName);
 
             UInt64 fileSize = SzArEx_GetFileSize(&db, i);
+
+            Z7Header *header = new Z7Header;
+            header->filename = std::string(fileNameBuf.data, fileNameBuf.data+fileNameBuf.size);
+            header->size = fileSize;
+
+            LOGE("filename=%s", header->filename.c_str());
+            LOGE("size=%ul", header->size);
+
+            headers->push_back(header);
         }
         Buf_Free(&fileNameBuf, &g_Alloc);
         ISzAlloc_Free(&allocImp, outBuffer);
@@ -108,18 +120,31 @@ FUNC(getHeaders)(JNIEnv *env, jclass type, jstring filePath_, jlong inBufSize) {
     }
 
     FileInStream_CreateVTable(&archiveStream);
-    std::vector<std::string> headers = getHeaders(&archiveStream.vt, inBufSize);
+    std::vector<Z7Header*> *headers = getHeaders(&archiveStream.vt, inBufSize);
     File_Close(&archiveStream.file);
+    if(headers == NULL)
+        return 0;
 
-    // header string으로 array list를 만든다.
+    // header로 array list를 만든다.
     jclass arrayList = env->FindClass("java/util/ArrayList");
-    jmethodID ctor = env->GetMethodID(arrayList, "<init>", "()V");
+    jmethodID array_ctor = env->GetMethodID(arrayList, "<init>", "()V");
     jmethodID add = env->GetMethodID(arrayList, "add", "(Ljava/lang/Object;)Z");
-    jobject objArrayList = env->NewObject(arrayList, ctor);
+    jobject objArrayList = env->NewObject(arrayList, array_ctor);
 
-    for(int i=0; i<headers.size(); i++) {
-        jstring fileName = env->NewStringUTF(headers[i].c_str());
-        env->CallBooleanMethod(objArrayList, add, fileName);
+    // header를 접근 
+    jclass header = env->FindClass("com/hzy/lib7z/Z7Header");
+    jmethodID header_ctor = env->GetMethodID(header, "<init>", "()V");
+    jfieldID fileNameField = env->GetFieldID(header, "fileName", "Ljava/lang/String;");
+    jfieldID sizeField = env->GetFieldID(header, "size", "J");
+
+    for(int i=0; i<headers->size(); i++) {
+        jobject objHeader = env->NewObject(header, header_ctor);
+        jstring fileName = env->NewStringUTF(headers->at(i)->filename.c_str());
+
+        env->SetObjectField(objHeader, fileNameField, fileName);
+        env->SetLongField(objHeader, sizeField, headers->at(i)->size);
+
+        env->CallBooleanMethod(objArrayList, add, objHeader);
     }
 
     env->ReleaseStringUTFChars(filePath_, filePath);
