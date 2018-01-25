@@ -39,6 +39,9 @@ public class Z7Extractor {
         return nExtractAsset(assetManager, fileName, outPath, callback, DEFAULT_IN_BUF_SIZE);
     }
 
+    public static ArrayList<String> getHeaders(String filePath) {
+        return getHeaders(filePath, DEFAULT_IN_BUF_SIZE);
+    }
     private static boolean prepareOutPath(String outPath) {
         File outDir = new File(outPath);
         if (!outDir.exists()) {
@@ -48,7 +51,7 @@ public class Z7Extractor {
         return outDir.exists() && outDir.isDirectory();
     }
 
-    public static native ArrayList<String> getHeaders(String filePath);
+    private static native ArrayList<String> getHeaders(String filePath, long inBufSize);
     
     private static native boolean nExtractAll(String filePath, String outPath,
                                               ExtractCallback callback, long inBufSize);
@@ -63,6 +66,6 @@ public class Z7Extractor {
     private static native String nGetLzmaVersion();
 
     static {
-        System.loadLibrary("un7zip");
+        System.loadLibrary("7z");
     }
 }

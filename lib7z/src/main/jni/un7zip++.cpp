@@ -22,6 +22,8 @@ static const ISzAlloc g_Alloc = {SzAlloc, SzFree};
 
 std::vector<std::string> getHeaders(ISeekInStream *seekStream, size_t inBufSize)
 {
+    std::vector<std::string> headers;
+
     ISzAlloc allocImp = g_Alloc;
     ISzAlloc allocTempImp = g_Alloc;
     CLookToRead2 lookStream;
@@ -80,6 +82,9 @@ std::vector<std::string> getHeaders(ISeekInStream *seekStream, size_t inBufSize)
             if (res != SZ_OK) {
                 break;
             }
+            std::string fileName(fileNameBuf.data, fileNameBuf.data+fileNameBuf.size);
+            headers.push_back(fileName);
+
             UInt64 fileSize = SzArEx_GetFileSize(&db, i);
         }
         Buf_Free(&fileNameBuf, &g_Alloc);
@@ -90,7 +95,7 @@ std::vector<std::string> getHeaders(ISeekInStream *seekStream, size_t inBufSize)
     ISzAlloc_Free(&allocImp, lookStream.buf);
     if (res != SZ_OK) {
     }
-    return std::vector<std::string>();
+    return headers;
 }
 
 JNIEXPORT jobject JNICALL
@@ -107,8 +112,17 @@ FUNC(getHeaders)(JNIEnv *env, jclass type, jstring filePath_, jlong inBufSize) {
     File_Close(&archiveStream.file);
 
     // header string으로 array list를 만든다.
+    jclass arrayList = env->FindClass("java/util/ArrayList");
+    jmethodID ctor = env->GetMethodID(arrayList, "<init>", "()V");
+    jmethodID add = env->GetMethodID(arrayList, "add", "(Ljava/lang/Object;)Z");
+    jobject objArrayList = env->NewObject(arrayList, ctor);
+
+    for(int i=0; i<headers.size(); i++) {
+        jstring fileName = env->NewStringUTF(headers[i].c_str());
+        env->CallBooleanMethod(objArrayList, add, fileName);
+    }
 
     env->ReleaseStringUTFChars(filePath_, filePath);
-    return 0;
+    return objArrayList;
 }
 }

@@ -101,6 +101,10 @@ android {
             variant.setIgnore(true)
         }
     }
+
+    packagingOptions {
+        pickFirst "lib/armeabi-v7a/libgnustl_shared.so"
+    }
 }
 
 dependencies {
@@ -128,8 +132,6 @@ dependencies {
     //FileUtils
     implementation 'commons-io:commons-io:2.6'
     implementation 'org.apache.commons:commons-compress:1.15'
-    //Junrar-Android
-    implementation 'com.github.GrenderG:junrar-android:1.0.1'
     implementation project(':lib7z')
     implementation project(':unrar-android')
 }

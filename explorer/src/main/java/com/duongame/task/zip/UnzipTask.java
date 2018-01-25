@@ -291,6 +291,7 @@ public class UnzipTask extends AsyncTask<Void, FileHelper.Progress, Boolean> {
     boolean unarchive7z(ExplorerItem item) throws IOException {
         // un7z를 사용함
         Z7Extractor extractor = new Z7Extractor();
+        ArrayList<String> headers = extractor.getHeaders(item.path);
 
         extractor.extractAll(item.path, path, new ExtractCallback() {
             int count;

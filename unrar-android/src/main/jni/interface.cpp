@@ -39,7 +39,7 @@ extern "C" {
                     env->SetLongField(jniHeader.objHeader, jniHeader.sizeField, header->size);
                     env->SetIntField(jniHeader.objHeader, jniHeader.timeField, header->time);
 
-                    env->CallBooleanMethod(jniArrayList.objArrayList, jniArrayList.add, jniHeader.objHeader);           
+                    env->CallBooleanMethod(jniArrayList.objArrayList, jniArrayList.add, jniHeader.objHeader);
                     delete header;
                 }
             }
