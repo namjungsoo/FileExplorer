@@ -86,4 +86,9 @@ public class ZipJavaFile implements IArchiveFile {
     public boolean extractAll(String destPath) {
         return false;
     }
+
+    @Override
+    public void destroy() {
+
+    }
 }

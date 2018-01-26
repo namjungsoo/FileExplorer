@@ -3,6 +3,7 @@
 #include <map>
 
 extern "C" {
+#include "un7zip.h"
 #include "ndk-helper.h"
 #include "src/7zVersion.h"
 
@@ -26,14 +27,45 @@ struct Z7Header {
     long size;
 };
 
-struct Z7Extractor {
-    UInt32 blockIndex;
-    Byte *outBuffer;
-
-    Z7Extractor() : blockIndex(0xFFFFFFFF), outBuffer(0) {}
+struct Z7Extracter {
+    std::string z7Path;
+    Z7Buffer buffer;
 };
 
-std::map<int, Z7Extractor*> z7Map;
+std::map<int, Z7Extracter*> z7Map;
+int maxId = 0;
+
+Z7Extracter *FindExtracter(int id) 
+{
+    if(z7Map.find(id) != z7Map.end())
+        return z7Map.find(id)->second;
+    return NULL;
+}
+
+JNIEXPORT jint JNICALL
+FUNC(init)(JNIEnv *env, jclass type, jstring filePath_) {
+    const char *filePath = env->GetStringUTFChars(filePath_, 0);
+    maxId++;
+
+    Z7Extracter *extractor = new Z7Extracter;
+    extractor->z7Path = filePath;
+
+
+    z7Map.insert(std::pair<int, Z7Extracter*>(maxId, extractor));
+
+    env->ReleaseStringUTFChars(filePath_, filePath);
+    return maxId;
+}
+
+JNIEXPORT void JNICALL
+FUNC(destroy)(JNIEnv *env, jclass type, jint id) {
+    Z7Extracter *extracter = FindExtracter(id);
+
+    if(extracter) {
+        ISzAlloc_Free(&g_Alloc, extracter->buffer.outBuffer);
+    }
+    z7Map.erase(id);
+}
 
 JNIEXPORT jstring JNICALL
 FUNC(nGetLzmaVersion)(JNIEnv *env, jclass type) {
@@ -41,41 +73,70 @@ FUNC(nGetLzmaVersion)(JNIEnv *env, jclass type) {
 }
 
 JNIEXPORT jboolean JNICALL
-FUNC(nExtractAll)(JNIEnv *env, jclass type, jstring filePath_,
+FUNC(nExtractAll)(JNIEnv *env, jclass type, jint id,
                    jstring outPath_, jobject callback, jlong inBufSize) {
-    const char *filePath = env->GetStringUTFChars(filePath_, 0);
+    Z7Extracter *extracter = FindExtracter(id);
+    if(!extracter)
+        return false;
+    const char *filePath = extracter->z7Path.c_str();
     const char *outPath = env->GetStringUTFChars(outPath_, 0);
     jboolean res = extractAll(env, filePath, outPath, callback, inBufSize);
-    env->ReleaseStringUTFChars(filePath_, filePath);
     env->ReleaseStringUTFChars(outPath_, outPath);
     return res;
 }
 
 JNIEXPORT jboolean JNICALL
-FUNC(nExtractFile)(JNIEnv *env, jclass type, jstring filePath_, jstring targetName_,
+FUNC(nExtractFile)(JNIEnv *env, jclass type, jint id, jstring targetName_,
                    jstring outPath_, jobject callback, jlong inBufSize) {
-    const char *filePath = env->GetStringUTFChars(filePath_, 0);
+    Z7Extracter *extracter = FindExtracter(id);
+    if(!extracter)
+        return false;
+    const char *filePath = extracter->z7Path.c_str();
     const char *outPath = env->GetStringUTFChars(outPath_, 0);
     const char *targetName = env->GetStringUTFChars(targetName_, 0);
-    jboolean res = extractFile(env, filePath, targetName, outPath, callback, inBufSize);
-    env->ReleaseStringUTFChars(filePath_, filePath);
+    jboolean res = extractFile(env, filePath, targetName, outPath, callback, inBufSize, &extracter->buffer);
     env->ReleaseStringUTFChars(outPath_, outPath);
     env->ReleaseStringUTFChars(targetName_, targetName);
     return res;
 }
 
-JNIEXPORT jboolean JNICALL
-FUNC(nExtractAsset)(JNIEnv *env, jclass type, jobject assetManager,
-                    jstring fileName_, jstring outPath_, jobject callback,
-                    jlong inBufSize) {
-    const char *fileName = env->GetStringUTFChars(fileName_, 0);
-    const char *outPath = env->GetStringUTFChars(outPath_, 0);
-    jboolean res = extractAsset(env, assetManager, fileName, outPath, callback, inBufSize);
-    env->ReleaseStringUTFChars(fileName_, fileName);
-    env->ReleaseStringUTFChars(outPath_, outPath);
-    return res;
-}
+// JNIEXPORT jboolean JNICALL
+// FUNC(nExtractAll)(JNIEnv *env, jclass type, jstring filePath_,
+//                    jstring outPath_, jobject callback, jlong inBufSize) {
+//     const char *filePath = env->GetStringUTFChars(filePath_, 0);
+//     const char *outPath = env->GetStringUTFChars(outPath_, 0);
+//     jboolean res = extractAll(env, filePath, outPath, callback, inBufSize);
+//     env->ReleaseStringUTFChars(filePath_, filePath);
+//     env->ReleaseStringUTFChars(outPath_, outPath);
+//     return res;
+// }
 
+// JNIEXPORT jboolean JNICALL
+// FUNC(nExtractFile)(JNIEnv *env, jclass type, jstring filePath_, jstring targetName_,
+//                    jstring outPath_, jobject callback, jlong inBufSize) {
+//     const char *filePath = env->GetStringUTFChars(filePath_, 0);
+//     const char *outPath = env->GetStringUTFChars(outPath_, 0);
+//     const char *targetName = env->GetStringUTFChars(targetName_, 0);
+//     jboolean res = extractFile(env, filePath, targetName, outPath, callback, inBufSize);
+//     env->ReleaseStringUTFChars(filePath_, filePath);
+//     env->ReleaseStringUTFChars(outPath_, outPath);
+//     env->ReleaseStringUTFChars(targetName_, targetName);
+//     return res;
+// }
+
+// JNIEXPORT jboolean JNICALL
+// FUNC(nExtractAsset)(JNIEnv *env, jclass type, jobject assetManager,
+//                     jstring fileName_, jstring outPath_, jobject callback,
+//                     jlong inBufSize) {
+//     const char *fileName = env->GetStringUTFChars(fileName_, 0);
+//     const char *outPath = env->GetStringUTFChars(outPath_, 0);
+//     jboolean res = extractAsset(env, assetManager, fileName, outPath, callback, inBufSize);
+//     env->ReleaseStringUTFChars(fileName_, fileName);
+//     env->ReleaseStringUTFChars(outPath_, outPath);
+//     return res;
+// }
+
+// 구현완료 
 std::vector<Z7Header*> *getHeaders(ISeekInStream *seekStream, size_t inBufSize)
 {
     std::vector<Z7Header*> *headers = new std::vector<Z7Header*>;
@@ -162,9 +223,13 @@ std::vector<Z7Header*> *getHeaders(ISeekInStream *seekStream, size_t inBufSize)
 }
 
 JNIEXPORT jobject JNICALL
-FUNC(getHeaders)(JNIEnv *env, jclass type, jstring filePath_, jlong inBufSize) {
+FUNC(getHeaders)(JNIEnv *env, jclass type, jint id, jlong inBufSize) {
     LOGE("getHeaders");
-    const char *filePath = env->GetStringUTFChars(filePath_, 0);
+    Z7Extracter *extracter = FindExtracter(id);
+    if(extracter == NULL)
+        return 0;
+//    const char *filePath = env->GetStringUTFChars(filePath_, 0);
+    const char *filePath = extracter->z7Path.c_str();
 
     CFileInStream archiveStream;
     if (InFile_Open(&archiveStream.file, filePath)) {
@@ -210,7 +275,7 @@ FUNC(getHeaders)(JNIEnv *env, jclass type, jstring filePath_, jlong inBufSize) {
     delete headers;
     env->DeleteLocalRef(header);
     env->DeleteLocalRef(arrayList);
-    env->ReleaseStringUTFChars(filePath_, filePath);
+//    env->ReleaseStringUTFChars(filePath_, filePath);
     return objArrayList;
 }
 }

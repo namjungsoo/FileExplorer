@@ -24,13 +24,18 @@ public class Z7Extractor {
     }
 
     public boolean extractFile(String targetName, String outPath, ExtractCallback callback) {
-        return extractFile(id, targetName, outPath, callback, DEFAULT_IN_BUF_SIZE);
+        callback = callback == null ? ExtractCallback.EMPTY_CALLBACK : callback;
+        return nExtractFile(id, targetName, outPath, callback, DEFAULT_IN_BUF_SIZE);
     }
 
     public boolean extractAll(String outPath, ExtractCallback callback) {
-        return extractAll(id, outPath, callback, DEFAULT_IN_BUF_SIZE);
+        callback = callback == null ? ExtractCallback.EMPTY_CALLBACK : callback;
+        return nExtractAll(id, outPath, callback, DEFAULT_IN_BUF_SIZE);
     }
 
+    public void destroy() {
+        destroy(id);
+    }
     /*
     public static boolean extractFile(String filePath, String targetName, String outPath,
                                       ExtractCallback callback) {
@@ -93,15 +98,17 @@ public class Z7Extractor {
     */
 
 
+    //region native
     static {
         System.loadLibrary("7z");
     }
 
-    //region native
-    private native int init(String rarPath);
+    private native int init(String z7Path);
     private native ArrayList<Z7Header> getHeaders(int id, long inBufSize);
-    private native boolean extractAll(int id, String outPath, ExtractCallback callback, long inBufSize);
-    private native boolean extractFile(int id, String targetName, String outPath, ExtractCallback callback, long inBufSize);
+    private native boolean nExtractAll(int id, String outPath, ExtractCallback callback, long inBufSize);
+    private native boolean nExtractFile(int id, String targetName, String outPath, ExtractCallback callback, long inBufSize);
+    private native void destroy(int id);
+
     private static native String nGetLzmaVersion();
     //endregion native
 }

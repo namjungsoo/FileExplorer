@@ -36,4 +36,9 @@ public class RarFile implements IArchiveFile {
     public boolean extractAll(String destPath) {
         return rar.extractAll(destPath, null);
     }
+
+    @Override
+    public void destroy() {
+
+    }
 }

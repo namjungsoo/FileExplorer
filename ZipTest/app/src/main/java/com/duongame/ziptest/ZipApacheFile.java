@@ -114,4 +114,9 @@ public class ZipApacheFile implements IArchiveFile {
         }
         return true;
     }
+
+    @Override
+    public void destroy() {
+
+    }
 }

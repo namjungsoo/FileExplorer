@@ -10,4 +10,5 @@ public interface IArchiveFile {
     ArrayList<ArchiveHeader> getHeaders();
     boolean extractFile(String fileName, String destPath);
     boolean extractAll(String destPath);
+    void destroy();
 }

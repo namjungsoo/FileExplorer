@@ -36,4 +36,9 @@ public class Z7File implements IArchiveFile {
     public boolean extractAll(String destPath) {
         return z7Extractor.extractAll(destPath, null);
     }
+
+    @Override
+    public void destroy() {
+        z7Extractor.destroy();
+    }
 }

@@ -103,6 +103,7 @@ public class MainActivity extends PermissionActivity {
 
     void z7() {
         long begin, end, delta, accum;
+        Log.e("ZIP", "z7");
         try {
             Z7File file = new Z7File(download + book7z);
             begin = System.currentTimeMillis();

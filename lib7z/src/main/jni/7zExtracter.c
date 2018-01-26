@@ -22,7 +22,7 @@ static const ISzAlloc g_Alloc = {SzAlloc, SzFree};
 
 static SRes
 extractStream(JNIEnv *env, ISeekInStream *seekStream, const char *destDir,
-              const int options, jobject callback, size_t inBufSize, const char *targetName) {
+              const int options, jobject callback, size_t inBufSize, const char *targetName, Z7Buffer *z7Buffer) {
     LOGE("extractStream begin");
 
     jclass callbackClass = (*env)->GetObjectClass(env, callback);
@@ -93,7 +93,7 @@ extractStream(JNIEnv *env, ISeekInStream *seekStream, const char *destDir,
                 break;
             }
 
-            LOGE("extractStream i=%d %s", i, fileNameBuf.data);
+            //LOGE("extractStream i=%d %s", i, fileNameBuf.data);
             // 타겟 파일이 있으면서 
             if(targetName) {
                 // 파일명이 다르면 
@@ -121,9 +121,15 @@ extractStream(JNIEnv *env, ISeekInStream *seekStream, const char *destDir,
             }
             if (options & OPTION_TEST) {
                 if (!isDir) {
-                    res = SzArEx_Extract(&db, &lookStream.vt, i, &blockIndex, &outBuffer,
+                    if(targetName) {
+                        res = SzArEx_Extract(&db, &lookStream.vt, i, &z7Buffer->blockIndex, &z7Buffer->outBuffer,
                                          &outBufferSize, &offset, &outSizeProcessed,
                                          &allocImp, &allocTempImp);
+                    } else {
+                        res = SzArEx_Extract(&db, &lookStream.vt, i, &blockIndex, &outBuffer,
+                                         &outBufferSize, &offset, &outSizeProcessed,
+                                         &allocImp, &allocTempImp);                        
+                    }
                     if (res != SZ_OK)
                         break;
                 }
@@ -170,7 +176,8 @@ extractStream(JNIEnv *env, ISeekInStream *seekStream, const char *destDir,
         Buf_Free(&fileNameBuf, &g_Alloc);
 
         // 내장 버퍼를 비움 
-        ISzAlloc_Free(&allocImp, outBuffer);
+        if(!targetName)
+            ISzAlloc_Free(&allocImp, outBuffer);
     }
     SzFree(NULL, temp);
     SzArEx_Free(&db, &allocImp);
@@ -203,7 +210,7 @@ jboolean extractAll(JNIEnv *env, const char *srcFile, const char *destDir, jobje
     }
     FileInStream_CreateVTable(&archiveStream);
     SRes res = extractStream(env, &archiveStream.vt, destDir, OPTION_EXTRACT, callback,
-                             (size_t) inBufSize, NULL);
+                             (size_t) inBufSize, NULL, NULL);
     File_Close(&archiveStream.file);
     if (res == SZ_OK) {
         CallJavaVoidMethod(env, callback, onSucceed);
@@ -216,7 +223,7 @@ jboolean extractAll(JNIEnv *env, const char *srcFile, const char *destDir, jobje
  * extract target file from 7z
  */
 jboolean extractFile(JNIEnv *env, const char *srcFile, const char *targetFile, const char *destDir, jobject callback,
-                    jlong inBufSize) {
+                    jlong inBufSize, Z7Buffer *buffer) {
     jclass callbackClass = (*env)->GetObjectClass(env, callback);
     jmethodID onStart =
             (*env)->GetMethodID(env, callbackClass, "onStart", "()V");
@@ -233,7 +240,7 @@ jboolean extractFile(JNIEnv *env, const char *srcFile, const char *targetFile, c
     }
     FileInStream_CreateVTable(&archiveStream);
     SRes res = extractStream(env, &archiveStream.vt, destDir, OPTION_EXTRACT, callback,
-                             (size_t) inBufSize, targetFile);
+                             (size_t) inBufSize, targetFile, buffer);
     File_Close(&archiveStream.file);
     if (res == SZ_OK) {
         CallJavaVoidMethod(env, callback, onSucceed);
@@ -264,7 +271,7 @@ jboolean extractAsset(JNIEnv *env, jobject assetsManager, const char *assetName,
     }
     AssetFileInStream_CreateVTable(&archiveStream);
     SRes res = extractStream(env, &archiveStream.vt, destDir, OPTION_EXTRACT, callback,
-                             (size_t) inBufSize, NULL);
+                             (size_t) inBufSize, NULL, NULL);
     AssetFile_Close(&archiveStream.assetFile);
     if (res == SZ_OK) {
         CallJavaVoidMethod(env, callback, onSucceed);
