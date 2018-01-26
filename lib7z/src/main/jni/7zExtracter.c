@@ -168,6 +168,8 @@ extractStream(JNIEnv *env, ISeekInStream *seekStream, const char *destDir,
                 break;
         }
         Buf_Free(&fileNameBuf, &g_Alloc);
+
+        // 내장 버퍼를 비움 
         ISzAlloc_Free(&allocImp, outBuffer);
     }
     SzFree(NULL, temp);

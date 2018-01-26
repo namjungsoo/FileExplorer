@@ -1,9 +1,5 @@
 package com.hzy.lib7z;
 
-import android.content.res.AssetManager;
-import android.text.TextUtils;
-
-import java.io.File;
 import java.util.ArrayList;
 
 /**
@@ -13,10 +9,29 @@ import java.util.ArrayList;
 public class Z7Extractor {
     public static final long DEFAULT_IN_BUF_SIZE = 0x200000;
 
+    private int id;
+
+    public Z7Extractor(String z7Path) {
+        id = init(z7Path);
+    }
+
     public static String getLzmaVersion() {
         return nGetLzmaVersion();
     }
 
+    public ArrayList<Z7Header> getHeaders() {
+        return getHeaders(id, DEFAULT_IN_BUF_SIZE);
+    }
+
+    public boolean extractFile(String targetName, String outPath, ExtractCallback callback) {
+        return extractFile(id, targetName, outPath, callback, DEFAULT_IN_BUF_SIZE);
+    }
+
+    public boolean extractAll(String outPath, ExtractCallback callback) {
+        return extractAll(id, outPath, callback, DEFAULT_IN_BUF_SIZE);
+    }
+
+    /*
     public static boolean extractFile(String filePath, String targetName, String outPath,
                                       ExtractCallback callback) {
         callback = callback == null ? ExtractCallback.EMPTY_CALLBACK : callback;
@@ -75,9 +90,18 @@ public class Z7Extractor {
                                                 String fileName, String outPath,
                                                 ExtractCallback callback, long inBufSize);
 
-    private static native String nGetLzmaVersion();
+    */
+
 
     static {
         System.loadLibrary("7z");
     }
+
+    //region native
+    private native int init(String rarPath);
+    private native ArrayList<Z7Header> getHeaders(int id, long inBufSize);
+    private native boolean extractAll(int id, String outPath, ExtractCallback callback, long inBufSize);
+    private native boolean extractFile(int id, String targetName, String outPath, ExtractCallback callback, long inBufSize);
+    private static native String nGetLzmaVersion();
+    //endregion native
 }

@@ -21,7 +21,6 @@ public class RarFile implements IArchiveFile {
         for (UnrarHeader header : headers) {
             newHeaders.add(new ArchiveHeader(header.fileName, header.size));
         }
-
         return newHeaders;
     }
 
