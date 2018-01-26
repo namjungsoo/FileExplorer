@@ -2,7 +2,7 @@
 2017-04-03 : Igor Pavlov : Public domain */
 
 #include "Precomp.h"
-
+#include "ndk-helper.h"
 #include <string.h>
 
 #include "7z.h"
@@ -1659,8 +1659,10 @@ SRes SzArEx_Extract(
     return SZ_OK;
   }
 
+  // 이전과 다른 폴더이면 폴더별로 새로 압축을 풀어준다. 
   if (*tempBuf == NULL || *blockIndex != folderIndex)
   {
+    LOGE("SzAr_GetFolderUnpackSize");
     UInt64 unpackSizeSpec = SzAr_GetFolderUnpackSize(&p->db, folderIndex);
     /*
     UInt64 unpackSizeSpec =
@@ -1687,6 +1689,7 @@ SRes SzArEx_Extract(
   
       if (res == SZ_OK)
       {
+        LOGE("SzAr_DecodeFolder");
         res = SzAr_DecodeFolder(&p->db, folderIndex,
             inStream, p->dataPos, *tempBuf, unpackSize, allocTemp);
       }

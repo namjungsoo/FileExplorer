@@ -187,16 +187,18 @@ JNIArrayList CreateArrayList(JNIEnv *env) {
     jmethodID add = env->GetMethodID(arrayList, "add", "(Ljava/lang/Object;)Z");
 
     jobject objArrayList = env->NewObject(arrayList, ctor);
+    
     JNIArrayList jniArrayList;
+    jniArrayList.arrayList = arrayList;
     jniArrayList.objArrayList = objArrayList;
     jniArrayList.add = add;
+    jniArrayList.ctor = ctor;
     return jniArrayList;
 }
 
 JNIHeader CreateHeader(JNIEnv *env) {
     jclass header = env->FindClass("com/duongame/archive/UnrarHeader");
     jmethodID ctor = env->GetMethodID(header, "<init>", "()V");
-    jobject objHeader = env->NewObject(header, ctor);
 
     // Field 접근
     jfieldID fileName = env->GetFieldID(header, "fileName", "Ljava/lang/String;");
@@ -204,9 +206,16 @@ JNIHeader CreateHeader(JNIEnv *env) {
     jfieldID timeField = env->GetFieldID(header, "time", "I");
 
     JNIHeader jniHeader;
-    jniHeader.objHeader = objHeader;
+    jniHeader.header = header;
+    jniHeader.ctor = ctor;
+    jniHeader.objHeader = 0;
     jniHeader.fileName = fileName;
     jniHeader.sizeField = sizeField;
     jniHeader.timeField = timeField;
     return jniHeader;
+}
+
+void NewHeader(JNIEnv *env, JNIHeader *header)
+{
+    header->objHeader = env->NewObject(header->header, header->ctor);
 }

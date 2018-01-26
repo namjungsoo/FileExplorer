@@ -25,7 +25,7 @@
 static const ISzAlloc g_Alloc = {SzAlloc, SzFree};
 
 void Print(const char *s) {
-    LOGD("%s", s);
+    //LOGD("%s", s);
 }
 
 void PrintError(const char *s) {
@@ -139,7 +139,8 @@ WRes OutFile_OpenUtf16(CSzFile *p, const UInt16 *name, const char *dir) {
     strcpy(temp, dir);
     strcat(temp, STRING_PATH_SEPARATOR);
     strcat(temp, (const char *) buf.data);
-    Print(temp);
+    // Disable output file name log
+    //Print(temp);
     res = OutFile_Open(p, temp);
     Buf_Free(&buf, &g_Alloc);
     return res;

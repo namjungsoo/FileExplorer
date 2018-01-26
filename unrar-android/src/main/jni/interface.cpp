@@ -13,6 +13,7 @@ extern "C" {
         maxId++;
         unrarMap.insert(std::pair<int, Unrar*>(maxId, rar));
 
+        LOGE("init %d %s", maxId, rarPath);
         env->ReleaseStringUTFChars(jrarPath, rarPath);
         return maxId;
     }
@@ -24,26 +25,37 @@ extern "C" {
             return 0;
         }
 
+        LOGE("getHeaders %d", id); 
         std::vector<RarFileHeader*> *headers = rar->getHeaders();
 
         if(headers != NULL) {
             // 우선 ArrayList의 클래스를 얻어 옴.
             JNIArrayList jniArrayList = CreateArrayList(env);
+            JNIHeader jniHeader = CreateHeader(env);
+
             for(int i=0; i<headers->size(); i++) {
                 RarFileHeader* header = headers->at(i);
                 if(header != NULL) {
-                    JNIHeader jniHeader = CreateHeader(env);
+                    LOGE("getHeaders i=%d %s", i, header->filename.c_str()); 
 
+                    NewHeader(env, &jniHeader);
                     jstring filename = env->NewStringUTF(header->filename.c_str());
                     env->SetObjectField(jniHeader.objHeader, jniHeader.fileName, filename);
                     env->SetLongField(jniHeader.objHeader, jniHeader.sizeField, header->size);
                     env->SetIntField(jniHeader.objHeader, jniHeader.timeField, header->time);
 
                     env->CallBooleanMethod(jniArrayList.objArrayList, jniArrayList.add, jniHeader.objHeader);
+
+                    // jstring, jobject
+                    env->DeleteLocalRef(filename);
+                    env->DeleteLocalRef(jniHeader.objHeader);
                     delete header;
                 }
             }
 
+            // jclass
+            env->DeleteLocalRef(jniHeader.header);
+            env->DeleteLocalRef(jniArrayList.arrayList);
             delete headers;
             return jniArrayList.objArrayList;
         }

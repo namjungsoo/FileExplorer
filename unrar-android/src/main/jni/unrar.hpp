@@ -25,11 +25,15 @@ struct RarFileHeader {
 };
 
 struct JNIArrayList {
+    jclass arrayList;
     jobject objArrayList;
+    jmethodID ctor;
     jmethodID add;
 };
 
 struct JNIHeader {
+    jclass header;
+    jmethodID ctor;
     jobject objHeader;
     jfieldID fileName;
     jfieldID sizeField;
@@ -92,7 +96,12 @@ private:
 int CallBack(UINT msg,LPARAM UserData,LPARAM P1,LPARAM P2);
 Unrar *FindUnrar(int id);
 jmethodID GetCallbackMethodID(JNIEnv *env, jobject jcallback);
+
 JNIArrayList CreateArrayList(JNIEnv *env);
 JNIHeader CreateHeader(JNIEnv *env);
+void NewHeader(JNIEnv *env, JNIHeader *header);
+
+void ReleaseArrayList(JNIEnv *env, JNIArrayList *arrayList);
+void ReleaseHeader(JNIEnv *env, JNIHeader *header);
 
 #endif//__UNRAR_H__

@@ -23,6 +23,8 @@ static const ISzAlloc g_Alloc = {SzAlloc, SzFree};
 static SRes
 extractStream(JNIEnv *env, ISeekInStream *seekStream, const char *destDir,
               const int options, jobject callback, size_t inBufSize, const char *targetName) {
+    LOGE("extractStream begin");
+
     jclass callbackClass = (*env)->GetObjectClass(env, callback);
     jmethodID onGetFileNum =
             (*env)->GetMethodID(env, callbackClass, "onGetFileNum", "(I)V");
@@ -91,11 +93,13 @@ extractStream(JNIEnv *env, ISeekInStream *seekStream, const char *destDir,
                 break;
             }
 
+            LOGE("extractStream i=%d %s", i, fileNameBuf.data);
             // 타겟 파일이 있으면서 
             if(targetName) {
                 // 파일명이 다르면 
                 if(strcmp(targetName, fileNameBuf.data))
                     continue;
+                LOGE("extractStream targetName OK %s", fileNameBuf.data);
             }                
 
             UInt64 fileSize = SzArEx_GetFileSize(&db, i);
@@ -159,6 +163,9 @@ extractStream(JNIEnv *env, ISeekInStream *seekStream, const char *destDir,
                     }
                 }
             }
+
+            if(targetName)
+                break;
         }
         Buf_Free(&fileNameBuf, &g_Alloc);
         ISzAlloc_Free(&allocImp, outBuffer);
@@ -169,6 +176,7 @@ extractStream(JNIEnv *env, ISeekInStream *seekStream, const char *destDir,
     if (res != SZ_OK) {
         CallJavaIntStringMethod(env, callback, onError, SZ_ERROR_ARCHIVE, "Stream Extract Error");
     }
+    LOGE("extractStream end");
     return res;
 }
 
