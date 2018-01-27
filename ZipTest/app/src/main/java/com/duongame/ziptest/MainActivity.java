@@ -5,6 +5,13 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
+import com.duongame.ziptest.compress.RarFile;
+import com.duongame.ziptest.compress.Z7File;
+import com.duongame.ziptest.compress.ZipApacheFile;
+import com.duongame.ziptest.compress.ZipJavaFile;
+import com.duongame.ziptest.compress.common.ArchiveHeader;
+import com.duongame.ziptest.util.PermissionActivity;
+
 import net.lingala.zip4j.core.ZipFile;
 import net.lingala.zip4j.exception.ZipException;
 import net.lingala.zip4j.model.FileHeader;
@@ -20,6 +27,8 @@ public class MainActivity extends PermissionActivity {
     String bookrar = "주방의 마법사 01-rar.rar";
     String book7z = "주방의 마법사 01-7z.7z";
 
+    int count = 1;
+
     void zip4j() {
         long begin, end, delta, accum;
         try {
@@ -33,13 +42,13 @@ public class MainActivity extends PermissionActivity {
             accum = 0;
             new File(download + "Out").mkdirs();
             //for (int i = 0; i < headers.size(); i++) {
-            for (int i = 0; i < 1; i++) {
+            for (int i = 0; i < count; i++) {
                 begin = System.currentTimeMillis();
                 file.extractFile(headers.get(i).getFileName(), download + "Out");
                 end = System.currentTimeMillis();
                 delta = end - begin;
                 accum += delta;
-                Log.e("ZIP", "zip4j extractFile i=" + i + "  " + delta);
+                Log.e("ZIP", "zip4j extractFile i=" + i + " " + delta);
             }
             Log.e("ZIP", "zip4j accum=" + accum);
 
@@ -51,7 +60,7 @@ public class MainActivity extends PermissionActivity {
     void zipApache() {
         long begin, end, delta, accum;
         try {
-            com.duongame.ziptest.ZipApacheFile file = new com.duongame.ziptest.ZipApacheFile(download + bookzip);
+            ZipApacheFile file = new ZipApacheFile(download + bookzip);
             begin = System.currentTimeMillis();
             ArrayList<ArchiveHeader> headers = file.getHeaders();
             end = System.currentTimeMillis();
@@ -61,13 +70,13 @@ public class MainActivity extends PermissionActivity {
             accum = 0;
             new File(download + "Out").mkdirs();
             //for (int i = 0; i < headers.size(); i++) {
-            for (int i = 0; i < 1; i++) {
+            for (int i = 0; i < count; i++) {
                 begin = System.currentTimeMillis();
                 file.extractFile(headers.get(i).getName(), download + "Out");
                 end = System.currentTimeMillis();
                 delta = end - begin;
                 accum += delta;
-                Log.e("ZIP", "zipApache extractFile i=" + i + "  " + delta);
+                Log.e("ZIP", "zipApache extractFile i=" + i + " " + delta);
             }
             Log.e("ZIP", "zipApache accum=" + accum);
 
@@ -79,7 +88,7 @@ public class MainActivity extends PermissionActivity {
     void zipJava() {
         long begin, end, delta, accum;
         try {
-            com.duongame.ziptest.ZipJavaFile file = new com.duongame.ziptest.ZipJavaFile(download + bookzip);
+            ZipJavaFile file = new ZipJavaFile(download + bookzip);
             begin = System.currentTimeMillis();
             ArrayList<ArchiveHeader> headers = file.getHeaders();
             end = System.currentTimeMillis();
@@ -89,13 +98,13 @@ public class MainActivity extends PermissionActivity {
             accum = 0;
             new File(download + "Out").mkdirs();
             //for (int i = 0; i < headers.size(); i++) {
-            for (int i = 0; i < 1; i++) {
+            for (int i = 0; i < count; i++) {
                 begin = System.currentTimeMillis();
                 file.extractFile(headers.get(i).getName(), download + "Out");
                 end = System.currentTimeMillis();
                 delta = end - begin;
                 accum += delta;
-                Log.e("ZIP", "zipJava extractFile i=" + i + "  " + delta);
+                Log.e("ZIP", "zipJava extractFile i=" + i + " " + delta);
             }
             Log.e("ZIP", "zipJava accum=" + accum);
 
@@ -118,13 +127,13 @@ public class MainActivity extends PermissionActivity {
             accum = 0;
             new File(download + "Out").mkdirs();
             //for (int i = 0; i < headers.size(); i++) {
-            for (int i = 0; i < 1; i++) {
+            for (int i = 0; i < count; i++) {
                 begin = System.currentTimeMillis();
                 file.extractFile(headers.get(i).getName(), download + "Out");
                 end = System.currentTimeMillis();
                 delta = end - begin;
                 accum += delta;
-                Log.e("ZIP", "z7 extractFile i=" + i + "  " + delta);
+                Log.e("ZIP", "z7 extractFile i=" + i + " " + delta);
             }
             Log.e("ZIP", "z7 accum=" + accum);
 
@@ -147,13 +156,13 @@ public class MainActivity extends PermissionActivity {
             accum = 0;
             new File(download + "Out").mkdirs();
             //for (int i = 0; i < headers.size(); i++) {
-            for (int i = 0; i < 1; i++) {
+            for (int i = 0; i < count; i++) {
                 begin = System.currentTimeMillis();
                 file.extractFile(headers.get(i).getName(), download + "Out");
                 end = System.currentTimeMillis();
                 delta = end - begin;
                 accum += delta;
-                Log.e("ZIP", "rar extractFile i=" + i + "  " + delta);
+                Log.e("ZIP", "rar extractFile i=" + i + " " + delta);
             }
             Log.e("ZIP", "rar accum=" + accum);
 

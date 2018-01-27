@@ -1,4 +1,4 @@
-package com.duongame.ziptest;
+package com.duongame.ziptest.util;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;

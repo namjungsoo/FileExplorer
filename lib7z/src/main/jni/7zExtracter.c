@@ -23,7 +23,7 @@ static const ISzAlloc g_Alloc = {SzAlloc, SzFree};
 static SRes
 extractStream(JNIEnv *env, ISeekInStream *seekStream, const char *destDir,
               const int options, jobject callback, size_t inBufSize, const char *targetName, Z7Buffer *z7Buffer) {
-    LOGE("extractStream begin");
+    LOGE("extractStream begin [%s] [%d]", targetName, z7Buffer);
 
     jclass callbackClass = (*env)->GetObjectClass(env, callback);
     jmethodID onGetFileNum =
@@ -99,7 +99,7 @@ extractStream(JNIEnv *env, ISeekInStream *seekStream, const char *destDir,
                 // 파일명이 다르면 
                 if(strcmp(targetName, fileNameBuf.data))
                     continue;
-                LOGE("extractStream targetName OK %s", fileNameBuf.data);
+                LOGE("extractStream targetName OK [%s]", fileNameBuf.data);
             }                
 
             UInt64 fileSize = SzArEx_GetFileSize(&db, i);
@@ -122,6 +122,7 @@ extractStream(JNIEnv *env, ISeekInStream *seekStream, const char *destDir,
             if (options & OPTION_TEST) {
                 if (!isDir) {
                     if(targetName) {
+                        LOGE("targetName");
                         res = SzArEx_Extract(&db, &lookStream.vt, i, &z7Buffer->blockIndex, &z7Buffer->outBuffer,
                                          &outBufferSize, &offset, &outSizeProcessed,
                                          &allocImp, &allocTempImp);
@@ -147,23 +148,27 @@ extractStream(JNIEnv *env, ISeekInStream *seekStream, const char *destDir,
                             name[j] = CHAR_PATH_SEPARATOR;
                         }
                     }
+
+                    LOGE("destPath: %s destDir: %s", destPath, destDir);
                     if (isDir) {
                         MyCreateDir(name, destDir);
                         continue;
                     } else if (OutFile_OpenUtf16(&outFile, destPath, destDir)) {
-                        PrintError("can not open output file");
+                        PrintError("OutFile_OpenUtf16: can not open output file");
                         res = SZ_ERROR_FAIL;
                         break;
                     }
+                    // size_t
                     processedSize = outSizeProcessed;
                     if (File_Write(&outFile, outBuffer + offset, &processedSize) != 0 ||
                         processedSize != outSizeProcessed) {
-                        PrintError("can not write output file");
+                        // PrintError("File_Write: can not write output file");
+                        LOGE("File_Write: can not write output file %d %d", processedSize, outSizeProcessed);
                         res = SZ_ERROR_FAIL;
                         break;
                     }
                     if (File_Close(&outFile)) {
-                        PrintError("can not close output file");
+                        PrintError("File_Close: can not close output file");
                         res = SZ_ERROR_FAIL;
                         break;
                     }
@@ -224,6 +229,7 @@ jboolean extractAll(JNIEnv *env, const char *srcFile, const char *destDir, jobje
  */
 jboolean extractFile(JNIEnv *env, const char *srcFile, const char *targetFile, const char *destDir, jobject callback,
                     jlong inBufSize, Z7Buffer *buffer) {
+    LOGE("extractFile [%s] [%d]", targetFile, buffer);                        
     jclass callbackClass = (*env)->GetObjectClass(env, callback);
     jmethodID onStart =
             (*env)->GetMethodID(env, callbackClass, "onStart", "()V");

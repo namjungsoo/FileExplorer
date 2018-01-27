@@ -1,4 +1,4 @@
-package com.duongame.ziptest;
+package com.duongame.ziptest.compress.common;
 
 /**
  * Created by namjungsoo on 2018-01-23.

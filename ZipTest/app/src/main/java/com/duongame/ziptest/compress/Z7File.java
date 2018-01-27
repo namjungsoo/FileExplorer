@@ -1,5 +1,7 @@
-package com.duongame.ziptest;
+package com.duongame.ziptest.compress;
 
+import com.duongame.ziptest.compress.common.ArchiveHeader;
+import com.duongame.ziptest.compress.common.IArchiveFile;
 import com.hzy.lib7z.Z7Extractor;
 import com.hzy.lib7z.Z7Header;
 

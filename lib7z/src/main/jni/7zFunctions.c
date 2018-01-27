@@ -141,6 +141,7 @@ WRes OutFile_OpenUtf16(CSzFile *p, const UInt16 *name, const char *dir) {
     strcat(temp, (const char *) buf.data);
     // Disable output file name log
     //Print(temp);
+    LOGE("OutFile_OpenUtf16: %s", temp);
     res = OutFile_Open(p, temp);
     Buf_Free(&buf, &g_Alloc);
     return res;

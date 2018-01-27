@@ -1,7 +1,9 @@
-package com.duongame.ziptest;
+package com.duongame.ziptest.compress;
 
 import com.duongame.archive.Unrar;
 import com.duongame.archive.UnrarHeader;
+import com.duongame.ziptest.compress.common.ArchiveHeader;
+import com.duongame.ziptest.compress.common.IArchiveFile;
 
 import java.util.ArrayList;
 

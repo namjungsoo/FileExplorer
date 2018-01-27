@@ -4,6 +4,7 @@
 #include "Precomp.h"
 
 #include "7zFile.h"
+#include "ndk-helper.h"
 
 #ifndef USE_WINDOWS_FILE
 
@@ -134,8 +135,10 @@ WRes File_Read(CSzFile *p, void *data, size_t *size)
 WRes File_Write(CSzFile *p, const void *data, size_t *size)
 {
   size_t originalSize = *size;
-  if (originalSize == 0)
+  if (originalSize == 0) {
+    LOGE("File_Write 0");
     return 0;
+  }
   
   #ifdef USE_WINDOWS_FILE
 
@@ -159,8 +162,11 @@ WRes File_Write(CSzFile *p, const void *data, size_t *size)
   #else
 
   *size = fwrite(data, 1, originalSize, p->file);
-  if (*size == originalSize)
+  if (*size == originalSize) {
+    LOGE("File_Write originalSize");
     return 0;
+  }
+  LOGE("File_Write ferror");
   return ferror(p->file);
   
   #endif

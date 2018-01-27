@@ -1662,8 +1662,9 @@ SRes SzArEx_Extract(
   // 이전과 다른 폴더이면 폴더별로 새로 압축을 풀어준다. 
   if (*tempBuf == NULL || *blockIndex != folderIndex)
   {
-    LOGE("SzAr_GetFolderUnpackSize");
+    LOGE("SzAr_GetFolderUnpackSize begin");
     UInt64 unpackSizeSpec = SzAr_GetFolderUnpackSize(&p->db, folderIndex);
+    LOGE("SzAr_GetFolderUnpackSize end");
     /*
     UInt64 unpackSizeSpec =
         p->UnpackPositions[p->FolderToFile[(size_t)folderIndex + 1]] -
@@ -1674,7 +1675,9 @@ SRes SzArEx_Extract(
     if (unpackSize != unpackSizeSpec)
       return SZ_ERROR_MEM;
     *blockIndex = folderIndex;
+    LOGE("ISzAlloc_Free begin");
     ISzAlloc_Free(allocMain, *tempBuf);
+    LOGE("ISzAlloc_Free end");
     *tempBuf = NULL;
     
     if (res == SZ_OK)
@@ -1682,16 +1685,19 @@ SRes SzArEx_Extract(
       *outBufferSize = unpackSize;
       if (unpackSize != 0)
       {
+        LOGE("ISzAlloc_Alloc begin");
         *tempBuf = (Byte *)ISzAlloc_Alloc(allocMain, unpackSize);
+        LOGE("ISzAlloc_Alloc end");
         if (*tempBuf == NULL)
           res = SZ_ERROR_MEM;
       }
   
       if (res == SZ_OK)
       {
-        LOGE("SzAr_DecodeFolder");
+        LOGE("SzAr_DecodeFolder begin");
         res = SzAr_DecodeFolder(&p->db, folderIndex,
             inStream, p->dataPos, *tempBuf, unpackSize, allocTemp);
+        LOGE("SzAr_DecodeFolder end");
       }
     }
   }

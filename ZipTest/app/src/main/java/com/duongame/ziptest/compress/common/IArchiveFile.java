@@ -1,4 +1,4 @@
-package com.duongame.ziptest;
+package com.duongame.ziptest.compress.common;
 
 import java.util.ArrayList;
 

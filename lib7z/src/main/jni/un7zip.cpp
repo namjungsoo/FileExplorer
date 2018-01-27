@@ -47,11 +47,13 @@ FUNC(init)(JNIEnv *env, jclass type, jstring filePath_) {
     const char *filePath = env->GetStringUTFChars(filePath_, 0);
     maxId++;
 
-    Z7Extracter *extractor = new Z7Extracter;
-    extractor->z7Path = filePath;
+    // 헤더 초기화 
+    Z7Extracter *extracter = new Z7Extracter;
+    extracter->z7Path = filePath;
+    extracter->buffer.blockIndex = 0xFFFFFFFF;
+    extracter->buffer.outBuffer = NULL;
 
-
-    z7Map.insert(std::pair<int, Z7Extracter*>(maxId, extractor));
+    z7Map.insert(std::pair<int, Z7Extracter*>(maxId, extracter));
 
     env->ReleaseStringUTFChars(filePath_, filePath);
     return maxId;
