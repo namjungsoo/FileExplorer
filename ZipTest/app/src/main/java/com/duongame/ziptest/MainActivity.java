@@ -32,7 +32,8 @@ public class MainActivity extends PermissionActivity {
 
             accum = 0;
             new File(download + "Out").mkdirs();
-            for (int i = 0; i < headers.size(); i++) {
+            //for (int i = 0; i < headers.size(); i++) {
+            for (int i = 0; i < 1; i++) {
                 begin = System.currentTimeMillis();
                 file.extractFile(headers.get(i).getFileName(), download + "Out");
                 end = System.currentTimeMillis();
@@ -59,7 +60,8 @@ public class MainActivity extends PermissionActivity {
 
             accum = 0;
             new File(download + "Out").mkdirs();
-            for (int i = 0; i < headers.size(); i++) {
+            //for (int i = 0; i < headers.size(); i++) {
+            for (int i = 0; i < 1; i++) {
                 begin = System.currentTimeMillis();
                 file.extractFile(headers.get(i).getName(), download + "Out");
                 end = System.currentTimeMillis();
@@ -86,7 +88,8 @@ public class MainActivity extends PermissionActivity {
 
             accum = 0;
             new File(download + "Out").mkdirs();
-            for (int i = 0; i < headers.size(); i++) {
+            //for (int i = 0; i < headers.size(); i++) {
+            for (int i = 0; i < 1; i++) {
                 begin = System.currentTimeMillis();
                 file.extractFile(headers.get(i).getName(), download + "Out");
                 end = System.currentTimeMillis();
@@ -114,7 +117,8 @@ public class MainActivity extends PermissionActivity {
 
             accum = 0;
             new File(download + "Out").mkdirs();
-            for (int i = 0; i < headers.size(); i++) {
+            //for (int i = 0; i < headers.size(); i++) {
+            for (int i = 0; i < 1; i++) {
                 begin = System.currentTimeMillis();
                 file.extractFile(headers.get(i).getName(), download + "Out");
                 end = System.currentTimeMillis();
@@ -142,7 +146,8 @@ public class MainActivity extends PermissionActivity {
 
             accum = 0;
             new File(download + "Out").mkdirs();
-            for (int i = 0; i < headers.size(); i++) {
+            //for (int i = 0; i < headers.size(); i++) {
+            for (int i = 0; i < 1; i++) {
                 begin = System.currentTimeMillis();
                 file.extractFile(headers.get(i).getName(), download + "Out");
                 end = System.currentTimeMillis();
