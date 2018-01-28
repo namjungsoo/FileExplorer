@@ -171,7 +171,7 @@ public class ArchiveLoader {
         ExplorerItem.CompressType type = FileHelper.getCompressType(filename);
         switch(type) {
             case ZIP:
-                zipFile = new ZipFile(filename);
+                zipFile = new Zip4jFile(filename);
                 break;
             case RAR:
                 zipFile = new RarFile(filename);

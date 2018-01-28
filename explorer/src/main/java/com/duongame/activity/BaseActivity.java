@@ -20,8 +20,6 @@ import android.widget.RelativeLayout;
 import com.duongame.AnalyticsApplication;
 import com.duongame.BuildConfig;
 import com.duongame.R;
-import com.duongame.archive.ArchiveLoader;
-import com.duongame.archive.ZipFile;
 import com.duongame.bitmap.BitmapCacheManager;
 import com.duongame.db.BookDB;
 import com.duongame.db.BookLoader;

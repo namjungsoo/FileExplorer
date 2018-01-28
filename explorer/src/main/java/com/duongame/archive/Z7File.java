@@ -1,7 +1,7 @@
 package com.duongame.archive;
 
-import com.hzy.lib7z.Z7Header;
 import com.hzy.lib7z.Z7Extractor;
+import com.hzy.lib7z.Z7Header;
 
 import java.util.ArrayList;
 
@@ -35,5 +35,10 @@ public class Z7File implements IArchiveFile {
     @Override
     public boolean extractAll(String destPath) {
         return z7Extractor.extractAll(destPath, null);
+    }
+
+    @Override
+    public void destroy() {
+        z7Extractor.destroy();
     }
 }
