@@ -4,6 +4,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -85,11 +86,12 @@ public class ZipActivity extends PagerActivity {
             pagerAdapter.notifyDataSetChanged();
 
             updateScrollInfo(pager.getCurrentItem());
+            Log.e(TAG, "onSuccess i=" + i);
         }
 
         @Override
         public void onFail(int i, String name) {
-
+            Log.e(TAG, "onFail i=" + i + " " + name);
         }
 
         @Override
@@ -122,7 +124,7 @@ public class ZipActivity extends PagerActivity {
 
     @Override
     protected void onPause() {
-        if(AppHelper.isComicz(this)) {
+        if (AppHelper.isComicz(this)) {
             zipLoader.cancelTask();
 
             final Book book = new Book();

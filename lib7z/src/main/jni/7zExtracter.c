@@ -53,17 +53,20 @@ extractStream(JNIEnv *env, ISeekInStream *seekStream, const char *destDir,
         lookStream.realStream = seekStream;
         LookToRead2_Init(&lookStream);
     }
+    LOGE("ISzAlloc_Alloc [%s] [%d]", targetName, res);
 
     CrcGenerateTable();
     SzArEx_Init(&db);
     if (res == SZ_OK) {
         res = SzArEx_Open(&db, &lookStream.vt, &allocImp, &allocTempImp);
+        LOGE("SzArEx_Open [%s] [%d]", targetName, res);
     }
     if (res == SZ_OK) {
         UInt32 i;
 
         UInt32 *pBlockIndex = NULL;
         Byte **ppOutBuffer = NULL;
+        size_t *pOutBufferSize = NULL;
 
         /*
         if you need cache, use these 3 variables.
@@ -88,12 +91,14 @@ extractStream(JNIEnv *env, ISeekInStream *seekStream, const char *destDir,
                 temp = (UInt16 *) SzAlloc(NULL, tempSize * sizeof(temp[0]));
                 if (!temp) {
                     res = SZ_ERROR_MEM;
+                    LOGE("SzAlloc break [%s] [%d]", targetName, res);
                     break;
                 }
             }
             SzArEx_GetFileNameUtf16(&db, i, temp);
             res = Utf16_To_Char(&fileNameBuf, temp);
             if (res != SZ_OK) {
+                LOGE("Utf16_To_Char break [%s] [%d]", targetName, res);
                 break;
             }
 
@@ -129,20 +134,23 @@ extractStream(JNIEnv *env, ISeekInStream *seekStream, const char *destDir,
                     if(targetName) {
                         pBlockIndex = &z7Buffer->blockIndex;
                         ppOutBuffer = &z7Buffer->outBuffer;
+                        pOutBufferSize = &z7Buffer->outBufferSize;
                         LOGE("targetName");
                         res = SzArEx_Extract(&db, &lookStream.vt, i, pBlockIndex, ppOutBuffer,
-                                         &outBufferSize, &offset, &outSizeProcessed,
+                                         pOutBufferSize, &offset, &outSizeProcessed,
                                          &allocImp, &allocTempImp);
                     } else {
                         pBlockIndex = &blockIndex;
                         ppOutBuffer = &outBuffer;
+                        pOutBufferSize = &outBufferSize;
                         res = SzArEx_Extract(&db, &lookStream.vt, i, pBlockIndex, ppOutBuffer,
-                                         &outBufferSize, &offset, &outSizeProcessed,
+                                         pOutBufferSize, &offset, &outSizeProcessed,
                                          &allocImp, &allocTempImp);                        
                     }
                     if (res != SZ_OK)
                         break;
                 }
+                LOGE("OPTION_OUTPUT");
                 if (options & OPTION_OUTPUT) {
                     CSzFile outFile;
                     size_t processedSize;
@@ -150,6 +158,7 @@ extractStream(JNIEnv *env, ISeekInStream *seekStream, const char *destDir,
                     UInt16 *name = temp;
                     const UInt16 *destPath = (const UInt16 *) name;
 
+                    LOGE("MyCreateDir");
                     for (j = 0; name[j] != 0; j++) {
                         if (name[j] == '/') {
                             name[j] = 0;
@@ -163,7 +172,7 @@ extractStream(JNIEnv *env, ISeekInStream *seekStream, const char *destDir,
                         MyCreateDir(name, destDir);
                         continue;
                     } else if (OutFile_OpenUtf16(&outFile, destPath, destDir)) {
-                        PrintError("OutFile_OpenUtf16: can not open output file");
+                        LOGE("OutFile_OpenUtf16: can not open output file");
                         res = SZ_ERROR_FAIL;
                         break;
                     }
@@ -178,7 +187,7 @@ extractStream(JNIEnv *env, ISeekInStream *seekStream, const char *destDir,
                         break;
                     }
                     if (File_Close(&outFile)) {
-                        PrintError("File_Close: can not close output file");
+                        LOGE("File_Close: can not close output file");
                         res = SZ_ERROR_FAIL;
                         break;
                     }
@@ -200,7 +209,7 @@ extractStream(JNIEnv *env, ISeekInStream *seekStream, const char *destDir,
     if (res != SZ_OK) {
         CallJavaIntStringMethod(env, callback, onError, SZ_ERROR_ARCHIVE, "Stream Extract Error");
     }
-    LOGE("extractStream end");
+    LOGE("extractStream end [%s] [%d]", res);
     return res;
 }
 

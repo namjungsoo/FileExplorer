@@ -1646,13 +1646,17 @@ SRes SzArEx_Extract(
 {
   UInt32 folderIndex = p->FileToFolder[fileIndex];
   SRes res = SZ_OK;
-  
+  LOGE("SzArEx_Extract folderIndex [%d] [%lu] [%lu] [%lu]", folderIndex, *offset, *outSizeProcessed, *outBufferSize);
+
   *offset = 0;
   *outSizeProcessed = 0;
   
   if (folderIndex == (UInt32)-1)
   {
+    LOGE("SzArEx_Extract folderIndex -1");
+    LOGE("SzArEx_Extract ISzAlloc_Free begin [%d]", tempBuf);
     ISzAlloc_Free(allocMain, *tempBuf);
+    LOGE("SzArEx_Extract ISzAlloc_Free end");
     *blockIndex = folderIndex;
     *tempBuf = NULL;
     *outBufferSize = 0;
@@ -1662,6 +1666,7 @@ SRes SzArEx_Extract(
   // 이전과 다른 폴더이면 폴더별로 새로 압축을 풀어준다. 
   if (*tempBuf == NULL || *blockIndex != folderIndex)
   {
+    LOGE("SzArEx_Extract tempBuf NULL || ");
     LOGE("SzAr_GetFolderUnpackSize begin");
     UInt64 unpackSizeSpec = SzAr_GetFolderUnpackSize(&p->db, folderIndex);
     LOGE("SzAr_GetFolderUnpackSize end");
@@ -1704,11 +1709,19 @@ SRes SzArEx_Extract(
 
   if (res == SZ_OK)
   {
+    LOGE("SzArEx_Extract UnpackPositions begin");
     UInt64 unpackPos = p->UnpackPositions[fileIndex];
+    LOGE("SzArEx_Extract UnpackPositions 1");
     *offset = (size_t)(unpackPos - p->UnpackPositions[p->FolderToFile[folderIndex]]);
+    LOGE("SzArEx_Extract UnpackPositions 2");
     *outSizeProcessed = (size_t)(p->UnpackPositions[(size_t)fileIndex + 1] - unpackPos);
-    if (*offset + *outSizeProcessed > *outBufferSize)
+    LOGE("SzArEx_Extract UnpackPositions 3");
+    LOGE("SzArEx_Extract UnpackPositions 3 [%lu] [%lu] [%lu]", *offset, *outSizeProcessed, *outBufferSize);
+    if (*offset + *outSizeProcessed > *outBufferSize) {
+      LOGE("SzArEx_Extract UnpackPositions 4 fail");
       return SZ_ERROR_FAIL;
+    }
+    LOGE("SzArEx_Extract SzBitWithVals_Check begin");
     if (SzBitWithVals_Check(&p->CRCs, fileIndex))
       if (CrcCalc(*tempBuf + *offset, *outSizeProcessed) != p->CRCs.Vals[fileIndex])
         res = SZ_ERROR_CRC;
