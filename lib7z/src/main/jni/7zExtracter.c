@@ -61,6 +61,10 @@ extractStream(JNIEnv *env, ISeekInStream *seekStream, const char *destDir,
     }
     if (res == SZ_OK) {
         UInt32 i;
+
+        UInt32 *pBlockIndex = NULL;
+        Byte **ppOutBuffer = NULL;
+
         /*
         if you need cache, use these 3 variables.
         if you use external function, you can make these variable as static.
@@ -121,13 +125,18 @@ extractStream(JNIEnv *env, ISeekInStream *seekStream, const char *destDir,
             }
             if (options & OPTION_TEST) {
                 if (!isDir) {
+
                     if(targetName) {
+                        pBlockIndex = &z7Buffer->blockIndex;
+                        ppOutBuffer = &z7Buffer->outBuffer;
                         LOGE("targetName");
-                        res = SzArEx_Extract(&db, &lookStream.vt, i, &z7Buffer->blockIndex, &z7Buffer->outBuffer,
+                        res = SzArEx_Extract(&db, &lookStream.vt, i, pBlockIndex, ppOutBuffer,
                                          &outBufferSize, &offset, &outSizeProcessed,
                                          &allocImp, &allocTempImp);
                     } else {
-                        res = SzArEx_Extract(&db, &lookStream.vt, i, &blockIndex, &outBuffer,
+                        pBlockIndex = &blockIndex;
+                        ppOutBuffer = &outBuffer;
+                        res = SzArEx_Extract(&db, &lookStream.vt, i, pBlockIndex, ppOutBuffer,
                                          &outBufferSize, &offset, &outSizeProcessed,
                                          &allocImp, &allocTempImp);                        
                     }
@@ -160,7 +169,8 @@ extractStream(JNIEnv *env, ISeekInStream *seekStream, const char *destDir,
                     }
                     // size_t
                     processedSize = outSizeProcessed;
-                    if (File_Write(&outFile, outBuffer + offset, &processedSize) != 0 ||
+                    //if (File_Write(&outFile, outBuffer + offset, &processedSize) != 0 ||
+                    if (File_Write(&outFile, *ppOutBuffer + offset, &processedSize) != 0 ||
                         processedSize != outSizeProcessed) {
                         // PrintError("File_Write: can not write output file");
                         LOGE("File_Write: can not write output file %d %d", processedSize, outSizeProcessed);
@@ -214,8 +224,7 @@ jboolean extractAll(JNIEnv *env, const char *srcFile, const char *destDir, jobje
         return JNI_FALSE;
     }
     FileInStream_CreateVTable(&archiveStream);
-    SRes res = extractStream(env, &archiveStream.vt, destDir, OPTION_EXTRACT, callback,
-                             (size_t) inBufSize, NULL, NULL);
+    SRes res = extractStream(env, &archiveStream.vt, destDir, OPTION_EXTRACT, callback, (size_t) inBufSize, NULL, NULL);
     File_Close(&archiveStream.file);
     if (res == SZ_OK) {
         CallJavaVoidMethod(env, callback, onSucceed);
@@ -229,7 +238,7 @@ jboolean extractAll(JNIEnv *env, const char *srcFile, const char *destDir, jobje
  */
 jboolean extractFile(JNIEnv *env, const char *srcFile, const char *targetFile, const char *destDir, jobject callback,
                     jlong inBufSize, Z7Buffer *buffer) {
-    LOGE("extractFile [%s] [%d]", targetFile, buffer);                        
+    LOGE("extractFile [%s] [%d] [%d] [%d]", targetFile, buffer, buffer->blockIndex, buffer->outBuffer);
     jclass callbackClass = (*env)->GetObjectClass(env, callback);
     jmethodID onStart =
             (*env)->GetMethodID(env, callbackClass, "onStart", "()V");
@@ -245,8 +254,8 @@ jboolean extractFile(JNIEnv *env, const char *srcFile, const char *targetFile, c
         return JNI_FALSE;
     }
     FileInStream_CreateVTable(&archiveStream);
-    SRes res = extractStream(env, &archiveStream.vt, destDir, OPTION_EXTRACT, callback,
-                             (size_t) inBufSize, targetFile, buffer);
+    SRes res = extractStream(env, &archiveStream.vt, destDir, OPTION_EXTRACT, callback, (size_t) inBufSize, targetFile, buffer);
+    //SRes res = extractStream(env, &archiveStream.vt, destDir, OPTION_EXTRACT, callback, (size_t) inBufSize, NULL, NULL);
     File_Close(&archiveStream.file);
     if (res == SZ_OK) {
         CallJavaVoidMethod(env, callback, onSucceed);
@@ -276,8 +285,7 @@ jboolean extractAsset(JNIEnv *env, jobject assetsManager, const char *assetName,
         return JNI_FALSE;
     }
     AssetFileInStream_CreateVTable(&archiveStream);
-    SRes res = extractStream(env, &archiveStream.vt, destDir, OPTION_EXTRACT, callback,
-                             (size_t) inBufSize, NULL, NULL);
+    SRes res = extractStream(env, &archiveStream.vt, destDir, OPTION_EXTRACT, callback, (size_t) inBufSize, NULL, NULL);
     AssetFile_Close(&archiveStream.assetFile);
     if (res == SZ_OK) {
         CallJavaVoidMethod(env, callback, onSucceed);
