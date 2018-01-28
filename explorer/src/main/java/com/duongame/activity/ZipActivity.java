@@ -14,8 +14,8 @@ import com.duongame.R;
 import com.duongame.adapter.ExplorerItem;
 import com.duongame.adapter.PhotoPagerAdapter;
 import com.duongame.adapter.ViewerPagerAdapter;
+import com.duongame.archive.ArchiveLoader;
 import com.duongame.bitmap.BitmapCacheManager;
-import com.duongame.bitmap.ZipLoader;
 import com.duongame.db.Book;
 import com.duongame.db.BookDB;
 import com.duongame.helper.AlertHelper;
@@ -38,8 +38,8 @@ public class ZipActivity extends PagerActivity {
     private final static String TAG = "ZipActivity";
 
     //RAR
-    private final ZipLoader zipLoader = new ZipLoader();
-    //private final ArchiveLoader zipLoader = new ArchiveLoader();
+    //private final ZipLoader zipLoader = new ZipLoader();
+    private final ArchiveLoader zipLoader = new ArchiveLoader();
 
     private ExplorerItem.Side side = LEFT;
     private ExplorerItem.Side lastSide = LEFT;
@@ -72,8 +72,8 @@ public class ZipActivity extends PagerActivity {
     }
 
     //RAR
-    private ZipLoader.ZipLoaderListener listener = new ZipLoader.ZipLoaderListener() {
-//    private ArchiveLoader.ArchiveLoaderListener listener = new ArchiveLoader.ArchiveLoaderListener() {
+//    private ZipLoader.ZipLoaderListener listener = new ZipLoader.ZipLoaderListener() {
+    private ArchiveLoader.ArchiveLoaderListener listener = new ArchiveLoader.ArchiveLoaderListener() {
         @Override
         public void onSuccess(int i, ArrayList<ExplorerItem> zipImageList, int totalFileCount) {
             ZipActivity.this.totalFileCount = totalFileCount;

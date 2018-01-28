@@ -53,12 +53,21 @@ public class BookLoader {
     // 히스토리일 경우는 바로 읽음
     public static void loadContinue(Activity context, Book book) {
         Class<?> cls = null;
-        if (book.path.toLowerCase().endsWith(".zip")) {
-            cls = ZipActivity.class;
-        } else if (book.path.toLowerCase().endsWith(".pdf")) {
-            cls = PdfActivity.class;
-        } else if (book.path.toLowerCase().endsWith(".txt")) {
-            cls = TextActivity.class;
+        switch(FileHelper.getCompressType(book.path)) {
+            case ZIP:
+            case RAR:
+            case SEVENZIP:
+                cls = ZipActivity.class;
+                break;
+            default:
+                if (book.path.toLowerCase().endsWith(".pdf")) {
+                    cls = PdfActivity.class;
+                } else if (book.path.toLowerCase().endsWith(".txt")) {
+                    cls = TextActivity.class;
+                } else {
+                    return;
+                }
+                break;
         }
 
         if (cls != null) {
@@ -75,12 +84,21 @@ public class BookLoader {
 
     private static Intent getIntentNew(final Activity context, ExplorerItem item) {
         Class<?> cls = null;
-        if (item.path.toLowerCase().endsWith(".zip")) {
-            cls = ZipActivity.class;
-        } else if (item.path.toLowerCase().endsWith(".pdf")) {
-            cls = PdfActivity.class;
-        } else if (item.path.toLowerCase().endsWith(".txt")) {
-            cls = TextActivity.class;
+        switch(FileHelper.getCompressType(item.path)) {
+            case ZIP:
+            case RAR:
+            case SEVENZIP:
+                cls = ZipActivity.class;
+                break;
+            default:
+                if (item.path.toLowerCase().endsWith(".pdf")) {
+                    cls = PdfActivity.class;
+                } else if (item.path.toLowerCase().endsWith(".txt")) {
+                    cls = TextActivity.class;
+                } else {
+                    return null;
+                }
+                break;
         }
 
         if (cls != null) {
@@ -99,13 +117,23 @@ public class BookLoader {
 
     private static Intent getIntentNew(final Activity context, Book book) {
         Class<?> cls = null;
-        if (book.path.toLowerCase().endsWith(".zip")) {
-            cls = ZipActivity.class;
-        } else if (book.path.toLowerCase().endsWith(".pdf")) {
-            cls = PdfActivity.class;
-        } else if (book.path.toLowerCase().endsWith(".txt")) {
-            cls = TextActivity.class;
+        switch(FileHelper.getCompressType(book.path)) {
+            case ZIP:
+            case RAR:
+            case SEVENZIP:
+                cls = ZipActivity.class;
+                break;
+            default:
+                if (book.path.toLowerCase().endsWith(".pdf")) {
+                    cls = PdfActivity.class;
+                } else if (book.path.toLowerCase().endsWith(".txt")) {
+                    cls = TextActivity.class;
+                } else {
+                    return null;
+                }
+                break;
         }
+
         if (cls != null) {
             final Intent intent = new Intent(context, cls);
             intent.putExtra("path", book.path);
@@ -123,12 +151,14 @@ public class BookLoader {
 
     private static void loadNew(final Activity context, ExplorerItem item) {
         Intent intent = getIntentNew(context, item);
-        context.startActivity(intent);
+        if(intent != null)
+            context.startActivity(intent);
     }
 
     private static void loadNew(final Activity context, Book book) {
         Intent intent = getIntentNew(context, book);
-        context.startActivity(intent);
+        if(intent != null)
+            context.startActivity(intent);
     }
 
     // 탐색기, 검색일 경우 여기서 읽음

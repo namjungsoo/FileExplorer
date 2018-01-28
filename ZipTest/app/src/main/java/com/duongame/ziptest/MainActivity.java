@@ -15,6 +15,7 @@ import com.duongame.ziptest.util.PermissionActivity;
 import net.lingala.zip4j.core.ZipFile;
 import net.lingala.zip4j.exception.ZipException;
 import net.lingala.zip4j.model.FileHeader;
+import net.lingala.zip4j.progress.ProgressMonitor;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -42,7 +43,7 @@ public class MainActivity extends PermissionActivity {
             accum = 0;
             new File(download + "Out").mkdirs();
             for (int i = 0; i < headers.size(); i++) {
-            //for (int i = 0; i < count; i++) {
+                //for (int i = 0; i < count; i++) {
                 begin = System.currentTimeMillis();
                 file.extractFile(headers.get(i).getFileName(), download + "Out");
                 end = System.currentTimeMillis();
@@ -70,7 +71,7 @@ public class MainActivity extends PermissionActivity {
             accum = 0;
             new File(download + "Out").mkdirs();
             for (int i = 0; i < headers.size(); i++) {
-            //for (int i = 0; i < count; i++) {
+                //for (int i = 0; i < count; i++) {
                 begin = System.currentTimeMillis();
                 file.extractFile(headers.get(i).getName(), download + "Out");
                 end = System.currentTimeMillis();
@@ -98,7 +99,7 @@ public class MainActivity extends PermissionActivity {
             accum = 0;
             new File(download + "Out").mkdirs();
             for (int i = 0; i < headers.size(); i++) {
-            //for (int i = 0; i < count; i++) {
+                //for (int i = 0; i < count; i++) {
                 begin = System.currentTimeMillis();
                 file.extractFile(headers.get(i).getName(), download + "Out");
                 end = System.currentTimeMillis();
@@ -127,7 +128,7 @@ public class MainActivity extends PermissionActivity {
             accum = 0;
             new File(download + "Out").mkdirs();
             for (int i = 0; i < headers.size(); i++) {
-            //for (int i = 0; i < count; i++) {
+                //for (int i = 0; i < count; i++) {
                 begin = System.currentTimeMillis();
                 file.extractFile(headers.get(i).getName(), download + "Out");
                 end = System.currentTimeMillis();
@@ -156,7 +157,7 @@ public class MainActivity extends PermissionActivity {
             accum = 0;
             new File(download + "Out").mkdirs();
             for (int i = 0; i < headers.size(); i++) {
-            //for (int i = 0; i < count; i++) {
+                //for (int i = 0; i < count; i++) {
                 begin = System.currentTimeMillis();
                 file.extractFile(headers.get(i).getName(), download + "Out");
                 end = System.currentTimeMillis();
@@ -175,8 +176,17 @@ public class MainActivity extends PermissionActivity {
         long begin, end, delta, accum;
         try {
             ZipFile file = new ZipFile(download + bookzip);
+            file.setRunInThread(true);
             begin = System.currentTimeMillis();
             file.extractAll(download + "Out");
+
+            ProgressMonitor monitor = file.getProgressMonitor();
+            while (monitor.getState() == ProgressMonitor.STATE_BUSY) {
+                if (monitor.getCurrentOperation() == ProgressMonitor.OPERATION_EXTRACT) {
+                    Log.e("ZIP", "zip4j extractAll filename=" + monitor.getFileName() + monitor.getPercentDone());
+                }
+            }
+
             end = System.currentTimeMillis();
             delta = end - begin;
             Log.e("ZIP", "zip4j extractAll=" + delta);
