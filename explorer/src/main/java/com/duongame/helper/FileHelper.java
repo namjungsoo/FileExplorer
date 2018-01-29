@@ -104,14 +104,14 @@ public class FileHelper {
     }
 
     public static ExplorerItem.CompressType getCompressType(String path) {
-        if (path.endsWith(".zip"))
+        if (path.endsWith(".zip") || path.endsWith(".cbz"))
             return ExplorerItem.CompressType.ZIP;
         //TODO: 현재 지원 안함
-        if (path.endsWith(".rar"))
+        if (path.endsWith(".rar") || path.endsWith(".cbr"))
             return ExplorerItem.CompressType.RAR;
-        if (path.endsWith(".7z"))
+        if (path.endsWith(".7z") || path.endsWith(".cb7"))
             return ExplorerItem.CompressType.SEVENZIP;
-        if (path.endsWith(".tar"))
+        if (path.endsWith(".tar") || path.endsWith(".cbt"))
             return ExplorerItem.CompressType.TAR;
         if (path.endsWith(".gz") || path.endsWith(".tgz"))
             return ExplorerItem.CompressType.GZIP;

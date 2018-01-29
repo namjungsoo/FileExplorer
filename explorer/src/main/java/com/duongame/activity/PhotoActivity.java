@@ -42,6 +42,8 @@ public class PhotoActivity extends PagerActivity {
 
     @Override
     protected ViewerPagerAdapter createPagerAdapter() {
+        // 이때는 애니메이션을 한다.
+        // 그런데 애니메이션이 없으면 안해야 한다.
         return new PhotoPagerAdapter(this, true);
     }
 

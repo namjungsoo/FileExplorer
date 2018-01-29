@@ -28,7 +28,7 @@ public class PhotoPagerAdapter extends ViewerPagerAdapter {
 
     private ArrayList<AsyncTask> taskList = new ArrayList<>();
     private int lastPosition = -1;
-    private boolean useGifAni = false;
+    private boolean useGifAni = false;// true: BitmapTask에서 읽음
 
     PagerOnTouchListener mPagerOnTouchListener;
 
@@ -181,7 +181,7 @@ public class PhotoPagerAdapter extends ViewerPagerAdapter {
                         // 기존 GIF가 있으면 가져와서 stop해줌
                         pagerActivity.stopGifAnimation();
 
-//                        imageView.stopAnimation();
+                        //imageView.stopAnimation();
                         imageView.setBytes(data);
                         imageView.startAnimation();
 

@@ -16,7 +16,6 @@ import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveOutputStream;
 import org.apache.commons.compress.compressors.bzip2.BZip2CompressorOutputStream;
 import org.apache.commons.compress.compressors.gzip.GzipCompressorOutputStream;
-import org.sevenzip4j.archive.SevenZipEntry;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -27,7 +26,6 @@ import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
 import static com.duongame.adapter.ExplorerItem.CompressType.BZIP2;
@@ -229,73 +227,8 @@ public class ZipTask extends AsyncTask<Void, FileHelper.Progress, Boolean> {
     }
     //endregion
 
-    private void setSevenZipEntryAttributes(File file, SevenZipEntry sevenEntry) {
-        sevenEntry.setName(file.getName());
-        sevenEntry.setSize(file.length());
-        sevenEntry.setLastWriteTime(file.lastModified());
-        sevenEntry.setReadonly(!file.canWrite());
-        sevenEntry.setHidden(file.isHidden());
-        sevenEntry.setDirectory(file.isDirectory());
-        sevenEntry.setArchive(true);
-        sevenEntry.setSystem(false);
-    }
-
     // 현재 지원 안됨
     boolean archive7z() {
-//        try {
-//            // sevenzip4j
-//            SevenZipArchiveOutputStream stream = new SevenZipArchiveOutputStream(new File(path));
-//
-//            byte[] buf = new byte[BLOCK_SIZE];
-//            for (int i = 0; i < zipList.size(); i++) {
-//                updateProgress(i, zipList.get(i).name);
-//
-//                File file = new File(zipList.get(i).path);
-//                SevenZipEntry sevenEntry = new SevenZipEntry();
-//                setSevenZipEntryAttributes(file, sevenEntry);
-//                stream.putNextEntry(sevenEntry);
-//
-//                FileInputStream inputStream = new FileInputStream(file);
-//                int nread = 0;
-//                while((nread = inputStream.read(buf)) > 0) {
-//                    stream.write(buf, 0, nread);
-//                }
-//            }
-//
-//            stream.finish();
-//            stream.close();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//            return false;
-//        }
-
-        // apache common compress는 android에서 지원안됨
-//        try {
-//            SevenZOutputFile sevenZOutputFile = new SevenZOutputFile(new File(path));
-//            byte[] buffer = new byte[1024];
-//
-//            for (int i = 0; i < zipList.size(); i++) {
-//                updateProgress(i, zipList.get(i).name);
-//
-//                FileInputStream inputStream = new FileInputStream(zipList.get(i).path);
-//
-//                SevenZArchiveEntry entry = sevenZOutputFile.createArchiveEntry(new File(zipList.get(i).path), zipList.get(i).name);
-//                sevenZOutputFile.putArchiveEntry(entry);
-//
-//                int count = 0;
-//                while ((count = inputStream.read(buffer)) > 0) {
-//                    sevenZOutputFile.write(buffer, 0, count);
-//                }
-//
-//                sevenZOutputFile.closeArchiveEntry();
-//            }
-//
-//            sevenZOutputFile.close();
-//
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//            return false;
-//        }
         return true;
     }
 

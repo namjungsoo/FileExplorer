@@ -3,9 +3,9 @@ package com.duongame.task.bitmap;
 import android.graphics.Bitmap;
 import android.widget.ImageView;
 
+import com.duongame.activity.PagerActivity;
 import com.duongame.adapter.ExplorerItem;
 import com.duongame.helper.FileHelper;
-import com.duongame.activity.PagerActivity;
 
 import java.lang.ref.WeakReference;
 
@@ -44,6 +44,8 @@ public class LoadBitmapTask extends BitmapTask {
         // useGifAni: 애니메이션이 있을때는 외부에서 쓰레드를 통해서 렌더링 하므로 여기서는 미리 gif를 로딩해 놓지 않는다.
         if (useGifAni && FileHelper.isGifImage(item.path)) {
 //            Glide.with(context).load(new File(item.path)).into(imageView);
+
+            // 일단 애니메이션이 있는지를 체크해보고 없으면 내가 로딩하자
             return null;
         }
 

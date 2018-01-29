@@ -177,6 +177,7 @@ public class ZipActivity extends PagerActivity {
 
     @Override
     protected ViewerPagerAdapter createPagerAdapter() {
+        // 이때는 애니메이션을 하지 않는다.
         return new PhotoPagerAdapter(this, false);
     }
 
