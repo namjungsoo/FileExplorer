@@ -21,8 +21,8 @@ public class FileSearcher {
         public ArrayList<ExplorerItem> imageList;
     }
 
+    private ArrayList<String> extensions;
     private String keyword;
-    private String ext;
     private Comparator<ExplorerItem> comparator;
 
     private boolean excludeDirectory;
@@ -30,8 +30,18 @@ public class FileSearcher {
     private boolean hiddenFile;
     private boolean imageListEnable;
 
+    public FileSearcher setExtensions(ArrayList<String> extensions) {
+        this.extensions = extensions;
+        return this;
+    }
+
     public FileSearcher setExtension(String ext) {
-        this.ext = ext;
+        //this.extension = ext;
+        if(extensions == null) {
+            extensions = new ArrayList<>();
+        }
+        extensions.clear();
+        extensions.add(ext);
         return this;
     }
 
@@ -135,12 +145,16 @@ public class FileSearcher {
                     }
                 }
             } else {
+                // 파일이므로 더할지 말지 결정을 해야 함
                 boolean willAdd = true;
-                if (ext != null) {
-                    willAdd = item.name.endsWith(ext);
+                if (extensions != null) {// 확장자가 맞으므로 더함
+                    willAdd = false;
+                    for(String ext : extensions) {
+                        willAdd |= item.name.endsWith(ext);
+                    }
                 }
 
-                if (keyword != null && willAdd) {
+                if (keyword != null && willAdd) {// 키워드를 포함하므로 더함
                     willAdd = item.name.contains(keyword);
                 }
 

@@ -16,8 +16,8 @@ import android.widget.Spinner;
 import android.widget.ViewSwitcher;
 
 import com.duongame.R;
-import com.duongame.adapter.SearchRecyclerAdapter;
 import com.duongame.adapter.ExplorerItem;
+import com.duongame.adapter.SearchRecyclerAdapter;
 import com.duongame.db.BookLoader;
 import com.duongame.helper.FileSearcher;
 import com.duongame.view.DividerItemDecoration;
@@ -44,9 +44,9 @@ public class SearchFragment extends BaseFragment {
     static class SearchTask extends AsyncTask<Void, Void, Boolean> {
         WeakReference<SearchFragment> fragmentWeakReference;
         String keyword;
-        String ext;
+        ArrayList<String> ext;
 
-        SearchTask(SearchFragment fragment, String keyword, String ext) {
+        SearchTask(SearchFragment fragment, String keyword, ArrayList<String> ext) {
             fragmentWeakReference = new WeakReference<SearchFragment>(fragment);
             this.keyword = keyword;
             this.ext = ext;
@@ -55,19 +55,19 @@ public class SearchFragment extends BaseFragment {
         @Override
         protected Boolean doInBackground(Void... params) {
             SearchFragment fragment = fragmentWeakReference.get();
-            if(fragment == null) {
+            if (fragment == null) {
                 return false;
             }
 
             fragment.searchResult = fragment.fileSearcher.setKeyword(keyword)
-                .setExtension(ext)
-                .setRecursiveDirectory(true)
-                .setExcludeDirectory(true)
-                .setImageListEnable(false)
-                .search(fragment.application.getInitialPath());
+                    .setExtensions(ext)
+                    .setRecursiveDirectory(true)
+                    .setExcludeDirectory(true)
+                    .setImageListEnable(false)
+                    .search(fragment.application.getInitialPath());
 
             fragment = fragmentWeakReference.get();
-            if(fragment == null) {
+            if (fragment == null) {
                 return false;
             }
 
@@ -82,7 +82,7 @@ public class SearchFragment extends BaseFragment {
         @Override
         protected void onPostExecute(Boolean result) {
             SearchFragment fragment = fragmentWeakReference.get();
-            if(fragment == null) {
+            if (fragment == null) {
                 return;
             }
 
@@ -91,7 +91,7 @@ public class SearchFragment extends BaseFragment {
                     @Override
                     public void onItemClick(int position) {
                         SearchFragment fragment = fragmentWeakReference.get();
-                        if(fragment == null) {
+                        if (fragment == null) {
                             return;
                         }
                         if (fragment.fileList != null) {
@@ -129,14 +129,20 @@ public class SearchFragment extends BaseFragment {
             @Override
             public void onClick(View v) {
                 InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-                if(imm != null)
+                if (imm != null)
                     imm.hideSoftInputFromWindow(editKeyword.getWindowToken(), 0);
 
                 // 대문자 PDF, ZIP, TXT를 소문자로 수정
-                String type = "." + spinnerType.getSelectedItem().toString().toLowerCase();
+                String ext = spinnerType.getSelectedItem().toString().toLowerCase();
+                String[] exts = ext.split(",");
+                ArrayList<String> extList = new ArrayList<>();
+                for (int i = 0; i < exts.length; i++) {
+                    extList.add("." + exts[i]);
+                }
+
                 String keyword = editKeyword.getText().toString();
 
-                SearchTask task = new SearchTask(SearchFragment.this, keyword, type);
+                SearchTask task = new SearchTask(SearchFragment.this, keyword, extList);
                 task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
                 progressBar.setVisibility(View.VISIBLE);

@@ -2,8 +2,8 @@
 <resources>
     <string name="comicz_name_free">코믹뷰어</string>
     <string name="comicz_name_pro">코믹뷰어 Pro</string>
-    <string name="file_name_free">파일매니저</string>
-    <string name="file_name_pro">파일매니저 Pro</string>
+    <string name="file_name_free">파일관리자</string>
+    <string name="file_name_pro">파일관리자 Pro</string>
     <string name="ok">확인</string>
     <string name="cancel">취소</string>
     <string name="grid">그리드</string>
@@ -35,7 +35,7 @@
     <string name="each_text">%d%%</string>
     <string name="total_text">%1$d/%2$d (%3$d%%)</string>
     <string-array name="search_file">
-        <item>ZIP</item>
+        <item>ZIP,RAR,7Z</item>
         <item>TXT</item>
         <item>PDF</item>
     </string-array>
