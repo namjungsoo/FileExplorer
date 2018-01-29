@@ -22,6 +22,7 @@ import com.duongame.bitmap.BitmapCacheManager;
 import com.duongame.helper.JLog;
 import com.duongame.task.thumbnail.LoadApkThumbnailTask;
 import com.duongame.task.thumbnail.LoadPdfThumbnailTask;
+import com.duongame.task.thumbnail.LoadThumbnailTask;
 import com.duongame.task.thumbnail.LoadVideoThumbnailTask;
 import com.duongame.task.thumbnail.LoadZipThumbnailTask;
 import com.duongame.view.RoundedImageView;
@@ -181,7 +182,7 @@ public class ExplorerAdapter extends RecyclerView.Adapter<ExplorerAdapter.Explor
         this.fileList = fileList;
         fileMap = new HashMap<>();
 
-        if(fileList == null)
+        if (fileList == null)
             return;
 
         for (ExplorerItem item : fileList) {
@@ -207,28 +208,33 @@ public class ExplorerAdapter extends RecyclerView.Adapter<ExplorerAdapter.Explor
         if (bitmap == null) {
             viewHolder.icon.setImageResource(R.drawable.file);
 
-            // Glide로 읽자
-            GlideApp.with(context)
-                    .load(new File(item.path))
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .placeholder(R.drawable.file)
-                    .centerCrop()
-                    .into(new ImageViewTarget<Drawable>(viewHolder.icon) {
-                        @Override
-                        protected void setResource(@Nullable Drawable resource) {
-                            //FIX: destroyed activity error
-                            if (context.isFinishing())
-                                return;
+            if (item.path.endsWith(".gif")) {
+                LoadThumbnailTask task = new LoadThumbnailTask(context, viewHolder.icon, viewHolder.iconSmall);
+                task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, item.path);
+            } else {
+                // Glide로 읽자
+                GlideApp.with(context)
+                        .load(new File(item.path))
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+                        .placeholder(R.drawable.file)
+                        .centerCrop()
+                        .into(new ImageViewTarget<Drawable>(viewHolder.icon) {
+                            @Override
+                            protected void setResource(@Nullable Drawable resource) {
+                                //FIX: destroyed activity error
+                                if (context.isFinishing())
+                                    return;
 
-                            Object tag = viewHolder.iconSmall.getTag();
-                            if (tag == null)
-                                return;
+                                Object tag = viewHolder.iconSmall.getTag();
+                                if (tag == null)
+                                    return;
 
-                            if (tag.equals(item.path)) {
-                                getView().setImageDrawable(resource);
+                                if (tag.equals(item.path)) {
+                                    getView().setImageDrawable(resource);
+                                }
                             }
-                        }
-                    });
+                        });
+            }
         } else {
             viewHolder.icon.setImageBitmap(bitmap);
         }
@@ -247,7 +253,7 @@ public class ExplorerAdapter extends RecyclerView.Adapter<ExplorerAdapter.Explor
     }
 
     void setIconZip(final ExplorerViewHolder viewHolder, ExplorerItem item) {
-        Log.e(TAG, "setIconZip "+item.path);
+        Log.e(TAG, "setIconZip " + item.path);
         final Drawable drawable = getDrawable(item.path);
         if (drawable == null) {
             viewHolder.icon.setImageResource(R.drawable.zip);

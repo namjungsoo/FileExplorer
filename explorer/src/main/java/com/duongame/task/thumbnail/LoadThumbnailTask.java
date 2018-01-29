@@ -17,13 +17,13 @@ import java.lang.ref.WeakReference;
 
 public class LoadThumbnailTask extends AsyncTask<String, Void, Bitmap> {
     private final WeakReference<Context> contextRef;
-    private final WeakReference<ImageView> imageViewRef;
-
+    private final WeakReference<ImageView> iconRef, iconSmallRef;
     private String path;
 
-    public LoadThumbnailTask(Context context, ImageView imageView) {
+    public LoadThumbnailTask(Context context, ImageView icon, ImageView iconSmall) {
         this.contextRef = new WeakReference<Context>(context);
-        this.imageViewRef = new WeakReference<ImageView>(imageView);
+        this.iconRef = new WeakReference<ImageView>(icon);
+        this.iconSmallRef = new WeakReference<ImageView>(iconSmall);
     }
 
     @Override
@@ -32,10 +32,10 @@ public class LoadThumbnailTask extends AsyncTask<String, Void, Bitmap> {
 
         path = params[0];
 
-        if(isCancelled())
+        if (isCancelled())
             return null;
 
-        if(contextRef.get() == null)
+        if (contextRef.get() == null)
             return null;
 
         if (contextRef.get() instanceof Activity) {
@@ -44,12 +44,12 @@ public class LoadThumbnailTask extends AsyncTask<String, Void, Bitmap> {
         }
 
         Bitmap bitmap = BitmapCacheManager.getThumbnail(path);
-        if(isCancelled())
+        if (isCancelled())
             return bitmap;
 
         if (bitmap == null) {
             bitmap = BitmapLoader.getThumbnail(contextRef.get(), path, true);
-            if(isCancelled())
+            if (isCancelled())
                 return bitmap;
 
             if (bitmap == null) {
@@ -67,8 +67,15 @@ public class LoadThumbnailTask extends AsyncTask<String, Void, Bitmap> {
         super.onPostExecute(bitmap);
         if (bitmap == null)
             return;
-        if (imageViewRef.get() == null)
+        if (path == null)
             return;
-        imageViewRef.get().setImageBitmap(bitmap);
+        if (iconRef.get() == null)
+            return;
+        if (iconSmallRef.get() == null)
+            return;
+        if (iconSmallRef.get().getTag() == null)
+            return;
+        if (path.equals(iconSmallRef.get().getTag()))
+            iconRef.get().setImageBitmap(bitmap);
     }
 }
