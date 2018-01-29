@@ -137,11 +137,11 @@ public class FileSearcher {
             } else {
                 boolean willAdd = true;
                 if (ext != null) {
-                    willAdd = item.name.toLowerCase().endsWith(ext);
+                    willAdd = item.name.endsWith(ext);
                 }
 
                 if (keyword != null && willAdd) {
-                    willAdd = item.name.toLowerCase().contains(keyword);
+                    willAdd = item.name.contains(keyword);
                 }
 
                 if (willAdd)

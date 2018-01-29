@@ -132,6 +132,7 @@ public class SearchFragment extends BaseFragment {
                 if(imm != null)
                     imm.hideSoftInputFromWindow(editKeyword.getWindowToken(), 0);
 
+                // 대문자 PDF, ZIP, TXT를 소문자로 수정
                 String type = "." + spinnerType.getSelectedItem().toString().toLowerCase();
                 String keyword = editKeyword.getText().toString();
 

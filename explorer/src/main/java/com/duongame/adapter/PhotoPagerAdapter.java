@@ -174,7 +174,7 @@ public class PhotoPagerAdapter extends ViewerPagerAdapter {
             if (!useGifAni)
                 return;
 
-            if (imageList.get(position).path.toLowerCase().endsWith(".gif")) {
+            if (imageList.get(position).path.endsWith(".gif")) {
                 final LoadGifTask task = new LoadGifTask(new LoadGifTask.LoadGifListener() {
                     @Override
                     public void onSuccess(byte[] data) {

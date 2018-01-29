@@ -60,9 +60,9 @@ public class BookLoader {
                 cls = ZipActivity.class;
                 break;
             default:
-                if (book.path.toLowerCase().endsWith(".pdf")) {
+                if (book.path.endsWith(".pdf")) {
                     cls = PdfActivity.class;
-                } else if (book.path.toLowerCase().endsWith(".txt")) {
+                } else if (FileHelper.isText(book.path)) {
                     cls = TextActivity.class;
                 } else {
                     return;
@@ -91,9 +91,9 @@ public class BookLoader {
                 cls = ZipActivity.class;
                 break;
             default:
-                if (item.path.toLowerCase().endsWith(".pdf")) {
+                if (item.path.endsWith(".pdf")) {
                     cls = PdfActivity.class;
-                } else if (item.path.toLowerCase().endsWith(".txt")) {
+                } else if (FileHelper.isText(item.path)) {
                     cls = TextActivity.class;
                 } else {
                     return null;
@@ -124,9 +124,9 @@ public class BookLoader {
                 cls = ZipActivity.class;
                 break;
             default:
-                if (book.path.toLowerCase().endsWith(".pdf")) {
+                if (book.path.endsWith(".pdf")) {
                     cls = PdfActivity.class;
-                } else if (book.path.toLowerCase().endsWith(".txt")) {
+                } else if (FileHelper.isText(book.path)) {
                     cls = TextActivity.class;
                 } else {
                     return null;
@@ -218,7 +218,7 @@ public class BookLoader {
 
     public static void loadBookBitmap(Context context, HistoryRecyclerAdapter.HistoryViewHolder holder, String path) {
         // zip 파일의 썸네일을 읽자
-        if (path.endsWith(".txt")) {
+        if (FileHelper.isText(path)) {
             holder.thumb.setImageBitmap(BitmapCacheManager.getResourceBitmap(context.getResources(), R.drawable.text));
             return;
         }

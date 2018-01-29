@@ -7,6 +7,9 @@ import android.view.View;
 
 import com.duongame.R;
 import com.duongame.adapter.ExplorerItem;
+import com.duongame.archive.ArchiveHeader;
+import com.duongame.archive.RarFile;
+import com.duongame.archive.Zip4jFile;
 import com.duongame.dialog.UnzipDialog;
 import com.duongame.helper.FileHelper;
 import com.duongame.helper.JLog;
@@ -17,7 +20,6 @@ import com.hzy.lib7z.Z7Header;
 
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
-import org.apache.commons.compress.archivers.zip.ZipArchiveInputStream;
 import org.apache.commons.compress.compressors.bzip2.BZip2CompressorInputStream;
 import org.apache.commons.compress.compressors.gzip.GzipCompressorInputStream;
 
@@ -27,7 +29,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
-import java.util.zip.ZipEntry;
 
 import static com.duongame.helper.FileHelper.BLOCK_SIZE;
 
@@ -114,61 +115,33 @@ public class UnzipTask extends AsyncTask<Void, FileHelper.Progress, Boolean> {
         publishProgress(progress);
     }
 
-//    boolean unarchiveRar(ExplorerItem item, int i) throws IOException {
-//        // 현재 동작안되고 다운됨
-//        try {
-//            Archive archive;
-//            FileHeader header;
-//
-//            // 파일 갯수 세기
-//            archive = new Archive(new File(item.path));
-//            header = archive.nextFileHeader();
-//            int size = 0;
-//
-//            while (header != null) {
-//                if (isCancelled())
-//                    return false;
-//
-//                size++;
-//                header = archive.nextFileHeader();
-//            }
-//            archive.close();
-//
-//
-//            archive = new Archive(new File(item.path));
-//            header = archive.nextFileHeader();
-//
-//            int j = 0;
-//            while (header != null) {
-//                if (isCancelled())
-//                    return false;
-//
-//                updateProgress(i, j, size, header.getFileNameString());
-//
-//                // 하위 폴더가 없을때 만들어줌
-//                String target = path + "/" + header.getFileNameString();
-//                new File(target).getParentFile().mkdirs();
-//
-//
-//                // 파일 복사 부분
-//                FileOutputStream os = new FileOutputStream(target);
-//                archive.extractAll(header, os);
-//                os.close();
-//
-//
-//                header = archive.nextFileHeader();
-//            }
-//        } catch (RarException e) {
-//            e.printStackTrace();
-//            return false;
-//        }
-//        return true;
-//    }
+    boolean unarchiveRar(ExplorerItem item) throws IOException {
+        // 현재 동작안되고 다운됨
+        RarFile rar = new RarFile(item.path);
+        ArrayList<ArchiveHeader> headers = rar.getHeaders();
+        if (headers == null)
+            return false;
+
+        int size = headers.size();
+        for (int j = 0; j < size; j++) {
+            if (isCancelled())
+                return false;
+
+            updateProgress(j, size, headers.get(j).getName(), 100);
+
+            // 하위 폴더가 없을때 만들어줌
+            String target = path + "/" + headers.get(j).getName();
+            new File(target).getParentFile().mkdirs();
+
+            rar.extractFile(headers.get(j).getName(), path);
+        }
+        return true;
+    }
 
     boolean unarchiveGzip(ExplorerItem item) throws IOException {
         String tar;
         byte[] buf = new byte[BLOCK_SIZE];
-        if (item.path.toLowerCase().endsWith(".tgz")) {
+        if (item.path.endsWith(".tgz")) {
             tar = item.path.replace(".tgz", ".tar");
         } else {
             tar = item.path.replace(".gz", "");
@@ -188,7 +161,7 @@ public class UnzipTask extends AsyncTask<Void, FileHelper.Progress, Boolean> {
             updateProgress(0, count + 1, tar, (int) percent);
         }
 
-        if (tar.toLowerCase().endsWith(".tar")) {
+        if (tar.endsWith(".tar")) {
             if (!unarchiveTar(tar))
                 return false;
 
@@ -201,7 +174,7 @@ public class UnzipTask extends AsyncTask<Void, FileHelper.Progress, Boolean> {
     boolean unarchiveBzip2(ExplorerItem item) throws IOException {
         byte[] buf = new byte[BLOCK_SIZE];
         String tar;
-        if (item.path.toLowerCase().endsWith(".tbz2")) {
+        if (item.path.endsWith(".tbz2")) {
             tar = item.path.replace(".tbz2", ".tar");
         } else {
             tar = item.path.replace(".bz2", "");
@@ -222,7 +195,7 @@ public class UnzipTask extends AsyncTask<Void, FileHelper.Progress, Boolean> {
             updateProgress(0, count + 1, tar, (int) percent);
         }
 
-        if (tar.toLowerCase().endsWith(".tar")) {
+        if (tar.endsWith(".tar")) {
             if (!unarchiveTar(tar))
                 return false;
 
@@ -331,61 +304,80 @@ public class UnzipTask extends AsyncTask<Void, FileHelper.Progress, Boolean> {
     }
 
     boolean unarchiveZip(ExplorerItem item) throws IOException {
-        ZipArchiveInputStream stream;
-        ZipEntry entry;
+//        ZipArchiveInputStream stream;
+//        ZipEntry entry;
+//
+//        stream = new ZipArchiveInputStream(new FileInputStream(item.path));
+//        entry = (ZipEntry) stream.getNextEntry();
+//        count = 0;
+//
+//        // 파일 갯수를 세기
+//        while (entry != null) {
+//            if (isCancelled())
+//                return false;
+//
+//            count++;
+//            entry = (ZipEntry) stream.getNextEntry();
+//        }
+//        stream.close();
+//
+//        stream = new ZipArchiveInputStream(new FileInputStream(item.path));
+//        entry = (ZipEntry) stream.getNextEntry();
+//
+//        int j = 0;
+//        byte[] buf = new byte[BLOCK_SIZE];
+//        while (entry != null) {
+//            if (isCancelled())
+//                return false;
+//
+//
+//            // 하위 폴더가 없을때 만들어줌
+//            String target = path + "/" + entry.getName();
+//            new File(target).getParentFile().mkdirs();
+//
+//
+//            // 파일 복사 부분
+//            FileOutputStream outputStream = new FileOutputStream(target);
+//
+//            long srcLength = entry.getSize();
+//            long totalRead = 0;
+//            int nRead = 0;
+//            while ((nRead = stream.read(buf)) > 0) {
+//                outputStream.write(buf, 0, nRead);
+//
+//                totalRead += nRead;
+//                long percent = totalRead * 100 / srcLength;
+//
+//                updateProgress(j, count, entry.getName(), (int) percent);
+//            }
+//
+//            outputStream.close();
+//
+//
+//            entry = (ZipEntry) stream.getNextEntry();
+//            j++;
+//        }
+//
+//        stream.close();
 
-        stream = new ZipArchiveInputStream(new FileInputStream(item.path));
-        entry = (ZipEntry) stream.getNextEntry();
-        count = 0;
+        Zip4jFile zip4j = new Zip4jFile(item.path);
+        ArrayList<ArchiveHeader> headers = zip4j.getHeaders();
+        if (headers == null)
+            return false;
 
-        // 파일 갯수를 세기
-        while (entry != null) {
+        int size = headers.size();
+        for (int j = 0; j < size; j++) {
             if (isCancelled())
                 return false;
 
-            count++;
-            entry = (ZipEntry) stream.getNextEntry();
-        }
-        stream.close();
-
-        stream = new ZipArchiveInputStream(new FileInputStream(item.path));
-        entry = (ZipEntry) stream.getNextEntry();
-
-        int j = 0;
-        byte[] buf = new byte[BLOCK_SIZE];
-        while (entry != null) {
-            if (isCancelled())
-                return false;
-
+            updateProgress(j, size, headers.get(j).getName(), 100);
 
             // 하위 폴더가 없을때 만들어줌
-            String target = path + "/" + entry.getName();
+            String target = path + "/" + headers.get(j).getName();
             new File(target).getParentFile().mkdirs();
 
-
-            // 파일 복사 부분 
-            FileOutputStream outputStream = new FileOutputStream(target);
-
-            long srcLength = entry.getSize();
-            long totalRead = 0;
-            int nRead = 0;
-            while ((nRead = stream.read(buf)) > 0) {
-                outputStream.write(buf, 0, nRead);
-
-                totalRead += nRead;
-                long percent = totalRead * 100 / srcLength;
-
-                updateProgress(j, count, entry.getName(), (int) percent);
-            }
-
-            outputStream.close();
-
-
-            entry = (ZipEntry) stream.getNextEntry();
-            j++;
+            zip4j.extractFile(headers.get(j).getName(), path);
         }
-
-        stream.close();
         return true;
     }
 
@@ -414,11 +406,10 @@ public class UnzipTask extends AsyncTask<Void, FileHelper.Progress, Boolean> {
                     if (!unarchiveBzip2(item))
                         return false;
                     break;
-                //TODO: 현재는 풀수 없다.
-//                    case RAR:
-//                        if (!unarchiveRar(item))
-//                            return false;
-//                        break;
+                case RAR:
+                    if (!unarchiveRar(item))
+                        return false;
+                    break;
                 case TAR:
                     if (!unarchiveTar(item.path))
                         return false;

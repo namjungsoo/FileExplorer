@@ -28,9 +28,8 @@ public class FileHelper {
     }
 
     public static String getNameWithoutTar(String name) {
-        String tar = name.toLowerCase();
-        if (tar.endsWith(".tar")) {
-            return name.substring(0, tar.length() - 4);
+        if (name.endsWith(".tar")) {
+            return name.substring(0, name.length() - 4);
             //return tar.replace(".tar", "");
         } else {
             return name;
@@ -125,32 +124,35 @@ public class FileHelper {
     //region Extension
     public static ExplorerItem.FileType getFileType(File eachFile) {
         ExplorerItem.FileType type = eachFile.isDirectory() ? ExplorerItem.FileType.FOLDER : ExplorerItem.FileType.FILE;
-        final String lower = eachFile.getName().toLowerCase();
-
         if (FileHelper.isImage(eachFile.getName())) {
             type = ExplorerItem.FileType.IMAGE;
-        } else if (getCompressType(lower) != ExplorerItem.CompressType.OTHER)
+        } else if (getCompressType(eachFile.getName()) != ExplorerItem.CompressType.OTHER)
             type = ExplorerItem.FileType.ZIP;
-        else if (lower.endsWith(".pdf"))
+        else if (eachFile.getName().endsWith(".pdf"))
             type = ExplorerItem.FileType.PDF;
-        else if (lower.endsWith(".mp4") || lower.endsWith(".avi") || lower.endsWith(".3gp") || lower.endsWith(".mkv") || lower.endsWith(".mov"))
+        else if (eachFile.getName().endsWith(".mp4") || eachFile.getName().endsWith(".avi") || eachFile.getName().endsWith(".3gp") || eachFile.getName().endsWith(".mkv") || eachFile.getName().endsWith(".mov"))
             type = ExplorerItem.FileType.VIDEO;
-        else if (lower.endsWith(".mp3"))
+        else if (eachFile.getName().endsWith(".mp3"))
             type = ExplorerItem.FileType.AUDIO;
-        else if (lower.endsWith(".txt") || lower.endsWith(".cap") || lower.endsWith(".log"))
+        else if (isText(eachFile.getName()))
             type = ExplorerItem.FileType.TEXT;
-        else if (lower.endsWith(".apk"))
+        else if (eachFile.getName().endsWith(".apk"))
             type = ExplorerItem.FileType.APK;
 
         return type;
     }
 
+    public static boolean isText(String filename) {
+        if (filename.endsWith(".txt") || filename.endsWith(".log"))
+            return true;
+        return false;
+    }
+
     public static boolean isImage(String filename) {
-        final String lower = filename.toLowerCase();
-        if (lower.endsWith(".jpg")
-                || lower.endsWith(".jpeg")
-                || lower.endsWith(".gif")
-                || lower.endsWith(".png")
+        if (filename.endsWith(".jpg")
+                || filename.endsWith(".jpeg")
+                || filename.endsWith(".gif")
+                || filename.endsWith(".png")
                 ) {
             return true;
         }
@@ -158,25 +160,22 @@ public class FileHelper {
     }
 
     public static boolean isGifImage(String filename) {
-        final String lower = filename.toLowerCase();
-        if (lower.endsWith(".gif")) {
+        if (filename.endsWith(".gif")) {
             return true;
         }
         return false;
     }
 
     public static boolean isPngImage(String filename) {
-        final String lower = filename.toLowerCase();
-        if (lower.endsWith(".png")) {
+        if (filename.endsWith(".png")) {
             return true;
         }
         return false;
     }
 
     public static boolean isJpegImage(String filename) {
-        final String lower = filename.toLowerCase();
-        if (lower.endsWith(".jpg")
-                || lower.endsWith(".jpeg")
+        if (filename.endsWith(".jpg")
+                || filename.endsWith(".jpeg")
                 ) {
             return true;
         }

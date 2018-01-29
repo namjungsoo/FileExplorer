@@ -394,14 +394,13 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
 
     // 폴더가 필요한 경우(gz,bz2가 아닌 경우)
     boolean isNeedFolder(String path) {
-        String lowerPath = path.toLowerCase();
         boolean needFolder = true;
-        if (lowerPath.endsWith(".gz")) {
-            String checkTar = lowerPath.replace(".gz", "");
+        if (path.endsWith(".gz")) {
+            String checkTar = path.replace(".gz", "");
             if (!checkTar.endsWith(".tar"))
                 needFolder = false;
-        } else if (lowerPath.endsWith(".bz2")) {
-            String checkTar = lowerPath.replace(".bz2", "");
+        } else if (path.endsWith(".bz2")) {
+            String checkTar = path.replace(".bz2", "");
             if (!checkTar.endsWith(".tar"))
                 needFolder = false;
         }

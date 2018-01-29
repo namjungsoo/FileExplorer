@@ -1,6 +1,7 @@
 package com.duongame.db;
 
 import com.duongame.adapter.ExplorerItem;
+import com.duongame.helper.FileHelper;
 
 import static com.duongame.db.TextBook.LINES_PER_PAGE;
 
@@ -57,7 +58,7 @@ public class Book {
     }
 
     public void updatePercent() {
-        if (name.toLowerCase().endsWith(".txt")) {
+        if (FileHelper.isText(name)) {
 
             // 전체 페이지 갯수를 계산
             // 저장된 total_page는 lineCount이다.
