@@ -28,8 +28,6 @@ import java.util.ArrayList;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
-import static com.duongame.adapter.ExplorerItem.CompressType.BZIP2;
-import static com.duongame.adapter.ExplorerItem.CompressType.GZIP;
 import static com.duongame.helper.FileHelper.BLOCK_SIZE;
 
 /**
@@ -45,7 +43,7 @@ public class ZipTask extends AsyncTask<Void, FileHelper.Progress, Boolean> {
 
     private DialogInterface.OnDismissListener onDismissListener;
     private String path;
-    private ExplorerItem.CompressType type;
+    private int type;
 
     public ZipTask(Activity activity) {
         activityWeakReference = new WeakReference<Activity>(activity);
@@ -283,7 +281,7 @@ public class ZipTask extends AsyncTask<Void, FileHelper.Progress, Boolean> {
         for (int i = 0; i < fileList.size(); i++) {
             ExplorerItem item = fileList.get(i);
 
-            if (item.type == ExplorerItem.FileType.FOLDER) {
+            if (item.type == ExplorerItem.FILETYPE_FOLDER) {
                 // 폴더의 경우 하위 모든 아이템을 찾은뒤에 더한다.
                 FileSearcher searcher = new FileSearcher();
                 FileSearcher.Result result = searcher.setRecursiveDirectory(true)
@@ -320,16 +318,16 @@ public class ZipTask extends AsyncTask<Void, FileHelper.Progress, Boolean> {
         makeZipList();
 
         switch (type) {
-            case ZIP:
+            case ExplorerItem.COMPRESSTYPE_ZIP:
                 return archiveZip();
             // 구현이 완료될때까지 막아둠
 //            case SEVENZIP:
 //                return archive7z();
-            case GZIP:
+            case ExplorerItem.COMPRESSTYPE_GZIP:
                 return archiveGzip();
-            case BZIP2:
+            case ExplorerItem.COMPRESSTYPE_BZIP2:
                 return archiveBzip2();
-            case TAR:
+            case ExplorerItem.COMPRESSTYPE_TAR:
                 return archiveTar();
         }
         return false;
@@ -347,7 +345,7 @@ public class ZipTask extends AsyncTask<Void, FileHelper.Progress, Boolean> {
             // 들어온 퍼센트를 바로 토탈로 표시한다.
             //int totalPercent = progress.percent;
             int size;
-            if (type == GZIP || type == BZIP2) {
+            if (type == ExplorerItem.COMPRESSTYPE_GZIP || type == ExplorerItem.COMPRESSTYPE_BZIP2) {
                 size = zipList.size() + 1;
             } else {
                 size = zipList.size();

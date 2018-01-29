@@ -38,7 +38,7 @@ public class BitmapTask extends AsyncTask<ExplorerItem, Void, Bitmap> {
         // 캐시에 있는지 확인해 보고
         // split일 경우에는 무조건 없다
         Bitmap bitmap = null;
-        if (item.side != ExplorerItem.Side.SIDE_ALL) {
+        if (item.side != ExplorerItem.SIDE_ALL) {
             final String page = BitmapCacheManager.changePathToPage(item);
             bitmap = BitmapCacheManager.getPage(page);
 
@@ -52,7 +52,7 @@ public class BitmapTask extends AsyncTask<ExplorerItem, Void, Bitmap> {
             final BitmapFactory.Options options = BitmapLoader.decodeBounds(item.path);
 
             // 자르는 경우에는 실제 예상보다 width/2를 하자
-            if (item.side != ExplorerItem.Side.SIDE_ALL) {
+            if (item.side != ExplorerItem.SIDE_ALL) {
                 options.outWidth >>= 1;
             }
             item.width = options.outWidth;
@@ -71,7 +71,7 @@ public class BitmapTask extends AsyncTask<ExplorerItem, Void, Bitmap> {
             count = 0;
             while (true) {
                 //NEW-2
-                if (item.side == ExplorerItem.Side.SIDE_ALL) {
+                if (item.side == ExplorerItem.SIDE_ALL) {
                     bitmap = BitmapLoader.decodeSampleBitmapFromFile(item.path, width, height, exif);
                     if (bitmap == null) {
                         // 다른 비트맵이 기다려지길 기다렸다가 다시 시도하자.

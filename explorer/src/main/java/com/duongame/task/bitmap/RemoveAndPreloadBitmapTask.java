@@ -31,7 +31,7 @@ public class RemoveAndPreloadBitmapTask extends BitmapTask {
             for (int i = 0; i < removeList.length; i++) {
                 final ExplorerItem item = removeList[i];
 
-                if (item.side == ExplorerItem.Side.SIDE_ALL) {
+                if (item.side == ExplorerItem.SIDE_ALL) {
                     BitmapCacheManager.removeBitmap(item.path);
                 } else {
                     String path = BitmapCacheManager.changePathToPage(item);

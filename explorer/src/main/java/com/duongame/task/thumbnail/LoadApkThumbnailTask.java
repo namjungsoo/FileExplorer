@@ -6,11 +6,11 @@ import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.widget.ImageView;
 
+import com.duongame.adapter.ExplorerItem;
 import com.duongame.bitmap.BitmapLoader;
 
 import java.lang.ref.WeakReference;
 
-import static com.duongame.adapter.ExplorerItem.FileType.APK;
 import static com.duongame.bitmap.BitmapLoader.loadThumbnail;
 
 /**
@@ -40,7 +40,7 @@ public class LoadApkThumbnailTask extends AsyncTask<String, Void, Drawable> {
                 return null;
         }
 
-        BitmapLoader.BitmapOrDrawable bod = loadThumbnail(contextRef.get(), APK, params[0]);
+        BitmapLoader.BitmapOrDrawable bod = loadThumbnail(contextRef.get(), ExplorerItem.FILETYPE_APK, params[0]);
         return bod.drawable;
     }
 

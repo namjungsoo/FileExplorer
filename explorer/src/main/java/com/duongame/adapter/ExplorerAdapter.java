@@ -31,8 +31,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import static com.duongame.adapter.ExplorerItem.FileType.APK;
-import static com.duongame.adapter.ExplorerItem.FileType.VIDEO;
 import static com.duongame.bitmap.BitmapCacheManager.getDrawable;
 import static com.duongame.bitmap.BitmapCacheManager.getThumbnail;
 
@@ -80,11 +78,11 @@ public class ExplorerAdapter extends RecyclerView.Adapter<ExplorerAdapter.Explor
     // 썸네일이 있는 파일만 true
     private boolean hasThumbnail(ExplorerItem item) {
         switch (item.type) {
-            case APK:
-            case ZIP:
-            case PDF:
-            case IMAGE:
-            case VIDEO:
+            case ExplorerItem.FILETYPE_APK:
+            case ExplorerItem.FILETYPE_ZIP:
+            case ExplorerItem.FILETYPE_PDF:
+            case ExplorerItem.FILETYPE_IMAGE:
+            case ExplorerItem.FILETYPE_VIDEO:
                 return true;
             default:
                 return false;
@@ -92,7 +90,7 @@ public class ExplorerAdapter extends RecyclerView.Adapter<ExplorerAdapter.Explor
     }
 
     private boolean checkBodInCache(ExplorerItem item) {
-        if (item.type == APK) {
+        if (item.type == ExplorerItem.FILETYPE_APK) {
             Drawable drawable = BitmapCacheManager.getDrawable(item.path);
             if (drawable != null)
                 return true;
@@ -121,7 +119,7 @@ public class ExplorerAdapter extends RecyclerView.Adapter<ExplorerAdapter.Explor
         public TextView size;
         public CheckBox check;
 
-        public ExplorerItem.FileType type;
+        public int type;// FileType
         public int position;
 
         public ExplorerViewHolder(View itemView) {
@@ -297,15 +295,15 @@ public class ExplorerAdapter extends RecyclerView.Adapter<ExplorerAdapter.Explor
         viewHolder.iconSmall.setTag(item.path);
         viewHolder.type = item.type;
 
-        if (item.type == ExplorerItem.FileType.IMAGE) {
+        if (item.type == ExplorerItem.FILETYPE_IMAGE) {
             setIconImage(viewHolder, item);
-        } else if (item.type == VIDEO) {
+        } else if (item.type == ExplorerItem.FILETYPE_VIDEO) {
             setIconVideo(viewHolder, item);
-        } else if (item.type == ExplorerItem.FileType.ZIP) {
+        } else if (item.type == ExplorerItem.FILETYPE_ZIP) {
             setIconZip(viewHolder, item);
-        } else if (item.type == ExplorerItem.FileType.PDF) {
+        } else if (item.type == ExplorerItem.FILETYPE_PDF) {
             setIconPdf(viewHolder, item);
-        } else if (item.type == ExplorerItem.FileType.APK) {
+        } else if (item.type == ExplorerItem.FILETYPE_APK) {
             setIconApk(viewHolder, item);
         } else {
             viewHolder.iconSmall.setTag(null);
@@ -315,7 +313,7 @@ public class ExplorerAdapter extends RecyclerView.Adapter<ExplorerAdapter.Explor
 
     void setIconDefault(final ExplorerViewHolder viewHolder, ExplorerItem item) {
         switch (item.type) {
-            case FOLDER:
+            case ExplorerItem.FILETYPE_FOLDER:
                 viewHolder.icon.setImageBitmap(BitmapCacheManager.getResourceBitmap(context.getResources(), R.drawable.folder));
                 break;
             default:
@@ -326,14 +324,14 @@ public class ExplorerAdapter extends RecyclerView.Adapter<ExplorerAdapter.Explor
 
     void setIconTypeDefault(final ExplorerViewHolder viewHolder, ExplorerItem item) {
         switch (item.type) {
-            case AUDIO:
-            case FILE:
+            case ExplorerItem.FILETYPE_AUDIO:
+            case ExplorerItem.FILETYPE_FILE:
                 viewHolder.icon.setImageBitmap(BitmapCacheManager.getResourceBitmap(context.getResources(), R.drawable.file));
                 break;
-            case FOLDER:
+            case ExplorerItem.FILETYPE_FOLDER:
                 viewHolder.icon.setImageBitmap(BitmapCacheManager.getResourceBitmap(context.getResources(), R.drawable.folder));
                 break;
-            case TEXT:
+            case ExplorerItem.FILETYPE_TEXT:
                 viewHolder.icon.setImageBitmap(BitmapCacheManager.getResourceBitmap(context.getResources(), R.drawable.text));
                 break;
             default:

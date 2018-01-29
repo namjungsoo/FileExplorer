@@ -120,12 +120,12 @@ public class FileSearcher {
             String date = DateHelper.getExplorerDateString(dateSource);
             long size = eachFile.length();
 
-            ExplorerItem.FileType type = getFileType(eachFile);
+            int type = getFileType(eachFile);
 
             String fullPath = FileHelper.getFullPath(path, name);
             ExplorerItem item = new ExplorerItem(fullPath, name, date, size, type);
 
-            if (type == ExplorerItem.FileType.FOLDER) {
+            if (type == ExplorerItem.FILETYPE_FOLDER) {
                 if (!excludeDirectory) {
                     item.size = -1;
                     directoryList.add(item);
@@ -136,7 +136,7 @@ public class FileSearcher {
 
                     if (subFileList != null) {
                         for (ExplorerItem subItem : subFileList.fileList) {
-                            if (subItem.type == ExplorerItem.FileType.FOLDER) {
+                            if (subItem.type == ExplorerItem.FILETYPE_FOLDER) {
                                 directoryList.add(subItem);
                             } else {
                                 normalList.add(subItem);
@@ -184,7 +184,7 @@ public class FileSearcher {
 
             // 이미지는 마지막에 모아서 처리한다.
             for (int i = 0; i < normalList.size(); i++) {
-                if (normalList.get(i).type == ExplorerItem.FileType.IMAGE) {
+                if (normalList.get(i).type == ExplorerItem.FILETYPE_IMAGE) {
                     imageList.add(normalList.get(i));
                 }
             }

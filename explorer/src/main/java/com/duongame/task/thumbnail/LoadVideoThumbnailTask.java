@@ -6,11 +6,11 @@ import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.widget.ImageView;
 
+import com.duongame.adapter.ExplorerItem;
 import com.duongame.bitmap.BitmapLoader;
 
 import java.lang.ref.WeakReference;
 
-import static com.duongame.adapter.ExplorerItem.FileType.VIDEO;
 import static com.duongame.bitmap.BitmapLoader.loadThumbnail;
 
 /**
@@ -40,7 +40,7 @@ public class LoadVideoThumbnailTask extends AsyncTask<String, Void, Bitmap> {
                 return null;
         }
 
-        BitmapLoader.BitmapOrDrawable bod = loadThumbnail(contextRef.get(), VIDEO, path);
+        BitmapLoader.BitmapOrDrawable bod = loadThumbnail(contextRef.get(), ExplorerItem.FILETYPE_VIDEO, path);
         return bod.bitmap;
     }
 

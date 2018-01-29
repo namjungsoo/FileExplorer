@@ -10,9 +10,6 @@ import com.duongame.bitmap.BitmapLoader;
 
 import java.util.ArrayList;
 
-import static com.duongame.adapter.ExplorerItem.Side.LEFT;
-import static com.duongame.adapter.ExplorerItem.Side.RIGHT;
-
 /**
  * Created by namjungsoo on 2018-01-23.
  */
@@ -24,7 +21,7 @@ public class LoadBookTask extends AsyncTask<String, Integer, Void> {
     private IArchiveFile zipFile;
     private ArchiveLoader.ArchiveLoaderListener listener;
 
-    private ExplorerItem.Side side = LEFT;
+    private int side = ExplorerItem.SIDE_LEFT;
     private int extract;// 압축 풀린 이미지 파일의 갯수
 
     private final Object mPauseWorkLock = new Object();
@@ -57,11 +54,11 @@ public class LoadBookTask extends AsyncTask<String, Integer, Void> {
         this.zipImageList = zipImageList;
     }
 
-    public void setSide(ExplorerItem.Side side) {
+    public void setSide(int side) {
         this.side = side;
     }
 
-    public static void processItem(int orgIndex, ExplorerItem item, ExplorerItem.Side side, ArrayList<ExplorerItem> imageList) {
+    public static void processItem(int orgIndex, ExplorerItem item, int side, ArrayList<ExplorerItem> imageList) {
         final BitmapFactory.Options options = BitmapLoader.decodeBounds(item.path);
 
         // 나중에 페이지 전환을 위해서 넣어둔다.
@@ -70,29 +67,29 @@ public class LoadBookTask extends AsyncTask<String, Integer, Void> {
 
         final int size = imageList.size();
         if (options.outWidth > options.outHeight) {// 잘라야 한다. 가로 파일이다.
-            if (side == LEFT) {
+            if (side == ExplorerItem.SIDE_LEFT) {
                 // 한국식은 right를 먼저 넣는다.
                 final ExplorerItem left = (ExplorerItem) item.clone();
-                left.side = LEFT;
+                left.side = ExplorerItem.SIDE_LEFT;
                 left.index = size;
                 left.orgIndex = orgIndex;
                 imageList.add(left);
 
                 final ExplorerItem right = (ExplorerItem) item.clone();
-                right.side = RIGHT;
+                right.side = ExplorerItem.SIDE_RIGHT;
                 right.index = size + 1;
                 right.orgIndex = orgIndex;
                 imageList.add(right);
-            } else if (side == RIGHT) {
+            } else if (side == ExplorerItem.SIDE_RIGHT) {
                 // 일본식은 right를 먼저 넣는다.
                 final ExplorerItem right = (ExplorerItem) item.clone();
-                right.side = RIGHT;
+                right.side = ExplorerItem.SIDE_RIGHT;
                 right.index = size;
                 right.orgIndex = orgIndex;
                 imageList.add(right);
 
                 final ExplorerItem left = (ExplorerItem) item.clone();
-                left.side = LEFT;
+                left.side = ExplorerItem.SIDE_LEFT;
                 left.index = size + 1;
                 left.orgIndex = orgIndex;
                 imageList.add(left);

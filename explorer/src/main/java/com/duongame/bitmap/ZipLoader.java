@@ -31,7 +31,7 @@ public class ZipLoader {
     private List<FileHeader> zipHeaders;
 
     private String extractPath;
-    private ExplorerItem.Side side = ExplorerItem.Side.LEFT;
+    private int side = ExplorerItem.SIDE_LEFT;
     private int extract;
 
     public interface ZipLoaderListener {
@@ -54,7 +54,7 @@ public class ZipLoader {
         }
     }
 
-    public void setSide(ExplorerItem.Side side) {
+    public void setSide(int side) {
         if (task != null && !task.isCancelled()) {
             task.setSide(side);
         }
@@ -86,7 +86,7 @@ public class ZipLoader {
         for (FileHeader header : zipHeaders) {
             final String name = header.getFileName();
             if (FileHelper.isImage(name)) {
-                imageList.add(new ExplorerItem(FileHelper.getFullPath(extractPath, name), name, "", 0, ExplorerItem.FileType.IMAGE));
+                imageList.add(new ExplorerItem(FileHelper.getFullPath(extractPath, name), name, "", 0, ExplorerItem.FILETYPE_IMAGE));
             }
         }
         Collections.sort(imageList, new FileHelper.NameAscComparator());
@@ -176,7 +176,7 @@ public class ZipLoader {
 
     // 리턴값은 이미지 리스트이다.
     // 압축을 풀지 않으면 정보를 알수가 없다. 좌우 잘라야 되는지 마는지를
-    public ArrayList<ExplorerItem> load(Context context, String filename, ZipLoaderListener listener, int extract, ExplorerItem.Side side, boolean firstImageOnly) throws ZipException {
+    public ArrayList<ExplorerItem> load(Context context, String filename, ZipLoaderListener listener, int extract, int side, boolean firstImageOnly) throws ZipException {
         // 일단 무조건 압축 풀자
         //TODO: 이미 전체 압축이 풀려있는지 검사해야함
         makeCachePath(context, filename);

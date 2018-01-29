@@ -50,7 +50,7 @@ public class PdfActivity extends PagerActivity {
             // 고정적인 내용 5개
             book.path = path;
             book.name = name;
-            book.type = ExplorerItem.FileType.ZIP;
+            book.type = ExplorerItem.FILETYPE_ZIP;
             book.size = size;
             book.total_file = 0;// 파일의 갯수이다.
 
@@ -66,7 +66,7 @@ public class PdfActivity extends PagerActivity {
             }
             book.current_file = 0;
             book.extract_file = 0;
-            book.side = ExplorerItem.Side.SIDE_ALL;
+            book.side = ExplorerItem.SIDE_ALL;
 
             BookDB.setLastBook(this, book);
         }
@@ -114,7 +114,7 @@ public class PdfActivity extends PagerActivity {
                     imageList = new ArrayList<>();
                     for (int i = 0; i < renderer.getPageCount(); i++) {
                         // path를 페이지 번호로 사용하자
-                        imageList.add(new ExplorerItem(FileHelper.setPdfFileNameFromPage(path, i), name, null, 0, ExplorerItem.FileType.PDF));
+                        imageList.add(new ExplorerItem(FileHelper.setPdfFileNameFromPage(path, i), name, null, 0, ExplorerItem.FILETYPE_PDF));
                     }
 
                     adapter.setRenderer(renderer);

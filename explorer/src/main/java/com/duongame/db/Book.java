@@ -15,7 +15,7 @@ public class Book {
     // 변하지 않음
     public String path;// 패스
     public String name;// 파일명
-    public ExplorerItem.FileType type = ExplorerItem.FileType.ZIP;
+    public int type = ExplorerItem.FILETYPE_ZIP;
     public long size;// zip파일 사이즈
     public int total_file;// 최대 파일 수
 
@@ -26,7 +26,7 @@ public class Book {
     public int current_file;// 현재 파일 인덱스
     public int extract_file;// 압축 풀린 파일수. zip에만 해당함. total_file == extract_file이면 로딩이 완료된것
 
-    public ExplorerItem.Side side = ExplorerItem.Side.SIDE_ALL;// 책넘김 방법
+    public int side = ExplorerItem.SIDE_ALL;// 책넘김 방법
     public String date;
 
     public String last_file;// 마지막 이미지 파일의 파일명

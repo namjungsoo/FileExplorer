@@ -24,7 +24,7 @@ import java.util.List;
 public class ArchiveLoader {
     private LoadBookTask task;
     private String extractPath;
-    private ExplorerItem.Side side = ExplorerItem.Side.LEFT;
+    private int side = ExplorerItem.SIDE_LEFT;
     private int extract;
     private ArchiveLoaderListener listener;
 
@@ -51,7 +51,7 @@ public class ArchiveLoader {
         }
     }
 
-    public void setSide(ExplorerItem.Side side) {
+    public void setSide(int side) {
         if (task != null && !task.isCancelled()) {
             task.setSide(side);
         }
@@ -73,7 +73,7 @@ public class ArchiveLoader {
         for (ArchiveHeader header : zipHeaders) {
             final String name = header.getName();
             if (FileHelper.isImage(name)) {
-                imageList.add(new ExplorerItem(FileHelper.getFullPath(extractPath, name), name, "", 0, ExplorerItem.FileType.IMAGE));
+                imageList.add(new ExplorerItem(FileHelper.getFullPath(extractPath, name), name, "", 0, ExplorerItem.FILETYPE_IMAGE));
             }
         }
         Collections.sort(imageList, new FileHelper.NameAscComparator());
@@ -159,7 +159,7 @@ public class ArchiveLoader {
 
     // 리턴값은 이미지 리스트이다.
     // 압축을 풀지 않으면 정보를 알수가 없다. 좌우 잘라야 되는지 마는지를
-    public ArrayList<ExplorerItem> load(Context context, String filename, ArchiveLoaderListener listener, int extract, ExplorerItem.Side side, boolean firstImageOnly) throws ZipException {
+    public ArrayList<ExplorerItem> load(Context context, String filename, ArchiveLoaderListener listener, int extract, int side, boolean firstImageOnly) throws ZipException {
         // 일단 무조건 압축 풀자
         //TODO: 이미 전체 압축이 풀려있는지 검사해야함
         makeCachePath(context, filename);
@@ -168,15 +168,15 @@ public class ArchiveLoader {
         this.listener = listener;
         this.extract = extract;
 
-        ExplorerItem.CompressType type = FileHelper.getCompressType(filename);
+        int type = FileHelper.getCompressType(filename);
         switch(type) {
-            case ZIP:
+            case ExplorerItem.COMPRESSTYPE_ZIP:
                 zipFile = new Zip4jFile(filename);
                 break;
-            case RAR:
+            case ExplorerItem.COMPRESSTYPE_RAR:
                 zipFile = new RarFile(filename);
                 break;
-            case SEVENZIP:
+            case ExplorerItem.COMPRESSTYPE_SEVENZIP:
                 zipFile = new Z7File(filename);
                 break;
             default:

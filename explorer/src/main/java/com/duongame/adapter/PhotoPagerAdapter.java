@@ -113,7 +113,7 @@ public class PhotoPagerAdapter extends ViewerPagerAdapter {
         try {
             ExplorerItem item = getImageList().get(position);
             // bitmap부터 체크
-            if(item.side == ExplorerItem.Side.SIDE_ALL) {
+            if(item.side == ExplorerItem.SIDE_ALL) {
                 BitmapCacheManager.removeBitmap(item.path);
             } else {
                 BitmapCacheManager.removePage(item.path);
@@ -125,7 +125,7 @@ public class PhotoPagerAdapter extends ViewerPagerAdapter {
 
     // 캐쉬에 비트맵이나 페이지가 있는지를 리턴
     private boolean checkCacheExistBitmapOrPage(ExplorerItem item) {
-        if (item.side == ExplorerItem.Side.SIDE_ALL) {
+        if (item.side == ExplorerItem.SIDE_ALL) {
             return BitmapCacheManager.getBitmap(item.path) == null ? false : true;
         } else {
             return BitmapCacheManager.getPage(BitmapCacheManager.changePathToPage(item)) == null ? false : true;
@@ -242,7 +242,7 @@ public class PhotoPagerAdapter extends ViewerPagerAdapter {
                 final ExplorerItem item = imageList.get(index);
 
                 // 전체 모드가 아니면 바로 전 이미지를 체크 한다.
-                if (item.side == ExplorerItem.Side.SIDE_ALL) {
+                if (item.side == ExplorerItem.SIDE_ALL) {
                     if (!checkCacheExistBitmapOrPage(item)) {
                         addPreloadListWithPriority(preloadList, item, i, NEXT_BEGIN);
                     }
@@ -269,7 +269,7 @@ public class PhotoPagerAdapter extends ViewerPagerAdapter {
                 final ExplorerItem item = imageList.get(index);
 
                 // 전체 모드가 아니면 바로 전 이미지를 체크 한다.
-                if (item.side == ExplorerItem.Side.SIDE_ALL) {
+                if (item.side == ExplorerItem.SIDE_ALL) {
                     if (!checkCacheExistBitmapOrPage(item)) {
                         addPreloadListWithPriority(preloadList, item, i, PREV_BEGIN);
                     }

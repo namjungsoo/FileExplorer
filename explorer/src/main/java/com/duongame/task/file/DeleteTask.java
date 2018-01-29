@@ -76,7 +76,7 @@ public class DeleteTask extends AsyncTask<Void, Integer, Boolean> {
             if (!item.selected)
                 continue;
 
-            if (item.type == ExplorerItem.FileType.FOLDER) {
+            if (item.type == ExplorerItem.FILETYPE_FOLDER) {
                 // 폴더의 경우 하위 모든 아이템을 찾은뒤에 더한다.
                 FileSearcher searcher = new FileSearcher();
                 FileSearcher.Result result = searcher.setRecursiveDirectory(true)

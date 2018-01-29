@@ -54,9 +54,9 @@ public class BookLoader {
     public static void loadContinue(Activity context, Book book) {
         Class<?> cls = null;
         switch (FileHelper.getCompressType(book.path)) {
-            case ZIP:
-            case RAR:
-            case SEVENZIP:
+            case ExplorerItem.COMPRESSTYPE_ZIP:
+            case ExplorerItem.COMPRESSTYPE_RAR:
+            case ExplorerItem.COMPRESSTYPE_SEVENZIP:
                 cls = ZipActivity.class;
                 break;
             default:
@@ -77,7 +77,7 @@ public class BookLoader {
             intent.putExtra("current_page", book.current_page);
             intent.putExtra("size", book.size);
             intent.putExtra("extract_file", book.extract_file);
-            intent.putExtra("side", book.side.getValue());
+            intent.putExtra("side", book.side);
             context.startActivity(intent);
         }
     }
@@ -85,9 +85,9 @@ public class BookLoader {
     private static Intent getIntentNew(final Activity context, ExplorerItem item) {
         Class<?> cls = null;
         switch (FileHelper.getCompressType(item.path)) {
-            case ZIP:
-            case RAR:
-            case SEVENZIP:
+            case ExplorerItem.COMPRESSTYPE_ZIP:
+            case ExplorerItem.COMPRESSTYPE_RAR:
+            case ExplorerItem.COMPRESSTYPE_SEVENZIP:
                 cls = ZipActivity.class;
                 break;
             default:
@@ -109,7 +109,7 @@ public class BookLoader {
             intent.putExtra("size", item.size);
             intent.putExtra("current_file", 0);
             intent.putExtra("extract_file", 0);
-            intent.putExtra("side", item.side.getValue());
+            intent.putExtra("side", item.side);
             return intent;
         }
         return null;
@@ -118,9 +118,9 @@ public class BookLoader {
     private static Intent getIntentNew(final Activity context, Book book) {
         Class<?> cls = null;
         switch (FileHelper.getCompressType(book.path)) {
-            case ZIP:
-            case RAR:
-            case SEVENZIP:
+            case ExplorerItem.COMPRESSTYPE_ZIP:
+            case ExplorerItem.COMPRESSTYPE_RAR:
+            case ExplorerItem.COMPRESSTYPE_SEVENZIP:
                 cls = ZipActivity.class;
                 break;
             default:
@@ -142,7 +142,7 @@ public class BookLoader {
             intent.putExtra("size", book.size);
             intent.putExtra("current_file", book.current_file);
             intent.putExtra("extract_file", book.extract_file);
-            intent.putExtra("side", book.side.getValue());
+            intent.putExtra("side", book.side);
 
             return intent;
         }
@@ -226,9 +226,9 @@ public class BookLoader {
         final Bitmap bitmap = getThumbnail(path);
         if (bitmap == null) {
             switch (FileHelper.getCompressType(path)) {
-                case ZIP:
-                case SEVENZIP:
-                case RAR: {
+                case ExplorerItem.COMPRESSTYPE_ZIP:
+                case ExplorerItem.COMPRESSTYPE_SEVENZIP:
+                case ExplorerItem.COMPRESSTYPE_RAR: {
                     final LoadZipThumbnailTask task = new LoadZipThumbnailTask(context, holder.thumb, holder.more);
                     task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, path);
                 }
@@ -250,7 +250,7 @@ public class BookLoader {
         // 압축파일이 아니라면 둘다 0이다.
         if (book.extract_file == book.total_file) {
             // 텍스트가 아닐경우에는 PDF나 ZIP이다.
-            if (book.type != ExplorerItem.FileType.TEXT)
+            if (book.type != ExplorerItem.FILETYPE_TEXT)
                 return (book.current_page + 1) + "/" + book.total_page;
             else {
                 return TextBook.getPageText(book);

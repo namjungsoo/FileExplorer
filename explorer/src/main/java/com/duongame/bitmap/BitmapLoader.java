@@ -33,8 +33,6 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 
 import static android.graphics.Bitmap.createBitmap;
-import static com.duongame.adapter.ExplorerItem.Side.LEFT;
-import static com.duongame.adapter.ExplorerItem.Side.RIGHT;
 
 /**
  * Created by namjungsoo on 2016. 11. 17..
@@ -49,23 +47,23 @@ public class BitmapLoader {
         public Drawable drawable;
     }
 
-    public static BitmapOrDrawable loadThumbnail(Context context, ExplorerItem.FileType type, String path) {
+    public static BitmapOrDrawable loadThumbnail(Context context, int type, String path) {
         BitmapOrDrawable bod = new BitmapOrDrawable();
 
         switch (type) {
-            case APK:
+            case ExplorerItem.FILETYPE_APK:
                 bod.drawable = BitmapLoader.loadApkThumbnailDrawable(context, path);
                 break;
-            case PDF:
+            case ExplorerItem.FILETYPE_PDF:
                 bod.bitmap = BitmapLoader.loadPdfThumbnailBitmap(context, path);
                 break;
-            case IMAGE:
+            case ExplorerItem.FILETYPE_IMAGE:
                 bod.bitmap = BitmapLoader.loadImageThumbnailBitmap(context, path);
                 break;
-            case VIDEO:
+            case ExplorerItem.FILETYPE_VIDEO:
                 bod.bitmap = BitmapLoader.loadVideoThumbnailBitmap(context, path);
                 break;
-            case ZIP:
+            case ExplorerItem.FILETYPE_ZIP:
                 bod.bitmap = BitmapLoader.loadZipThumbnailBitmap(context, path);
                 break;
         }
@@ -153,7 +151,7 @@ public class BitmapLoader {
         String image = null;
         try {
             final ArchiveLoader loader = new ArchiveLoader();
-            final ArrayList<ExplorerItem> imageList = loader.load(context, path, null, 0, ExplorerItem.Side.LEFT, true);
+            final ArrayList<ExplorerItem> imageList = loader.load(context, path, null, 0, ExplorerItem.SIDE_LEFT, true);
 
             if (imageList != null && imageList.size() > 0) {
                 image = imageList.get(0).path;
@@ -430,7 +428,7 @@ public class BitmapLoader {
         final String key;
         final String keyOther;
         final ExplorerItem itemOther = (ExplorerItem) item.clone();
-        itemOther.side = item.side == LEFT ? RIGHT : LEFT;
+        itemOther.side = item.side == ExplorerItem.SIDE_LEFT ? ExplorerItem.SIDE_RIGHT : ExplorerItem.SIDE_LEFT;
         key = BitmapCacheManager.changePathToPage(item);
         keyOther = BitmapCacheManager.changePathToPage(itemOther);
 
@@ -446,7 +444,7 @@ public class BitmapLoader {
         try {
 
             switch (item.side) {
-                case LEFT:
+                case ExplorerItem.SIDE_LEFT:
 //                    JLog.e(TAG, "samplesize " + options.inSampleSize);
 
                     decoder = BitmapRegionDecoder.newInstance(item.path, false);
@@ -466,7 +464,7 @@ public class BitmapLoader {
 //                    JLog.e(TAG, "pageOther " + pageOther.getWidth() + " " + pageOther.getHeight());
                     break;
 
-                case RIGHT:
+                case ExplorerItem.SIDE_RIGHT:
 //                    JLog.e(TAG, "samplesize " + options.inSampleSize);
 
                     decoder = BitmapRegionDecoder.newInstance(item.path, false);
@@ -517,7 +515,7 @@ public class BitmapLoader {
         final String key;
         final String keyOther;
         final ExplorerItem itemOther = (ExplorerItem) item.clone();
-        itemOther.side = item.side == LEFT ? RIGHT : LEFT;
+        itemOther.side = item.side == ExplorerItem.SIDE_LEFT ? ExplorerItem.SIDE_RIGHT : ExplorerItem.SIDE_LEFT;
         key = BitmapCacheManager.changePathToPage(item);
         keyOther = BitmapCacheManager.changePathToPage(itemOther);
 
@@ -528,11 +526,11 @@ public class BitmapLoader {
 
         Bitmap pageOther = null;
         switch (item.side) {
-            case LEFT:
+            case ExplorerItem.SIDE_LEFT:
                 page = createBitmap(bitmap, 0, 0, bitmap.getWidth() >> 1, bitmap.getHeight());
                 pageOther = createBitmap(bitmap, bitmap.getWidth() >> 1, 0, bitmap.getWidth() >> 1, bitmap.getHeight());
                 break;
-            case RIGHT:
+            case ExplorerItem.SIDE_RIGHT:
                 page = createBitmap(bitmap, bitmap.getWidth() >> 1, 0, bitmap.getWidth() >> 1, bitmap.getHeight());
                 pageOther = createBitmap(bitmap, 0, 0, bitmap.getWidth() >> 1, bitmap.getHeight());
                 break;

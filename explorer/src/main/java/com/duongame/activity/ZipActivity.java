@@ -27,10 +27,6 @@ import net.lingala.zip4j.exception.ZipException;
 
 import java.util.ArrayList;
 
-import static com.duongame.adapter.ExplorerItem.Side.LEFT;
-import static com.duongame.adapter.ExplorerItem.Side.RIGHT;
-import static com.duongame.adapter.ExplorerItem.Side.SIDE_ALL;
-
 /**
  * Created by namjungsoo on 2016-11-19.
  */
@@ -42,14 +38,14 @@ public class ZipActivity extends PagerActivity {
     //private final ZipLoader zipLoader = new ZipLoader();
     private final ArchiveLoader zipLoader = new ArchiveLoader();
 
-    private ExplorerItem.Side side = LEFT;
-    private ExplorerItem.Side lastSide = LEFT;
+    private int side = ExplorerItem.SIDE_LEFT;
+    private int lastSide = ExplorerItem.SIDE_LEFT;
 
     private int totalFileCount = 0;
     private int extractFileCount = 0;// 압축 풀린 파일의 갯수
     private boolean zipExtractCompleted = false;
 
-    private void changeSide(ExplorerItem.Side side) {
+    private void changeSide(int side) {
         lastSide = this.side;
         this.side = side;
     }
@@ -132,7 +128,7 @@ public class ZipActivity extends PagerActivity {
             // 고정적인 내용 5개
             book.path = path;
             book.name = name;
-            book.type = ExplorerItem.FileType.ZIP;
+            book.type = ExplorerItem.FILETYPE_ZIP;
             book.size = size;
             book.total_file = totalFileCount;// 파일의 갯수이다.
 
@@ -195,7 +191,8 @@ public class ZipActivity extends PagerActivity {
             name = extras.getString("name");
             size = extras.getLong("size");
             extractFileCount = extras.getInt("extract_file");
-            side.setValue(extras.getInt("side"));
+            int intentSide = extras.getInt("side");
+            side = intentSide;
             lastSide = side;
 
             // initPagerAdapter의 기능이다.
@@ -229,7 +226,7 @@ public class ZipActivity extends PagerActivity {
         ImageView iv;
         TextView tv;
         switch (side) {
-            case LEFT:
+            case ExplorerItem.SIDE_LEFT:
                 iv = (ImageView) findViewById(R.id.img_left);
                 tv = (TextView) findViewById(R.id.text_left);
                 iv.setColorFilter(ContextCompat.getColor(this, android.R.color.holo_orange_light));
@@ -246,7 +243,7 @@ public class ZipActivity extends PagerActivity {
                 iv.setColorFilter(ContextCompat.getColor(this, android.R.color.white));
                 tv.setTextColor(ContextCompat.getColor(this, android.R.color.white));
                 break;
-            case RIGHT:
+            case ExplorerItem.SIDE_RIGHT:
                 iv = (ImageView) findViewById(R.id.img_right);
                 tv = (TextView) findViewById(R.id.text_right);
                 iv.setColorFilter(ContextCompat.getColor(this, android.R.color.holo_orange_light));
@@ -263,7 +260,7 @@ public class ZipActivity extends PagerActivity {
                 iv.setColorFilter(ContextCompat.getColor(this, android.R.color.white));
                 tv.setTextColor(ContextCompat.getColor(this, android.R.color.white));
                 break;
-            case SIDE_ALL:
+            case ExplorerItem.SIDE_ALL:
                 iv = (ImageView) findViewById(R.id.img_both);
                 tv = (TextView) findViewById(R.id.text_both);
                 iv.setColorFilter(ContextCompat.getColor(this, android.R.color.holo_orange_light));
@@ -314,8 +311,8 @@ public class ZipActivity extends PagerActivity {
             final ExplorerItem item = imageList.get(i);
 
             // 잘려진 데이터는 둘중 하나를 삭제한다.
-            if (side == SIDE_ALL) {
-                if (item.side != SIDE_ALL) {
+            if (side == ExplorerItem.SIDE_ALL) {
+                if (item.side != ExplorerItem.SIDE_ALL) {
                     // 둘중하나는 삭제 해야 함
                     // 앞에꺼가 있는지 확인하고 삭제하자
                     if (i == 0)
@@ -327,7 +324,7 @@ public class ZipActivity extends PagerActivity {
                     if (item.path.equals(item1.path)) {
                         // 2번째것을 삭제하고, 1번째것은 값을 변경하자
                         final ExplorerItem newItem = (ExplorerItem) item.clone();
-                        newItem.side = SIDE_ALL;
+                        newItem.side = ExplorerItem.SIDE_ALL;
                         newImageList.add(newItem);
                     } else {
                     }
@@ -338,18 +335,18 @@ public class ZipActivity extends PagerActivity {
             } else {// 좌우 변경, 강제 BOTH에서 잘라야 할 것이라면... (side = LEFT or RIGHT)
                 // 같은 파일명을 공유하는 애들끼리 LEFT, RIGHT 순서를 체크한 후에 바꿀 필요가 있을 경우에 바꾸자.
                 // 현재 포지션은 바뀌지 않는다.
-                if (item.side == SIDE_ALL) {
+                if (item.side == ExplorerItem.SIDE_ALL) {
                     // 원래 잘려야할 애들이라면 잘라주어야 한다.
                     if (item.width > item.height) {
                         final ExplorerItem left = (ExplorerItem) item.clone();
                         final ExplorerItem right = (ExplorerItem) item.clone();
-                        left.side = LEFT;
-                        right.side = RIGHT;
+                        left.side = ExplorerItem.SIDE_LEFT;
+                        right.side = ExplorerItem.SIDE_RIGHT;
 
-                        if (side == LEFT) {
+                        if (side == ExplorerItem.SIDE_LEFT) {
                             newImageList.add(left);
                             newImageList.add(right);
-                        } else if (side == RIGHT) {
+                        } else if (side == ExplorerItem.SIDE_RIGHT) {
                             newImageList.add(right);
                             newImageList.add(left);
                         }
@@ -368,13 +365,13 @@ public class ZipActivity extends PagerActivity {
                     if (item.path.equals(item1.path)) {
                         final ExplorerItem left = (ExplorerItem) item.clone();
                         final ExplorerItem right = (ExplorerItem) item.clone();
-                        left.side = LEFT;
-                        right.side = RIGHT;
+                        left.side = ExplorerItem.SIDE_LEFT;
+                        right.side = ExplorerItem.SIDE_RIGHT;
 
-                        if (side == LEFT) {
+                        if (side == ExplorerItem.SIDE_LEFT) {
                             newImageList.add(left);
                             newImageList.add(right);
-                        } else if (side == RIGHT) {
+                        } else if (side == ExplorerItem.SIDE_RIGHT) {
                             newImageList.add(right);
                             newImageList.add(left);
                         }
@@ -392,7 +389,7 @@ public class ZipActivity extends PagerActivity {
         pagerAdapter.notifyDataSetChanged();
         pager.setAdapter(pagerAdapter);
 
-        if (lastSide == SIDE_ALL || side == SIDE_ALL) {
+        if (lastSide == ExplorerItem.SIDE_ALL || side == ExplorerItem.SIDE_ALL) {
             // 페이지 연산을 파일명 단위로 한다.
             int i;
             for (i = 0; i < newImageList.size(); i++) {
@@ -425,9 +422,9 @@ public class ZipActivity extends PagerActivity {
             layoutLeft.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (side == LEFT)
+                    if (side == ExplorerItem.SIDE_LEFT)
                         return;
-                    changeSide(LEFT);
+                    changeSide(ExplorerItem.SIDE_LEFT);
                     updateTopSidePanelColor();
                     updatePageSide();
                 }
@@ -436,9 +433,9 @@ public class ZipActivity extends PagerActivity {
             layoutRight.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (side == RIGHT)
+                    if (side == ExplorerItem.SIDE_RIGHT)
                         return;
-                    changeSide(RIGHT);
+                    changeSide(ExplorerItem.SIDE_RIGHT);
                     updateTopSidePanelColor();
                     updatePageSide();
                 }
@@ -448,9 +445,9 @@ public class ZipActivity extends PagerActivity {
             layoutBoth.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (side == SIDE_ALL)
+                    if (side == ExplorerItem.SIDE_ALL)
                         return;
-                    changeSide(SIDE_ALL);
+                    changeSide(ExplorerItem.SIDE_ALL);
                     updateTopSidePanelColor();
                     updatePageSide();
                 }

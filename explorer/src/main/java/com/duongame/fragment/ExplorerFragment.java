@@ -922,23 +922,23 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
 
     void onRunItemClick(ExplorerItem item) {
         switch (item.type) {
-            case FOLDER:
+            case ExplorerItem.FILETYPE_FOLDER:
                 onClickDirectory(item);
                 break;
-            case IMAGE:
+            case ExplorerItem.FILETYPE_IMAGE:
                 onClickImage(item);
                 break;
-            case APK:
+            case ExplorerItem.FILETYPE_APK:
                 onClickApk(item);
                 break;
 
-            case PDF:
-            case TEXT:
+            case ExplorerItem.FILETYPE_PDF:
+            case ExplorerItem.FILETYPE_TEXT:
                 //TODO: 나중에 읽던 책의 현재위치 이미지의 preview를 만들자.
                 onClickBook(item);
                 break;
 
-            case ZIP:
+            case ExplorerItem.FILETYPE_ZIP:
                 if (AppHelper.isComicz(getActivity())) {
                     onClickBook(item);
                 } else {
@@ -1112,7 +1112,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
         task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
         // 이벤트를 보냄
-        getTracker().send(new HitBuilders.EventBuilder().setCategory("File").setAction("Zip").setValue(FileHelper.getCompressType(ext).getValue()).build());
+        getTracker().send(new HitBuilders.EventBuilder().setCategory("File").setAction("Zip").setValue(FileHelper.getCompressType(ext)).build());
     }
 
     public void zipFileWithDialog() {

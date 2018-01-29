@@ -103,41 +103,41 @@ public class FileHelper {
         }
     }
 
-    public static ExplorerItem.CompressType getCompressType(String path) {
+    public static int getCompressType(String path) {
         if (path.endsWith(".zip") || path.endsWith(".cbz"))
-            return ExplorerItem.CompressType.ZIP;
+            return ExplorerItem.COMPRESSTYPE_ZIP;
         //TODO: 현재 지원 안함
         if (path.endsWith(".rar") || path.endsWith(".cbr"))
-            return ExplorerItem.CompressType.RAR;
+            return ExplorerItem.COMPRESSTYPE_RAR;
         if (path.endsWith(".7z") || path.endsWith(".cb7"))
-            return ExplorerItem.CompressType.SEVENZIP;
+            return ExplorerItem.COMPRESSTYPE_SEVENZIP;
         if (path.endsWith(".tar") || path.endsWith(".cbt"))
-            return ExplorerItem.CompressType.TAR;
+            return ExplorerItem.COMPRESSTYPE_TAR;
         if (path.endsWith(".gz") || path.endsWith(".tgz"))
-            return ExplorerItem.CompressType.GZIP;
+            return ExplorerItem.COMPRESSTYPE_GZIP;
         //TODO: 테스트 더해보고 안되면 막아야 함
 //        if (path.endsWith(".bz2") || path.endsWith(".tbz2"))
 //            return ExplorerItem.CompressType.BZIP2;
-        return ExplorerItem.CompressType.OTHER;
+        return ExplorerItem.COMPRESSTYPE_OTHER;
     }
 
     //region Extension
-    public static ExplorerItem.FileType getFileType(File eachFile) {
-        ExplorerItem.FileType type = eachFile.isDirectory() ? ExplorerItem.FileType.FOLDER : ExplorerItem.FileType.FILE;
+    public static int getFileType(File eachFile) {
+        int type = eachFile.isDirectory() ? ExplorerItem.FILETYPE_FOLDER : ExplorerItem.FILETYPE_FILE;
         if (FileHelper.isImage(eachFile.getName())) {
-            type = ExplorerItem.FileType.IMAGE;
-        } else if (getCompressType(eachFile.getName()) != ExplorerItem.CompressType.OTHER)
-            type = ExplorerItem.FileType.ZIP;
+            type = ExplorerItem.FILETYPE_IMAGE;
+        } else if (getCompressType(eachFile.getName()) != ExplorerItem.COMPRESSTYPE_OTHER)
+            type = ExplorerItem.FILETYPE_ZIP;
         else if (eachFile.getName().endsWith(".pdf"))
-            type = ExplorerItem.FileType.PDF;
+            type = ExplorerItem.FILETYPE_PDF;
         else if (eachFile.getName().endsWith(".mp4") || eachFile.getName().endsWith(".avi") || eachFile.getName().endsWith(".3gp") || eachFile.getName().endsWith(".mkv") || eachFile.getName().endsWith(".mov"))
-            type = ExplorerItem.FileType.VIDEO;
+            type = ExplorerItem.FILETYPE_VIDEO;
         else if (eachFile.getName().endsWith(".mp3"))
-            type = ExplorerItem.FileType.AUDIO;
+            type = ExplorerItem.FILETYPE_AUDIO;
         else if (isText(eachFile.getName()))
-            type = ExplorerItem.FileType.TEXT;
+            type = ExplorerItem.FILETYPE_TEXT;
         else if (eachFile.getName().endsWith(".apk"))
-            type = ExplorerItem.FileType.APK;
+            type = ExplorerItem.FILETYPE_APK;
 
         return type;
     }

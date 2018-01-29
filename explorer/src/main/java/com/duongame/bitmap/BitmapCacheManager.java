@@ -34,9 +34,9 @@ public class BitmapCacheManager {
 
     public static String changePathToPage(ExplorerItem item) {
         String path;
-        if (item.side == ExplorerItem.Side.LEFT) {
+        if (item.side == ExplorerItem.SIDE_LEFT) {
             path = item.path + ".left";
-        } else if (item.side == ExplorerItem.Side.RIGHT) {
+        } else if (item.side == ExplorerItem.SIDE_RIGHT) {
             path = item.path + ".right";
         } else {
             path = item.path;

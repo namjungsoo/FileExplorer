@@ -5,8 +5,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import com.duongame.adapter.ExplorerItem;
-
 import java.util.ArrayList;
 
 /**
@@ -66,8 +64,7 @@ public class BookDB extends SQLiteOpenHelper {
 
         book.path = cursor.getString(0);
         book.name = cursor.getString(1);
-        int type = cursor.getInt(2);
-        book.type = ExplorerItem.FileType.values()[type];
+        book.type = cursor.getInt(2);
         book.size = cursor.getLong(3);
         book.total_file = cursor.getInt(4);
 
@@ -75,7 +72,7 @@ public class BookDB extends SQLiteOpenHelper {
         book.total_page = cursor.getInt(6);
         book.current_file = cursor.getInt(7);
         book.extract_file = cursor.getInt(8);
-        book.side.setValue(cursor.getInt(9));
+        book.side = cursor.getInt(9);
         book.date = cursor.getString(10);
         book.last_file = cursor.getString(11);
 
@@ -183,13 +180,13 @@ public class BookDB extends SQLiteOpenHelper {
                     + ",total_page=" + book.total_page
                     + ",current_file=" + book.current_file
                     + ",extract_file=" + book.extract_file
-                    + ",side=" + book.side.getValue()
+                    + ",side=" + book.side
                     + ",date=datetime('now','localtime')"
                     + ",last_file='" + book.last_file + "'"
                     + " WHERE path='" + book.path + "'";
             db.execSQL(sql2);
         } else {// 없으면 추가
-            int type = book.type.getValue();
+            int type = book.type;
             final String sql2 = "INSERT INTO book VALUES('" + book.path
                     + "','" + book.name
                     + "'," + type
@@ -202,7 +199,7 @@ public class BookDB extends SQLiteOpenHelper {
                     + "," + book.current_file
                     + "," + book.extract_file
 
-                    + "," + book.side.getValue()
+                    + "," + book.side
 
                     + ",datetime('now','localtime')"
                     + ",'" + book.last_file + "'"

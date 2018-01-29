@@ -388,29 +388,29 @@ public class UnzipTask extends AsyncTask<Void, FileHelper.Progress, Boolean> {
         ExplorerItem item = fileList.get(0);
 
         try {
-            ExplorerItem.CompressType type = FileHelper.getCompressType(item.path);
+            int type = FileHelper.getCompressType(item.path);
             switch (type) {
-                case ZIP:
+                case ExplorerItem.COMPRESSTYPE_ZIP:
                     if (!unarchiveZip(item))
                         return false;
                     break;
-                case SEVENZIP:
+                case ExplorerItem.COMPRESSTYPE_SEVENZIP:
                     if (!unarchive7z(item))
                         return false;
                     break;
-                case GZIP:
+                case ExplorerItem.COMPRESSTYPE_GZIP:
                     if (!unarchiveGzip(item))
                         return false;
                     break;
-                case BZIP2:
+                case ExplorerItem.COMPRESSTYPE_BZIP2:
                     if (!unarchiveBzip2(item))
                         return false;
                     break;
-                case RAR:
+                case ExplorerItem.COMPRESSTYPE_RAR:
                     if (!unarchiveRar(item))
                         return false;
                     break;
-                case TAR:
+                case ExplorerItem.COMPRESSTYPE_TAR:
                     if (!unarchiveTar(item.path, 0))
                         return false;
                     break;

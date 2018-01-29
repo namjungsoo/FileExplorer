@@ -153,7 +153,7 @@ public class PasteTask extends AsyncTask<Void, FileHelper.Progress, Boolean> {
         for (int i = 0; i < fileList.size(); i++) {
             ExplorerItem item = fileList.get(i);
 
-            if (item.type == ExplorerItem.FileType.FOLDER) {
+            if (item.type == ExplorerItem.FILETYPE_FOLDER) {
 
                 // 폴더의 경우 하위 모든 아이템을 찾은뒤에 더한다.
                 FileSearcher.Result result = searchFile(item.path);

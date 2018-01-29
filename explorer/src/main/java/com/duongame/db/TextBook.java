@@ -23,7 +23,7 @@ public class TextBook {
         // 고정적인 내용 5개
         book.path = path;
         book.name = name;
-        book.type = ExplorerItem.FileType.TEXT;
+        book.type = ExplorerItem.FILETYPE_TEXT;
         book.size = size;
         book.total_file = 0;// 파일의 갯수이다.
 
@@ -34,7 +34,7 @@ public class TextBook {
         // zip아 아니면 사용하지 않는 부분
         book.current_file = 0;
         book.extract_file = 0;
-        book.side = ExplorerItem.Side.SIDE_ALL;
+        book.side = ExplorerItem.SIDE_ALL;
 
         return book;
     }
@@ -46,7 +46,7 @@ public class TextBook {
         // 고정적인 내용 5개
         book.path = path;
         book.name = name;
-        book.type = ExplorerItem.FileType.TEXT;
+        book.type = ExplorerItem.FILETYPE_TEXT;
         book.size = size;
         book.total_file = 0;// 파일의 갯수이다.
 
@@ -58,7 +58,7 @@ public class TextBook {
         // zip아 아니면 사용하지 않는 부분
         book.current_file = percent;
         book.extract_file = 0;
-        book.side = ExplorerItem.Side.SIDE_ALL;
+        book.side = ExplorerItem.SIDE_ALL;
 
         return book;
     }

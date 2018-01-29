@@ -71,13 +71,13 @@ public class SearchRecyclerAdapter extends RecyclerView.Adapter<SearchRecyclerAd
 
 //        item.imageViewRef = new WeakReference<ImageView>(searchViewHolder.icon);
         switch (item.type) {
-            case ZIP:
+            case ExplorerItem.FILETYPE_ZIP:
                 setIconZip(holder, item);
                 break;
-            case PDF:
+            case ExplorerItem.FILETYPE_PDF:
                 setIconPdf(holder, item);
                 break;
-            case TEXT:
+            case ExplorerItem.FILETYPE_TEXT:
                 setIconText(holder, item);
                 break;
         }
@@ -132,7 +132,7 @@ public class SearchRecyclerAdapter extends RecyclerView.Adapter<SearchRecyclerAd
         public TextView date;
         public TextView size;
         public TextView path;// 추가됨
-        public ExplorerItem.FileType type;
+        public int type;
         public int position;
 
         public SearchViewHolder(View itemView) {
