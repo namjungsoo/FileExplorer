@@ -162,7 +162,7 @@ public class UnzipTask extends AsyncTask<Void, FileHelper.Progress, Boolean> {
         }
 
         if (tar.endsWith(".tar")) {
-            if (!unarchiveTar(tar))
+            if (!unarchiveTar(tar, 1))
                 return false;
 
             // tar 파일 삭제
@@ -196,7 +196,7 @@ public class UnzipTask extends AsyncTask<Void, FileHelper.Progress, Boolean> {
         }
 
         if (tar.endsWith(".tar")) {
-            if (!unarchiveTar(tar))
+            if (!unarchiveTar(tar, 1))
                 return false;
 
             // tar 파일 삭제
@@ -206,7 +206,7 @@ public class UnzipTask extends AsyncTask<Void, FileHelper.Progress, Boolean> {
         return true;
     }
 
-    boolean unarchiveTar(String tar) throws IOException {
+    boolean unarchiveTar(String tar, int add) throws IOException {
         TarArchiveInputStream stream;
         TarArchiveEntry entry;
         byte[] buf = new byte[BLOCK_SIZE];
@@ -249,7 +249,7 @@ public class UnzipTask extends AsyncTask<Void, FileHelper.Progress, Boolean> {
 
                 totalRead += nRead;
                 long percent = totalRead * 100 / srcLength;
-                updateProgress(j, count + 1, entry.getName(), (int) percent);
+                updateProgress(j, count + add, entry.getName(), (int) percent);
             }
             outputStream.close();
 
@@ -411,7 +411,7 @@ public class UnzipTask extends AsyncTask<Void, FileHelper.Progress, Boolean> {
                         return false;
                     break;
                 case TAR:
-                    if (!unarchiveTar(item.path))
+                    if (!unarchiveTar(item.path, 0))
                         return false;
                     break;
             }
