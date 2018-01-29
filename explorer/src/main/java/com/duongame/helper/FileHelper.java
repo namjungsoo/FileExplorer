@@ -105,20 +105,19 @@ public class FileHelper {
     }
 
     public static ExplorerItem.CompressType getCompressType(String path) {
-        String lower = path.toLowerCase();
-        if (lower.endsWith(".zip"))
+        if (path.endsWith(".zip"))
             return ExplorerItem.CompressType.ZIP;
         //TODO: 현재 지원 안함
-        if (lower.endsWith(".rar"))
+        if (path.endsWith(".rar"))
             return ExplorerItem.CompressType.RAR;
-        if (lower.endsWith(".7z"))
+        if (path.endsWith(".7z"))
             return ExplorerItem.CompressType.SEVENZIP;
-        if (lower.endsWith(".tar"))
+        if (path.endsWith(".tar"))
             return ExplorerItem.CompressType.TAR;
-        if (lower.endsWith(".gz") || lower.endsWith(".tgz"))
+        if (path.endsWith(".gz") || path.endsWith(".tgz"))
             return ExplorerItem.CompressType.GZIP;
         //TODO: 테스트 더해보고 안되면 막아야 함
-//        if (lower.endsWith(".bz2") || lower.endsWith(".tbz2"))
+//        if (path.endsWith(".bz2") || path.endsWith(".tbz2"))
 //            return ExplorerItem.CompressType.BZIP2;
         return ExplorerItem.CompressType.OTHER;
     }

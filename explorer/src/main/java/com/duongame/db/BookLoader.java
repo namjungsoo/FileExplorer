@@ -53,7 +53,7 @@ public class BookLoader {
     // 히스토리일 경우는 바로 읽음
     public static void loadContinue(Activity context, Book book) {
         Class<?> cls = null;
-        switch(FileHelper.getCompressType(book.path)) {
+        switch (FileHelper.getCompressType(book.path)) {
             case ZIP:
             case RAR:
             case SEVENZIP:
@@ -84,7 +84,7 @@ public class BookLoader {
 
     private static Intent getIntentNew(final Activity context, ExplorerItem item) {
         Class<?> cls = null;
-        switch(FileHelper.getCompressType(item.path)) {
+        switch (FileHelper.getCompressType(item.path)) {
             case ZIP:
             case RAR:
             case SEVENZIP:
@@ -117,7 +117,7 @@ public class BookLoader {
 
     private static Intent getIntentNew(final Activity context, Book book) {
         Class<?> cls = null;
-        switch(FileHelper.getCompressType(book.path)) {
+        switch (FileHelper.getCompressType(book.path)) {
             case ZIP:
             case RAR:
             case SEVENZIP:
@@ -151,13 +151,13 @@ public class BookLoader {
 
     private static void loadNew(final Activity context, ExplorerItem item) {
         Intent intent = getIntentNew(context, item);
-        if(intent != null)
+        if (intent != null)
             context.startActivity(intent);
     }
 
     private static void loadNew(final Activity context, Book book) {
         Intent intent = getIntentNew(context, book);
-        if(intent != null)
+        if (intent != null)
             context.startActivity(intent);
     }
 
@@ -218,19 +218,27 @@ public class BookLoader {
 
     public static void loadBookBitmap(Context context, HistoryRecyclerAdapter.HistoryViewHolder holder, String path) {
         // zip 파일의 썸네일을 읽자
-        if (path.toLowerCase().endsWith(".txt")) {
+        if (path.endsWith(".txt")) {
             holder.thumb.setImageBitmap(BitmapCacheManager.getResourceBitmap(context.getResources(), R.drawable.text));
             return;
         }
 
         final Bitmap bitmap = getThumbnail(path);
         if (bitmap == null) {
-            if (path.toLowerCase().endsWith(".zip")) {
-                final LoadZipThumbnailTask task = new LoadZipThumbnailTask(context, holder.thumb, holder.more);
-                task.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, path);
-            } else if (path.toLowerCase().endsWith(".pdf")) {
-                final LoadPdfThumbnailTask task = new LoadPdfThumbnailTask(context, holder.thumb, holder.more);
-                task.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, path);
+            switch (FileHelper.getCompressType(path)) {
+                case ZIP:
+                case SEVENZIP:
+                case RAR: {
+                    final LoadZipThumbnailTask task = new LoadZipThumbnailTask(context, holder.thumb, holder.more);
+                    task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, path);
+                }
+                break;
+                default:
+                    if (path.endsWith(".pdf")) {
+                        final LoadPdfThumbnailTask task = new LoadPdfThumbnailTask(context, holder.thumb, holder.more);
+                        task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, path);
+                    }
+                    break;
             }
         } else {
             holder.thumb.setImageBitmap(bitmap);

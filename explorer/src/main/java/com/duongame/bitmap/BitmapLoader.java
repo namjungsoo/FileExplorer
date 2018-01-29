@@ -20,6 +20,7 @@ import android.provider.MediaStore;
 
 import com.duongame.R;
 import com.duongame.adapter.ExplorerItem;
+import com.duongame.archive.ArchiveLoader;
 import com.duongame.helper.FileHelper;
 
 import net.lingala.zip4j.exception.ZipException;
@@ -151,8 +152,7 @@ public class BitmapLoader {
         // ZIP파일 안에 있는 이미지 파일을 찾자.
         String image = null;
         try {
-            //image = ZipLoader.getFirstImage(context, path);
-            final ZipLoader loader = new ZipLoader();
+            final ArchiveLoader loader = new ArchiveLoader();
             final ArrayList<ExplorerItem> imageList = loader.load(context, path, null, 0, ExplorerItem.Side.LEFT, true);
 
             if (imageList != null && imageList.size() > 0) {
