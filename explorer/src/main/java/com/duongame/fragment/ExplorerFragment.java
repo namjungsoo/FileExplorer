@@ -305,6 +305,8 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
         for (ExplorerItem item : imageList) {
             if (activity == null)
                 break;
+            if (item == null || item.path == null)
+                continue;
             activity.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse("file://" + item.path)));
         }
     }
