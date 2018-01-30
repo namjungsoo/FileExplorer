@@ -2,6 +2,7 @@ package com.duongame.activity;
 
 import android.animation.ValueAnimator;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
@@ -25,6 +26,7 @@ import com.duongame.db.BookDB;
 import com.duongame.db.BookLoader;
 import com.duongame.fragment.BaseFragment;
 import com.duongame.fragment.ExplorerFragment;
+import com.duongame.helper.AlertHelper;
 import com.duongame.helper.AppHelper;
 import com.duongame.helper.PreferenceHelper;
 import com.duongame.helper.ToastHelper;
@@ -140,8 +142,8 @@ public abstract class BaseActivity extends AppCompatActivity {
         final ExplorerFragment explorerFragment = getExplorerFragment();
 
         // 탐색기일 경우에는 붙이기 모드에서만 상단의 바를 활성화 함
-        if(fragment == explorerFragment) {
-            if(explorerFragment.isPasteMode()) {
+        if (fragment == explorerFragment) {
+            if (explorerFragment.isPasteMode()) {
                 explorerFragment.gotoUpDirectory();
             } else {
                 defaultBackPressed();
@@ -254,11 +256,23 @@ public abstract class BaseActivity extends AppCompatActivity {
             return true;
         }
 
+        if (id == R.id.action_license) {
+            AlertHelper.showAlertWithAd(this,
+                    AppHelper.getAppName(this),
+                    "Icon license: designed by Smashicons from Flaticon",
+                    new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            dialogInterface.dismiss();
+                        }
+                    }, null, true);
+        }
+
         return super.onOptionsItemSelected(item);
     }
 
     void onPasteModeBackPressed() {
-        if(getExplorerFragment().isPasteMode()) {
+        if (getExplorerFragment().isPasteMode()) {
             onBackPressed();
         } else {
             // 붙이기 모드는 상단 홈버튼을 통해서만 취소가 가능하고, 백버튼은 폴더를 이동해야 한다.
@@ -316,7 +330,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         btnCopy.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-            getExplorerFragment().captureSelectedFile(false);
+                getExplorerFragment().captureSelectedFile(false);
             }
         });
 
@@ -325,7 +339,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         btnCut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-            getExplorerFragment().captureSelectedFile(true);
+                getExplorerFragment().captureSelectedFile(true);
             }
         });
 
