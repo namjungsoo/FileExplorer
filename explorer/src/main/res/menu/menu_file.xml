@@ -35,4 +35,10 @@
         android:title="@string/action_clear_cache"
         app:showAsAction="never" />
 
+    <item
+        android:id="@+id/action_license"
+        android:orderInCategory="100"
+        android:title="License"
+        app:showAsAction="never" />
+
 </menu>

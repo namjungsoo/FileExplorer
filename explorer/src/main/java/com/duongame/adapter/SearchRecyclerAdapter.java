@@ -122,7 +122,7 @@ public class SearchRecyclerAdapter extends RecyclerView.Adapter<SearchRecyclerAd
     }
 
     void setIconText(SearchViewHolder searchViewHolder, ExplorerItem item) {
-        searchViewHolder.icon.setImageBitmap(BitmapCacheManager.getResourceBitmap(context.getResources(), R.drawable.text));
+        searchViewHolder.icon.setImageBitmap(BitmapCacheManager.getResourceBitmap(context.getResources(), R.drawable.txt));
     }
 
     protected static class SearchViewHolder extends RecyclerView.ViewHolder {

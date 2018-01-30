@@ -46,4 +46,11 @@
         android:orderInCategory="100"
         android:title="@string/action_open_lastbook"
         app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_license"
+        android:orderInCategory="100"
+        android:title="License"
+        app:showAsAction="never" />
+
 </menu>
