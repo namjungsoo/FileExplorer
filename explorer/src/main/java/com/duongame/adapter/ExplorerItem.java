@@ -7,18 +7,32 @@ import com.duongame.attacher.ImageViewAttacher;
  */
 
 public class ExplorerItem implements Cloneable {
+    //FILETYPE_IMAGE
+    public static final int EXTTYPE_JPG = 0;// JPG, GIF
+    public static final int EXTTYPE_PNG = 1;
+    //FILETYPE_VIDEO
+    public static final int EXTTYPE_AVI = 2;// MKV, MOV, WMV, 3GP, K3G, ASF
+    public static final int EXTTYPE_MP4 = 3;
+    public static final int EXTTYPE_FLV = 4;
+    //FILETYPE_TEXT
+    public static final int EXTTYPE_JSON = 4;
+    public static final int EXTTYPE_TEXT = 5;
 
     public static final int FILETYPE_FOLDER = 0;
-    public static final int FILETYPE_IMAGE = 1;
-    public static final int FILETYPE_VIDEO = 2;
-    public static final int FILETYPE_AUDIO = 3;
-    public static final int FILETYPE_ZIP = 4;
-    public static final int FILETYPE_RAR = 5;
+    public static final int FILETYPE_IMAGE = 1;// JPG, PNG, GIF
+    public static final int FILETYPE_VIDEO = 2;// MP4, FLV, (AVI, MKV, MOV, WMV, 3GP, K3G, ASF)
+    public static final int FILETYPE_AUDIO = 3;// MP3
+    public static final int FILETYPE_ZIP = 4;// ZIP, RAR, 7Z, CBZ, CBR, CB7, TAR, TAR.GZ, (TAR.TB2), TGZ, (TB2)
     public static final int FILETYPE_PDF = 6;
-    public static final int FILETYPE_TEXT = 7;
+    public static final int FILETYPE_TEXT = 7;// TXT, LOG, JSON
     public static final int FILETYPE_FILE = 8;
-    public static final int FILETYPE_APK = 9;
-    public static final int FILETYPE_ALL = 10;
+    public static final int FILETYPE_APK = 9;// APK <- FILE
+    public static final int FILETYPE_DOC = 10;
+    public static final int FILETYPE_RTF = 11;
+    public static final int FILETYPE_CSV = 12;
+    public static final int FILETYPE_XLS = 13;
+    public static final int FILETYPE_PPT = 14;
+    public static final int FILETYPE_HTML = 15;
 
     public static final int COMPRESSTYPE_ZIP = 0;
     public static final int COMPRESSTYPE_SEVENZIP = 1;
@@ -26,12 +40,12 @@ public class ExplorerItem implements Cloneable {
     public static final int COMPRESSTYPE_BZIP2 = 3;
     public static final int COMPRESSTYPE_RAR = 4;
     public static final int COMPRESSTYPE_TAR = 5;
-    public static final int COMPRESSTYPE_OTHER = 6;
+    public static final int COMPRESSTYPE_XZ = 6;
+    public static final int COMPRESSTYPE_OTHER = 7;
 
     public static final int SIDE_ALL = 0;
     public static final int SIDE_LEFT = 1;
     public static final int SIDE_RIGHT = 2;
-    public static final int SIDE_OTHER = 3;
 
     public String name;
     public String date;

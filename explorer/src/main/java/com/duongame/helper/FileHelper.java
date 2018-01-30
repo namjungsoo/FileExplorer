@@ -122,11 +122,23 @@ public class FileHelper {
     }
 
     //region Extension
+    public static int getExtType(File eachFile, int fileType) {
+
+    }
+
     public static int getFileType(File eachFile) {
         int type = eachFile.isDirectory() ? ExplorerItem.FILETYPE_FOLDER : ExplorerItem.FILETYPE_FILE;
-        if (FileHelper.isImage(eachFile.getName())) {
+
+        // 폴더면 바로 리턴
+        if (type == ExplorerItem.FILETYPE_FOLDER)
+            return type;
+
+        // 이미지
+        if (FileHelper.isImage(eachFile.getName()))
             type = ExplorerItem.FILETYPE_IMAGE;
-        } else if (getCompressType(eachFile.getName()) != ExplorerItem.COMPRESSTYPE_OTHER)
+
+            // 압축 파일
+        else if (getCompressType(eachFile.getName()) != ExplorerItem.COMPRESSTYPE_OTHER)
             type = ExplorerItem.FILETYPE_ZIP;
         else if (eachFile.getName().endsWith(".pdf"))
             type = ExplorerItem.FILETYPE_PDF;
@@ -142,8 +154,12 @@ public class FileHelper {
         return type;
     }
 
+    public static boolean isVideo(String filename) {
+
+    }
+
     public static boolean isText(String filename) {
-        if (filename.endsWith(".txt") || filename.endsWith(".log"))
+        if (filename.endsWith(".txt") || filename.endsWith(".log") || filename.endsWith(".json"))
             return true;
         return false;
     }

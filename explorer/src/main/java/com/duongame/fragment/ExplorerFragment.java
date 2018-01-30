@@ -252,7 +252,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
 
         this.viewType = viewType;
 
-        if(switcherViewType != null)
+        if (switcherViewType != null)
             switcherViewType.setDisplayedChild(viewType);
 
         switch (viewType) {
