@@ -204,12 +204,16 @@ public class ExplorerAdapter extends RecyclerView.Adapter<ExplorerAdapter.Explor
     void setIconImage(final ExplorerViewHolder viewHolder, final ExplorerItem item) {
         final Bitmap bitmap = getThumbnail(item.path);
         if (bitmap == null) {
-            viewHolder.icon.setImageResource(R.drawable.file);
 
             if (item.path.endsWith(".gif")) {
+                viewHolder.icon.setImageResource(R.drawable.jpg);
                 LoadThumbnailTask task = new LoadThumbnailTask(context, viewHolder.icon, viewHolder.iconSmall);
                 task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, item.path);
             } else {
+                if (item.path.endsWith(".png"))
+                    viewHolder.icon.setImageResource(R.drawable.png);
+                else
+                    viewHolder.icon.setImageResource(R.drawable.jpg);
                 // Glide로 읽자
                 GlideApp.with(context)
                         .load(new File(item.path))
@@ -241,7 +245,7 @@ public class ExplorerAdapter extends RecyclerView.Adapter<ExplorerAdapter.Explor
     void setIconPdf(final ExplorerViewHolder viewHolder, ExplorerItem item) {
         final Bitmap bitmap = getThumbnail(item.path);
         if (bitmap == null) {
-            viewHolder.icon.setImageResource(R.drawable.file);
+            viewHolder.icon.setImageResource(R.drawable.pdf);
 
             LoadPdfThumbnailTask task = new LoadPdfThumbnailTask(context, viewHolder.icon, viewHolder.iconSmall);
             task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, item.path);
@@ -280,8 +284,12 @@ public class ExplorerAdapter extends RecyclerView.Adapter<ExplorerAdapter.Explor
     void setIconVideo(final ExplorerViewHolder viewHolder, ExplorerItem item) {
         final Bitmap bitmap = getThumbnail(item.path);
         if (bitmap == null) {
-            viewHolder.icon.setImageResource(R.drawable.file);
-
+            if (item.path.endsWith(".mp4"))
+                viewHolder.icon.setImageResource(R.drawable.mp4);
+            else if (item.path.endsWith(".fla"))
+                viewHolder.icon.setImageResource(R.drawable.fla);
+            else
+                viewHolder.icon.setImageResource(R.drawable.avi);
             LoadVideoThumbnailTask task = new LoadVideoThumbnailTask(context, viewHolder.icon, viewHolder.iconSmall);
             task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, item.path);
         } else {// 로딩된 비트맵을 셋팅
@@ -325,6 +333,8 @@ public class ExplorerAdapter extends RecyclerView.Adapter<ExplorerAdapter.Explor
     void setIconTypeDefault(final ExplorerViewHolder viewHolder, ExplorerItem item) {
         switch (item.type) {
             case ExplorerItem.FILETYPE_AUDIO:
+                viewHolder.icon.setImageBitmap(BitmapCacheManager.getResourceBitmap(context.getResources(), R.drawable.mp3));
+                break;
             case ExplorerItem.FILETYPE_FILE:
                 viewHolder.icon.setImageBitmap(BitmapCacheManager.getResourceBitmap(context.getResources(), R.drawable.file));
                 break;

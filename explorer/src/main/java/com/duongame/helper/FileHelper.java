@@ -123,7 +123,7 @@ public class FileHelper {
 
     //region Extension
     public static int getExtType(File eachFile, int fileType) {
-
+        return 0;
     }
 
     public static int getFileType(File eachFile) {
@@ -155,7 +155,7 @@ public class FileHelper {
     }
 
     public static boolean isVideo(String filename) {
-
+        return false;
     }
 
     public static boolean isText(String filename) {
