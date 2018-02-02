@@ -58,4 +58,7 @@
     <!-- shortcut -->
     <uses-permission android:name="com.android.launcher.permission.INSTALL_SHORTCUT" />
 
+    <meta-data
+        android:name="io.fabric.ApiKey"
+        android:value="479ae7d868a353eb8da82e059fd1a04418af3cf3" />
 </manifest>

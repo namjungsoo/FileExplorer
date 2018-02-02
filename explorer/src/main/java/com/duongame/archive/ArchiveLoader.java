@@ -70,6 +70,12 @@ public class ArchiveLoader {
     }
 
     private void filterImageList(ArrayList<ExplorerItem> imageList) {
+        if (zipHeaders == null)
+            return;
+
+        if (imageList == null)
+            return;
+
         for (ArchiveHeader header : zipHeaders) {
             final String name = header.getName();
             if (FileHelper.isImage(name)) {
@@ -84,7 +90,7 @@ public class ArchiveLoader {
             // 이미지 로딩후 확인해보고 좌우를 나눠야 되면 나누어 주자
             // 파일명으로 실제 폴더 안에 파일이 있는지 검사
             if (!(new File(imageList.get(0).name).exists())) {
-                if(!zipFile.extractFile(imageList.get(0).name, extractPath))
+                if (!zipFile.extractFile(imageList.get(0).name, extractPath))
                     return null;
             }
 
@@ -118,14 +124,14 @@ public class ArchiveLoader {
 
     private ArrayList<ExplorerItem> loadContinue(ArrayList<ExplorerItem> imageList, ArrayList<ExplorerItem> firstList) {
         // extract 미만의 파일들은 파일이 존재한다고 가정하고 시작한 것이다.
-        if(extract > imageList.size()) // 에러인 경우이다.
+        if (extract > imageList.size()) // 에러인 경우이다.
             extract = imageList.size();
 
         for (int i = 0; i < extract; i++) {
             // 여기서 파일의 존재여부에 대한 검증을 해야 한다.
             try {
                 final ExplorerItem item = (ExplorerItem) imageList.get(i);
-                if(isFileExtracted(item.path, zipHeaders)) {
+                if (isFileExtracted(item.path, zipHeaders)) {
                     UnzipBookTask.processItem(i, item, side, firstList);
                 } else {
                     // 에러이므로 여기서 중단한다.
@@ -145,12 +151,12 @@ public class ArchiveLoader {
 
     private boolean isFileExtracted(String path, List<ArchiveHeader> headers) {
         File file = new File(path);
-        if(!file.exists())
+        if (!file.exists())
             return false;
 
-        for(int i=0; i<headers.size(); i++) {
-            if(file.getName().equals(headers.get(i).getName())) {
-                if(file.length() == headers.get(i).getSize())
+        for (int i = 0; i < headers.size(); i++) {
+            if (file.getName().equals(headers.get(i).getName())) {
+                if (file.length() == headers.get(i).getSize())
                     return true;
             }
         }
@@ -169,7 +175,7 @@ public class ArchiveLoader {
         this.extract = extract;
 
         int type = FileHelper.getCompressType(filename);
-        switch(type) {
+        switch (type) {
             case ExplorerItem.COMPRESSTYPE_ZIP:
                 zipFile = new Zip4jFile(filename);
                 break;

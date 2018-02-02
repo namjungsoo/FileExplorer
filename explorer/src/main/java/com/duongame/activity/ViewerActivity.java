@@ -18,6 +18,7 @@ import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import com.crashlytics.android.Crashlytics;
 import com.duongame.AnalyticsApplication;
 import com.duongame.BuildConfig;
 import com.duongame.R;
@@ -29,6 +30,8 @@ import com.google.android.gms.ads.AdView;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.google.firebase.analytics.FirebaseAnalytics;
+
+import io.fabric.sdk.android.Fabric;
 
 /**
  * Created by namjungsoo on 2016-11-16.
@@ -65,6 +68,7 @@ public class ViewerActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Fabric.with(this, new Crashlytics());
 
         initContentView();
 

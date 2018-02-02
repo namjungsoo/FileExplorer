@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply plugin: 'io.fabric'
 
 android {
     compileSdkVersion 27
@@ -58,8 +59,8 @@ android {
             buildConfigField "boolean", "PREVIEW_ZIP", "true"
             applicationIdSuffix '.comicz'
             dimension "project"
-            versionCode 24
-            versionName "1.2.2"
+            versionCode 25
+            versionName "1.2.3"
             addManifestPlaceholders([APP_NAME: "@string/comicz_name_free"])
         }
 
@@ -74,8 +75,8 @@ android {
             buildConfigField "boolean", "PREVIEW_ZIP", "false"
             applicationIdSuffix '.file'
             dimension "project"
-            versionCode 4
-            versionName "1.0.3"
+            versionCode 5
+            versionName "1.0.4"
             addManifestPlaceholders([APP_NAME: "@string/file_name_free"])
         }
 
@@ -134,7 +135,12 @@ dependencies {
     implementation 'org.apache.commons:commons-compress:1.15'
     implementation project(':lib7z')
     implementation project(':unrar-android')
+
+    compile('com.crashlytics.sdk.android:crashlytics:2.8.0@aar') {
+        transitive = true;
+    }
 }
 
 // ADD THIS AT THE BOTTOM
 apply plugin: 'com.google.gms.google-services'
+

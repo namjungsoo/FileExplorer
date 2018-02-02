@@ -861,9 +861,12 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
         if (pasteMode || selectMode) {
             onNormalMode();
         } else {
-            if (application.isInitialPath(application.getLastPath()))// user root일 경우
+            if (application == null)
+                return;
+
+            if (application.isInitialPath(application.getLastPath())) {// user root일 경우
                 super.onBackPressed();
-            else if (extSdCard != null && extSdCard.equals(application.getLastPath())) {// sd카드 root일 경우
+            } else if (extSdCard != null && extSdCard.equals(application.getLastPath())) {// sd카드 root일 경우
                 super.onBackPressed();
             } else {
                 gotoUpDirectory();

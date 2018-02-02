@@ -18,6 +18,7 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
+import com.crashlytics.android.Crashlytics;
 import com.duongame.AnalyticsApplication;
 import com.duongame.BuildConfig;
 import com.duongame.R;
@@ -41,6 +42,8 @@ import com.google.android.gms.analytics.Tracker;
 import com.google.firebase.analytics.FirebaseAnalytics;
 
 import java.io.File;
+
+import io.fabric.sdk.android.Fabric;
 
 import static com.duongame.fragment.ExplorerFragment.SWITCH_GRID;
 import static com.duongame.fragment.ExplorerFragment.SWITCH_LIST;
@@ -84,6 +87,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Fabric.with(this, new Crashlytics());
 
         AdBannerManager.init(this);
         AdInterstitialManager.init(this);
