@@ -79,7 +79,7 @@ public class ArchiveLoader {
         for (ArchiveHeader header : zipHeaders) {
             final String name = header.getName();
             if (FileHelper.isImage(name)) {
-                imageList.add(new ExplorerItem(FileHelper.getFullPath(extractPath, name), name, "", 0, ExplorerItem.FILETYPE_IMAGE));
+                imageList.add(new ExplorerItem(FileHelper.getFullPath(extractPath, name), name, "", header.getSize(), ExplorerItem.FILETYPE_IMAGE));
             }
         }
         Collections.sort(imageList, new FileHelper.NameAscComparator());
@@ -89,14 +89,21 @@ public class ArchiveLoader {
         if (imageList.size() > 0) {
             // 이미지 로딩후 확인해보고 좌우를 나눠야 되면 나누어 주자
             // 파일명으로 실제 폴더 안에 파일이 있는지 검사
-            if (!(new File(imageList.get(0).name).exists())) {
+            File file = new File(imageList.get(0).name);
+            if (!file.exists()) {
                 if (!zipFile.extractFile(imageList.get(0).name, extractPath))
                     return null;
+            } else {
+                // 이미 있으면, 사이즈가 같은지 확인하고 이 파일을 로딩하자
+                if(file.length() == imageList.get(0).size) {
+                    return imageList;
+                }
             }
 
             final BitmapFactory.Options options = BitmapLoader.decodeBounds(imageList.get(0).path);
 
             // 일본식(RIGHT)를 기준으로 잡자
+            // 현재는 LEFT가 기본인데 이것을 설정에서 설정하도록 하자
             if (options.outWidth > options.outHeight) {
                 imageList.get(0).side = side;
             }
