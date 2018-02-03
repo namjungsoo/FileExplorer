@@ -49,6 +49,9 @@ public class PhotoActivity extends PagerActivity {
 
     private void initPagerAdapter() {
         final ArrayList<ExplorerItem> imageList = getImageList();
+        if(imageList == null)
+            return;
+
         pagerAdapter.setImageList(imageList);
         pager.setAdapter(pagerAdapter);
 
@@ -57,6 +60,9 @@ public class PhotoActivity extends PagerActivity {
 
     protected void processIntent() {
         final ArrayList<ExplorerItem> imageList = getImageList();
+        if(imageList == null)
+            return;
+
         final Intent intent = getIntent();
         final Bundle extras = intent.getExtras();
         if (extras != null) {

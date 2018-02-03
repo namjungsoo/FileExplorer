@@ -242,22 +242,36 @@ public class BitmapLoader {
         //TODO: 추후 landscape 모드를 고려하자.
         // 원하는 이미지의 사이즈
         // QHD 이상일 경우 메모리 문제로 인해서 FHD로 다운해야 한다.
-        if(screenWidth > 1080) {
-            inSampleSize = 2;
+//        if(screenWidth > 1080) {
+//            inSampleSize = 2;
+//        }
+        JLog.e(TAG, "calculateInSampleSize BEGIN screen=" + screenWidth + " " + screenHeight);
+
+        float screenScaleFHD = 0.0f;
+        if (screenWidth > 1080) {
+            screenScaleFHD = 1080.0f / screenWidth;
+            screenWidth = 1080;
+            screenHeight *= screenScaleFHD;
         }
-        if(screenHeight > 1920) {
-            inSampleSize = 2;
-        }
+
+        JLog.e(TAG, "calculateInSampleSize END screen=" + screenWidth + " " + screenHeight);
+//        if(screenHeight > 1920) {
+//            inSampleSize = 2;
+//        }
 
         // 비트맵이 화면 크기보다 더 클경우에
         if (bmpHeight > screenHeight || bmpWidth > screenWidth) {
             final int widthRatio = Math.round((float) bmpWidth / (float) screenWidth);
             final int heightRatio = Math.round((float) bmpHeight / (float) screenHeight);
 
+            // 둘다 1보다 크기 때문에 작은것으로 해야지 안깨진다.
+            int ratioScale = (heightRatio < widthRatio ? heightRatio : widthRatio);
+            JLog.e(TAG, "calculateInSampleSize widthRatio=" + screenWidth + " heightRatio=" + screenHeight + " ratioScale=" + ratioScale);
+
             // 답이 소숫점이 있을수 있다.
             // 1보다 큰것이 sampling해야 되는 것이다.
             // 큰값으로 샘플링하면 메모리가 많이 줄어든다.
-            inSampleSize *= (heightRatio > widthRatio ? heightRatio : widthRatio);
+            inSampleSize *= (int) ratioScale;
         }
         JLog.e(TAG, String.format("calculateInSampleSize bmpWidth=%d bmpHeight=%d screenWidth=%d screenHeight=%d inSampleSize=%d", bmpWidth, bmpHeight, screenWidth, screenHeight, inSampleSize));
 
@@ -480,7 +494,7 @@ public class BitmapLoader {
                             decoder.recycle();
                         }
                     } catch (OutOfMemoryError e) {
-                        if(decoder != null)
+                        if (decoder != null)
                             decoder.recycle();
                         return null;
                     }
@@ -506,7 +520,7 @@ public class BitmapLoader {
                             decoder.recycle();
                         }
                     } catch (OutOfMemoryError e) {
-                        if(decoder != null)
+                        if (decoder != null)
                             decoder.recycle();
                         return null;
                     }
