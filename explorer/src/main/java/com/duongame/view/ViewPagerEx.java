@@ -8,6 +8,8 @@ import android.view.MotionEvent;
  * Created by Jungsoo on 2017-10-10.
  */
 
+//java.lang.IllegalArgumentException: pointerIndex out of range
+// 위의 문제 때문에 항상 ViewPagerEx를 사용해야 함. ViewPager 대신에
 public class ViewPagerEx extends android.support.v4.view.ViewPager {
     public ViewPagerEx(Context context) {
         super(context);

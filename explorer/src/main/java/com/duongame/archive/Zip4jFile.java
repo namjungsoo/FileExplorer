@@ -28,6 +28,9 @@ public class Zip4jFile implements IArchiveFile {
         if(file != null) {
             try {
                 List<FileHeader> headers = file.getFileHeaders();
+                if(headers == null)
+                    return null;
+
                 ArrayList<ArchiveHeader> newHeaders = new ArrayList<>();
                 for (FileHeader header : headers) {
                     newHeaders.add(new ArchiveHeader(header.getFileName(), header.getUncompressedSize()));

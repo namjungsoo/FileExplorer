@@ -16,8 +16,10 @@ public class RarFile implements IArchiveFile {
     @Override
     public ArrayList<ArchiveHeader> getHeaders() {
         ArrayList<UnrarHeader> headers = rar.getHeaders();
-        ArrayList<ArchiveHeader> newHeaders = new ArrayList<>();
+        if(headers == null)
+            return null;
 
+        ArrayList<ArchiveHeader> newHeaders = new ArrayList<>();
         for (UnrarHeader header : headers) {
             newHeaders.add(new ArchiveHeader(header.fileName, header.size));
         }

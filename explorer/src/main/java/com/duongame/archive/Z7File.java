@@ -19,8 +19,10 @@ public class Z7File implements IArchiveFile {
     @Override
     public ArrayList<ArchiveHeader> getHeaders() {
         ArrayList<Z7Header> headers = z7Extractor.getHeaders();
-        ArrayList<ArchiveHeader> newHeaders = new ArrayList<>();
+        if(headers == null)
+            return null;
 
+        ArrayList<ArchiveHeader> newHeaders = new ArrayList<>();
         for (Z7Header header : headers) {
             newHeaders.add(new ArchiveHeader(header.fileName, header.size));
         }

@@ -136,7 +136,7 @@ dependencies {
     implementation project(':unrar-android')
 
     compile('com.crashlytics.sdk.android:crashlytics:2.8.0@aar') {
-        transitive = true;
+        transitive = true
     }
 }
 
