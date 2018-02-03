@@ -18,14 +18,14 @@ public class BitmapTask extends AsyncTask<ExplorerItem, Void, Bitmap> {
     private static final int RETRY_INTERVAL_MS = 500;
     private static final int RETRY_COUNT = 5;
 
-    private int width, height;
+    private int screenWidth, screenHeight;
     private boolean exif;
     private int count;
 
-    // width, height는 화면(컨테이너)의 크기이다.
-    public BitmapTask(int width, int height, boolean exif) {
-        this.width = width;
-        this.height = height;
+    // screenWidth, height는 화면(컨테이너)의 크기이다.
+    public BitmapTask(int width, int screenHeight, boolean exif) {
+        this.screenWidth = width;
+        this.screenHeight = screenHeight;
         this.exif = exif;
     }
 
@@ -51,7 +51,7 @@ public class BitmapTask extends AsyncTask<ExplorerItem, Void, Bitmap> {
         if (bitmap == null) {
             final BitmapFactory.Options options = BitmapLoader.decodeBounds(item.path);
 
-            // 자르는 경우에는 실제 예상보다 width/2를 하자
+            // 자르는 경우에는 실제 예상보다 screenWidth/2를 하자
             if (item.side != ExplorerItem.SIDE_ALL) {
                 options.outWidth >>= 1;
             }
@@ -59,12 +59,12 @@ public class BitmapTask extends AsyncTask<ExplorerItem, Void, Bitmap> {
             item.height = options.outHeight;
 
             float bitmapRatio = (float) options.outHeight / (float) options.outWidth;
-            float screenRatio = (float) height / (float) width;
+            float screenRatio = (float) screenHeight / (float) screenWidth;
 
             if (screenRatio > bitmapRatio) {
-                height = (int) (width * bitmapRatio);
+                screenHeight = (int) (screenWidth * bitmapRatio);
             } else {
-                height = (int) (width * screenRatio);
+                screenHeight = (int) (screenWidth * screenRatio);
             }
 
             // 파일에서 읽어서 있으면 캐시에 넣는다
@@ -72,7 +72,7 @@ public class BitmapTask extends AsyncTask<ExplorerItem, Void, Bitmap> {
             while (true) {
                 //NEW-2
                 if (item.side == ExplorerItem.SIDE_ALL) {
-                    bitmap = BitmapLoader.decodeSampleBitmapFromFile(item.path, width, height, exif);
+                    bitmap = BitmapLoader.decodeSampleBitmapFromFile(item.path, screenWidth, screenHeight, exif);
                     if (bitmap == null) {
                         // 다른 비트맵이 기다려지길 기다렸다가 다시 시도하자.
                         // 왜냐면 압축을 푸는 중인 파일도 있기 때문이다.
@@ -85,7 +85,7 @@ public class BitmapTask extends AsyncTask<ExplorerItem, Void, Bitmap> {
                 } else {
                     // RegionDecoder가 지원되는 경우는 PNG, JPG
                     if (FileHelper.isJpegImage(item.path) || FileHelper.isPngImage(item.path)) {
-                        bitmap = BitmapLoader.splitBitmapSide(item, width, height, exif);
+                        bitmap = BitmapLoader.splitBitmapSide(item, screenWidth, screenHeight, exif);
                         if (bitmap == null) {
                             // 다른 비트맵이 기다려지길 기다렸다가 다시 시도하자.
                             // 왜냐면 압축을 푸는 중인 파일도 있기 때문이다.
@@ -95,7 +95,7 @@ public class BitmapTask extends AsyncTask<ExplorerItem, Void, Bitmap> {
                             break;
                         }
                     } else {
-                        bitmap = BitmapLoader.decodeSampleBitmapFromFile(item.path, width, height, exif);
+                        bitmap = BitmapLoader.decodeSampleBitmapFromFile(item.path, screenWidth, screenHeight, exif);
                         if (bitmap == null) {
                             // 다른 비트맵이 기다려지길 기다렸다가 다시 시도하자.
                             // 왜냐면 압축을 푸는 중인 파일도 있기 때문이다.
@@ -110,7 +110,7 @@ public class BitmapTask extends AsyncTask<ExplorerItem, Void, Bitmap> {
 
                 //NEW-1
 //                if (item.side == ExplorerItem.Side.SIDE_ALL) {
-//                    bitmap = BitmapLoader.decodeSampleBitmapFromFile(item.path, width, height, exif);
+//                    bitmap = BitmapLoader.decodeSampleBitmapFromFile(item.path, screenWidth, screenHeight, exif);
 //                    if (bitmap == null) {
 //                        // 다른 비트맵이 기다려지길 기다렸다가 다시 시도하자.
 //                        // 왜냐면 압축을 푸는 중인 파일도 있기 때문이다.
@@ -122,7 +122,7 @@ public class BitmapTask extends AsyncTask<ExplorerItem, Void, Bitmap> {
 //                        break;
 //                    }
 //                } else {
-//                    bitmap = BitmapLoader.decodeSampleBitmapFromFile(item.path, width, height, exif);
+//                    bitmap = BitmapLoader.decodeSampleBitmapFromFile(item.path, screenWidth, screenHeight, exif);
 //                    if (bitmap == null) {
 //                        // 다른 비트맵이 기다려지길 기다렸다가 다시 시도하자.
 //                        // 왜냐면 압축을 푸는 중인 파일도 있기 때문이다.
@@ -136,7 +136,7 @@ public class BitmapTask extends AsyncTask<ExplorerItem, Void, Bitmap> {
 //                }
 
                 //OLD
-//                bitmap = BitmapLoader.decodeSampleBitmapFromFile(item.path, width, height, exif);
+//                bitmap = BitmapLoader.decodeSampleBitmapFromFile(item.path, screenWidth, screenHeight, exif);
 //                if (bitmap == null) {
 //                    // 다른 비트맵이 기다려지길 기다렸다가 다시 시도하자.
 //                    // 왜냐면 압축을 푸는 중인 파일도 있기 때문이다.
@@ -149,7 +149,7 @@ public class BitmapTask extends AsyncTask<ExplorerItem, Void, Bitmap> {
 //                        // 비트맵을 로딩했으면 이제 자르자
 //                        // 자르고 현재 page의 bitmap을 리턴한다.
 //                        bitmap = BitmapLoader.splitBitmapSide(bitmap, item);
-////                        bitmap = BitmapLoader.splitBitmapSide(item, width, height, exif);
+////                        bitmap = BitmapLoader.splitBitmapSide(item, screenWidth, screenHeight, exif);
 //                    }
 //                    break;
 //                }

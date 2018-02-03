@@ -233,19 +233,33 @@ public class BitmapLoader {
         return null;
     }
 
-    public static int calculateInSampleSize(BitmapFactory.Options options, int reqWidth, int reqHeight) {
-        final int height = options.outHeight;
-        final int width = options.outWidth;
+    public static int calculateInSampleSize(BitmapFactory.Options options, int screenWidth, int screenHeight) {
+        // 실제 이미지의 사이즈
+        final int bmpWidth = options.outWidth;
+        final int bmpHeight = options.outHeight;
         int inSampleSize = 1;
 
-        // 실제 크기가 더 클경우에
-        if (height > reqHeight || width > reqWidth) {
-            final int heightRatio = Math.round((float) height / (float) reqHeight);
-            final int widthRatio = Math.round((float) width / (float) reqWidth);
-
-            inSampleSize = heightRatio < widthRatio ? heightRatio : widthRatio;
+        //TODO: 추후 landscape 모드를 고려하자.
+        // 원하는 이미지의 사이즈
+        // QHD 이상일 경우 메모리 문제로 인해서 FHD로 다운해야 한다.
+        if(screenWidth > 1080) {
+            inSampleSize = 2;
         }
-        JLog.e(TAG, String.format("calculateInSampleSize reqWidth=%d reqHeight=%d inSampleSize=%d", reqWidth, reqHeight, inSampleSize));
+        if(screenHeight > 1920) {
+            inSampleSize = 2;
+        }
+
+        // 비트맵이 화면 크기보다 더 클경우에
+        if (bmpHeight > screenHeight || bmpWidth > screenWidth) {
+            final int widthRatio = Math.round((float) bmpWidth / (float) screenWidth);
+            final int heightRatio = Math.round((float) bmpHeight / (float) screenHeight);
+
+            // 답이 소숫점이 있을수 있다.
+            // 1보다 큰것이 sampling해야 되는 것이다.
+            // 큰값으로 샘플링하면 메모리가 많이 줄어든다.
+            inSampleSize *= (heightRatio > widthRatio ? heightRatio : widthRatio);
+        }
+        JLog.e(TAG, String.format("calculateInSampleSize bmpWidth=%d bmpHeight=%d screenWidth=%d screenHeight=%d inSampleSize=%d", bmpWidth, bmpHeight, screenWidth, screenHeight, inSampleSize));
 
         return inSampleSize;
     }
@@ -427,11 +441,12 @@ public class BitmapLoader {
     }
 
 
-    public static Bitmap splitBitmapSide(ExplorerItem item, int width, int height, boolean exif) {
+    public static Bitmap splitBitmapSide(ExplorerItem item, int screenWidth, int screenHeight, boolean exif) {
         // 이미 캐시된 페이지가 있으면
         final String key;
         final String keyOther;
         final ExplorerItem itemOther = (ExplorerItem) item.clone();
+
         itemOther.side = item.side == ExplorerItem.SIDE_LEFT ? ExplorerItem.SIDE_RIGHT : ExplorerItem.SIDE_LEFT;
         key = BitmapCacheManager.changePathToPage(item);
         keyOther = BitmapCacheManager.changePathToPage(itemOther);
@@ -444,7 +459,7 @@ public class BitmapLoader {
         Bitmap pageOther = null;
         BitmapRegionDecoder decoder = null;
 
-        BitmapFactory.Options options = sampleDecodeBounds(item.path, width, height);
+        BitmapFactory.Options options = sampleDecodeBounds(item.path, screenWidth, screenHeight);
         try {
 
             switch (item.side) {

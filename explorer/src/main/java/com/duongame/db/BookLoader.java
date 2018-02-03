@@ -82,6 +82,7 @@ public class BookLoader {
         }
     }
 
+    // 탐색기에서 클릭하여 로딩할 경우
     private static Intent getIntentNew(final Activity context, ExplorerItem item) {
         Class<?> cls = null;
         switch (FileHelper.getCompressType(item.path)) {
@@ -109,12 +110,13 @@ public class BookLoader {
             intent.putExtra("size", item.size);
             intent.putExtra("current_file", 0);
             intent.putExtra("extract_file", 0);
-            intent.putExtra("side", item.side);
+            intent.putExtra("side", ExplorerItem.SIDE_LEFT);
             return intent;
         }
         return null;
     }
 
+    // 기존에 읽던 책을 처음부터 다시 로딩할 경우
     private static Intent getIntentNew(final Activity context, Book book) {
         Class<?> cls = null;
         switch (FileHelper.getCompressType(book.path)) {
