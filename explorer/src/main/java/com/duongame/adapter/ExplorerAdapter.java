@@ -177,11 +177,10 @@ public class ExplorerAdapter extends RecyclerView.Adapter<ExplorerAdapter.Explor
 
     public void setFileList(ArrayList<ExplorerItem> fileList) {
         this.fileList = fileList;
-        fileMap = new HashMap<>();
-
         if (fileList == null)
             return;
 
+        fileMap = new HashMap<>();
         for (ExplorerItem item : fileList) {
             fileMap.put(item.path, item);
         }

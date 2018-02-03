@@ -8,7 +8,6 @@
         android:icon="@drawable/comicz"
         android:label="${APP_NAME}"
         android:largeHeap="true"
-        android:screenOrientation="portrait"
         android:theme="@style/ExplorerTheme">
         <activity android:name=".activity.ComicActivity"
             android:screenOrientation="portrait">

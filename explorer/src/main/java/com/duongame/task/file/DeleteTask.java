@@ -71,6 +71,9 @@ public class DeleteTask extends AsyncTask<Void, Integer, Boolean> {
     @Override
     protected Boolean doInBackground(Void... voids) {
         deleteList = new ArrayList<>();
+        if(fileList == null)
+            return false;
+
         for (int i = 0; i < fileList.size(); i++) {
             ExplorerItem item = fileList.get(i);
             if (!item.selected)

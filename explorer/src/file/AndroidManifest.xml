@@ -8,7 +8,6 @@
         android:largeHeap="true"
         android:icon="@drawable/explorer"
         android:label="${APP_NAME}"
-        android:screenOrientation="portrait"
         android:theme="@style/ExplorerTheme">
 
         <activity android:name=".activity.FileActivity">

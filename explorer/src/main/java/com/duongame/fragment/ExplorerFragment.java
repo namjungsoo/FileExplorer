@@ -257,7 +257,9 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
 
         switch (viewType) {
             case SWITCH_LIST:
-                adapter = new ExplorerListAdapter(getActivity(), fileList);
+                synchronized (this) {
+                    adapter = new ExplorerListAdapter(getActivity(), fileList);
+                }
                 currentView = (RecyclerView) rootView.findViewById(R.id.list_explorer);
                 if (currentView != null) {
                     currentView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -268,7 +270,9 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
                 }
                 break;
             case SWITCH_GRID:
-                adapter = new ExplorerGridAdapter(getActivity(), fileList);
+                synchronized (this) {
+                    adapter = new ExplorerGridAdapter(getActivity(), fileList);
+                }
                 currentView = (RecyclerView) rootView.findViewById(R.id.grid_explorer);
                 if (currentView != null) {
                     currentView.setLayoutManager(new GridLayoutManager(getActivity(), 4));
@@ -448,32 +452,38 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
 
     void onAdapterItemLongClick(int position) {
 //        JLog.e(TAG, "onAdapterItemLongClick=" + position);
+        synchronized (this) {
+            if (fileList == null)
+                return;
 
-        ExplorerItem item = fileList.get(position);
-        if (item == null)
-            return;
+            ExplorerItem item = fileList.get(position);
+            if (item == null)
+                return;
 
-        // 이미 선택 모드라면 이름변경을 해줌
-        if (selectMode) {
-            //renameFileWithDialog
-            if (getSelectedFileCount() == 1) {
-                renameFileWithDialog(item);
-            } else {
-                ToastHelper.showToast(getActivity(), R.string.toast_multi_rename_error);
+            // 이미 선택 모드라면 이름변경을 해줌
+            if (selectMode) {
+                //renameFileWithDialog
+                if (getSelectedFileCount() == 1) {
+                    renameFileWithDialog(item);
+                } else {
+                    ToastHelper.showToast(getActivity(), R.string.toast_multi_rename_error);
+                }
+            } else {// 선택 모드로 진입 + 현재 파일 선택
+                onSelectMode(item, position);
             }
-        } else {// 선택 모드로 진입 + 현재 파일 선택
-            onSelectMode(item, position);
         }
     }
 
     int getSelectedFileCount() {
-        if (fileList == null)
-            return 0;
-
         int count = 0;
-        for (int i = 0; i < fileList.size(); i++) {
-            if (fileList.get(i).selected) {
-                count++;
+        synchronized (this) {
+            if (fileList == null)
+                return 0;
+
+            for (int i = 0; i < fileList.size(); i++) {
+                if (fileList.get(i).selected) {
+                    count++;
+                }
             }
         }
         return count;
@@ -588,15 +598,18 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
 
     void onAdapterItemClick(int position) {
 //        JLog.e(TAG, "onAdapterItemClick=" + position);
+        synchronized (this) {
+            if (fileList == null)
+                return;
 
-        ExplorerItem item = fileList.get(position);
-        if (item == null)
-            return;
-
-        if (selectMode) {
-            onSelectItemClick(item, position);
-        } else {
-            onRunItemClick(item);
+            ExplorerItem item = fileList.get(position);
+            if (item == null)
+                return;
+            if (selectMode) {
+                onSelectItemClick(item, position);
+            } else {
+                onRunItemClick(item);
+            }
         }
     }
 
@@ -719,9 +732,11 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
             if (fragment.searchResult == null) {
                 fragment.searchResult = new FileSearcher.Result();
             }
-            fragment.fileList = fragment.searchResult.fileList;
-            fragment.application.setImageList(fragment.searchResult.imageList);
-            fragment.adapter.setFileList(fragment.fileList);
+            synchronized (fragment) {
+                fragment.fileList = fragment.searchResult.fileList;
+                fragment.application.setImageList(fragment.searchResult.imageList);
+                fragment.adapter.setFileList(fragment.fileList);
+            }
             return null;
         }
 
@@ -740,9 +755,11 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
 
             // SearchTask가 resume
             if (pathChanged) {
-                if (fragment.fileList != null && fragment.fileList.size() > 0) {
-                    fragment.currentView.scrollToPosition(0);
-                    fragment.currentView.invalidate();
+                synchronized (fragment) {
+                    if (fragment.fileList != null && fragment.fileList.size() > 0) {
+                        fragment.currentView.scrollToPosition(0);
+                        fragment.currentView.invalidate();
+                    }
                 }
 //                JLog.e(TAG, "SearchTask pathChanged");
             }
@@ -992,16 +1009,21 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
 
     public void selectAll() {
         // 전체가 선택된 상태라면 전부 선택 초기화를 해줌
-        if (fileList.size() == getSelectedFileCount()) {
-            for (int i = 0; i < fileList.size(); i++) {
-                fileList.get(i).selected = false;
+        synchronized (this) {
+            if (fileList == null)
+                return;
+
+            if (fileList.size() == getSelectedFileCount()) {
+                for (int i = 0; i < fileList.size(); i++) {
+                    fileList.get(i).selected = false;
+                }
+                ToastHelper.showToast(getActivity(), R.string.toast_deselect_all);
+            } else {
+                for (int i = 0; i < fileList.size(); i++) {
+                    fileList.get(i).selected = true;
+                }
+                ToastHelper.showToast(getActivity(), R.string.toast_select_all);
             }
-            ToastHelper.showToast(getActivity(), R.string.toast_deselect_all);
-        } else {
-            for (int i = 0; i < fileList.size(); i++) {
-                fileList.get(i).selected = true;
-            }
-            ToastHelper.showToast(getActivity(), R.string.toast_select_all);
         }
 
         updateSelectedFileCount();
@@ -1017,10 +1039,15 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
         // Toast 메세지를 표시
         // 선택된 파일을 목록을 작성
         selectedFileList = new ArrayList<>();
-        for (int i = 0; i < fileList.size(); i++) {
-            ExplorerItem item = fileList.get(i);
-            if (item.selected) {
-                selectedFileList.add(item);
+        synchronized (this) {
+            if (fileList == null)
+                return;
+
+            for (int i = 0; i < fileList.size(); i++) {
+                ExplorerItem item = fileList.get(i);
+                if (item.selected) {
+                    selectedFileList.add(item);
+                }
             }
         }
         this.cut = cut;
@@ -1093,20 +1120,25 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
     }
 
     void runZipTask(String name, String ext) {
+        // 선택된 파일만 압축할 리스트에 추가해 줌
+        ArrayList<ExplorerItem> zipList = new ArrayList<>();
+        synchronized (this) {
+            if(fileList == null)
+                return;
+
+            for (int i = 0; i < fileList.size(); i++) {
+                if (fileList.get(i).selected) {
+                    zipList.add(fileList.get(i));
+                }
+            }
+        }
+
         String path = application.getLastPath();
         String zipPath = path + "/" + name + ext;
 
         ZipTask task = new ZipTask(getActivity());
         task.setPath(path);
         task.setPath(zipPath);
-
-        // 선택된 파일만 압축할 리스트에 추가해 줌
-        ArrayList<ExplorerItem> zipList = new ArrayList<>();
-        for (int i = 0; i < fileList.size(); i++) {
-            if (fileList.get(i).selected) {
-                zipList.add(fileList.get(i));
-            }
-        }
 
         task.setFileList(zipList);
         task.setOnDismissListener(new DialogInterface.OnDismissListener() {
