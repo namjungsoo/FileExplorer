@@ -25,7 +25,6 @@ import com.duongame.task.thumbnail.LoadPdfThumbnailTask;
 import com.duongame.task.thumbnail.LoadThumbnailTask;
 import com.duongame.task.thumbnail.LoadVideoThumbnailTask;
 import com.duongame.task.thumbnail.LoadZipThumbnailTask;
-import com.duongame.view.RoundedImageView;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -113,7 +112,7 @@ public class ExplorerAdapter extends RecyclerView.Adapter<ExplorerAdapter.Explor
 
     static class ExplorerViewHolder extends RecyclerView.ViewHolder {
         public ImageView iconSmall;// 현재 사용안함. 작은 아이콘을 위해서 남겨둠
-        public RoundedImageView icon;
+        public ImageView icon;
         public TextView name;
         public TextView date;
         public TextView size;
@@ -124,7 +123,7 @@ public class ExplorerAdapter extends RecyclerView.Adapter<ExplorerAdapter.Explor
 
         public ExplorerViewHolder(View itemView) {
             super(itemView);
-            icon = (RoundedImageView) itemView.findViewById(R.id.file_icon);
+            icon = (ImageView) itemView.findViewById(R.id.file_icon);
             name = (TextView) itemView.findViewById(R.id.text_name);
             date = (TextView) itemView.findViewById(R.id.text_date);
             size = (TextView) itemView.findViewById(R.id.text_size);

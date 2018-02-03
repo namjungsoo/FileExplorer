@@ -17,7 +17,6 @@ import com.duongame.helper.FileHelper;
 import com.duongame.helper.UnitHelper;
 import com.duongame.task.thumbnail.LoadPdfThumbnailTask;
 import com.duongame.task.thumbnail.LoadZipThumbnailTask;
-import com.duongame.view.RoundedImageView;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -65,7 +64,7 @@ public class SearchRecyclerAdapter extends RecyclerView.Adapter<SearchRecyclerAd
         holder.path.setText(parentPath);
         holder.date.setText(item.date);
         holder.size.setText(FileHelper.getMinimizedSize(item.size));
-        holder.icon.setRadiusDp(5);
+        //holder.icon.setRadiusDp(5);
         holder.iconSmall.setVisibility(View.INVISIBLE);
         holder.iconSmall.setTag(item.path);
 
@@ -127,7 +126,7 @@ public class SearchRecyclerAdapter extends RecyclerView.Adapter<SearchRecyclerAd
 
     protected static class SearchViewHolder extends RecyclerView.ViewHolder {
         public ImageView iconSmall;// 현재 사용안함. 작은 아이콘을 위해서 남겨둠
-        public RoundedImageView icon;
+        public ImageView icon;
         public TextView name;
         public TextView date;
         public TextView size;
@@ -138,7 +137,7 @@ public class SearchRecyclerAdapter extends RecyclerView.Adapter<SearchRecyclerAd
         public SearchViewHolder(View itemView) {
             super(itemView);
 
-            icon = (RoundedImageView) itemView.findViewById(R.id.file_icon);
+            icon = (ImageView) itemView.findViewById(R.id.file_icon);
             name = (TextView) itemView.findViewById(R.id.text_name);
             date = (TextView) itemView.findViewById(R.id.text_date);
             size = (TextView) itemView.findViewById(R.id.text_size);

@@ -4,7 +4,7 @@
     android:layout_height="80dp"
     android:orientation="horizontal">
 
-    <com.duongame.view.RoundedImageView
+    <ImageView
         android:id="@+id/image_thumb"
         android:layout_width="80dp"
         android:layout_height="80dp"

@@ -31,7 +31,7 @@ public class ExplorerGridAdapter extends ExplorerAdapter {
             return;
 
         viewHolder.name.setText(item.name);
-        viewHolder.icon.setRadiusDp(5);
+        //viewHolder.icon.setRadiusDp(5);
         viewHolder.iconSmall.setVisibility(View.INVISIBLE);
         viewHolder.position = position;
         item.position = position;

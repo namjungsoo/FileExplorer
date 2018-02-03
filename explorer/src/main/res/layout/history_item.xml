@@ -12,7 +12,7 @@
         android:layout_marginRight="9dp"
         android:layout_marginTop="4.5dp">
 
-        <com.duongame.view.RoundedImageView
+        <ImageView
             android:id="@+id/image_thumb"
             android:layout_width="80dp"
             android:layout_height="80dp"

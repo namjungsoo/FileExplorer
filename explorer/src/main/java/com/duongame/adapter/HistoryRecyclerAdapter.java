@@ -16,7 +16,6 @@ import com.duongame.db.Book;
 import com.duongame.db.BookDB;
 import com.duongame.db.BookLoader;
 import com.duongame.fragment.BaseFragment;
-import com.duongame.view.RoundedImageView;
 
 import java.util.ArrayList;
 
@@ -116,7 +115,7 @@ public class HistoryRecyclerAdapter extends RecyclerView.Adapter<HistoryRecycler
     }
 
     public static class HistoryViewHolder extends RecyclerView.ViewHolder {
-        public RoundedImageView thumb;
+        public ImageView thumb;
         public TextView name;
         public TextView size;
         public TextView date;
@@ -130,8 +129,8 @@ public class HistoryRecyclerAdapter extends RecyclerView.Adapter<HistoryRecycler
         public HistoryViewHolder(View itemView) {
             super(itemView);
 
-            thumb = (RoundedImageView) itemView.findViewById(R.id.image_thumb);
-            thumb.setRadiusDp(5);
+            thumb = (ImageView) itemView.findViewById(R.id.image_thumb);
+            //thumb.setRadiusDp(5);
 
             name = (TextView) itemView.findViewById(R.id.text_name);
             size = (TextView) itemView.findViewById(R.id.text_size);

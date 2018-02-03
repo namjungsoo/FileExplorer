@@ -34,7 +34,7 @@ public class ExplorerListAdapter extends ExplorerAdapter {
         viewHolder.name.setText(item.name);
         viewHolder.date.setText(item.date);
         viewHolder.size.setText(FileHelper.getMinimizedSize(item.size));
-        viewHolder.icon.setRadiusDp(5);
+        //viewHolder.icon.setRadiusDp(5);
         viewHolder.iconSmall.setVisibility(View.INVISIBLE);
         viewHolder.position = position;
         item.position = position;
