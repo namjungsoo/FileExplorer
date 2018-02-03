@@ -161,6 +161,7 @@ public class BitmapTask extends AsyncTask<ExplorerItem, Void, Bitmap> {
 
     private boolean waitImageExtracting() {
         try {
+            // 최대 시간을 기다렸다면 멈추고 종료 한다.
             count += RETRY_INTERVAL_MS;
             if (count == RETRY_INTERVAL_MS * RETRY_COUNT)
                 return false;

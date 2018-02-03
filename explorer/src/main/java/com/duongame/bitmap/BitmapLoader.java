@@ -22,6 +22,7 @@ import com.duongame.R;
 import com.duongame.adapter.ExplorerItem;
 import com.duongame.archive.ArchiveLoader;
 import com.duongame.helper.FileHelper;
+import com.duongame.helper.JLog;
 
 import net.lingala.zip4j.exception.ZipException;
 
@@ -244,6 +245,8 @@ public class BitmapLoader {
 
             inSampleSize = heightRatio < widthRatio ? heightRatio : widthRatio;
         }
+        JLog.e(TAG, String.format("calculateInSampleSize reqWidth=%d reqHeight=%d inSampleSize=%d", reqWidth, reqHeight, inSampleSize));
+
         return inSampleSize;
     }
 
@@ -296,6 +299,7 @@ public class BitmapLoader {
         options.inJustDecodeBounds = true;
         BitmapFactory.decodeFile(path, options);
 
+        JLog.e(TAG, String.format("sampleDecodeBounds reqWidth=%d reqHeight=%d", reqWidth, reqHeight));
         options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
         //FIX: 565로 메모리를 아낌
         options.inPreferredConfig = Bitmap.Config.RGB_565;
@@ -447,17 +451,23 @@ public class BitmapLoader {
                 case ExplorerItem.SIDE_LEFT:
 //                    JLog.e(TAG, "samplesize " + options.inSampleSize);
 
-                    decoder = BitmapRegionDecoder.newInstance(item.path, false);
-                    if (decoder != null) {
-                        Rect rect = new Rect(0, 0, decoder.getWidth() >> 1, decoder.getHeight());
+                    try {
+                        decoder = BitmapRegionDecoder.newInstance(item.path, false);
+                        if (decoder != null) {
+                            Rect rect = new Rect(0, 0, decoder.getWidth() >> 1, decoder.getHeight());
 //                        JLog.e(TAG, "rect " + rect + " " + rect.width() + " " + rect.height());
-                        page = decoder.decodeRegion(rect, options);
+                            page = decoder.decodeRegion(rect, options);
 
-                        Rect rectOther = new Rect(decoder.getWidth() >> 1, 0, decoder.getWidth(), decoder.getHeight());
+                            Rect rectOther = new Rect(decoder.getWidth() >> 1, 0, decoder.getWidth(), decoder.getHeight());
 //                        JLog.e(TAG, "rectOther " + rectOther + " " + rectOther.width() + " " + rectOther.height());
-                        pageOther = decoder.decodeRegion(rectOther, options);
+                            pageOther = decoder.decodeRegion(rectOther, options);
 
-                        decoder.recycle();
+                            decoder.recycle();
+                        }
+                    } catch (OutOfMemoryError e) {
+                        if(decoder != null)
+                            decoder.recycle();
+                        return null;
                     }
 
 //                    JLog.e(TAG, "page " + page.getWidth() + " " + page.getHeight());
@@ -467,17 +477,23 @@ public class BitmapLoader {
                 case ExplorerItem.SIDE_RIGHT:
 //                    JLog.e(TAG, "samplesize " + options.inSampleSize);
 
-                    decoder = BitmapRegionDecoder.newInstance(item.path, false);
-                    if (decoder != null) {
-                        Rect rect = new Rect(decoder.getWidth() >> 1, 0, decoder.getWidth(), decoder.getHeight());
+                    try {
+                        decoder = BitmapRegionDecoder.newInstance(item.path, false);
+                        if (decoder != null) {
+                            Rect rect = new Rect(decoder.getWidth() >> 1, 0, decoder.getWidth(), decoder.getHeight());
 //                        JLog.e(TAG, "rect " + rect + " " + rect.width() + " " + rect.height());
-                        page = decoder.decodeRegion(rect, options);
+                            page = decoder.decodeRegion(rect, options);
 
-                        Rect rectOther = new Rect(0, 0, decoder.getWidth() >> 1, decoder.getHeight());
+                            Rect rectOther = new Rect(0, 0, decoder.getWidth() >> 1, decoder.getHeight());
 //                        JLog.e(TAG, "rectOther " + rectOther + " " + rectOther.width() + " " + rectOther.height());
-                        pageOther = decoder.decodeRegion(rectOther, options);
+                            pageOther = decoder.decodeRegion(rectOther, options);
 
-                        decoder.recycle();
+                            decoder.recycle();
+                        }
+                    } catch (OutOfMemoryError e) {
+                        if(decoder != null)
+                            decoder.recycle();
+                        return null;
                     }
 
 //                    JLog.e(TAG, "page " + page.getWidth() + " " + page.getHeight());
