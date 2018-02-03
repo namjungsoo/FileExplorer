@@ -9,30 +9,27 @@
         android:label="${APP_NAME}"
         android:largeHeap="true"
         android:theme="@style/ExplorerTheme">
-        <activity android:name=".activity.ComicActivity"
-            android:screenOrientation="portrait">
+
+        <activity android:name=".activity.ComicActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity
             android:name=".activity.PhotoActivity"
-            android:theme="@style/ComicViewerTheme"
-            android:screenOrientation="portrait"/>
+            android:theme="@style/ComicViewerTheme" />
         <activity
             android:name=".activity.ZipActivity"
-            android:theme="@style/ComicViewerTheme"
-            android:screenOrientation="portrait"/>
+            android:theme="@style/ComicViewerTheme" />
         <activity
             android:name=".activity.TextActivity"
-            android:theme="@style/ComicViewerTheme"
-            android:screenOrientation="portrait"/>
+            android:theme="@style/ComicViewerTheme" />
         <activity
             android:name=".activity.PdfActivity"
-            android:theme="@style/ComicViewerTheme"
-            android:screenOrientation="portrait"/>
+            android:theme="@style/ComicViewerTheme" />
 
         <provider
             android:name="android.support.v4.content.FileProvider"
@@ -45,6 +42,7 @@
         </provider>
 
     </application>
+
     <protected-broadcast android:name="android.intent.action.MEDIA_MOUNTED" />
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
