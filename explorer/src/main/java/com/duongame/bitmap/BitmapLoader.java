@@ -339,12 +339,25 @@ public class BitmapLoader {
 
     public static Bitmap decodeSampleBitmapFromFile(String path, int reqWidth, int reqHeight, boolean exifRotation) {
         BitmapFactory.Options options = sampleDecodeBounds(path, reqWidth, reqHeight);
-        Bitmap bitmap = BitmapFactory.decodeFile(path, options);
 
-        if (exifRotation) {
-            bitmap = rotateBitmapOnExif(bitmap, options, path);
+        int tryCount = 0;
+        Bitmap bitmap = null;
+        while(true) {
+            try {
+                bitmap = BitmapFactory.decodeFile(path, options);
+                if (exifRotation) {
+                    bitmap = rotateBitmapOnExif(bitmap, options, path);
+                }
+                return bitmap;
+            }
+            catch (OutOfMemoryError e) {
+                options.inSampleSize++;
+                tryCount++;
+
+                if(tryCount == 3)
+                    return null;
+            }
         }
-        return bitmap;
     }
 
     private static Bitmap cropSquareBitmap(Bitmap decoder, float ratio) {
@@ -472,73 +485,69 @@ public class BitmapLoader {
 
         Bitmap pageOther = null;
         BitmapRegionDecoder decoder = null;
-
         BitmapFactory.Options options = sampleDecodeBounds(item.path, screenWidth, screenHeight);
-        try {
 
+        try {
+            int tryCount = 0;
             switch (item.side) {
                 case ExplorerItem.SIDE_LEFT:
-//                    JLog.e(TAG, "samplesize " + options.inSampleSize);
+                    while (true) {
+                        try {
+                            decoder = BitmapRegionDecoder.newInstance(item.path, false);
+                            if (decoder != null) {
+                                Rect rect = new Rect(0, 0, decoder.getWidth() >> 1, decoder.getHeight());
+                                page = decoder.decodeRegion(rect, options);
 
-                    try {
-                        decoder = BitmapRegionDecoder.newInstance(item.path, false);
-                        if (decoder != null) {
-                            Rect rect = new Rect(0, 0, decoder.getWidth() >> 1, decoder.getHeight());
-//                        JLog.e(TAG, "rect " + rect + " " + rect.width() + " " + rect.height());
-                            page = decoder.decodeRegion(rect, options);
+                                Rect rectOther = new Rect(decoder.getWidth() >> 1, 0, decoder.getWidth(), decoder.getHeight());
+                                pageOther = decoder.decodeRegion(rectOther, options);
 
-                            Rect rectOther = new Rect(decoder.getWidth() >> 1, 0, decoder.getWidth(), decoder.getHeight());
-//                        JLog.e(TAG, "rectOther " + rectOther + " " + rectOther.width() + " " + rectOther.height());
-                            pageOther = decoder.decodeRegion(rectOther, options);
+                                decoder.recycle();
+                                break;
+                            }
+                        } catch (OutOfMemoryError e) {
+                            if (decoder != null)
+                                decoder.recycle();
 
-                            decoder.recycle();
+                            options.inSampleSize++;
+                            tryCount++;
+
+                            if(tryCount == 3)
+                                return null;
                         }
-                    } catch (OutOfMemoryError e) {
-                        if (decoder != null)
-                            decoder.recycle();
-                        return null;
                     }
-
-//                    JLog.e(TAG, "page " + page.getWidth() + " " + page.getHeight());
-//                    JLog.e(TAG, "pageOther " + pageOther.getWidth() + " " + pageOther.getHeight());
                     break;
 
                 case ExplorerItem.SIDE_RIGHT:
-//                    JLog.e(TAG, "samplesize " + options.inSampleSize);
+                    while (true) {
+                        try {
+                            decoder = BitmapRegionDecoder.newInstance(item.path, false);
+                            if (decoder != null) {
+                                Rect rect = new Rect(decoder.getWidth() >> 1, 0, decoder.getWidth(), decoder.getHeight());
+                                page = decoder.decodeRegion(rect, options);
 
-                    try {
-                        decoder = BitmapRegionDecoder.newInstance(item.path, false);
-                        if (decoder != null) {
-                            Rect rect = new Rect(decoder.getWidth() >> 1, 0, decoder.getWidth(), decoder.getHeight());
-//                        JLog.e(TAG, "rect " + rect + " " + rect.width() + " " + rect.height());
-                            page = decoder.decodeRegion(rect, options);
+                                Rect rectOther = new Rect(0, 0, decoder.getWidth() >> 1, decoder.getHeight());
+                                pageOther = decoder.decodeRegion(rectOther, options);
 
-                            Rect rectOther = new Rect(0, 0, decoder.getWidth() >> 1, decoder.getHeight());
-//                        JLog.e(TAG, "rectOther " + rectOther + " " + rectOther.width() + " " + rectOther.height());
-                            pageOther = decoder.decodeRegion(rectOther, options);
+                                decoder.recycle();
+                                break;
+                            }
+                        } catch (OutOfMemoryError e) {
+                            if (decoder != null)
+                                decoder.recycle();
 
-                            decoder.recycle();
+                            options.inSampleSize++;
+                            tryCount++;
+
+                            if(tryCount == 3)
+                                return null;
                         }
-                    } catch (OutOfMemoryError e) {
-                        if (decoder != null)
-                            decoder.recycle();
-                        return null;
                     }
-
-//                    JLog.e(TAG, "page " + page.getWidth() + " " + page.getHeight());
-//                    JLog.e(TAG, "pageOther " + pageOther.getWidth() + " " + pageOther.getHeight());
                     break;
 
                 default:
-//                    JLog.e(TAG, "default " + item.path + " " + item.side);
                     break;
             }
-
-//            decoder.recycle();
-//            decoderOther.recycle();
         } catch (Exception e) {
-//            JLog.e(TAG, e.getMessage());
-
             if (decoder != null) {
                 decoder.recycle();
             }

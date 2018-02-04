@@ -31,7 +31,6 @@ public class ReviewManager {
                     final String content = String.format(context.getResources().getString(R.string.dialog_review_content), appName);
 
                     AlertHelper.showAlertWithAd(context,
-                            //TODO: 문자열에 앱이름이 들어가지 않고 %s로 할수 있게 수정
                             title,
                             content,
                             new DialogInterface.OnClickListener() {

@@ -95,6 +95,7 @@ public class BitmapTask extends AsyncTask<ExplorerItem, Void, Bitmap> {
                             break;
                         }
                     } else {
+                        // GIF는 RegionDecoder가 지원이 되지 않는다.
                         bitmap = BitmapLoader.decodeSampleBitmapFromFile(item.path, screenWidth, screenHeight, exif);
                         if (bitmap == null) {
                             // 다른 비트맵이 기다려지길 기다렸다가 다시 시도하자.
