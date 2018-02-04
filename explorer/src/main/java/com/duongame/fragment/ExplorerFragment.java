@@ -466,7 +466,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
                 if (getSelectedFileCount() == 1) {
                     renameFileWithDialog(item);
                 } else {
-                    ToastHelper.showToast(getActivity(), R.string.toast_multi_rename_error);
+                    ToastHelper.warning(getActivity(), R.string.toast_multi_rename_error);
                 }
             } else {// 선택 모드로 진입 + 현재 파일 선택
                 onSelectMode(item, position);
@@ -539,10 +539,10 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
         String path = application.getLastPath();
         File folder = new File(path + "/" + newFolder);
         if (folder.exists()) {
-            ToastHelper.showToast(getActivity(), R.string.toast_error);
+            ToastHelper.error(getActivity(), R.string.toast_error);
         } else {
             folder.mkdirs();
-            ToastHelper.showToast(getActivity(), R.string.toast_new_folder);
+            ToastHelper.success(getActivity(), R.string.toast_new_folder);
         }
 
         // 파일 리스트 리프레시를 요청해야함
@@ -590,9 +590,12 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
             // 이벤트를 보냄
             getTracker().send(new HitBuilders.EventBuilder().setCategory("File").setAction("Rename").build());
 
-            ToastHelper.showToast(getActivity(), R.string.toast_file_rename);
+            // 파일 선택 갯수 초기화
+            updateSelectedFileCount();
+
+            ToastHelper.success(getActivity(), R.string.toast_file_rename);
         } catch (Exception e) {
-            ToastHelper.showToast(getActivity(), R.string.toast_error);
+            ToastHelper.error(getActivity(), R.string.toast_error);
         }
     }
 
@@ -1017,12 +1020,12 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
                 for (int i = 0; i < fileList.size(); i++) {
                     fileList.get(i).selected = false;
                 }
-                ToastHelper.showToast(getActivity(), R.string.toast_deselect_all);
+                ToastHelper.info(getActivity(), R.string.toast_deselect_all);
             } else {
                 for (int i = 0; i < fileList.size(); i++) {
                     fileList.get(i).selected = true;
                 }
-                ToastHelper.showToast(getActivity(), R.string.toast_select_all);
+                ToastHelper.info(getActivity(), R.string.toast_select_all);
             }
         }
 

@@ -439,14 +439,14 @@ public class PasteTask extends AsyncTask<Void, FileHelper.Progress, Boolean> {
         if (activity != null) {
             if (result) {
                 if (cut)
-                    ToastHelper.showToast(activity, R.string.toast_file_paste_cut);
+                    ToastHelper.info(activity, R.string.toast_file_paste_cut);
                 else
-                    ToastHelper.showToast(activity, R.string.toast_file_paste_copy);
+                    ToastHelper.info(activity, R.string.toast_file_paste_copy);
             } else {
                 if (cancelled)
-                    ToastHelper.showToast(activity, R.string.toast_cancel);
+                    ToastHelper.error(activity, R.string.toast_cancel);
                 else
-                    ToastHelper.showToast(activity, R.string.toast_error);
+                    ToastHelper.error(activity, R.string.toast_error);
             }
         }
 

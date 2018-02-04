@@ -4,6 +4,8 @@ import android.content.Context;
 import android.view.Gravity;
 import android.widget.Toast;
 
+import es.dmoral.toasty.Toasty;
+
 /**
  * Created by 정수 on 2015-11-15.
  */
@@ -21,4 +23,21 @@ public class ToastHelper {
         toast.setGravity(Gravity.BOTTOM, 0, 40);
         toast.show();
     }
+
+    public static void info(Context context, int resId) {
+        Toasty.info(context, context.getString(resId), Toast.LENGTH_SHORT, true).show();
+    }
+
+    public static void error(Context context, int resId) {
+        Toasty.error(context, context.getString(resId), Toast.LENGTH_SHORT, true).show();
+    }
+
+    public static void success(Context context, int resId) {
+        Toasty.success(context, context.getString(resId), Toast.LENGTH_SHORT, true).show();
+    }
+
+    public static void warning(Context context, int resId) {
+        Toasty.warning(context, context.getString(resId), Toast.LENGTH_SHORT, true).show();
+    }
+
 }

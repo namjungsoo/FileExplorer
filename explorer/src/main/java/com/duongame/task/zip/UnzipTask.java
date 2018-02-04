@@ -453,9 +453,9 @@ public class UnzipTask extends AsyncTask<Void, FileHelper.Progress, Boolean> {
         Activity activity = activityWeakReference.get();
         if (activity != null) {
             if (result)
-                ToastHelper.showToast(activity, R.string.toast_file_unzip);
+                ToastHelper.success(activity, R.string.toast_file_unzip);
             else
-                ToastHelper.showToast(activity, R.string.toast_cancel);
+                ToastHelper.error(activity, R.string.toast_cancel);
         }
 
         UnzipDialog dialog = dialogWeakReference.get();

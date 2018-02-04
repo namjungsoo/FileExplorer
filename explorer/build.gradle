@@ -26,6 +26,17 @@ android {
 
     }
 
+    sourceSets {
+        main {
+            // eclipse의 폴더명과 동일하게 사용함
+            jniLibs.srcDirs = ["src/main/libs"]
+
+            // android studio가 직접 컴파일하지 않게 함
+            jni.srcDirs = []
+        }
+    }
+
+
     buildTypes {
 
         release {
@@ -134,8 +145,8 @@ dependencies {
     implementation 'org.apache.commons:commons-compress:1.15'
     implementation project(':lib7z')
     implementation project(':unrar-android')
-
-    compile('com.crashlytics.sdk.android:crashlytics:2.8.0@aar') {
+    implementation 'com.github.GrenderG:Toasty:1.2.8'
+    implementation('com.crashlytics.sdk.android:crashlytics:2.8.0@aar') {
         transitive = true
     }
 }

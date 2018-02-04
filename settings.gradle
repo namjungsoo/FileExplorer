@@ -1,2 +1,1 @@
-include ':explorer', ':lib7z', ':unrar-android', ':app'
-project(':app').projectDir = new File('ZipTest/app')
+include ':explorer', ':lib7z', ':unrar-android'

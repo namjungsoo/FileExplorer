@@ -163,12 +163,12 @@ public class DeleteTask extends AsyncTask<Void, Integer, Boolean> {
         Activity activity = activityWeakReference.get();
         if (activity != null) {
             if (result)
-                ToastHelper.showToast(activity, R.string.toast_file_delete);
+                ToastHelper.success(activity, R.string.toast_file_delete);
             else {
                 if(cancelled)
-                    ToastHelper.showToast(activity, R.string.toast_cancel);
+                    ToastHelper.error(activity, R.string.toast_cancel);
                 else
-                    ToastHelper.showToast(activity, R.string.toast_error);
+                    ToastHelper.error(activity, R.string.toast_error);
             }
         }
 
