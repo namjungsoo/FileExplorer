@@ -28,7 +28,7 @@ public class FileHelper {
     }
 
     public static String getNameWithoutTar(String name) {
-        if (name.endsWith(".tar")) {
+        if (name.endsWith(".tar") || name.endsWith(".TAR")) {
             return name.substring(0, name.length() - 4);
             //return tar.replace(".tar", "");
         } else {
@@ -104,16 +104,20 @@ public class FileHelper {
     }
 
     public static int getCompressType(String path) {
-        if (path.endsWith(".zip") || path.endsWith(".cbz"))
+        if (path.endsWith(".zip") || path.endsWith(".cbz") ||
+                path.endsWith(".ZIP") || path.endsWith(".CBZ"))
             return ExplorerItem.COMPRESSTYPE_ZIP;
-        //TODO: 현재 지원 안함
-        if (path.endsWith(".rar") || path.endsWith(".cbr"))
+        if (path.endsWith(".rar") || path.endsWith(".cbr") ||
+                path.endsWith(".RAR") || path.endsWith(".CBR"))
             return ExplorerItem.COMPRESSTYPE_RAR;
-        if (path.endsWith(".7z") || path.endsWith(".cb7"))
+        if (path.endsWith(".7z") || path.endsWith(".cb7") ||
+                path.endsWith(".7Z") || path.endsWith(".CB7"))
             return ExplorerItem.COMPRESSTYPE_SEVENZIP;
-        if (path.endsWith(".tar") || path.endsWith(".cbt"))
+        if (path.endsWith(".tar") || path.endsWith(".cbt") ||
+                path.endsWith(".TAR") || path.endsWith(".CBT"))
             return ExplorerItem.COMPRESSTYPE_TAR;
-        if (path.endsWith(".gz") || path.endsWith(".tgz"))
+        if (path.endsWith(".gz") || path.endsWith(".tgz") ||
+                path.endsWith(".GZ") || path.endsWith(".TGZ"))
             return ExplorerItem.COMPRESSTYPE_GZIP;
         //TODO: 테스트 더해보고 안되면 막아야 함
 //        if (path.endsWith(".bz2") || path.endsWith(".tbz2"))
@@ -140,15 +144,18 @@ public class FileHelper {
             // 압축 파일
         else if (getCompressType(eachFile.getName()) != ExplorerItem.COMPRESSTYPE_OTHER)
             type = ExplorerItem.FILETYPE_ZIP;
-        else if (eachFile.getName().endsWith(".pdf"))
+        else if (eachFile.getName().endsWith(".pdf") ||
+                eachFile.getName().endsWith(".PDF"))
             type = ExplorerItem.FILETYPE_PDF;
         else if (eachFile.getName().endsWith(".mp4") || eachFile.getName().endsWith(".avi") || eachFile.getName().endsWith(".3gp") || eachFile.getName().endsWith(".mkv") || eachFile.getName().endsWith(".mov"))
             type = ExplorerItem.FILETYPE_VIDEO;
-        else if (eachFile.getName().endsWith(".mp3"))
+        else if (eachFile.getName().endsWith(".mp3") ||
+                eachFile.getName().endsWith(".MP3"))
             type = ExplorerItem.FILETYPE_AUDIO;
         else if (isText(eachFile.getName()))
             type = ExplorerItem.FILETYPE_TEXT;
-        else if (eachFile.getName().endsWith(".apk"))
+        else if (eachFile.getName().endsWith(".apk") ||
+                eachFile.getName().endsWith(".APK"))
             type = ExplorerItem.FILETYPE_APK;
 
         return type;
@@ -159,40 +166,38 @@ public class FileHelper {
     }
 
     public static boolean isText(String filename) {
-        if (filename.endsWith(".txt") || filename.endsWith(".log") || filename.endsWith(".json"))
+        if (filename.endsWith(".txt") || filename.endsWith(".log") || filename.endsWith(".json") ||
+                filename.endsWith(".TXT") || filename.endsWith(".LOG") || filename.endsWith(".JSON"))
             return true;
         return false;
     }
 
     public static boolean isImage(String filename) {
-        if (filename.endsWith(".jpg")
-                || filename.endsWith(".jpeg")
-                || filename.endsWith(".gif")
-                || filename.endsWith(".png")
-                ) {
+        if (isJpegImage(filename) || isPngImage(filename) || isGifImage(filename)) {
             return true;
         }
         return false;
     }
 
     public static boolean isGifImage(String filename) {
-        if (filename.endsWith(".gif")) {
+        if (filename.endsWith(".gif") ||
+                filename.endsWith(".GIF")) {
             return true;
         }
         return false;
     }
 
     public static boolean isPngImage(String filename) {
-        if (filename.endsWith(".png")) {
+        if (filename.endsWith(".png") ||
+                filename.endsWith(".PNG")) {
             return true;
         }
         return false;
     }
 
     public static boolean isJpegImage(String filename) {
-        if (filename.endsWith(".jpg")
-                || filename.endsWith(".jpeg")
-                ) {
+        if (filename.endsWith(".jpg")|| filename.endsWith(".jpeg") ||
+                filename.endsWith(".JPG")|| filename.endsWith(".JPEG")) {
             return true;
         }
         return false;
