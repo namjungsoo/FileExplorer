@@ -1,8 +1,8 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 27
-    buildToolsVersion '27.0.0'
+    compileSdkVersion 26
+    buildToolsVersion '26.0.2'
 
 
     lintOptions {
@@ -19,7 +19,7 @@ android {
         buildConfigField "boolean", "SHOW_AD", "true"
         buildConfigField "boolean", "PREVIEW_ZIP", "false"
         minSdkVersion 14
-        targetSdkVersion 27
+        targetSdkVersion 26
         versionCode 1
         versionName "1.0.0"
         //multiDexEnabled true
@@ -69,8 +69,8 @@ android {
             buildConfigField "boolean", "PREVIEW_ZIP", "true"
             applicationIdSuffix '.comicz'
             dimension "project"
-            versionCode 29
-            versionName "1.2.7"
+            versionCode 30
+            versionName "1.2.8"
             addManifestPlaceholders([APP_NAME: "@string/comicz_name_free"])
         }
 
@@ -85,8 +85,8 @@ android {
             buildConfigField "boolean", "PREVIEW_ZIP", "false"
             applicationIdSuffix '.file'
             dimension "project"
-            versionCode 9
-            versionName "1.0.8"
+            versionCode 10
+            versionName "1.0.9"
             addManifestPlaceholders([APP_NAME: "@string/file_name_free"])
         }
 
@@ -122,8 +122,8 @@ dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     //implementation files('libs/sevenzip4j.jar')
     //android
-    implementation 'com.android.support:appcompat-v7:27.0.2'
-    implementation 'com.android.support:design:27.0.2'
+    implementation 'com.android.support:appcompat-v7:26.1.0'
+    implementation 'com.android.support:design:26.1.0'
     //zip
     implementation 'net.lingala.zip4j:zip4j:1.2.4'
     //encoding
