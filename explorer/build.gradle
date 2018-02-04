@@ -69,8 +69,8 @@ android {
             buildConfigField "boolean", "PREVIEW_ZIP", "true"
             applicationIdSuffix '.comicz'
             dimension "project"
-            versionCode 27
-            versionName "1.2.5"
+            versionCode 28
+            versionName "1.2.6"
             addManifestPlaceholders([APP_NAME: "@string/comicz_name_free"])
         }
 
@@ -85,8 +85,8 @@ android {
             buildConfigField "boolean", "PREVIEW_ZIP", "false"
             applicationIdSuffix '.file'
             dimension "project"
-            versionCode 7
-            versionName "1.0.6"
+            versionCode 8
+            versionName "1.0.7"
             addManifestPlaceholders([APP_NAME: "@string/file_name_free"])
         }
 
@@ -135,10 +135,11 @@ dependencies {
     implementation 'com.github.bumptech.glide:glide:4.1.1'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.1.1'
     //firebase - 11.6.0에서 변경하지 말것
-    implementation 'com.google.firebase:firebase-crash:11.6.0'
-    implementation 'com.google.firebase:firebase-core:11.6.0'
-    implementation 'com.google.android.gms:play-services-analytics:11.6.0'
-    implementation 'com.google.android.gms:play-services-ads:11.6.0'
+    implementation 'com.google.firebase:firebase-crash:11.6.2'
+    implementation 'com.google.firebase:firebase-core:11.6.2'
+    implementation 'com.google.android.gms:play-services-analytics:11.6.2'
+    implementation 'com.google.android.gms:play-services-ads:11.6.2'
+    implementation 'com.google.firebase:firebase-config:11.6.2'
     implementation 'joda-time:joda-time:2.9.9'
     //FileUtils
     implementation 'commons-io:commons-io:2.6'

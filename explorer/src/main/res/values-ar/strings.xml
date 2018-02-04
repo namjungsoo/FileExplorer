@@ -86,4 +86,5 @@
     <string name="toast_file_unzip">تم فك ضغط الملفات.</string>
     <string name="msg_file_zip">سيتم ضغط الملفات المحددة.</string>
     <string name="toast_file_zip">تم ضغط الملفات.</string>
+    <string name="toast_new_version">تم إصدار إصدار جديد.</string>
 </resources>

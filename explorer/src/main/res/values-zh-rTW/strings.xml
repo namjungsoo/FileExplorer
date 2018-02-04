@@ -86,4 +86,5 @@
     <string name="toast_file_unzip">這些文件已被解壓縮。</string>
     <string name="msg_file_zip">所選文件將被壓縮。</string>
     <string name="toast_file_zip">這些文件已被壓縮。</string>
+    <string name="toast_new_version">新版本已經發布。</string>
 </resources>

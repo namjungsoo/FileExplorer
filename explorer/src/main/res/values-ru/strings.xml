@@ -86,4 +86,5 @@
     <string name="toast_file_unzip">Файлы распакованы.</string>
     <string name="msg_file_zip">Выбранные файлы будут заархивированы.</string>
     <string name="toast_file_zip">Файлы были заархивированы.</string>
+    <string name="toast_new_version">Вышла новая версия.</string>
 </resources>

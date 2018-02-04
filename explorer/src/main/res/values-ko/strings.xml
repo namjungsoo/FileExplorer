@@ -86,4 +86,5 @@
     <string name="toast_file_unzip">압축 풀기가 완료되었습니다.</string>
     <string name="msg_file_zip">선택된 파일을 압축합니다.</string>
     <string name="toast_file_zip">압축 하기가 완료되었습니다.</string>
+    <string name="toast_new_version">새로운 버전이 출시되었습니다.</string>
 </resources>

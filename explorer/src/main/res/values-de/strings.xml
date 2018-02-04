@@ -86,4 +86,5 @@
     <string name="toast_file_unzip">Die Dateien wurden entpackt.</string>
     <string name="msg_file_zip">Die ausgewählten Dateien werden gezippt.</string>
     <string name="toast_file_zip">Die Dateien wurden gezippt.</string>
+    <string name="toast_new_version">Eine neue Version wurde veröffentlicht.</string>
 </resources>

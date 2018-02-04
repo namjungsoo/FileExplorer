@@ -86,4 +86,5 @@
     <string name="toast_file_unzip">फ़ाइलों को अनझिप किया गया है</string>
     <string name="msg_file_zip">चयनित फ़ाइलों को ज़िपित किया जाएगा।</string>
     <string name="toast_file_zip">फ़ाइलों को ज़िपित किया गया है</string>
+    <string name="toast_new_version">एक नया संस्करण जारी किया गया है।</string>
 </resources>

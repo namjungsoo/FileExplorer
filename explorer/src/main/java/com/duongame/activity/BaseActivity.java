@@ -5,7 +5,9 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -29,6 +31,7 @@ import com.duongame.fragment.BaseFragment;
 import com.duongame.fragment.ExplorerFragment;
 import com.duongame.helper.AlertHelper;
 import com.duongame.helper.AppHelper;
+import com.duongame.helper.JLog;
 import com.duongame.helper.PreferenceHelper;
 import com.duongame.helper.ToastHelper;
 import com.duongame.helper.UnitHelper;
@@ -39,7 +42,10 @@ import com.duongame.manager.ReviewManager;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.analytics.FirebaseAnalytics;
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 
 import java.io.File;
 
@@ -55,6 +61,7 @@ import static com.duongame.fragment.ExplorerFragment.SWITCH_LIST;
 public abstract class BaseActivity extends AppCompatActivity {
     protected FirebaseAnalytics mFirebaseAnalytics;
     protected Tracker mTracker;
+    protected FirebaseRemoteConfig mFirebaseRemoteConfig;
 
     // admob
     protected View activityView;
@@ -101,6 +108,21 @@ public abstract class BaseActivity extends AppCompatActivity {
 
         AnalyticsApplication application = (AnalyticsApplication) getApplication();
         mTracker = application.getDefaultTracker();
+
+        mFirebaseRemoteConfig = FirebaseRemoteConfig.getInstance();
+        mFirebaseRemoteConfig.fetch(0).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if (task.isSuccessful()) {
+                    mFirebaseRemoteConfig.activateFetched();
+                    long version = mFirebaseRemoteConfig.getLong("latest_version");
+                    if (BuildConfig.VERSION_CODE < version) {
+                        ToastHelper.info(BaseActivity.this, R.string.toast_new_version);
+                    }
+                }
+            }
+        });
+
     }
 
     @Override

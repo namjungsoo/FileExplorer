@@ -86,4 +86,5 @@
     <string name="toast_file_unzip">ファイルは解凍されています。</string>
     <string name="msg_file_zip">選択したファイルは圧縮されます。</string>
     <string name="toast_file_zip">ファイルは圧縮されています。</string>
+    <string name="toast_new_version">新しいバージョンがリリースされました。</string>
 </resources>
