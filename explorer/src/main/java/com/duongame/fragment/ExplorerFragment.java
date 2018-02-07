@@ -1,6 +1,5 @@
 package com.duongame.fragment;
 
-import android.app.Activity;
 import android.app.Application;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -60,6 +59,7 @@ import java.io.File;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.Map;
 
 import static android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION;
 import static android.view.View.GONE;
@@ -117,7 +117,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
 
     public Tracker getTracker() {
         FragmentActivity activity = getActivity();
-        if(activity == null)
+        if (activity == null)
             return null;
 
         Application application = activity.getApplication();
@@ -125,6 +125,14 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
             return null;
 
         return ((AnalyticsApplication) application).getDefaultTracker();
+    }
+
+    public void sendEventTracker(Map<String, String> var) {
+        Tracker tracker = getTracker();
+        if (tracker == null)
+            return;
+
+        tracker.send(var);
     }
 
     @Nullable
@@ -259,7 +267,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
 
     public void changeViewType(int viewType) {
         // 이벤트를 보냄
-        getTracker().send(new HitBuilders.EventBuilder().setCategory("UI").setAction("ViewType").setValue(viewType).build());
+        sendEventTracker(new HitBuilders.EventBuilder().setCategory("UI").setAction("ViewType").setValue(viewType).build());
 
         this.viewType = viewType;
 
@@ -407,7 +415,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
         task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
         // 이벤트를 보냄
-        getTracker().send(new HitBuilders.EventBuilder().setCategory("File").setAction("Unzip").build());
+        sendEventTracker(new HitBuilders.EventBuilder().setCategory("File").setAction("Unzip").build());
     }
 
     // 폴더가 필요한 경우(gz,bz2가 아닌 경우)
@@ -519,7 +527,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
         dialog.show(getActivity().getFragmentManager(), "sort");
 
         // 이벤트를 보냄
-        getTracker().send(new HitBuilders.EventBuilder().setCategory("File").setAction("Sort").setValue(sortType * 10 + sortDirection).build());
+        sendEventTracker(new HitBuilders.EventBuilder().setCategory("File").setAction("Sort").setValue(sortType * 10 + sortDirection).build());
     }
 
     public void newFolderWithDialog() {
@@ -560,7 +568,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
         onRefresh();
 
         // 이벤트를 보냄
-        getTracker().send(new HitBuilders.EventBuilder().setCategory("File").setAction("NewFolder").build());
+        sendEventTracker(new HitBuilders.EventBuilder().setCategory("File").setAction("NewFolder").build());
     }
 
     void renameFileWithDialog(final ExplorerItem item) {
@@ -599,7 +607,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
             adapter.notifyItemChanged(item.position);
 
             // 이벤트를 보냄
-            getTracker().send(new HitBuilders.EventBuilder().setCategory("File").setAction("Rename").build());
+            sendEventTracker(new HitBuilders.EventBuilder().setCategory("File").setAction("Rename").build());
 
             // 파일 선택 갯수 초기화
             updateSelectedFileCount();
@@ -859,15 +867,14 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
     public void updateFileList(final String path) {
         //updateFileList(path, isPathChanged(path));
         if (path == null)
-            updateFileList(path, true);
+            updateFileList(null, true);
         else
             updateFileList(path, isPathChanged(path));
     }
 
     private boolean isPathChanged(String path) {
         String currentPath = PreferenceHelper.getLastPath(getContext());
-        boolean pathChanged = !currentPath.equals(path);
-        return pathChanged;
+        return !currentPath.equals(path);
     }
 
     private void softRefresh() {
@@ -920,7 +927,10 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
         onSelectItemClick(item, position);
 
         // 하단 UI 표시
-        ((BaseActivity) getActivity()).showBottomUI();
+        FragmentActivity activity = getActivity();
+        if (activity == null)
+            return;
+        ((BaseActivity) activity).showBottomUI();
     }
 
     public void onPasteMode() {
@@ -939,7 +949,10 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
         softRefresh();
 
         // 하단 UI 숨김
-        ((BaseActivity) getActivity()).hideBottomUI();
+        FragmentActivity activity = getActivity();
+        if (activity == null)
+            return;
+        ((BaseActivity) activity).hideBottomUI();
     }
 
     // 이건 뭐지?
@@ -956,7 +969,11 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
 
     void updateSelectedFileCount() {
         int count = getSelectedFileCount();
-        ((BaseActivity) getActivity()).updateSelectedFileCount(count);
+
+        FragmentActivity activity = getActivity();
+        if (activity == null)
+            return;
+        ((BaseActivity) activity).updateSelectedFileCount(count);
     }
 
     void onRunItemClick(ExplorerItem item) {
@@ -1010,7 +1027,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
                         task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
                         // 이벤트를 보냄
-                        getTracker().send(new HitBuilders.EventBuilder().setCategory("File").setAction("Delete").build());
+                        sendEventTracker(new HitBuilders.EventBuilder().setCategory("File").setAction("Delete").build());
                     }
                 }, new DialogInterface.OnClickListener() {
                     @Override
@@ -1046,7 +1063,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
         softRefresh();
 
         // 이벤트를 보냄
-        getTracker().send(new HitBuilders.EventBuilder().setCategory("File").setAction("SelectAll").build());
+        sendEventTracker(new HitBuilders.EventBuilder().setCategory("File").setAction("SelectAll").build());
     }
 
     public void captureSelectedFile(boolean cut) {
@@ -1070,13 +1087,16 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
         // 붙이기 모드로 바꿈
         onPasteMode();
 
-        ((BaseActivity) getActivity()).updatePasteMode();
+        FragmentActivity activity = getActivity();
+        if (activity != null) {
+            ((BaseActivity) activity).updatePasteMode();
+        }
 
         // 이벤트를 보냄
         if (cut)
-            getTracker().send(new HitBuilders.EventBuilder().setCategory("File").setAction("Cut").build());
+            sendEventTracker(new HitBuilders.EventBuilder().setCategory("File").setAction("Cut").build());
         else
-            getTracker().send(new HitBuilders.EventBuilder().setCategory("File").setAction("Copy").build());
+            sendEventTracker(new HitBuilders.EventBuilder().setCategory("File").setAction("Copy").build());
     }
 
     void warnMoveToSameLocation() {
@@ -1107,7 +1127,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
         task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
         // 이벤트를 보냄
-        getTracker().send(new HitBuilders.EventBuilder().setCategory("File").setAction("Paste").build());
+        sendEventTracker(new HitBuilders.EventBuilder().setCategory("File").setAction("Paste").build());
     }
 
     public void pasteFileWithDialog() {
@@ -1166,13 +1186,17 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
         task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
         // 이벤트를 보냄
-        getTracker().send(new HitBuilders.EventBuilder().setCategory("File").setAction("Zip").setValue(FileHelper.getCompressType(ext)).build());
+        sendEventTracker(new HitBuilders.EventBuilder().setCategory("File").setAction("Zip").setValue(FileHelper.getCompressType(ext)).build());
     }
 
     public void zipFileWithDialog() {
         final String path = application.getLastPath();
 
-        View view = getActivity().getLayoutInflater().inflate(R.layout.dialog_zip, null, false);
+        FragmentActivity activity = getActivity();
+        if (activity == null)
+            return;
+
+        View view = activity.getLayoutInflater().inflate(R.layout.dialog_zip, null, false);
         final EditText editFileName = (EditText) view.findViewById(R.id.file_name);
         final Spinner spinner = (Spinner) view.findViewById(R.id.zip_type);
 
