@@ -18,6 +18,8 @@ public class AppHelper {
     }
 
     public static String getAppName(Context context) {
+        if (context == null)
+            return "";
         if (isComicz(context)) {
             return context.getResources().getString(R.string.comicz_name_free);
         } else {

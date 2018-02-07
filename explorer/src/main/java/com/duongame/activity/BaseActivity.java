@@ -449,7 +449,7 @@ public abstract class BaseActivity extends AppCompatActivity {
             for (File child : fileOrDirectory.listFiles())
                 deleteRecursive(child);
 
-        fileOrDirectory.delete();
+        boolean ret = fileOrDirectory.delete();
     }
 
     protected void clearHistory() {
@@ -490,7 +490,9 @@ public abstract class BaseActivity extends AppCompatActivity {
             }
         });
         ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
+        if(actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
 
         updateSelectMenuIcon(true, false);
     }
@@ -510,15 +512,19 @@ public abstract class BaseActivity extends AppCompatActivity {
 
         // 원래 타이틀로 돌려준다.
         ActionBar actionBar = getSupportActionBar();
-        actionBar.setTitle(AppHelper.getAppName(this));
-        actionBar.setDisplayHomeAsUpEnabled(false);
+        if (actionBar != null) {
+            actionBar.setTitle(AppHelper.getAppName(this));
+            actionBar.setDisplayHomeAsUpEnabled(false);
+        }
 
         updateSelectMenuIcon(false, false);
     }
 
     public void updateSelectedFileCount(int count) {
         ActionBar actionBar = getSupportActionBar();
-        actionBar.setTitle("" + count);
+        if (actionBar != null) {
+            actionBar.setTitle("" + count);
+        }
 
         if (count > 0) {
             btnArchive.setEnabled(true);
@@ -543,7 +549,9 @@ public abstract class BaseActivity extends AppCompatActivity {
         btnPaste.setEnabled(true);
 
         ActionBar actionBar = getSupportActionBar();
-        actionBar.setTitle(R.string.paste);
+        if(actionBar != null) {
+            actionBar.setTitle(R.string.paste);
+        }
 
         updateSelectMenuIcon(false, true);
     }

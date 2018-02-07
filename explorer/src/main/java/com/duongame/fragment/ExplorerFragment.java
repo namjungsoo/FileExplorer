@@ -1,11 +1,14 @@
 package com.duongame.fragment;
 
+import android.app.Activity;
+import android.app.Application;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.FileProvider;
@@ -113,11 +116,19 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
     private int sortDirection;
 
     public Tracker getTracker() {
-        return ((AnalyticsApplication) getActivity().getApplication()).getDefaultTracker();
+        FragmentActivity activity = getActivity();
+        if(activity == null)
+            return null;
+
+        Application application = activity.getApplication();
+        if (application == null)
+            return null;
+
+        return ((AnalyticsApplication) application).getDefaultTracker();
     }
 
     @Nullable
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_explorer, container, false);
 
@@ -1126,7 +1137,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
         // 선택된 파일만 압축할 리스트에 추가해 줌
         ArrayList<ExplorerItem> zipList = new ArrayList<>();
         synchronized (this) {
-            if(fileList == null)
+            if (fileList == null)
                 return;
 
             for (int i = 0; i < fileList.size(); i++) {
