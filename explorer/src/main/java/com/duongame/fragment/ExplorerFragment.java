@@ -710,7 +710,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
         onAdapterItemLongClick(position);
     }
 
-    static class SearchTask extends AsyncTask<String, Void, Void> {
+    class SearchTask extends AsyncTask<String, Void, Void> {
         WeakReference<ExplorerFragment> fragmentWeakReference;
         boolean pathChanged;
         String path;
@@ -783,7 +783,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
             if (fragment.searchResult == null) {
                 fragment.searchResult = new FileSearcher.Result();
             }
-            synchronized (fragment) {
+            synchronized (ExplorerFragment.this) {
                 fragment.fileList = fragment.searchResult.fileList;
                 fragment.application.setImageList(fragment.searchResult.imageList);
                 fragment.adapter.setFileList(fragment.fileList);
@@ -804,7 +804,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
 
             // SearchTask가 resume
             if (pathChanged) {
-                synchronized (fragment) {
+                synchronized (ExplorerFragment.this) {
                     if (fragment.fileList != null && fragment.fileList.size() > 0) {
                         fragment.currentView.scrollToPosition(0);
                         fragment.currentView.invalidate();
