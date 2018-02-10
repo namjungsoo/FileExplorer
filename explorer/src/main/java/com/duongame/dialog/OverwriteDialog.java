@@ -1,5 +1,6 @@
 package com.duongame.dialog;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
@@ -44,8 +45,12 @@ public class OverwriteDialog extends DialogFragment {
 
     @Override
     public Dialog onCreateDialog(Bundle bundle) {
-        View view = getActivity().getLayoutInflater().inflate(R.layout.dialog_paste, null, false);
-        CheckBox checkApplyAll = (CheckBox) view.findViewById(R.id.apply_all);
+        Activity activity = getActivity();
+        if(activity == null)
+            return null;
+
+        View view = activity.getLayoutInflater().inflate(R.layout.dialog_paste, null, false);
+        CheckBox checkApplyAll = view.findViewById(R.id.apply_all);
         checkApplyAll.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -55,14 +60,14 @@ public class OverwriteDialog extends DialogFragment {
             }
         });
 
-        TextView fileName = (TextView) view.findViewById(R.id.file_name);
+        TextView fileName = view.findViewById(R.id.file_name);
         fileName.setText(path);
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity())
-                .setTitle(AppHelper.getAppName(getActivity()))
+        AlertDialog.Builder builder = new AlertDialog.Builder(activity)
+                .setTitle(AppHelper.getAppName(activity))
                 .setMessage(R.string.msg_overwrite)
                 .setView(view)
-                .setIcon(AppHelper.getIconResId(getActivity()))
+                .setIcon(AppHelper.getIconResId(activity))
                 // 덮어쓰기
                 .setPositiveButton(R.string.overwrite, new DialogInterface.OnClickListener() {
                     @Override

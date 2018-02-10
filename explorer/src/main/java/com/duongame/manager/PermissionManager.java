@@ -19,8 +19,11 @@ public class PermissionManager {
     }
 
     public static boolean checkStoragePermissions(Activity context) {
-        if (isStoragePermissions == true)
-            return isStoragePermissions;
+        if (isStoragePermissions)
+            return true;
+
+        if(context == null)
+            return true;
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (context.checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED ||

@@ -1,5 +1,6 @@
 package com.duongame.dialog;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
@@ -74,21 +75,25 @@ public abstract class MultiDialog extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle bundle) {
 //        JLog.w("TAG", "onCreateDialog");
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        View view = getActivity().getLayoutInflater().inflate(R.layout.dialog_multi, null, false);
+        Activity activity = getActivity();
+        if(activity == null)
+            return null;
 
-        fileName = (TextView) view.findViewById(R.id.file_name);
-        eachText = (TextView) view.findViewById(R.id.each_text);
-        totalText = (TextView) view.findViewById(R.id.total_text);
+        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+        View view = activity.getLayoutInflater().inflate(R.layout.dialog_multi, null, false);
 
-        eachProgress = (ProgressBar) view.findViewById(R.id.each_progress);
-        totalProgress = (ProgressBar) view.findViewById(R.id.total_progress);
+        fileName = view.findViewById(R.id.file_name);
+        eachText = view.findViewById(R.id.each_text);
+        totalText = view.findViewById(R.id.total_text);
+
+        eachProgress = view.findViewById(R.id.each_progress);
+        totalProgress = view.findViewById(R.id.total_progress);
 
         eachProgress.setMax(100);
         totalProgress.setMax(100);
 
-        builder.setTitle(AppHelper.getAppName(getActivity()))
-                .setIcon(AppHelper.getIconResId(getActivity()))
+        builder.setTitle(AppHelper.getAppName(activity))
+                .setIcon(AppHelper.getIconResId(activity))
                 .setMessage(messageResId)
                 .setView(view);
 

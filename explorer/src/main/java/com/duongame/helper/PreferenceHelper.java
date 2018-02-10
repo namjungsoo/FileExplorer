@@ -33,99 +33,96 @@ public class PreferenceHelper {
     private static SharedPreferences pref = null;
 
     private static void checkPrefManager(Context context) {
-        if (pref == null)
+        if (pref == null) {
+            if (context == null)
+                return;
+
             pref = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
+        }
     }
 
     public static boolean isShortcut(Context context) {
         checkPrefManager(context);
-        final boolean prefIsShortcut = pref.getBoolean(IS_SHORTCUT, false);
-        return prefIsShortcut;
+        return pref.getBoolean(IS_SHORTCUT, false);
     }
 
     public static void setShortcut(Context context, boolean shortcut) {
         checkPrefManager(context);
         final SharedPreferences.Editor editor = pref.edit();
         editor.putBoolean(IS_SHORTCUT, shortcut);
-        editor.commit();
+        editor.apply();
     }
 
     public static int getStartCount(Context context) {
         checkPrefManager(context);
-        final int startCount = pref.getInt(START_COUNT, 0);
-        return startCount;
+        return pref.getInt(START_COUNT, 0);
     }
 
     public static void setStartCount(Context context, int count) {
         checkPrefManager(context);
         final SharedPreferences.Editor editor = pref.edit();
         editor.putInt(START_COUNT, count);
-        editor.commit();
+        editor.apply();
     }
 
     public static int getViewType(Context context) {
         checkPrefManager(context);
-        final int viewType = pref.getInt(VIEW_TYPE, 0);
-        return viewType;
+        return pref.getInt(VIEW_TYPE, 0);
     }
 
     public static void setViewType(Context context, int viewType) {
         checkPrefManager(context);
         final SharedPreferences.Editor editor = pref.edit();
         editor.putInt(VIEW_TYPE, viewType);
-        editor.commit();
+        editor.apply();
     }
 
     public static String getLastPath(Context context) {
         checkPrefManager(context);
-        final String lastPath = pref.getString(LAST_PATH, Environment.getExternalStorageDirectory().getAbsolutePath());
-        return lastPath;
+        return pref.getString(LAST_PATH, Environment.getExternalStorageDirectory().getAbsolutePath());
     }
 
     public static void setLastPath(Context context, String lastPath) {
         checkPrefManager(context);
         final SharedPreferences.Editor editor = pref.edit();
         editor.putString(LAST_PATH, lastPath);
-        editor.commit();
+        editor.apply();
     }
 
     public static int getLastPosition(Context context) {
         checkPrefManager(context);
-        final int lastPosition = pref.getInt(LAST_POSITION, 0);
-        return lastPosition;
+        return pref.getInt(LAST_POSITION, 0);
     }
 
     public static void setLastPosition(Context context, int lastPosition) {
         checkPrefManager(context);
         final SharedPreferences.Editor editor = pref.edit();
         editor.putInt(LAST_POSITION, lastPosition);
-        editor.commit();
+        editor.apply();
     }
 
     public static int getLastTop(Context context) {
         checkPrefManager(context);
-        final int lastTop = pref.getInt(LAST_TOP, 0);
-        return lastTop;
+        return pref.getInt(LAST_TOP, 0);
     }
 
     public static void setLastTop(Context context, int lastTop) {
         checkPrefManager(context);
         final SharedPreferences.Editor editor = pref.edit();
         editor.putInt(LAST_TOP, lastTop);
-        editor.commit();
+        editor.apply();
     }
 
     public static int getReviewCount(Context context) {
         checkPrefManager(context);
-        final int review = pref.getInt(REVIEW_COUNT, 0);
-        return review;
+        return pref.getInt(REVIEW_COUNT, 0);
     }
 
     public static void setReviewCount(Context context, int count) {
         checkPrefManager(context);
         final SharedPreferences.Editor editor = pref.edit();
         editor.putInt(REVIEW_COUNT, count);
-        editor.commit();
+        editor.apply();
     }
 
     public static boolean getReviewed(Context context) {
@@ -137,7 +134,7 @@ public class PreferenceHelper {
         checkPrefManager(context);
         final SharedPreferences.Editor editor = pref.edit();
         editor.putBoolean(REVIEWED, reviewed);
-        editor.commit();
+        editor.apply();
     }
 
     public static int getExitAdCount(Context context) {
@@ -149,7 +146,7 @@ public class PreferenceHelper {
         checkPrefManager(context);
         final SharedPreferences.Editor editor = pref.edit();
         editor.putInt(EXIT_COUNT, count);
-        editor.commit();
+        editor.apply();
     }
 
     public static boolean getHideCompleted(Context context) {
@@ -161,7 +158,7 @@ public class PreferenceHelper {
         checkPrefManager(context);
         final SharedPreferences.Editor editor = pref.edit();
         editor.putBoolean(HIDE_COMPLETED, hide);
-        editor.commit();
+        editor.apply();
     }
 
     public static int getSortType(Context context) {
@@ -173,7 +170,7 @@ public class PreferenceHelper {
         checkPrefManager(context);
         final SharedPreferences.Editor editor = pref.edit();
         editor.putInt(SORT_TYPE, count);
-        editor.commit();
+        editor.apply();
     }
 
     public static int getSortDirection(Context context) {
@@ -185,7 +182,7 @@ public class PreferenceHelper {
         checkPrefManager(context);
         final SharedPreferences.Editor editor = pref.edit();
         editor.putInt(SORT_DIRECTION, count);
-        editor.commit();
+        editor.apply();
     }
 
 }

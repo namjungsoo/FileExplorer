@@ -227,53 +227,53 @@ public class ZipActivity extends PagerActivity {
         TextView tv;
         switch (side) {
             case ExplorerItem.SIDE_LEFT:
-                iv = (ImageView) findViewById(R.id.img_left);
-                tv = (TextView) findViewById(R.id.text_left);
+                iv = findViewById(R.id.img_left);
+                tv = findViewById(R.id.text_left);
                 iv.setColorFilter(ContextCompat.getColor(this, android.R.color.holo_orange_light));
                 tv.setTextColor(ContextCompat.getColor(this, android.R.color.holo_orange_light));
 
                 // 나머지 두개를 꺼주어야 한다.
-                iv = (ImageView) findViewById(R.id.img_right);
-                tv = (TextView) findViewById(R.id.text_right);
+                iv = findViewById(R.id.img_right);
+                tv = findViewById(R.id.text_right);
                 iv.setColorFilter(ContextCompat.getColor(this, android.R.color.white));
                 tv.setTextColor(ContextCompat.getColor(this, android.R.color.white));
 
-                iv = (ImageView) findViewById(R.id.img_both);
-                tv = (TextView) findViewById(R.id.text_both);
+                iv = findViewById(R.id.img_both);
+                tv = findViewById(R.id.text_both);
                 iv.setColorFilter(ContextCompat.getColor(this, android.R.color.white));
                 tv.setTextColor(ContextCompat.getColor(this, android.R.color.white));
                 break;
             case ExplorerItem.SIDE_RIGHT:
-                iv = (ImageView) findViewById(R.id.img_right);
-                tv = (TextView) findViewById(R.id.text_right);
+                iv = findViewById(R.id.img_right);
+                tv = findViewById(R.id.text_right);
                 iv.setColorFilter(ContextCompat.getColor(this, android.R.color.holo_orange_light));
                 tv.setTextColor(ContextCompat.getColor(this, android.R.color.holo_orange_light));
 
                 // 나머지 두개를 꺼주어야 한다.
-                iv = (ImageView) findViewById(R.id.img_left);
-                tv = (TextView) findViewById(R.id.text_left);
+                iv = findViewById(R.id.img_left);
+                tv = findViewById(R.id.text_left);
                 iv.setColorFilter(ContextCompat.getColor(this, android.R.color.white));
                 tv.setTextColor(ContextCompat.getColor(this, android.R.color.white));
 
-                iv = (ImageView) findViewById(R.id.img_both);
-                tv = (TextView) findViewById(R.id.text_both);
+                iv = findViewById(R.id.img_both);
+                tv = findViewById(R.id.text_both);
                 iv.setColorFilter(ContextCompat.getColor(this, android.R.color.white));
                 tv.setTextColor(ContextCompat.getColor(this, android.R.color.white));
                 break;
             case ExplorerItem.SIDE_ALL:
-                iv = (ImageView) findViewById(R.id.img_both);
-                tv = (TextView) findViewById(R.id.text_both);
+                iv = findViewById(R.id.img_both);
+                tv = findViewById(R.id.text_both);
                 iv.setColorFilter(ContextCompat.getColor(this, android.R.color.holo_orange_light));
                 tv.setTextColor(ContextCompat.getColor(this, android.R.color.holo_orange_light));
 
                 // 나머지 두개를 꺼주어야 한다.
-                iv = (ImageView) findViewById(R.id.img_right);
-                tv = (TextView) findViewById(R.id.text_right);
+                iv = findViewById(R.id.img_right);
+                tv = findViewById(R.id.text_right);
                 iv.setColorFilter(ContextCompat.getColor(this, android.R.color.white));
                 tv.setTextColor(ContextCompat.getColor(this, android.R.color.white));
 
-                iv = (ImageView) findViewById(R.id.img_left);
-                tv = (TextView) findViewById(R.id.text_left);
+                iv = findViewById(R.id.img_left);
+                tv = findViewById(R.id.text_left);
                 iv.setColorFilter(ContextCompat.getColor(this, android.R.color.white));
                 tv.setTextColor(ContextCompat.getColor(this, android.R.color.white));
                 break;

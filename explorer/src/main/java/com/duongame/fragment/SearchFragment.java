@@ -3,6 +3,7 @@ package com.duongame.fragment;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -71,9 +72,13 @@ public class SearchFragment extends BaseFragment {
                 return false;
             }
 
+            FragmentActivity activity = fragment.getActivity();
+            if(activity == null)
+                return false;
+
             fragment.fileList = fragment.searchResult.fileList;
             if (fragment.fileList != null && fragment.fileList.size() > 0) {
-                fragment.adapter = new SearchRecyclerAdapter(fragment.getActivity(), fragment.fileList);
+                fragment.adapter = new SearchRecyclerAdapter(activity, fragment.fileList);
                 return true;
             }
             return false;
@@ -96,7 +101,9 @@ public class SearchFragment extends BaseFragment {
                         }
                         if (fragment.fileList != null) {
                             ExplorerItem item = fragment.fileList.get(position);
-                            BookLoader.load(fragment.getActivity(), item, false);
+                            FragmentActivity activity = fragment.getActivity();
+                            if (activity != null)
+                                BookLoader.load(activity, item, false);
                         }
                     }
                 });
@@ -113,22 +120,30 @@ public class SearchFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        FragmentActivity activity = getActivity();
+        if (activity == null)
+            return null;
+
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_search, container, false);
-        switcherContents = (ViewSwitcher) rootView.findViewById(R.id.switcher_contents);
+        switcherContents = rootView.findViewById(R.id.switcher_contents);
 
-        recyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_search);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL_LIST));
+        recyclerView = rootView.findViewById(R.id.recycler_search);
+        recyclerView.setLayoutManager(new LinearLayoutManager(activity));
+        recyclerView.addItemDecoration(new DividerItemDecoration(activity, DividerItemDecoration.VERTICAL_LIST));
 
-        spinnerType = (Spinner) rootView.findViewById(R.id.spinner_type);
-        editKeyword = (EditText) rootView.findViewById(R.id.edit_keyword);
-        progressBar = (ProgressBar) rootView.findViewById(R.id.progress_search);
+        spinnerType = rootView.findViewById(R.id.spinner_type);
+        editKeyword = rootView.findViewById(R.id.edit_keyword);
+        progressBar = rootView.findViewById(R.id.progress_search);
 
-        Button buttonSearch = (Button) rootView.findViewById(R.id.btn_search);
+        Button buttonSearch = rootView.findViewById(R.id.btn_search);
         buttonSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                FragmentActivity activity = getActivity();
+                if (activity == null)
+                    return;
+
+                InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
                 if (imm != null)
                     imm.hideSoftInputFromWindow(editKeyword.getWindowToken(), 0);
 

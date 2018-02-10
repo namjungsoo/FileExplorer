@@ -45,11 +45,11 @@ public class ComicActivity extends BaseActivity {
     }
 
     private void initTabs() {
-        pager = (ViewPager) findViewById(R.id.pager);
+        pager = findViewById(R.id.pager);
         adapter = new ComicPagerAdapter(getSupportFragmentManager(), this);
         pager.setAdapter(adapter);
         pager.setOffscreenPageLimit(3);
-        TabLayout tab = (TabLayout) findViewById(R.id.tab);
+        TabLayout tab = findViewById(R.id.tab);
         tab.setupWithViewPager(pager);
     }
 }

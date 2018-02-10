@@ -348,10 +348,10 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     void initBottomUI() {
         // 최초에는 하단으로 숨겨둠
-        bottom = (LinearLayout) findViewById(R.id.bottom);
+        bottom = findViewById(R.id.bottom);
         bottom.setTranslationY(UnitHelper.dpToPx(48));
 
-        btnCopy = (ImageButton) bottom.findViewById(R.id.btn_copy);
+        btnCopy = bottom.findViewById(R.id.btn_copy);
         btnCopy.setEnabled(false);
         btnCopy.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -360,7 +360,7 @@ public abstract class BaseActivity extends AppCompatActivity {
             }
         });
 
-        btnCut = (ImageButton) bottom.findViewById(R.id.btn_cut);
+        btnCut = bottom.findViewById(R.id.btn_cut);
         btnCut.setEnabled(false);
         btnCut.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -369,7 +369,7 @@ public abstract class BaseActivity extends AppCompatActivity {
             }
         });
 
-        btnPaste = (ImageButton) bottom.findViewById(R.id.btn_paste);
+        btnPaste = bottom.findViewById(R.id.btn_paste);
         btnPaste.setEnabled(false);
         btnPaste.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -379,7 +379,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         });
 
 
-        btnArchive = (ImageButton) bottom.findViewById(R.id.btn_archive);
+        btnArchive = bottom.findViewById(R.id.btn_archive);
         btnArchive.setEnabled(false);
         btnArchive.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -389,7 +389,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         });
 
 
-        btnDelete = (ImageButton) bottom.findViewById(R.id.btn_delete);
+        btnDelete = bottom.findViewById(R.id.btn_delete);
         btnDelete.setEnabled(false);
         btnDelete.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -2,6 +2,7 @@ package com.duongame.fragment;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -39,35 +40,45 @@ public class HistoryFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, final ViewGroup container,
                              Bundle savedInstanceState) {
-        ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_history, container, false);
-        RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_history);
-        isHideCompleted = PreferenceHelper.getHideCompleted(getActivity());
+        FragmentActivity activity = getActivity();
+        if (activity == null)
+            return null;
 
-        Switch switchHide = (Switch) rootView.findViewById(R.id.switch_hide);
+        ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_history, container, false);
+        RecyclerView recyclerView = rootView.findViewById(R.id.recycler_history);
+        isHideCompleted = PreferenceHelper.getHideCompleted(activity);
+
+        Switch switchHide = rootView.findViewById(R.id.switch_hide);
         switchHide.setChecked(isHideCompleted);
         switchHide.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 isHideCompleted = isChecked;
-                PreferenceHelper.setHideCompleted(getActivity(), isHideCompleted);
+                FragmentActivity activity = getActivity();
+                if (activity == null)
+                    return;
+                PreferenceHelper.setHideCompleted(activity, isHideCompleted);
                 onRefresh();
             }
         });
 
-        recyclerAdapter = new HistoryRecyclerAdapter(getActivity(), this, null);
+        recyclerAdapter = new HistoryRecyclerAdapter(activity, this, null);
         recyclerAdapter.setOnItemClickListener(new HistoryRecyclerAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(int position) {
                 if (bookList != null) {
                     final Book book = bookList.get(position);
-                    BookLoader.loadContinue(getActivity(), book);
+                    FragmentActivity activity = getActivity();
+                    if (activity == null)
+                        return;
+                    BookLoader.loadContinue(activity, book);
                 }
             }
         });
         recyclerView.setAdapter(recyclerAdapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL_LIST));
-        switcherContents = (ViewSwitcher) rootView.findViewById(R.id.switcher_contents);
+        recyclerView.setLayoutManager(new LinearLayoutManager(activity));
+        recyclerView.addItemDecoration(new DividerItemDecoration(activity, DividerItemDecoration.VERTICAL_LIST));
+        switcherContents = rootView.findViewById(R.id.switcher_contents);
 
         return rootView;
     }
@@ -86,8 +97,12 @@ public class HistoryFragment extends BaseFragment {
             if (fragment == null)
                 return null;
 
+            FragmentActivity activity = fragment.getActivity();
+            if (activity == null)
+                return null;
+
             fragment.bookList = new ArrayList<>();
-            ArrayList<Book> historyList = BookDB.getBooks(fragment.getActivity());
+            ArrayList<Book> historyList = BookDB.getBooks(activity);
 
             fragment = fragmentWeakReferencea.get();
             if (fragment == null)

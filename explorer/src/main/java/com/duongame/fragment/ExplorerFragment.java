@@ -9,7 +9,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.FileProvider;
 import android.support.v7.widget.GridLayoutManager;
@@ -63,7 +62,6 @@ import java.util.Comparator;
 import java.util.Map;
 
 import static android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION;
-import static android.os.Parcelable.PARCELABLE_WRITE_RETURN_VALUE;
 import static android.view.View.GONE;
 import static com.duongame.ExplorerConfig.MAX_THUMBNAILS;
 
@@ -145,9 +143,12 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
         initUI();
         initViewType();
 
-        PermissionManager.checkStoragePermissions(getActivity());
-        sortType = PreferenceHelper.getSortType(getActivity());
-        sortDirection = PreferenceHelper.getSortDirection(getActivity());
+        FragmentActivity activity = getActivity();
+        if (activity != null) {
+            PermissionManager.checkStoragePermissions(activity);
+            sortType = PreferenceHelper.getSortType(activity);
+            sortDirection = PreferenceHelper.getSortDirection(activity);
+        }
 
         extSdCard = ExtSdCardHelper.getExternalSdCardPath();
         if (extSdCard != null) {
@@ -195,8 +196,11 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
         new Thread(new Runnable() {
             @Override
             public void run() {
-                PreferenceHelper.setLastPosition(getActivity(), position);
-                PreferenceHelper.setLastTop(getActivity(), top);
+                FragmentActivity activity = getActivity();
+                if (activity != null) {
+                    PreferenceHelper.setLastPosition(activity, position);
+                    PreferenceHelper.setLastTop(activity, top);
+                }
             }
         }).start();
     }
@@ -255,6 +259,10 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
     }
 
     public void changeViewType(int viewType) {
+        FragmentActivity activity = getActivity();
+        if (activity == null)
+            return;
+
         // 이벤트를 보냄
         sendEventTracker(new HitBuilders.EventBuilder().setCategory("UI").setAction("ViewType").setValue(viewType).build());
 
@@ -266,24 +274,24 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
         switch (viewType) {
             case SWITCH_LIST:
                 synchronized (this) {
-                    adapter = new ExplorerListAdapter(getActivity(), fileList);
+                    adapter = new ExplorerListAdapter(activity, fileList);
                 }
                 currentView = rootView.findViewById(R.id.list_explorer);
                 if (currentView != null) {
-                    currentView.setLayoutManager(new LinearLayoutManager(getActivity()));
+                    currentView.setLayoutManager(new LinearLayoutManager(activity));
                     if (itemDecoration == null) {
-                        itemDecoration = new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL_LIST);
+                        itemDecoration = new DividerItemDecoration(activity, DividerItemDecoration.VERTICAL_LIST);
                         currentView.addItemDecoration(itemDecoration);
                     }
                 }
                 break;
             case SWITCH_GRID:
                 synchronized (this) {
-                    adapter = new ExplorerGridAdapter(getActivity(), fileList);
+                    adapter = new ExplorerGridAdapter(activity, fileList);
                 }
                 currentView = rootView.findViewById(R.id.grid_explorer);
                 if (currentView != null) {
-                    currentView.setLayoutManager(new GridLayoutManager(getActivity(), 4));
+                    currentView.setLayoutManager(new GridLayoutManager(activity, 4));
                 }
                 break;
         }
@@ -375,7 +383,10 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
     }
 
     void onClickBook(ExplorerItem item) {
-        BookLoader.load(getActivity(), item, false);
+        FragmentActivity activity = getActivity();
+        if (activity == null)
+            return;
+        BookLoader.load(activity, item, false);
     }
 
     void onClickZip(ExplorerItem item) {
@@ -391,7 +402,11 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
             targetPath = path + "/" + name;
         }
 
-        UnzipTask task = new UnzipTask(getActivity());
+        FragmentActivity activity = getActivity();
+        if(activity != null)
+            return;
+
+        UnzipTask task = new UnzipTask(activity);
         task.setPath(targetPath);
 
         // 여러 파일을 동시에 풀수있도록 함
@@ -508,6 +523,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
     }
 
     public void sortFileWithDialog() {
+
         SortDialog dialog = new SortDialog();
         dialog.setTypeAndDirection(sortType, sortDirection);
         dialog.setOnSortListener(new SortDialog.OnSortListener() {
@@ -516,8 +532,9 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
                 sortType = type;
                 sortDirection = dir;
 
-                PreferenceHelper.setSortType(getActivity(), sortType);
-                PreferenceHelper.setSortDirection(getActivity(), sortDirection);
+                FragmentActivity activity = getActivity();
+                PreferenceHelper.setSortType(activity, sortType);
+                PreferenceHelper.setSortDirection(activity, sortDirection);
 
                 updateFileList(application.getLastPath());
             }
@@ -590,8 +607,8 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
         final EditText editFileName = view.findViewById(R.id.file_name);
         editFileName.setText(item.name);
 
-        AlertHelper.showAlert(getActivity(),
-                AppHelper.getAppName(getContext()),
+        AlertHelper.showAlert(activity,
+                AppHelper.getAppName(activity),
                 getString(R.string.msg_file_rename),
                 view, new DialogInterface.OnClickListener() {
                     @Override
@@ -1006,16 +1023,23 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
     }
 
     public void deleteFileWithDialog() {
+        FragmentActivity activity = getActivity();
+        if (activity == null)
+            return;
+
         int count = getSelectedFileCount();
         // 파일을 삭제할건지 경고
-        AlertHelper.showAlert(getActivity(),
-                AppHelper.getAppName(getActivity()),
+        AlertHelper.showAlert(activity,
+                AppHelper.getAppName(activity),
                 String.format(getString(R.string.warn_file_delete), count),
                 null,
                 new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        DeleteTask task = new DeleteTask(getActivity());
+                        FragmentActivity activity = getActivity();
+                        if (activity == null)
+                            return;
+                        DeleteTask task = new DeleteTask(activity);
                         task.setFileList(fileList);
                         task.setOnDismissListener(new DialogInterface.OnDismissListener() {
                             @Override
@@ -1101,8 +1125,9 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
 
     void warnMoveToSameLocation() {
         // 이동 불가
-        AlertHelper.showAlert(getActivity(),
-                AppHelper.getAppName(getActivity()),
+        FragmentActivity activity = getActivity();
+        AlertHelper.showAlert(activity,
+                AppHelper.getAppName(activity),
                 getString(R.string.warn_move_same_folder), null, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
@@ -1112,7 +1137,11 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
     }
 
     void runPasteTask(String pastePath) {
-        PasteTask task = new PasteTask(getActivity());
+        FragmentActivity activity = getActivity();
+        if(activity != null)
+            return;
+
+        PasteTask task = new PasteTask(activity);
         task.setIsCut(cut);// cut or copy
         task.setFileList(selectedFileList);
         task.setPath(capturePath, pastePath);
@@ -1138,9 +1167,13 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
             if (cut) {
                 warnMoveToSameLocation();
             } else {
+                FragmentActivity activity = getActivity();
+                if(activity == null)
+                    return;
+
                 // 사본 생성
-                AlertHelper.showAlert(getActivity(),
-                        AppHelper.getAppName(getActivity()),
+                AlertHelper.showAlert(activity,
+                        AppHelper.getAppName(activity),
                         getString(R.string.warn_copy_same_folder), null, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
@@ -1170,7 +1203,11 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
         String path = application.getLastPath();
         String zipPath = path + "/" + name + ext;
 
-        ZipTask task = new ZipTask(getActivity());
+        FragmentActivity activity = getActivity();
+        if(activity != null)
+            return;
+
+        ZipTask task = new ZipTask(activity);
         task.setPath(path);
         task.setPath(zipPath);
 
@@ -1221,8 +1258,8 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
             }
         });
 
-        AlertHelper.showAlert(getActivity(),
-                AppHelper.getAppName(getActivity()),
+        AlertHelper.showAlert(activity,
+                AppHelper.getAppName(activity),
                 getString(R.string.msg_file_zip),
                 view,
                 new DialogInterface.OnClickListener() {

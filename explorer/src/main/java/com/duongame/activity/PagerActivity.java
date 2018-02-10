@@ -93,7 +93,7 @@ public class PagerActivity extends ViewerActivity {
     }
 
     protected void initPager() {
-        pager = (ViewPager) findViewById(R.id.pager);
+        pager = findViewById(R.id.pager);
         pagerAdapter = createPagerAdapter();
 //        pager.setOffscreenPageLimit(OFFLINE_PAGE_LIMIT);
     }

@@ -1,6 +1,5 @@
 package com.duongame.fragment;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -26,7 +25,11 @@ public class BaseFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        application = (AnalyticsApplication) getActivity().getApplication();
+
+        FragmentActivity activity = getActivity();
+        if(activity != null) {
+            application = (AnalyticsApplication) activity.getApplication();
+        }
         fileSearcher = new FileSearcher();
     }
 
@@ -48,7 +51,10 @@ public class BaseFragment extends Fragment {
             lastBackPressed = current;
 
             // 토스트를 띄운다.
-            ToastHelper.info(getActivity(), R.string.back_pressed);
+            FragmentActivity activity = getActivity();
+            if (activity != null) {
+                ToastHelper.info(activity, R.string.back_pressed);
+            }
         }
     }
 }
