@@ -29,9 +29,9 @@ public class AppHelper {
 
     public static int getIconResId(Context context) {
         if (isComicz(context)) {
-            return R.drawable.comicz;
+            return R.mipmap.comicz;
         } else {
-            return R.drawable.explorer;
+            return R.mipmap.explorer;
         }
     }
 }

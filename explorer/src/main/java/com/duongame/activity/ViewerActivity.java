@@ -7,10 +7,16 @@ import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.util.DisplayMetrics;
+import android.view.Display;
+import android.view.KeyCharacterMap;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -107,7 +113,7 @@ public class ViewerActivity extends AppCompatActivity {
 //            setContentView(layout);
 //
 //        } else {
-            setContentView(contentViewResId);
+        setContentView(contentViewResId);
 //        }
     }
 
@@ -196,6 +202,12 @@ public class ViewerActivity extends AppCompatActivity {
         topPanel.setY(getStatusBarHeight());
 
         bottomPanel = findViewById(R.id.panel_bottom);
+        if (hasSoftKeys()) {
+            FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams) bottomPanel.getLayoutParams();
+            lp.bottomMargin = getNavigationBarHeight();
+            bottomPanel.requestLayout();
+        }
+
         textPage = findViewById(R.id.text_page);
         seekPage = findViewById(R.id.seek_page);
 
@@ -268,6 +280,33 @@ public class ViewerActivity extends AppCompatActivity {
     }
 
     protected void updateName(int i) {
+    }
+
+    public boolean hasSoftKeys() {
+        boolean hasSoftwareKeys = true;
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            final Display d = getWindowManager().getDefaultDisplay();
+
+            final DisplayMetrics realDisplayMetrics = new DisplayMetrics();
+            d.getRealMetrics(realDisplayMetrics);
+
+            final int realHeight = realDisplayMetrics.heightPixels;
+            final int realWidth = realDisplayMetrics.widthPixels;
+
+            final DisplayMetrics displayMetrics = new DisplayMetrics();
+            d.getMetrics(displayMetrics);
+
+            final int displayHeight = displayMetrics.heightPixels;
+            final int displayWidth = displayMetrics.widthPixels;
+
+            hasSoftwareKeys = (realWidth - displayWidth) > 0 || (realHeight - displayHeight) > 0;
+        } else {
+            boolean hasMenuKey = ViewConfiguration.get(this).hasPermanentMenuKey();
+            boolean hasBackKey = KeyCharacterMap.deviceHasKey(KeyEvent.KEYCODE_BACK);
+            hasSoftwareKeys = !hasMenuKey && !hasBackKey;
+        }
+        return hasSoftwareKeys;
     }
 
     protected int getNavigationBarHeight() {

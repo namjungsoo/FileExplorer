@@ -5,7 +5,7 @@
     <application
         android:name=".AnalyticsApplication"
         android:allowBackup="true"
-        android:icon="@drawable/explorer"
+        android:icon="@mipmap/explorer"
         android:label="${APP_NAME}"
         android:largeHeap="true"
         android:theme="@style/ExplorerTheme">
