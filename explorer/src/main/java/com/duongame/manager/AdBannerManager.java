@@ -38,7 +38,6 @@ public class AdBannerManager {
         return adView;
     }
 
-
     public static void initBannerAd(Activity context, int i) {
         adBannerView[i] = createAd(context, BANNER_ID, AdSize.SMART_BANNER);
         adBannerView[i].setId(R.id.admob);

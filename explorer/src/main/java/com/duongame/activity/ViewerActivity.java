@@ -1,6 +1,5 @@
 package com.duongame.activity;
 
-import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
@@ -8,23 +7,19 @@ import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
 import com.duongame.AnalyticsApplication;
-import com.duongame.BuildConfig;
 import com.duongame.R;
 import com.duongame.bitmap.BitmapCacheManager;
 import com.duongame.helper.PreferenceHelper;
-import com.duongame.manager.AdBannerManager;
 import com.duongame.manager.AdInterstitialManager;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.analytics.HitBuilders;
@@ -60,7 +55,7 @@ public class ViewerActivity extends AppCompatActivity {
     protected SeekBar seekPage;
     protected int contentViewResId;
 
-    private View mainView;
+    //private View mainView;
     private AdView adView;
 
     protected AnalyticsApplication application;
@@ -80,36 +75,43 @@ public class ViewerActivity extends AppCompatActivity {
         mTracker = application.getDefaultTracker();
     }
 
+    protected void initAdLayout() {
+
+    }
+
     protected void initContentView() {
-        if (BuildConfig.SHOW_AD) {
-            final LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            mainView = inflater.inflate(contentViewResId, null, true);
-
-            final RelativeLayout layout = new RelativeLayout(this);
-            layout.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT));
-
-            AdBannerManager.initBannerAd(this, 1);
-            adView = AdBannerManager.getAdBannerView(1);
-
-            // adview layout params
-            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-            params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
-            adView.setLayoutParams(params);
-            AdBannerManager.requestAd(1);
-
-            // mainview layout params
-            params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
-            params.addRule(RelativeLayout.ABOVE, adView.getId());
-            mainView.setLayoutParams(params);
-
-            layout.addView(adView);
-            layout.addView(mainView);
-
-            setContentView(layout);
-
-        } else {
+        // 여기서 광고를 없애고
+//        if (BuildConfig.SHOW_AD) {
+//            final LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+//            if (inflater == null)
+//                return;
+//            View mainView = inflater.inflate(contentViewResId, null, true);
+//
+//            final RelativeLayout layout = new RelativeLayout(this);
+//            layout.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT));
+//
+//            AdBannerManager.initBannerAd(this, 1);
+//            adView = AdBannerManager.getAdBannerView(1);
+//
+//            // adview layout params
+//            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+//            params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+//            adView.setLayoutParams(params);
+//            AdBannerManager.requestAd(1);
+//
+//            // mainview layout params
+//            params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
+//            params.addRule(RelativeLayout.ABOVE, adView.getId());
+//            mainView.setLayoutParams(params);
+//
+//            layout.addView(adView);
+//            layout.addView(mainView);
+//
+//            setContentView(layout);
+//
+//        } else {
             setContentView(contentViewResId);
-        }
+//        }
     }
 
     @Override
@@ -188,18 +190,19 @@ public class ViewerActivity extends AppCompatActivity {
     }
 
     protected void initToolBox() {
-        textName = (TextView) findViewById(R.id.text_name);
+        textName = findViewById(R.id.text_name);
 
-        textInfo = (TextView) findViewById(R.id.text_info);
-        textSize = (TextView) findViewById(R.id.text_size);
+        textInfo = findViewById(R.id.text_info);
+        textSize = findViewById(R.id.text_size);
 
-        topPanel = (LinearLayout) findViewById(R.id.panel_top);
+        topPanel = findViewById(R.id.panel_top);
         topPanel.setY(getStatusBarHeight());
 
-        bottomPanel = (LinearLayout) findViewById(R.id.panel_bottom);
-        textPage = (TextView) findViewById(R.id.text_page);
-        seekPage = (SeekBar) findViewById(R.id.seek_page);
+        bottomPanel = findViewById(R.id.panel_bottom);
+        textPage = findViewById(R.id.text_page);
+        seekPage = findViewById(R.id.seek_page);
 
+        bottomPanel.addView();
         seekPage.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
