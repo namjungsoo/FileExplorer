@@ -20,6 +20,7 @@ import com.duongame.AnalyticsApplication;
 import com.duongame.R;
 import com.duongame.bitmap.BitmapCacheManager;
 import com.duongame.helper.PreferenceHelper;
+import com.duongame.manager.AdBannerManager;
 import com.duongame.manager.AdInterstitialManager;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.analytics.HitBuilders;
@@ -73,10 +74,6 @@ public class ViewerActivity extends AppCompatActivity {
 
         application = (AnalyticsApplication) getApplication();
         mTracker = application.getDefaultTracker();
-    }
-
-    protected void initAdLayout() {
-
     }
 
     protected void initContentView() {
@@ -202,7 +199,14 @@ public class ViewerActivity extends AppCompatActivity {
         textPage = findViewById(R.id.text_page);
         seekPage = findViewById(R.id.seek_page);
 
-        bottomPanel.addView();
+        //ADVIEW
+        AdBannerManager.initBannerAd(this, 1);
+        adView = AdBannerManager.getAdBannerView(1);
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        adView.setLayoutParams(params);
+        AdBannerManager.requestAd(1);
+        bottomPanel.addView(adView);
+
         seekPage.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
