@@ -83,6 +83,9 @@ public class AdInterstitialManager {
 
     public static boolean showAd(Activity context, int mode) {
         AdInterstitialManager.mode = mode;
+        if (interstitialAD == null)
+            return false;
+
         if (interstitialAD.isLoaded()) {
             interstitialAD.show();
             JLog.d(TAG, "show");
