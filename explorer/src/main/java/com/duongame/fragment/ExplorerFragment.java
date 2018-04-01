@@ -653,6 +653,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
             if (fileList == null)
                 return;
 
+            //TODO: 여기서 IndexOutOfBoundsException 발생함. 동기화 문제.
             ExplorerItem item = fileList.get(position);
             if (item == null)
                 return;

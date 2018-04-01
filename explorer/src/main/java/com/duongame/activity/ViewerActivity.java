@@ -161,7 +161,7 @@ public class ViewerActivity extends AppCompatActivity {
         final int count = PreferenceHelper.getExitAdCount(this);
 
         // 2번중에 1번을 띄워준다.
-        if (count % 2 == 1) {// 전면 팝업후 종료 팝업
+        if (count % 4 == 1) {// 전면 팝업후 종료 팝업
             if (!AdInterstitialManager.showAd(this, AdInterstitialManager.MODE_EXIT)) {
                 // 보여지지 않았다면 insterstitial후 카운트 증가하지 않음
                 return;

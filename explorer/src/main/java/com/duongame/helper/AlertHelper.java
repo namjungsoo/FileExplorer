@@ -4,9 +4,11 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.view.View;
+import android.view.ViewGroup;
 
 import com.duongame.R;
 import com.duongame.manager.AdBannerManager;
+import com.google.android.gms.ads.AdView;
 
 /**
  * Created by namjungsoo on 2016-04-30.
@@ -40,7 +42,17 @@ public class AlertHelper {
                                        DialogInterface.OnClickListener posListener,
                                        DialogInterface.OnClickListener negListener,
                                        DialogInterface.OnKeyListener keyListener) {
-        showAlert(context, title, message, AdBannerManager.getAdPopupView(), posListener, negListener, keyListener);
+        // adPopupView가 이전의 팝업에 붙어 있을경우 처리해줌
+        AdView adView = AdBannerManager.getAdPopupView();
+        if(adView == null)
+            return;
+
+        ViewGroup vg = (ViewGroup) adView.getParent();
+        if(vg != null) {
+            vg.removeView(adView);
+        }
+
+        showAlert(context, title, message, adView, posListener, negListener, keyListener);
     }
 
 
@@ -50,10 +62,19 @@ public class AlertHelper {
                                        DialogInterface.OnClickListener posListener,
                                        DialogInterface.OnKeyListener keyListener,
                                        boolean okOnly) {
+        AdView adView = AdBannerManager.getAdPopupView();
+        if(adView == null)
+            return;
+
+        ViewGroup vg = (ViewGroup) adView.getParent();
+        if(vg != null) {
+            vg.removeView(adView);
+        }
+
         final AlertDialog.Builder builder = new AlertDialog.Builder(context)
                 .setTitle(title)
                 .setMessage(message)
-                .setView(AdBannerManager.getAdPopupView())
+                .setView(adView)
                 .setIcon(AppHelper.getIconResId(context))
                 .setOnKeyListener(keyListener)
                 .setPositiveButton(context.getString(R.string.ok), posListener);
