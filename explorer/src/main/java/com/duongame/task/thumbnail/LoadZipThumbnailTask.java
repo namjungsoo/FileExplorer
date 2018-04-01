@@ -60,6 +60,7 @@ public class LoadZipThumbnailTask extends AsyncTask<String, Void, String> {
         if (iconSmallRef.get() == null)
             return;
 
+
         if (contextRef.get() instanceof Activity) {
             if (((Activity) contextRef.get()).isFinishing())
                 return;
