@@ -30,9 +30,9 @@ public class LoadZipThumbnailTask extends AsyncTask<String, Void, String> {
     private String path;
 
     public LoadZipThumbnailTask(Context context, ImageView icon, ImageView iconSmall) {
-        this.contextRef = new WeakReference<Context>(context);
-        this.iconRef = new WeakReference<ImageView>(icon);
-        this.iconSmallRef = new WeakReference<ImageView>(iconSmall);
+        this.contextRef = new WeakReference<>(context);
+        this.iconRef = new WeakReference<>(icon);
+        this.iconSmallRef = new WeakReference<>(iconSmall);
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.duongame.activity;
 
+import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -31,7 +32,6 @@ import com.duongame.fragment.BaseFragment;
 import com.duongame.fragment.ExplorerFragment;
 import com.duongame.helper.AlertHelper;
 import com.duongame.helper.AppHelper;
-import com.duongame.helper.JLog;
 import com.duongame.helper.PreferenceHelper;
 import com.duongame.helper.ToastHelper;
 import com.duongame.helper.UnitHelper;
@@ -95,6 +95,12 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Fabric.with(this, new Crashlytics());
+//        final Fabric fabric = new Fabric.Builder(BaseActivity.this)
+//                .kits(new Crashlytics())
+//                .debuggable(true)           // Enables Crashlytics debugger
+//                .build();
+//        Fabric.with(fabric);
+
 
         AdBannerManager.init(this);
         AdInterstitialManager.init(this);
@@ -123,6 +129,13 @@ public abstract class BaseActivity extends AppCompatActivity {
             }
         });
 
+        //TEST Fabric
+//        runOnUiThread(new Runnable() {
+//            @Override
+//            public void run() {
+//                Crashlytics.getInstance().crash(); // Force a crash
+//            }
+//        });
     }
 
     @Override
@@ -480,17 +493,25 @@ public abstract class BaseActivity extends AppCompatActivity {
     public void showBottomUI() {
         final int defaultHeight = mainView.getHeight();
 
-        bottom.animate().translationYBy(-bottom.getHeight()).setUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator animation) {
-                int offset = (int) ((float) animation.getAnimatedValue() * bottom.getHeight());
+        // setUpdateListener requires API 19
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            bottom.animate().translationYBy(-bottom.getHeight()).setUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                @Override
+                public void onAnimationUpdate(ValueAnimator animation) {
+                    int offset = (int) ((float) animation.getAnimatedValue() * bottom.getHeight());
 //                JLog.e("TAG", "" + animation.getAnimatedValue() + " " + offset + " " + mainView.getHeight());
-                mainView.getLayoutParams().height = defaultHeight - offset;
-                mainView.requestLayout();
-            }
-        });
+                    mainView.getLayoutParams().height = defaultHeight - offset;
+                    mainView.requestLayout();
+                }
+            });
+        } else {
+            ObjectAnimator oa = ObjectAnimator.ofFloat(bottom, View.TRANSLATION_Y, bottom.getTranslationY(), bottom.getTranslationY() - bottom.getHeight());
+            oa.setDuration(300);
+            oa.start();
+        }
+
         ActionBar actionBar = getSupportActionBar();
-        if(actionBar != null) {
+        if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
@@ -500,15 +521,22 @@ public abstract class BaseActivity extends AppCompatActivity {
     public void hideBottomUI() {
         final int defaultHeight = mainView.getHeight();
 
-        bottom.animate().translationYBy(bottom.getHeight()).setUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator animation) {
-                int offset = (int) ((float) animation.getAnimatedValue() * bottom.getHeight());
+        // setUpdateListener requires API 19
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            bottom.animate().translationYBy(bottom.getHeight()).setUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                @Override
+                public void onAnimationUpdate(ValueAnimator animation) {
+                    int offset = (int) ((float) animation.getAnimatedValue() * bottom.getHeight());
 //                JLog.e("TAG", "" + animation.getAnimatedValue() + " " + offset + " " + mainView.getHeight());
-                mainView.getLayoutParams().height = defaultHeight + offset;
-                mainView.requestLayout();
-            }
-        });
+                    mainView.getLayoutParams().height = defaultHeight + offset;
+                    mainView.requestLayout();
+                }
+            });
+        } else {
+            ObjectAnimator oa = ObjectAnimator.ofFloat(bottom, View.TRANSLATION_Y, bottom.getTranslationY(), bottom.getTranslationY() + bottom.getHeight());
+            oa.setDuration(300);
+            oa.start();
+        }
 
         // 원래 타이틀로 돌려준다.
         ActionBar actionBar = getSupportActionBar();
@@ -549,7 +577,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         btnPaste.setEnabled(true);
 
         ActionBar actionBar = getSupportActionBar();
-        if(actionBar != null) {
+        if (actionBar != null) {
             actionBar.setTitle(R.string.paste);
         }
 
