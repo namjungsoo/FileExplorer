@@ -2,8 +2,6 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 26
-    buildToolsVersion '26.0.2'
-
 
     lintOptions {
         abortOnError false
@@ -22,8 +20,15 @@ android {
         targetSdkVersion 26
         versionCode 1
         versionName "1.0.0"
-        //multiDexEnabled true
+    }
 
+    signingConfigs {
+        release {
+            storeFile file("../fileexplorer.jks")
+            storePassword "love77"
+            keyAlias "comicz"
+            keyPassword "love77"
+        }
     }
 
     sourceSets {
@@ -36,20 +41,18 @@ android {
         }
     }
 
-
     buildTypes {
-
         release {
+            signingConfig signingConfigs.release
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
 
-
-//    dexOptions {
-//        jumboMode true
-//        javaMaxHeapSize "4g"
-//    }
+    dexOptions {
+        jumboMode true
+        javaMaxHeapSize "4g"
+    }
 
     flavorDimensions("project", "edition")
 
@@ -90,7 +93,7 @@ android {
             addManifestPlaceholders([APP_NAME: "@string/file_name_free"])
         }
 
-        // 유료
+        // 유료(현재 사용하지 않음)
         pro {
             buildConfigField "boolean", "SHOW_AD", "false"
             dimension "edition"
@@ -102,6 +105,7 @@ android {
         }
     }
 
+    // Android Studio 3.1에서 주석처리함
     variantFilter { variant ->
         // 메인일 경우에 현재 사용하지 않으므로 무시하라
         if (variant.getFlavors().get(1).name.equals('main')) {
@@ -110,6 +114,13 @@ android {
         // 프로일 경우에 현재 사용하지 않으므로 무시하라
         if (variant.getFlavors().get(1).name.equals('pro')) {
             variant.setIgnore(true)
+        }
+    }
+
+    //D:\git\FileExplorer\explorer\release에 output을 내도록 수정
+    applicationVariants.all { variant ->
+        variant.outputs.all {
+            outputFileName = "../../release/" + outputFileName
         }
     }
 
