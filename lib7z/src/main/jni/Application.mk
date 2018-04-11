@@ -1,4 +1,4 @@
-APP_ABI := armeabi-v7a
+APP_ABI := armeabi-v7a, armeabi
 APP_PLATFORM := android-14
 APP_DEPRECATED_HEADERS := true
 

@@ -155,6 +155,12 @@ public class BookDB extends SQLiteOpenHelper {
         if(book == null)
             return;
 
+        //FIX: NPE 수정
+        if(book.path == null)
+            return;
+        if(book.name == null)
+            return;
+
         final SQLiteDatabase db = getInstance(context).getReadableDatabase();
 
         book.path = book.path.replace("'", "''");

@@ -115,6 +115,8 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
     private int sortType;
     private int sortDirection;
 
+    private boolean canClick = true;
+
     public Tracker getTracker() {
         FragmentActivity activity = getActivity();
         if (activity == null)
@@ -403,7 +405,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
         }
 
         FragmentActivity activity = getActivity();
-        if(activity != null)
+        if (activity != null)
             return;
 
         UnzipTask task = new UnzipTask(activity);
@@ -654,6 +656,9 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
                 return;
 
             //TODO: 여기서 IndexOutOfBoundsException 발생함. 동기화 문제.
+            if (fileList.size() <= position)// 포지션이 이상하면 return
+                return;
+
             ExplorerItem item = fileList.get(position);
             if (item == null)
                 return;
@@ -703,12 +708,16 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
 
     @Override
     public void onItemClick(int position) {
-        onAdapterItemClick(position);
+        if(canClick) {
+            onAdapterItemClick(position);
+        }
     }
 
     @Override
     public void onItemLongClick(int position) {
-        onAdapterItemLongClick(position);
+        if(canClick) {
+            onAdapterItemLongClick(position);
+        }
     }
 
     class SearchTask extends AsyncTask<String, Void, Void> {
@@ -793,7 +802,16 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
         }
 
         @Override
+        protected void onPreExecute() {
+            super.onPreExecute();// AsyncTask는 아무것도 안함
+
+            canClick = false;// 이제부터 클릭할수 없음
+        }
+
+        @Override
         protected void onPostExecute(Void result) {
+            super.onPostExecute(result);// AsyncTask는 아무것도 안함
+
             if (isCancelled())
                 return;
 
@@ -834,6 +852,8 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
                     fragment.switcherContents.setDisplayedChild(0);
                 }
             }
+
+            canClick = true;
         }
     }
 
@@ -859,7 +879,8 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
         searchTask = new SearchTask(this, isPathChanged);
         searchTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, path);
 
-        // 가장 오른쪽으로 스크롤
+        // 패스 UI를 가장 오른쪽으로 스크롤
+        // 이동이 완료되기전에 이미 이동한다.
         scrollPath.post(new Runnable() {
                             @Override
                             public void run() {
@@ -1139,7 +1160,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
 
     void runPasteTask(String pastePath) {
         FragmentActivity activity = getActivity();
-        if(activity != null)
+        if (activity != null)
             return;
 
         PasteTask task = new PasteTask(activity);
@@ -1169,7 +1190,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
                 warnMoveToSameLocation();
             } else {
                 FragmentActivity activity = getActivity();
-                if(activity == null)
+                if (activity == null)
                     return;
 
                 // 사본 생성
@@ -1205,7 +1226,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
         String zipPath = path + "/" + name + ext;
 
         FragmentActivity activity = getActivity();
-        if(activity != null)
+        if (activity != null)
             return;
 
         ZipTask task = new ZipTask(activity);
