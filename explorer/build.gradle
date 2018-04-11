@@ -1,7 +1,7 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 26
+    compileSdkVersion 27
 
     lintOptions {
         abortOnError false
@@ -17,7 +17,7 @@ android {
         buildConfigField "boolean", "SHOW_AD", "true"
         buildConfigField "boolean", "PREVIEW_ZIP", "false"
         minSdkVersion 14
-        targetSdkVersion 26
+        targetSdkVersion 27
         versionCode 1
         versionName "1.0.0"
     }
@@ -117,7 +117,8 @@ android {
         }
     }
 
-    //D:\git\FileExplorer\explorer\release에 output을 내도록 수정
+    // Android studio 3.1.0 이상  
+    // D:\git\FileExplorer\explorer\release에 output을 내도록 수정
     applicationVariants.all { variant ->
         variant.outputs.all {
             outputFileName = "../../release/" + outputFileName
@@ -133,8 +134,8 @@ dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     //implementation files('libs/sevenzip4j.jar')
     //android
-    implementation 'com.android.support:appcompat-v7:26.1.0'
-    implementation 'com.android.support:design:26.1.0'
+    implementation 'com.android.support:appcompat-v7:27.1.1'
+    implementation 'com.android.support:design:27.1.1'
     //zip
     implementation 'net.lingala.zip4j:zip4j:1.2.4'
     //encoding
@@ -146,11 +147,11 @@ dependencies {
     implementation 'com.github.bumptech.glide:glide:4.1.1'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.1.1'
     //firebase - 11.6.0에서 변경하지 말것
-    implementation 'com.google.firebase:firebase-crash:11.8.0'
-    implementation 'com.google.firebase:firebase-core:11.8.0'
-    implementation 'com.google.android.gms:play-services-analytics:11.8.0'
-    implementation 'com.google.android.gms:play-services-ads:11.8.0'
-    implementation 'com.google.firebase:firebase-config:11.8.0'
+    implementation 'com.google.firebase:firebase-crash:12.0.1'
+    implementation 'com.google.firebase:firebase-core:12.0.1'
+    implementation 'com.google.android.gms:play-services-analytics:12.0.1'
+    implementation 'com.google.android.gms:play-services-ads:12.0.1'
+    implementation 'com.google.firebase:firebase-config:12.0.1'
     implementation 'joda-time:joda-time:2.9.9'
     //FileUtils
     implementation 'commons-io:commons-io:2.6'
