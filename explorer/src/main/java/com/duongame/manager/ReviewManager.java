@@ -1,6 +1,7 @@
 package com.duongame.manager;
 
 import android.app.Activity;
+import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
@@ -36,13 +37,23 @@ public class ReviewManager {
                             new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
-                                    final Intent marketLaunch = new Intent(Intent.ACTION_VIEW);
-                                    final String packageName = context.getApplicationContext().getPackageName();
+                                    try {
+                                        final Intent marketLaunch = new Intent(Intent.ACTION_VIEW);
+                                        final String packageName = context.getApplicationContext().getPackageName();
 
-                                    marketLaunch.setData(Uri.parse("market://details?id=" + packageName));
-                                    context.startActivity(marketLaunch);
+                                        marketLaunch.setData(Uri.parse("market://details?id=" + packageName));
+                                        context.startActivity(marketLaunch);
 
-                                    PreferenceHelper.setReviewed(context, true);
+                                        PreferenceHelper.setReviewed(context, true);
+                                    } catch(ActivityNotFoundException e) {// FIX: ActivityNotFoundException
+                                        final Intent marketLaunch = new Intent(Intent.ACTION_VIEW);
+                                        final String packageName = context.getApplicationContext().getPackageName();
+
+                                        marketLaunch.setData(Uri.parse("https://play.google.com/store/apps/details?id=" + packageName));
+                                        context.startActivity(marketLaunch);
+
+                                        PreferenceHelper.setReviewed(context, true);
+                                    }
                                 }
                             },
                             new DialogInterface.OnClickListener() {
