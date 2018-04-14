@@ -73,8 +73,14 @@ public class SearchFragment extends BaseFragment {
             }
 
             FragmentActivity activity = fragment.getActivity();
-            if(activity == null)
+            if(activity == null) {
                 return false;
+            }
+
+            //FIX: NPE
+            if(fragment.searchResult == null) {
+                return false;
+            }
 
             fragment.fileList = fragment.searchResult.fileList;
             if (fragment.fileList != null && fragment.fileList.size() > 0) {
