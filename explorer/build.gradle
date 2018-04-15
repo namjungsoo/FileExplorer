@@ -125,10 +125,11 @@ android {
         }
     }
 
-    packagingOptions {
-        pickFirst "lib/armeabi-v7a/libgnustl_shared.so"
-        pickFirst "lib/armeabi/libgnustl_shared.so"
-    }
+    //gnustl 사용안함
+//    packagingOptions {
+//        pickFirst "lib/armeabi-v7a/libgnustl_shared.so"
+//        pickFirst "lib/armeabi/libgnustl_shared.so"
+//    }
 }
 
 dependencies {
