@@ -118,6 +118,7 @@ public class Z7Extractor {
 
     //region native
     static {
+        System.loadLibrary("gnustl_shared");
         System.loadLibrary("7z");
     }
 

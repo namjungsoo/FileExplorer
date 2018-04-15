@@ -708,14 +708,14 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
 
     @Override
     public void onItemClick(int position) {
-        if(canClick) {
+        if (canClick) {
             onAdapterItemClick(position);
         }
     }
 
     @Override
     public void onItemLongClick(int position) {
-        if(canClick) {
+        if (canClick) {
             onAdapterItemLongClick(position);
         }
     }
