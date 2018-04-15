@@ -4,7 +4,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -21,6 +20,7 @@ import com.duongame.db.Book;
 import com.duongame.db.BookDB;
 import com.duongame.helper.AlertHelper;
 import com.duongame.helper.AppHelper;
+import com.duongame.helper.JLog;
 import com.duongame.manager.AdBannerManager;
 
 import net.lingala.zip4j.exception.ZipException;
@@ -82,12 +82,12 @@ public class ZipActivity extends PagerActivity {
             pagerAdapter.notifyDataSetChanged();
 
             updateScrollInfo(pager.getCurrentItem());
-            Log.e(TAG, "onSuccess i=" + i);
+            JLog.e(TAG, "onSuccess i=" + i);
         }
 
         @Override
         public void onFail(int i, String name) {
-            Log.e(TAG, "onFail i=" + i + " " + name);
+            JLog.e(TAG, "onFail i=" + i + " " + name);
         }
 
         @Override
@@ -415,10 +415,10 @@ public class ZipActivity extends PagerActivity {
 
         if (!fullscreen) {
             // top_side_panel을 보이게 하자
-            final LinearLayout topOptionPanel = (LinearLayout) findViewById(R.id.panel_top_option);
+            final LinearLayout topOptionPanel = findViewById(R.id.panel_top_option);
             topOptionPanel.setVisibility(View.VISIBLE);
 
-            final LinearLayout layoutLeft = (LinearLayout) findViewById(R.id.layout_left);
+            final LinearLayout layoutLeft = findViewById(R.id.layout_left);
             layoutLeft.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -429,7 +429,7 @@ public class ZipActivity extends PagerActivity {
                     updatePageSide();
                 }
             });
-            final LinearLayout layoutRight = (LinearLayout) findViewById(R.id.layout_right);
+            final LinearLayout layoutRight = findViewById(R.id.layout_right);
             layoutRight.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -441,7 +441,7 @@ public class ZipActivity extends PagerActivity {
                 }
             });
 
-            final LinearLayout layoutBoth = (LinearLayout) findViewById(R.id.layout_both);
+            final LinearLayout layoutBoth = findViewById(R.id.layout_both);
             layoutBoth.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

@@ -5,8 +5,9 @@ import android.support.v4.view.ViewPager;
 import android.widget.SeekBar;
 
 import com.duongame.R;
-import com.duongame.bitmap.BitmapCacheManager;
 import com.duongame.adapter.ViewerPagerAdapter;
+import com.duongame.bitmap.BitmapCacheManager;
+import com.duongame.helper.JLog;
 import com.duongame.listener.PagerOnTouchListener;
 import com.felipecsl.gifimageview.library.GifImageView;
 
@@ -71,6 +72,7 @@ public class PagerActivity extends ViewerActivity {
                     BitmapCacheManager.removeAllBitmaps();
                 }
 
+                JLog.e("PagerActivity", "setCurrentItem");
                 pager.setCurrentItem(page, false);
             }
         });

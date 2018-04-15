@@ -4,6 +4,7 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
+import android.util.Log;
 
 import com.duongame.adapter.ExplorerItem;
 
@@ -65,6 +66,7 @@ public class BitmapCacheManager {
     }
 
     public static void removeAllPages() {
+        Log.e(TAG, "removeAllPages");
         for (String key : pageCache.keySet()) {
             Bitmap bitmap = pageCache.get(key);
             if (bitmap != null) {
@@ -126,6 +128,7 @@ public class BitmapCacheManager {
     }
 
     public static void removeAllBitmaps() {
+        Log.e(TAG, "removeAllBitmaps");
         for (String key : bitmapCache.keySet()) {
             Bitmap bitmap = bitmapCache.get(key);
             if (bitmap != null) {

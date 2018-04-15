@@ -11,6 +11,7 @@ import com.duongame.R;
 import com.duongame.activity.PagerActivity;
 import com.duongame.attacher.ImageViewAttacher;
 import com.duongame.bitmap.BitmapCacheManager;
+import com.duongame.helper.JLog;
 import com.duongame.listener.PagerOnTouchListener;
 import com.duongame.task.bitmap.LoadBitmapTask;
 import com.duongame.task.bitmap.LoadGifTask;
@@ -39,7 +40,7 @@ public class PhotoPagerAdapter extends ViewerPagerAdapter {
 
     @Override
     public Object instantiateItem(final ViewGroup container, final int position) {
-//        JLog.e(TAG, "instantiateItem " + position);
+        JLog.e(TAG, "instantiateItem " + position);
 
         final FrameLayout rootView = (FrameLayout) context.getLayoutInflater().inflate(R.layout.viewer_page, container, false);
         final ImageView imageView = (ImageView) rootView.findViewById(R.id.image_viewer);
@@ -135,7 +136,7 @@ public class PhotoPagerAdapter extends ViewerPagerAdapter {
 
     @Override
     public void setPrimaryItem(final ViewGroup container, final int position, Object object) {
-//        JLog.e(TAG, "setPrimaryItem " + position);
+        JLog.e(TAG, "setPrimaryItem " + position);
 
         final int width = container.getWidth();
         final int height = container.getHeight();
@@ -163,53 +164,57 @@ public class PhotoPagerAdapter extends ViewerPagerAdapter {
 //                preloadAndRemoveNearBitmap(position, width, height);
             }
 
-            // GIF 이미지일 경우
-            // 메모리에 사라졌다가 재 로딩일 경우에 애니메이션이 잘 안된다.
-            final ViewGroup rootView = (ViewGroup) object;
-            if (rootView == null)
-                return;
+            updateGifImage(object, position);
+        }
+    }
 
-            final PagerActivity pagerActivity = (PagerActivity) context;
-            final GifImageView imageView = (GifImageView) rootView.findViewById(R.id.image_viewer);
+    private void updateGifImage(Object object, final int position) {
+        // GIF 이미지일 경우
+        // 메모리에 사라졌다가 재 로딩일 경우에 애니메이션이 잘 안된다.
+        final ViewGroup rootView = (ViewGroup) object;
+        if (rootView == null)
+            return;
 
-            if (!useGifAni)
-                return;
+        final PagerActivity pagerActivity = context;
+        final GifImageView imageView = rootView.findViewById(R.id.image_viewer);
 
-            if (imageList.get(position).path.endsWith(".gif")) {
-                final LoadGifTask task = new LoadGifTask(new LoadGifTask.LoadGifListener() {
-                    @Override
-                    public void onSuccess(byte[] data) {
-                        // 기존 GIF가 있으면 가져와서 stop해줌
-                        pagerActivity.stopGifAnimation();
+        if (!useGifAni)
+            return;
 
-                        //imageView.stopAnimation();
-                        imageView.setBytes(data);
-                        imageView.startAnimation();
+        if (imageList.get(position).path.endsWith(".gif")) {
+            final LoadGifTask task = new LoadGifTask(new LoadGifTask.LoadGifListener() {
+                @Override
+                public void onSuccess(byte[] data) {
+                    // 기존 GIF가 있으면 가져와서 stop해줌
+                    pagerActivity.stopGifAnimation();
 
-                        // 성공이면 imageView를 저장해 놓음
-                        pagerActivity.setGifImageView(imageView);
+                    //imageView.stopAnimation();
+                    imageView.setBytes(data);
+                    imageView.startAnimation();
 
-                        ExplorerItem item = getImageList().get(position);
-                        if (item != null) {
-                            item.width = imageView.getGifWidth();
-                            item.height = imageView.getGifHeight();
-                        }
-                        context.updateInfo(position);
+                    // 성공이면 imageView를 저장해 놓음
+                    pagerActivity.setGifImageView(imageView);
+
+                    ExplorerItem item = getImageList().get(position);
+                    if (item != null) {
+                        item.width = imageView.getGifWidth();
+                        item.height = imageView.getGifHeight();
                     }
+                    context.updateInfo(position);
+                }
 
-                    @Override
-                    public void onFail() {
-                        // 기존 GIF가 있으면 가져와서 stop해줌
-                        pagerActivity.stopGifAnimation();
-                        pagerActivity.setGifImageView(null);
-                    }
-                });
-                task.execute(imageList.get(position).path);
-            } else {// GIF가 아니면
-                // 기존 GIF가 있으면 가져와서 stop해줌
-                pagerActivity.stopGifAnimation();
-                pagerActivity.setGifImageView(null);
-            }
+                @Override
+                public void onFail() {
+                    // 기존 GIF가 있으면 가져와서 stop해줌
+                    pagerActivity.stopGifAnimation();
+                    pagerActivity.setGifImageView(null);
+                }
+            });
+            task.execute(imageList.get(position).path);
+        } else {// GIF가 아니면
+            // 기존 GIF가 있으면 가져와서 stop해줌
+            pagerActivity.stopGifAnimation();
+            pagerActivity.setGifImageView(null);
         }
     }
 

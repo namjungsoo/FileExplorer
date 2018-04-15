@@ -253,7 +253,7 @@ public class ExplorerAdapter extends RecyclerView.Adapter<ExplorerAdapter.Explor
     }
 
     void setIconZip(final ExplorerViewHolder viewHolder, ExplorerItem item) {
-        Log.e(TAG, "setIconZip " + item.path);
+        JLog.e(TAG, "setIconZip " + item.path);
         final Drawable drawable = getDrawable(item.path);
         if (drawable == null) {
             viewHolder.icon.setImageResource(R.drawable.zip);

@@ -8,7 +8,6 @@ import java.util.ArrayList;
 
 public class Unrar {
     static {
-        System.loadLibrary("gnustl_shared");
         System.loadLibrary("unrar");
     }
 
