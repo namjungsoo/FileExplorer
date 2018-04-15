@@ -43,7 +43,7 @@ public class PhotoPagerAdapter extends ViewerPagerAdapter {
         JLog.e(TAG, "instantiateItem " + position);
 
         final FrameLayout rootView = (FrameLayout) context.getLayoutInflater().inflate(R.layout.viewer_page, container, false);
-        final ImageView imageView = (ImageView) rootView.findViewById(R.id.image_viewer);
+        final ImageView imageView = rootView.findViewById(R.id.image_viewer);
 
 //        rootView.setBaseOnTouchListener(mPagerOnTouchListener);
 
@@ -102,7 +102,7 @@ public class PhotoPagerAdapter extends ViewerPagerAdapter {
 
         // 이미지뷰에서 bitmap을 끊어주자.
         final ViewGroup rootView = (ViewGroup) object;
-        final ImageView imageView = (ImageView) rootView.findViewById(R.id.image_viewer);
+        final ImageView imageView = rootView.findViewById(R.id.image_viewer);
         imageView.setImageBitmap(null);
 
         //FIX: OOM

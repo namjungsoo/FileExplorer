@@ -2,6 +2,8 @@ package com.duongame.activity;
 
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
+import android.view.View;
+import android.widget.ImageView;
 import android.widget.SeekBar;
 
 import com.duongame.R;
@@ -68,6 +70,21 @@ public class PagerActivity extends ViewerActivity {
                 if (Math.abs(current - page) > 2) {
                     // 모든 로딩 중인 태스크를 정리하고 비트맵을 리사이클을 한다.
                     pagerAdapter.stopAllTasks();
+
+                    // ImageView bitmap을 전부 null로 셋팅한다.
+                    int count = pager.getChildCount();
+                    for (int i = 0; i < count; i++) {
+                        View view = pager.getChildAt(i);
+                        if (view == null)
+                            continue;
+                        ImageView imageView = view.findViewById(R.id.image_viewer);
+                        if (imageView == null)
+                            continue;
+
+                        imageView.setImageBitmap(null);
+                    }
+
+                    // 모든 캐쉬 비트맵을 정리한다.
                     BitmapCacheManager.removeAllPages();
                     BitmapCacheManager.removeAllBitmaps();
                 }

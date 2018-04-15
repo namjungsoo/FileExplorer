@@ -62,14 +62,22 @@ public class LoadBitmapTask extends BitmapTask {
         if (bitmap == null)
             return;
 
-        if (imageViewRef.get() == null)
+        ImageView imageView = imageViewRef.get();
+        if (imageView == null)
             return;
 
-        imageViewRef.get().setImageBitmap(bitmap);
-        imageViewRef.get().setTag(item.path);
+        if (isCancelled())
+            return;
 
-        if (!contextRef.get().isFinishing()) {
-            contextRef.get().updateInfo(position);
+        imageView.setImageBitmap(bitmap);
+        imageView.setTag(item.path);
+
+        PagerActivity context = contextRef.get();
+        if(context == null)
+            return;
+
+        if (!context.isFinishing()) {
+            context.updateInfo(position);
         }
 
         // 종횡비 체크

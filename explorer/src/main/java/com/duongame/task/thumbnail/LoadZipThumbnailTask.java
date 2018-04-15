@@ -53,20 +53,20 @@ public class LoadZipThumbnailTask extends AsyncTask<String, Void, String> {
         if (param == null)
             return;
 
-        if (contextRef.get() == null)
+        Context context = contextRef.get();
+        if (context == null)
             return;
         if (iconRef.get() == null)
             return;
         if (iconSmallRef.get() == null)
             return;
 
-
-        if (contextRef.get() instanceof Activity) {
-            if (((Activity) contextRef.get()).isFinishing())
+        if (context instanceof Activity) {
+            if (((Activity) context).isFinishing())
                 return;
         }
 
-        GlideApp.with(contextRef.get())
+        GlideApp.with(context)
                 .load(new File(param))
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .placeholder(R.drawable.zip)
@@ -75,8 +75,9 @@ public class LoadZipThumbnailTask extends AsyncTask<String, Void, String> {
                     @Override
                     protected void setResource(@Nullable Drawable resource) {
                         //FIX: destroyed activity error
-                        if (contextRef.get() instanceof Activity) {
-                            if (((Activity) contextRef.get()).isFinishing())
+                        Context context = contextRef.get();
+                        if (context instanceof Activity) {
+                            if (((Activity) context).isFinishing())
                                 return;
                         }
 

@@ -297,6 +297,20 @@ public class ZipActivity extends PagerActivity {
         // 전부 초기화 한다.
         // 초기화 하기전에 task를 전부 stop한다.
         pagerAdapter.stopAllTasks();
+
+        // ImageView bitmap을 전부 null로 셋팅한다.
+        int count = pager.getChildCount();
+        for (int i = 0; i < count; i++) {
+            View view = pager.getChildAt(i);
+            if (view == null)
+                continue;
+            ImageView imageView = view.findViewById(R.id.image_viewer);
+            if (imageView == null)
+                continue;
+
+            imageView.setImageBitmap(null);
+        }
+
         pager.removeAllViews();
         BitmapCacheManager.removeAllPages();
         BitmapCacheManager.removeAllBitmaps();
