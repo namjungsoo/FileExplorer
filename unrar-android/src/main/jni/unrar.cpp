@@ -33,10 +33,10 @@ std::vector<RarFileHeader*> *Unrar::getHeaders() {
     //RARSetCallback(hArchive, CallBack, (LPARAM)this);
     if(data.OpenResult == ERAR_SUCCESS) {
         std::vector<RarFileHeader*> *headerVec = new std::vector<RarFileHeader*>;
+        RARHeaderData header;
         int ret;
         while(ERAR_SUCCESS == (ret = RARReadHeader(hArchive, &header))) {
             RarFileHeader *rarheader = new RarFileHeader;
-
             if (ERAR_SUCCESS != (ret = RARProcessFile(hArchive, RAR_SKIP, NULL, NULL))) {
                 return NULL;
             }
@@ -67,6 +67,7 @@ int Unrar::getCount()
 
     //RARSetCallback(hArchive, CallBack, (LPARAM)this);
     if(data.OpenResult == ERAR_SUCCESS) {
+        RARHeaderData header;
         int ret;
         while(ERAR_SUCCESS == (ret = RARReadHeader(hArchive, &header))) {
             if (ERAR_SUCCESS != (ret = RARProcessFile(hArchive, RAR_SKIP, NULL, NULL))) {

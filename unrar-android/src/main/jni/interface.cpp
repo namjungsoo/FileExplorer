@@ -25,7 +25,7 @@ extern "C" {
             return 0;
         }
 
-        LOGE("getHeaders %d", id); 
+        LOGE("getHeaders %d: %s", id, rar->getRarName().c_str()); 
         std::vector<RarFileHeader*> *headers = rar->getHeaders();
 
         if(headers != NULL) {
@@ -36,7 +36,7 @@ extern "C" {
             for(int i=0; i<headers->size(); i++) {
                 RarFileHeader* header = headers->at(i);
                 if(header != NULL) {
-                    LOGE("getHeaders i=%d %s", i, header->filename.c_str()); 
+                    LOGE("getHeaders %d: %s i=%d %s", id, rar->getRarName().c_str(), i, header->filename.c_str()); 
 
                     NewHeader(env, &jniHeader);
                     jstring filename = env->NewStringUTF(header->filename.c_str());

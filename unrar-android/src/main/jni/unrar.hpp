@@ -42,7 +42,7 @@ struct JNIHeader {
 
 class Unrar {
 public:
-    Unrar(JNIEnv *env, const char *rarname) : id(0), count(0), handle(NULL),
+    Unrar(JNIEnv *env, const char *rarname) : id(0), count(0), //handle(NULL),
         filesize(0), fileprogress(0), jcallback(0), jprocess(0) {
         this->env = env;
         this->rarname = rarname;
@@ -52,6 +52,9 @@ public:
     bool unarchive(const char *file, const char *dest);
     bool unarchiveAll(const char *dest);
     std::vector<RarFileHeader*> *getHeaders();
+    const std::string &getRarName() {
+        return rarname;
+    }
 
 public:
     void setCallback(jobject callback, jmethodID process) {
@@ -59,10 +62,12 @@ public:
         jprocess = process;
     }
 
+    // callback을 위한 현재 filename
     void setFileName(const char *name) {
         filename = name;
     }
 
+    // callback을 위한 현재 filesize
     void setFileSize(long size) {
         filesize = size;
     }
@@ -71,6 +76,7 @@ public:
         fileprogress = 0;
     }
 
+    // java의 callback함수를 호출함. p2는 파일사이즈 progress
     void callback(long P2);
 
 private:
@@ -89,8 +95,9 @@ private:
     jobject jcallback;
     jmethodID jprocess;
 
-    HANDLE handle;
-    RARHeaderData header;
+    // 함수 단위로 직접 다루도록 수정함 
+    // HANDLE handle;
+    // RARHeaderData header;
 };
 
 int CallBack(UINT msg,LPARAM UserData,LPARAM P1,LPARAM P2);

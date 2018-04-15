@@ -372,11 +372,18 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
             FragmentActivity activity = getActivity();
             if (activity == null)
                 return;
-            final String providerName = activity.getPackageName() + ".provider";
-            final Uri apkUri = FileProvider.getUriForFile(activity, providerName, new File(item.path));
-            intent.setDataAndType(apkUri, "application/vnd.android.package-archive");
-            intent.addFlags(FLAG_GRANT_READ_URI_PERMISSION);
-            startActivity(intent);
+
+            //TODO: 외부 SdCard에 있는 설치폴더는 설치가 될것인가?
+            // 일단은 exception은 처리하자.
+            try {
+                final String providerName = activity.getPackageName() + ".provider";
+                final Uri apkUri = FileProvider.getUriForFile(activity, providerName, new File(item.path));
+                intent.setDataAndType(apkUri, "application/vnd.android.package-archive");
+                intent.addFlags(FLAG_GRANT_READ_URI_PERMISSION);
+                startActivity(intent);
+            } catch (Exception e) {
+                ToastHelper.error(activity, R.string.toast_error);
+            }
         } else {
             final Intent intent = new Intent(Intent.ACTION_VIEW);
             intent.setDataAndType(Uri.parse("file://" + item.path), "application/vnd.android.package-archive");
