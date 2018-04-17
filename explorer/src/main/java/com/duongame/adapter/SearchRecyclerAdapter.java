@@ -30,10 +30,10 @@ import static com.duongame.bitmap.BitmapCacheManager.getThumbnail;
 
 // PDF, ZIP, TEXT만 검색될수 있다.
 public class SearchRecyclerAdapter extends RecyclerView.Adapter<SearchRecyclerAdapter.SearchViewHolder> {
-    Activity context;
-    ArrayList<ExplorerItem> fileList;
+    private Activity context;
+    private ArrayList<ExplorerItem> fileList;
 
-    OnItemClickListener onItemClickListener;
+    private OnItemClickListener onItemClickListener;
 
     public interface OnItemClickListener {
         void onItemClick(int position);
@@ -137,14 +137,14 @@ public class SearchRecyclerAdapter extends RecyclerView.Adapter<SearchRecyclerAd
         public SearchViewHolder(View itemView) {
             super(itemView);
 
-            icon = (ImageView) itemView.findViewById(R.id.file_icon);
-            name = (TextView) itemView.findViewById(R.id.text_name);
-            date = (TextView) itemView.findViewById(R.id.text_date);
-            size = (TextView) itemView.findViewById(R.id.text_size);
-            iconSmall = (ImageView) itemView.findViewById(R.id.file_small_icon);
+            icon = itemView.findViewById(R.id.file_icon);
+            name = itemView.findViewById(R.id.text_name);
+            date = itemView.findViewById(R.id.text_date);
+            size = itemView.findViewById(R.id.text_size);
+            iconSmall = itemView.findViewById(R.id.file_small_icon);
 
             name.getLayoutParams().height = UnitHelper.dpToPx(20);
-            path = (TextView) itemView.findViewById(R.id.text_path);
+            path = itemView.findViewById(R.id.text_path);
             path.setVisibility(View.VISIBLE);
             path.getLayoutParams().height = UnitHelper.dpToPx(20);
 

@@ -33,6 +33,22 @@ public class BaseFragment extends Fragment {
         fileSearcher = new FileSearcher();
     }
 
+    //FIX:
+    @Override
+    public void onResume() {
+        super.onResume();
+        if(application == null) {
+            FragmentActivity activity = getActivity();
+            if(activity != null) {
+                application = (AnalyticsApplication) activity.getApplication();
+            }
+        }
+
+        if(fileSearcher == null) {
+            fileSearcher = new FileSearcher();
+        }
+    }
+
     public void onRefresh() {
     }
 

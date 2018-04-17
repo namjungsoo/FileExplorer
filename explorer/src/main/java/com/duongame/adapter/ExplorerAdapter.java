@@ -6,7 +6,6 @@ import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
@@ -42,12 +41,12 @@ public class ExplorerAdapter extends RecyclerView.Adapter<ExplorerAdapter.Explor
     private final static boolean DEBUG = false;
 
     protected ArrayList<ExplorerItem> fileList;
-    protected HashMap<String, ExplorerItem> fileMap;// file path와 file item을 묶어 놓음
+    private HashMap<String, ExplorerItem> fileMap;// file path와 file item을 묶어 놓음
     protected Activity context;
 
     private boolean selectMode = false;
 
-    public boolean getSelectMode() {
+    private boolean getSelectMode() {
         return selectMode;
     }
 
@@ -55,8 +54,8 @@ public class ExplorerAdapter extends RecyclerView.Adapter<ExplorerAdapter.Explor
         selectMode = mode;
     }
 
-    OnItemClickListener onItemClickListener;
-    OnItemLongClickListener onLongItemClickListener;
+    private OnItemClickListener onItemClickListener;
+    private OnItemLongClickListener onLongItemClickListener;
 
     public interface OnItemClickListener {
         void onItemClick(int position);
@@ -123,12 +122,12 @@ public class ExplorerAdapter extends RecyclerView.Adapter<ExplorerAdapter.Explor
 
         public ExplorerViewHolder(View itemView) {
             super(itemView);
-            icon = (ImageView) itemView.findViewById(R.id.file_icon);
-            name = (TextView) itemView.findViewById(R.id.text_name);
-            date = (TextView) itemView.findViewById(R.id.text_date);
-            size = (TextView) itemView.findViewById(R.id.text_size);
-            iconSmall = (ImageView) itemView.findViewById(R.id.file_small_icon);
-            check = (CheckBox) itemView.findViewById(R.id.check_file);
+            icon = itemView.findViewById(R.id.file_icon);
+            name = itemView.findViewById(R.id.text_name);
+            date = itemView.findViewById(R.id.text_date);
+            size = itemView.findViewById(R.id.text_size);
+            iconSmall = itemView.findViewById(R.id.file_small_icon);
+            check = itemView.findViewById(R.id.check_file);
         }
     }
 

@@ -1,7 +1,6 @@
 package com.duongame.task.thumbnail;
 
 import android.app.Activity;
-import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.support.annotation.Nullable;
@@ -24,12 +23,12 @@ import java.lang.ref.WeakReference;
 public class LoadZipThumbnailTask extends AsyncTask<String, Void, String> {
     private final String TAG = LoadZipThumbnailTask.class.getSimpleName();
 
-    private final WeakReference<Context> contextRef;
+    private final WeakReference<Activity> contextRef;
     private final WeakReference<ImageView> iconRef, iconSmallRef;
 
     private String path;
 
-    public LoadZipThumbnailTask(Context context, ImageView icon, ImageView iconSmall) {
+    public LoadZipThumbnailTask(Activity context, ImageView icon, ImageView iconSmall) {
         this.contextRef = new WeakReference<>(context);
         this.iconRef = new WeakReference<>(icon);
         this.iconSmallRef = new WeakReference<>(iconSmall);
@@ -53,7 +52,7 @@ public class LoadZipThumbnailTask extends AsyncTask<String, Void, String> {
         if (param == null)
             return;
 
-        Context context = contextRef.get();
+        Activity context = contextRef.get();
         if (context == null)
             return;
         if (iconRef.get() == null)
@@ -61,33 +60,29 @@ public class LoadZipThumbnailTask extends AsyncTask<String, Void, String> {
         if (iconSmallRef.get() == null)
             return;
 
-        if (context instanceof Activity) {
-            if (((Activity) context).isFinishing())
-                return;
-        }
+        if (context.isFinishing())
+            return;
 
-        GlideApp.with(context)
-                .load(new File(param))
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .placeholder(R.drawable.zip)
-                .centerCrop()
-                .into(new ImageViewTarget<Drawable>(iconRef.get()) {
-                    @Override
-                    protected void setResource(@Nullable Drawable resource) {
-                        //FIX: destroyed activity error
-                        Context context = contextRef.get();
-                        if (context instanceof Activity) {
-                            if (((Activity) context).isFinishing())
-                                return;
-                        }
-
-                        if (path.equals(iconSmallRef.get().getTag())) {
-                            if (resource != null) {
-                                getView().setImageDrawable(resource);
-                                BitmapCacheManager.setDrawable(path, resource);
+        try {
+            GlideApp.with(context.getApplicationContext())
+                    .load(new File(param))
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .placeholder(R.drawable.zip)
+                    .centerCrop()
+                    .into(new ImageViewTarget<Drawable>(iconRef.get()) {
+                        @Override
+                        protected void setResource(@Nullable Drawable resource) {
+                            //FIX: destroyed activity error
+                            if (path.equals(iconSmallRef.get().getTag())) {
+                                if (resource != null) {
+                                    getView().setImageDrawable(resource);
+                                    BitmapCacheManager.setDrawable(path, resource);
+                                }
                             }
                         }
-                    }
-                });
+                    });
+        } catch (Exception e) {// FIX: IllegalArgumentException
+
+        }
     }
 }

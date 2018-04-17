@@ -1,7 +1,6 @@
 package com.duongame.db;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -12,17 +11,17 @@ import android.support.v7.app.AlertDialog;
 import android.view.View;
 
 import com.duongame.R;
-import com.duongame.adapter.HistoryRecyclerAdapter;
+import com.duongame.activity.PdfActivity;
+import com.duongame.activity.TextActivity;
+import com.duongame.activity.ZipActivity;
 import com.duongame.adapter.ExplorerItem;
+import com.duongame.adapter.HistoryRecyclerAdapter;
 import com.duongame.bitmap.BitmapCacheManager;
 import com.duongame.helper.AppHelper;
 import com.duongame.helper.DateHelper;
 import com.duongame.helper.FileHelper;
 import com.duongame.task.thumbnail.LoadPdfThumbnailTask;
 import com.duongame.task.thumbnail.LoadZipThumbnailTask;
-import com.duongame.activity.PdfActivity;
-import com.duongame.activity.TextActivity;
-import com.duongame.activity.ZipActivity;
 
 import static com.duongame.bitmap.BitmapCacheManager.getThumbnail;
 
@@ -176,7 +175,7 @@ public class BookLoader {
         }
     }
 
-    private static void updateHistoryItem(Context context, View view, Book book) {
+    private static void updateHistoryItem(Activity context, View view, Book book) {
         HistoryRecyclerAdapter.HistoryViewHolder holder = new HistoryRecyclerAdapter.HistoryViewHolder(view);
 
         BookLoader.updateBookHolder(context, holder, book);
@@ -218,7 +217,7 @@ public class BookLoader {
         return BookDB.getBook(context, item.path);
     }
 
-    public static void loadBookBitmap(Context context, HistoryRecyclerAdapter.HistoryViewHolder holder, String path) {
+    public static void loadBookBitmap(Activity context, HistoryRecyclerAdapter.HistoryViewHolder holder, String path) {
         // zip 파일의 썸네일을 읽자
         if (FileHelper.isText(path)) {
             holder.thumb.setImageBitmap(BitmapCacheManager.getResourceBitmap(context.getResources(), R.drawable.txt));
@@ -266,7 +265,7 @@ public class BookLoader {
         return String.valueOf(book.percent) + "%";
     }
 
-    public static void updateBookHolder(Context context, HistoryRecyclerAdapter.HistoryViewHolder holder, Book book) {
+    public static void updateBookHolder(Activity context, HistoryRecyclerAdapter.HistoryViewHolder holder, Book book) {
         holder.name.setText(book.name);
         holder.size.setText(FileHelper.getMinimizedSize(book.size));
         holder.date.setText(DateHelper.getExplorerDateString(book.date));

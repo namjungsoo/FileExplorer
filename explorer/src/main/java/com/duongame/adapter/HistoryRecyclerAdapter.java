@@ -44,7 +44,7 @@ public class HistoryRecyclerAdapter extends RecyclerView.Adapter<HistoryRecycler
         return bookList;
     }
 
-    OnItemClickListener onItemClickListener;
+    private OnItemClickListener onItemClickListener;
 
     public interface OnItemClickListener {
         void onItemClick(int position);
@@ -129,17 +129,17 @@ public class HistoryRecyclerAdapter extends RecyclerView.Adapter<HistoryRecycler
         public HistoryViewHolder(View itemView) {
             super(itemView);
 
-            thumb = (ImageView) itemView.findViewById(R.id.image_thumb);
+            thumb = itemView.findViewById(R.id.image_thumb);
             //thumb.setRadiusDp(5);
 
-            name = (TextView) itemView.findViewById(R.id.text_name);
-            size = (TextView) itemView.findViewById(R.id.text_size);
-            date = (TextView) itemView.findViewById(R.id.text_date);
-            page = (TextView) itemView.findViewById(R.id.text_page);
-            percent = (TextView) itemView.findViewById(R.id.text_percent);
-            progressBar = (ProgressBar) itemView.findViewById(R.id.progress_history);
+            name = itemView.findViewById(R.id.text_name);
+            size = itemView.findViewById(R.id.text_size);
+            date = itemView.findViewById(R.id.text_date);
+            page = itemView.findViewById(R.id.text_page);
+            percent = itemView.findViewById(R.id.text_percent);
+            progressBar = itemView.findViewById(R.id.progress_history);
 
-            more = (ImageView) itemView.findViewById(R.id.btn_more);
+            more = itemView.findViewById(R.id.btn_more);
         }
     }
 }

@@ -727,7 +727,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
         }
     }
 
-    class SearchTask extends AsyncTask<String, Void, Void> {
+    class SearchTask extends AsyncTask<String, Void, FileSearcher.Result> {
         WeakReference<ExplorerFragment> fragmentWeakReference;
         boolean pathChanged;
         String path;
@@ -777,7 +777,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
         }
 
         @Override
-        protected Void doInBackground(String... params) {
+        protected FileSearcher.Result doInBackground(String... params) {
             path = params[0];
             updateComparator();
 
@@ -785,7 +785,8 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
             if (fragment == null)
                 return null;
 
-            fragment.searchResult = fragment.fileSearcher
+//            fragment.searchResult = fragment.fileSearcher
+            FileSearcher.Result result = fragment.fileSearcher
                     .setRecursiveDirectory(false)
                     .setExcludeDirectory(false)
                     .setComparator(comparator)
@@ -793,19 +794,20 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
                     .setImageListEnable(true)
                     .search(path);
 
-            fragment = fragmentWeakReference.get();
-            if (fragment == null)
-                return null;
+//            fragment = fragmentWeakReference.get();
+//            if (fragment == null)
+//                return null;
 
-            if (fragment.searchResult == null) {
-                fragment.searchResult = new FileSearcher.Result();
-            }
-            synchronized (ExplorerFragment.this) {
-                fragment.fileList = fragment.searchResult.fileList;
-                fragment.application.setImageList(fragment.searchResult.imageList);
-                fragment.adapter.setFileList(fragment.fileList);
-            }
-            return null;
+            // 이부분을 쓰레드에서 실행하면 안된다.
+//            if (fragment.searchResult == null) {
+//                fragment.searchResult = new FileSearcher.Result();
+//            }
+//            synchronized (ExplorerFragment.this) {
+//                fragment.fileList = fragment.searchResult.fileList;
+//                fragment.application.setImageList(fragment.searchResult.imageList);
+//                fragment.adapter.setFileList(fragment.fileList);
+//            }
+            return result;
         }
 
         @Override
@@ -816,7 +818,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
         }
 
         @Override
-        protected void onPostExecute(Void result) {
+        protected void onPostExecute(FileSearcher.Result result) {
             super.onPostExecute(result);// AsyncTask는 아무것도 안함
 
             if (isCancelled())
@@ -825,6 +827,12 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
             ExplorerFragment fragment = fragmentWeakReference.get();
             if (fragment == null)
                 return;
+
+            //FIX: Index Out of Bound
+            // 쓰레드에서 메인쓰레드로 옮김
+            fragment.fileList = result.fileList;
+            fragment.application.setImageList(result.imageList);
+            fragment.adapter.setFileList(fragment.fileList);
 
             fragment.adapter.notifyDataSetChanged();
 
