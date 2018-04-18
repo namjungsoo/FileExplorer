@@ -20,6 +20,7 @@ import com.duongame.db.BookLoader;
 import com.duongame.helper.PreferenceHelper;
 import com.duongame.view.DividerItemDecoration;
 
+import java.io.File;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
@@ -108,8 +109,22 @@ public class HistoryFragment extends BaseFragment {
             if (fragment == null)
                 return null;
 
+            ArrayList<String> deleteList = new ArrayList<>();
+
             for (int i = 0; i < historyList.size(); i++) {
                 Book book = historyList.get(i);
+
+                try {
+                    // 파일이 존재하지 않으면 삭제 리스트에 넣고 패스함
+                    File file = new File(book.path);
+                    if (!file.exists()) {
+                        deleteList.add(book.path);
+                        continue;
+                    }
+                } catch (Exception e) {
+
+                }
+
                 if (fragment.isHideCompleted) {
                     if (book.percent < 100) {
                         fragment.bookList.add(book);
@@ -119,9 +134,14 @@ public class HistoryFragment extends BaseFragment {
                 }
             }
 
-            if (fragment.recyclerAdapter != null) {
-                fragment.recyclerAdapter.setBookList(fragment.bookList);
+            // 삭제 리스트에 있는 모든 파일을 지운다.
+            for (int i = 0; i < deleteList.size(); i++) {
+                BookDB.clearBook(activity, deleteList.get(i));
             }
+
+//            if (fragment.recyclerAdapter != null) {
+//                fragment.recyclerAdapter.setBookList(fragment.bookList);
+//            }
             return null;
         }
 
@@ -131,8 +151,10 @@ public class HistoryFragment extends BaseFragment {
             if (fragment == null)
                 return;
 
-            if (fragment.recyclerAdapter != null)
+            if (fragment.recyclerAdapter != null) {
+                fragment.recyclerAdapter.setBookList(fragment.bookList);
                 fragment.recyclerAdapter.notifyDataSetChanged();
+            }
 
             // 결과가 있을때 없을때를 구분해서 SWICTH 함
             if (fragment.bookList != null && fragment.bookList.size() > 0) {

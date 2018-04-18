@@ -23,6 +23,8 @@ import com.duongame.helper.FileHelper;
 import com.duongame.task.thumbnail.LoadPdfThumbnailTask;
 import com.duongame.task.thumbnail.LoadZipThumbnailTask;
 
+import java.io.File;
+
 import static com.duongame.bitmap.BitmapCacheManager.getThumbnail;
 
 /**
@@ -31,20 +33,46 @@ import static com.duongame.bitmap.BitmapCacheManager.getThumbnail;
 
 public class BookLoader {
     //TODO: 마지막 책읽기는 comicz만 수행
+    // 액티비티 시작할때
     public static boolean openLastBook(Activity context) {
         final Book book = BookDB.getLastBook(context);
         if (book != null && book.percent < 100) {
-            BookLoader.loadWithAlert(context, book, true);
-            return true;
+            // DB에서는 책을 읽어야 하지만, 파일이 삭제된 경우에는 제외한다.
+            try {
+                File file = new File(book.path);
+                if(file.exists()) {
+                    BookLoader.loadWithAlert(context, book, true);
+                    return true;
+                } else {
+                    // DB에서 삭제한다.
+                    BookDB.clearBook(context, book.path);
+                }
+            }
+            catch (Exception e) {
+                // 아무것도 하지 않고 false 리턴한다.
+            }
         }
         return false;
     }
 
+    // 직접 메뉴에서 마지막 책읽기를 선택한 경우
     public static boolean openLastBookDirect(Activity context) {
         final Book book = BookDB.getLastBook(context);
         if (book != null && book.percent < 100) {
-            BookLoader.loadContinue(context, book);
-            return true;
+            // DB에서는 책을 읽어야 하지만, 파일이 삭제된 경우에는 제외한다.
+            try {
+                File file = new File(book.path);
+                if(file.exists()) {
+                    BookLoader.loadContinue(context, book);
+                    return true;
+                } else {
+                    // DB에서 삭제한다.
+                    BookDB.clearBook(context, book.path);
+                }
+            }
+            catch (Exception e) {
+                // 아무것도 하지 않고 false 리턴한다.
+            }
         }
         return false;
     }
