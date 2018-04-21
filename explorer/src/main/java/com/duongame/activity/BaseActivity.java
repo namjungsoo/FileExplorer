@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -18,6 +19,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
@@ -440,6 +442,27 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
     protected void clearCache() {
+        //FIX:
+        // 모든 썸네일에서 imagebitmap을 찾아서 null해준다.
+        // 그 중에 drawable도 있다.
+        ExplorerFragment explorerFragment = getExplorerFragment();
+        if (explorerFragment != null) {
+            RecyclerView recyclerView = explorerFragment.getCurrentView();
+            if (recyclerView != null && recyclerView.getChildCount() > 0) {
+                for (int i = 0; i < recyclerView.getChildCount(); i++) {
+                    View view = recyclerView.getChildAt(i);
+                    if (view == null)
+                        break;
+                    ImageView imageView = view.findViewById(R.id.file_icon);
+                    if (imageView == null)
+                        break;
+
+                    imageView.setImageBitmap(null);
+                    imageView.setImageDrawable(null);
+                }
+            }
+        }
+
         BitmapCacheManager.removeAllThumbnails();
         BitmapCacheManager.removeAllPages();
         BitmapCacheManager.removeAllBitmaps();
@@ -449,9 +472,8 @@ public abstract class BaseActivity extends AppCompatActivity {
         final File file = getFilesDir();
         deleteRecursive(file);
 
-        final BaseFragment fragment = getExplorerFragment();
-        if (fragment != null)
-            fragment.onRefresh();
+        if (explorerFragment != null)
+            explorerFragment.onRefresh();
     }
 
     protected void deleteRecursive(File fileOrDirectory) {

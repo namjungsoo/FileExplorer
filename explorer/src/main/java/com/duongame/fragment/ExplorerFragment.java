@@ -260,6 +260,10 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
         changeViewType(PreferenceHelper.getViewType(getActivity()));
     }
 
+    public RecyclerView getCurrentView() {
+        return currentView;
+    }
+
     public void changeViewType(int viewType) {
         FragmentActivity activity = getActivity();
         if (activity == null)
@@ -785,7 +789,6 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
             if (fragment == null)
                 return null;
 
-//            fragment.searchResult = fragment.fileSearcher
             FileSearcher.Result result = fragment.fileSearcher
                     .setRecursiveDirectory(false)
                     .setExcludeDirectory(false)
@@ -794,19 +797,11 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
                     .setImageListEnable(true)
                     .search(path);
 
-//            fragment = fragmentWeakReference.get();
-//            if (fragment == null)
-//                return null;
+            if (result == null) {
+                result = new FileSearcher.Result();
+            }
+            fragment.searchResult = result;
 
-            // 이부분을 쓰레드에서 실행하면 안된다.
-//            if (fragment.searchResult == null) {
-//                fragment.searchResult = new FileSearcher.Result();
-//            }
-//            synchronized (ExplorerFragment.this) {
-//                fragment.fileList = fragment.searchResult.fileList;
-//                fragment.application.setImageList(fragment.searchResult.imageList);
-//                fragment.adapter.setFileList(fragment.fileList);
-//            }
             return result;
         }
 

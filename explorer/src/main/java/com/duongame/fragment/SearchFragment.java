@@ -73,18 +73,17 @@ public class SearchFragment extends BaseFragment {
             }
 
             FragmentActivity activity = fragment.getActivity();
-            if(activity == null) {
+            if (activity == null) {
                 return false;
             }
 
             //FIX: NPE
-            if(fragment.searchResult == null) {
+            if (fragment.searchResult == null) {
                 return false;
             }
 
             fragment.fileList = fragment.searchResult.fileList;
             if (fragment.fileList != null && fragment.fileList.size() > 0) {
-                fragment.adapter = new SearchRecyclerAdapter(activity, fragment.fileList);
                 return true;
             }
             return false;
@@ -98,21 +97,27 @@ public class SearchFragment extends BaseFragment {
             }
 
             if (result) {
-                fragment.adapter.setOnItemClickListener(new SearchRecyclerAdapter.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(int position) {
-                        SearchFragment fragment = fragmentWeakReference.get();
-                        if (fragment == null) {
-                            return;
+                FragmentActivity activity = fragment.getActivity();
+                if (activity != null) {
+                    fragment.adapter = new SearchRecyclerAdapter(activity, fragment.fileList);
+                }
+                if (fragment.adapter != null) {
+                    fragment.adapter.setOnItemClickListener(new SearchRecyclerAdapter.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(int position) {
+                            SearchFragment fragment = fragmentWeakReference.get();
+                            if (fragment == null) {
+                                return;
+                            }
+                            if (fragment.fileList != null) {
+                                ExplorerItem item = fragment.fileList.get(position);
+                                FragmentActivity activity = fragment.getActivity();
+                                if (activity != null)
+                                    BookLoader.load(activity, item, false);
+                            }
                         }
-                        if (fragment.fileList != null) {
-                            ExplorerItem item = fragment.fileList.get(position);
-                            FragmentActivity activity = fragment.getActivity();
-                            if (activity != null)
-                                BookLoader.load(activity, item, false);
-                        }
-                    }
-                });
+                    });
+                }
                 fragment.recyclerView.setAdapter(fragment.adapter);
 
                 fragment.switcherContents.setDisplayedChild(0);
