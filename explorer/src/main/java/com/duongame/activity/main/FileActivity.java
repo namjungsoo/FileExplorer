@@ -4,7 +4,7 @@ import com.duongame.R;
 import com.duongame.fragment.BaseFragment;
 import com.duongame.fragment.ExplorerFragment;
 
-public class FileActivity extends BaseActivity {
+public class FileActivity extends BaseMainActivity {
     private final static String TAG = FileActivity.class.getSimpleName();;
 
     @Override

@@ -60,7 +60,7 @@ import static com.duongame.fragment.ExplorerFragment.SWITCH_LIST;
  * Created by Jungsoo on 2017-10-05.
  */
 
-public abstract class BaseActivity extends AppCompatActivity {
+public abstract class BaseMainActivity extends AppCompatActivity {
     protected FirebaseAnalytics mFirebaseAnalytics;
     protected Tracker mTracker;
     protected FirebaseRemoteConfig mFirebaseRemoteConfig;
@@ -97,7 +97,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Fabric.with(this, new Crashlytics());
-//        final Fabric fabric = new Fabric.Builder(BaseActivity.this)
+//        final Fabric fabric = new Fabric.Builder(BaseMainActivity.this)
 //                .kits(new Crashlytics())
 //                .debuggable(true)           // Enables Crashlytics debugger
 //                .build();
@@ -125,7 +125,7 @@ public abstract class BaseActivity extends AppCompatActivity {
                     mFirebaseRemoteConfig.activateFetched();
                     long version = mFirebaseRemoteConfig.getLong("latest_version");
                     if (BuildConfig.VERSION_CODE < version) {
-                        ToastHelper.info(BaseActivity.this, R.string.toast_new_version);
+                        ToastHelper.info(BaseMainActivity.this, R.string.toast_new_version);
                     }
                 }
             }

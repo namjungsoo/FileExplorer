@@ -9,7 +9,7 @@ import com.duongame.adapter.ComicPagerAdapter;
 import com.duongame.fragment.BaseFragment;
 import com.duongame.fragment.ExplorerFragment;
 
-public class ComicActivity extends BaseActivity {
+public class ComicActivity extends BaseMainActivity {
     private final static String TAG = ComicActivity.class.getSimpleName();
 
     // viewpager

@@ -28,7 +28,7 @@ import android.widget.ViewSwitcher;
 
 import com.duongame.AnalyticsApplication;
 import com.duongame.R;
-import com.duongame.activity.main.BaseActivity;
+import com.duongame.activity.main.BaseMainActivity;
 import com.duongame.activity.viewer.PhotoActivity;
 import com.duongame.adapter.ExplorerAdapter;
 import com.duongame.adapter.ExplorerGridAdapter;
@@ -169,7 +169,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        BaseActivity activity = (BaseActivity) getActivity();
+        BaseMainActivity activity = (BaseMainActivity) getActivity();
         if (activity != null) {
             if (!activity.getShowReview()) {
                 if (AppHelper.isComicz(getContext())) {
@@ -979,7 +979,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
         FragmentActivity activity = getActivity();
         if (activity == null)
             return;
-        ((BaseActivity) activity).showBottomUI();
+        ((BaseMainActivity) activity).showBottomUI();
     }
 
     public void onPasteMode() {
@@ -1001,7 +1001,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
         FragmentActivity activity = getActivity();
         if (activity == null)
             return;
-        ((BaseActivity) activity).hideBottomUI();
+        ((BaseMainActivity) activity).hideBottomUI();
     }
 
     // 이건 뭐지?
@@ -1022,7 +1022,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
         FragmentActivity activity = getActivity();
         if (activity == null)
             return;
-        ((BaseActivity) activity).updateSelectedFileCount(count);
+        ((BaseMainActivity) activity).updateSelectedFileCount(count);
     }
 
     void onRunItemClick(ExplorerItem item) {
@@ -1145,7 +1145,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
 
         FragmentActivity activity = getActivity();
         if (activity != null) {
-            ((BaseActivity) activity).updatePasteMode();
+            ((BaseMainActivity) activity).updatePasteMode();
         }
 
         // 이벤트를 보냄
