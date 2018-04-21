@@ -1,4 +1,4 @@
-package com.duongame.activity;
+package com.duongame.activity.main;
 
 import com.duongame.R;
 import com.duongame.fragment.BaseFragment;

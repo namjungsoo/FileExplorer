@@ -4,7 +4,7 @@ import android.os.AsyncTask;
 import android.view.MotionEvent;
 import android.view.View;
 
-import com.duongame.activity.PagerActivity;
+import com.duongame.activity.viewer.PagerActivity;
 
 import java.lang.ref.WeakReference;
 import java.util.concurrent.atomic.AtomicBoolean;

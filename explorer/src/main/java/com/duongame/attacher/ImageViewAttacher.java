@@ -4,7 +4,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 
-import com.duongame.activity.PagerActivity;
+import com.duongame.activity.viewer.PagerActivity;
 import com.duongame.listener.PagerOnTouchListener;
 import com.github.chrisbanes.photoview.PhotoViewAttacher;
 

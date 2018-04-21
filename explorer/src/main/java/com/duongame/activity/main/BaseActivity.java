@@ -1,4 +1,4 @@
-package com.duongame.activity;
+package com.duongame.activity.main;
 
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;

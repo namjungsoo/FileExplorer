@@ -28,8 +28,8 @@ import android.widget.ViewSwitcher;
 
 import com.duongame.AnalyticsApplication;
 import com.duongame.R;
-import com.duongame.activity.BaseActivity;
-import com.duongame.activity.PhotoActivity;
+import com.duongame.activity.main.BaseActivity;
+import com.duongame.activity.viewer.PhotoActivity;
 import com.duongame.adapter.ExplorerAdapter;
 import com.duongame.adapter.ExplorerGridAdapter;
 import com.duongame.adapter.ExplorerItem;

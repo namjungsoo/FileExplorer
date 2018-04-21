@@ -8,7 +8,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 
 import com.duongame.R;
-import com.duongame.activity.PagerActivity;
+import com.duongame.activity.viewer.PagerActivity;
 import com.duongame.attacher.ImageViewAttacher;
 import com.duongame.bitmap.BitmapCacheManager;
 import com.duongame.helper.JLog;

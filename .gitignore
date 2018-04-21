@@ -7,7 +7,7 @@
 /captures
 .externalNativeBuild
 .idea
-obj
-.o
-.o.d
-.apk
+*obj
+*.o
+*.o.d
+*.apk

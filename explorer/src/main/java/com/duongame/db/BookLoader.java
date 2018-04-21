@@ -11,9 +11,9 @@ import android.support.v7.app.AlertDialog;
 import android.view.View;
 
 import com.duongame.R;
-import com.duongame.activity.PdfActivity;
-import com.duongame.activity.TextActivity;
-import com.duongame.activity.ZipActivity;
+import com.duongame.activity.viewer.PdfActivity;
+import com.duongame.activity.viewer.TextActivity;
+import com.duongame.activity.viewer.ZipActivity;
 import com.duongame.adapter.ExplorerItem;
 import com.duongame.adapter.HistoryRecyclerAdapter;
 import com.duongame.bitmap.BitmapCacheManager;

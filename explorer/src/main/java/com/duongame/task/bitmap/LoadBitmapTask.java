@@ -3,7 +3,7 @@ package com.duongame.task.bitmap;
 import android.graphics.Bitmap;
 import android.widget.ImageView;
 
-import com.duongame.activity.PagerActivity;
+import com.duongame.activity.viewer.PagerActivity;
 import com.duongame.adapter.ExplorerItem;
 import com.duongame.helper.FileHelper;
 

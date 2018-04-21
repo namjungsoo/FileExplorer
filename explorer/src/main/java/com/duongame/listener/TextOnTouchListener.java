@@ -1,6 +1,6 @@
 package com.duongame.listener;
 
-import com.duongame.activity.TextActivity;
+import com.duongame.activity.viewer.TextActivity;
 
 /**
  * Created by namjungsoo on 2017-01-22.

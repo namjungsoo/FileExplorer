@@ -1,4 +1,4 @@
-package com.duongame.activity;
+package com.duongame.activity.viewer;
 
 import android.content.Intent;
 import android.graphics.Color;
@@ -38,7 +38,7 @@ import static com.duongame.helper.FileHelper.BLOCK_SIZE;
  */
 
 // text는 pager가 아니라 상하 스크롤되는 액티비티
-public class TextActivity extends ViewerActivity {
+public class TextActivity extends BaseViewerActivity {
     private static final String TAG = "TextActivity";
 
     private ScrollView scrollText;

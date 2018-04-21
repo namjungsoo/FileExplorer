@@ -1,4 +1,4 @@
-package com.duongame.activity;
+package com.duongame.activity.viewer;
 
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -40,7 +40,7 @@ import io.fabric.sdk.android.Fabric;
  */
 
 // 전체 화면을 지원한다.
-public class ViewerActivity extends AppCompatActivity {
+public class BaseViewerActivity extends AppCompatActivity {
     private static final String TAG = "ComicViewerActivity";
 
     private FirebaseAnalytics mFirebaseAnalytics;

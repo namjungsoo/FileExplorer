@@ -1,4 +1,4 @@
-package com.duongame.activity;
+package com.duongame.activity.viewer;
 
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
@@ -22,7 +22,7 @@ import com.felipecsl.gifimageview.library.GifImageView;
 //
 // +뷰페이저
 // +하단 툴박스
-public class PagerActivity extends ViewerActivity {
+public class PagerActivity extends BaseViewerActivity {
     // 파일의 정보
     protected String path;
     protected String name;

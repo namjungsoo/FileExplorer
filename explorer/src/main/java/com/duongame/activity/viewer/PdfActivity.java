@@ -1,4 +1,4 @@
-package com.duongame.activity;
+package com.duongame.activity.viewer;
 
 import android.content.Intent;
 import android.graphics.pdf.PdfRenderer;

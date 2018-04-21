@@ -1,4 +1,4 @@
-package com.duongame.activity;
+package com.duongame.activity.main;
 
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;

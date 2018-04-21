@@ -10,7 +10,7 @@
         android:largeHeap="true"
         android:theme="@style/ExplorerTheme">
 
-        <activity android:name=".activity.FileActivity">
+        <activity android:name=".activity.main.FileActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -19,16 +19,16 @@
         </activity>
 
         <activity
-            android:name=".activity.PhotoActivity"
+            android:name=".activity.viewer.PhotoActivity"
             android:theme="@style/ComicViewerTheme" />
         <activity
-            android:name=".activity.ZipActivity"
+            android:name=".activity.viewer.ZipActivity"
             android:theme="@style/ComicViewerTheme" />
         <activity
-            android:name=".activity.TextActivity"
+            android:name=".activity.viewer.TextActivity"
             android:theme="@style/ComicViewerTheme" />
         <activity
-            android:name=".activity.PdfActivity"
+            android:name=".activity.viewer.PdfActivity"
             android:theme="@style/ComicViewerTheme" />
 
         <provider

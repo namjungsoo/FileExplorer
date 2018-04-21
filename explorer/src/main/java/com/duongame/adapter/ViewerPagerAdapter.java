@@ -3,7 +3,7 @@ package com.duongame.adapter;
 import android.support.v4.view.PagerAdapter;
 import android.view.View;
 
-import com.duongame.activity.PagerActivity;
+import com.duongame.activity.viewer.PagerActivity;
 
 import java.util.ArrayList;
 
