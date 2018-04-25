@@ -317,6 +317,8 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
     }
 
     // 새로운 파일이 추가 되었을때 스캔을 하라는 의미이다.
+    // 쓰레드에서 동작하므로 여러가지 문제점이 생겼다.
+    // 일단은 imageList를 복사하고 나서 작업을 시작하자
     @SuppressWarnings("unchecked")
     void requestThumbnailScan() {
         //ArrayList<ExplorerItem> imageList = (ArrayList<ExplorerItem>) FileSearcher.getImageList().clone();

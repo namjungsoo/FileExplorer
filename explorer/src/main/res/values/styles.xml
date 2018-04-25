@@ -7,7 +7,8 @@
         <item name="android:textSize">9sp</item>
     </style>
 
-    <!-- Base application theme. -->
+    <!-- Base application theme.
+    액션바가 존재함 -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
@@ -15,6 +16,9 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <!-- 탐색기 테마
+    ActionBar를 직접 만들어서 사용함
+    -->
     <style name="ExplorerTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
@@ -22,6 +26,9 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <!-- 코믹뷰어 테마
+    ActionBar를 오버레이 함
+    -->
     <style name="ComicViewerTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>

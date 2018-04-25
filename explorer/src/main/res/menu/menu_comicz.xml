@@ -53,4 +53,10 @@
         android:title="License"
         app:showAsAction="never" />
 
+    <item
+        android:id="@+id/action_setting"
+        android:orderInCategory="100"
+        android:title="Setting"
+        app:showAsAction="never" />
+
 </menu>

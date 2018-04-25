@@ -18,6 +18,10 @@
             </intent-filter>
         </activity>
 
+        <activity android:name=".activity.SettingActivity"
+            android:theme="@style/AppTheme">
+
+        </activity>
         <activity
             android:name=".activity.viewer.PhotoActivity"
             android:theme="@style/ComicViewerTheme" />
@@ -56,7 +60,9 @@
     <uses-permission android:name="com.android.launcher.permission.INSTALL_SHORTCUT" />
 
     <!--<meta-data-->
-        <!--android:name="io.fabric.ApiKey"-->
-        <!--android:value="479ae7d868a353eb8da82e059fd1a04418af3cf3" />-->
-    <meta-data android:name="firebase_crashlytics_collection_enabled" android:value="true" />
+    <!--android:name="io.fabric.ApiKey"-->
+    <!--android:value="479ae7d868a353eb8da82e059fd1a04418af3cf3" />-->
+    <meta-data
+        android:name="firebase_crashlytics_collection_enabled"
+        android:value="true" />
 </manifest>

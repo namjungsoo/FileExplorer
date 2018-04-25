@@ -9,7 +9,7 @@
         android:id="@+id/activity_main"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".activity.main.ComicActivity">
+        tools:context=".activity.main.FileActivity">
 
         <!-- AppBarLayout is a wrapper for a Toolbar in order to apply scrolling effects. -->
         <!-- Note that AppBarLayout expects to be the first child nested within a CoordinatorLayout -->

@@ -4,13 +4,13 @@ import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
@@ -23,10 +23,10 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
-import com.crashlytics.android.Crashlytics;
-import com.duongame.AnalyticsApplication;
 import com.duongame.BuildConfig;
 import com.duongame.R;
+import com.duongame.activity.BaseActivity;
+import com.duongame.activity.SettingActivity;
 import com.duongame.bitmap.BitmapCacheManager;
 import com.duongame.db.BookDB;
 import com.duongame.db.BookLoader;
@@ -42,16 +42,11 @@ import com.duongame.manager.AdInterstitialManager;
 import com.duongame.manager.PermissionManager;
 import com.duongame.manager.ReviewManager;
 import com.google.android.gms.ads.AdView;
-import com.google.android.gms.analytics.HitBuilders;
-import com.google.android.gms.analytics.Tracker;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 
 import java.io.File;
-
-import io.fabric.sdk.android.Fabric;
 
 import static com.duongame.fragment.ExplorerFragment.SWITCH_GRID;
 import static com.duongame.fragment.ExplorerFragment.SWITCH_LIST;
@@ -60,9 +55,7 @@ import static com.duongame.fragment.ExplorerFragment.SWITCH_LIST;
  * Created by Jungsoo on 2017-10-05.
  */
 
-public abstract class BaseMainActivity extends AppCompatActivity {
-    protected FirebaseAnalytics mFirebaseAnalytics;
-    protected Tracker mTracker;
+public abstract class BaseMainActivity extends BaseActivity {
     protected FirebaseRemoteConfig mFirebaseRemoteConfig;
 
     // admob
@@ -96,13 +89,6 @@ public abstract class BaseMainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Fabric.with(this, new Crashlytics());
-//        final Fabric fabric = new Fabric.Builder(BaseMainActivity.this)
-//                .kits(new Crashlytics())
-//                .debuggable(true)           // Enables Crashlytics debugger
-//                .build();
-//        Fabric.with(fabric);
-
 
         AdBannerManager.init(this);
         AdInterstitialManager.init(this);
@@ -111,11 +97,6 @@ public abstract class BaseMainActivity extends AppCompatActivity {
         initToolbar();
 
         showReview = ReviewManager.checkReview(this);
-
-        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
-
-        AnalyticsApplication application = (AnalyticsApplication) getApplication();
-        mTracker = application.getDefaultTracker();
 
         mFirebaseRemoteConfig = FirebaseRemoteConfig.getInstance();
         mFirebaseRemoteConfig.fetch(0).addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -130,14 +111,6 @@ public abstract class BaseMainActivity extends AppCompatActivity {
                 }
             }
         });
-
-        //TEST Fabric
-//        runOnUiThread(new Runnable() {
-//            @Override
-//            public void run() {
-//                Crashlytics.getInstance().crash(); // Force a crash
-//            }
-//        });
     }
 
     @Override
@@ -172,9 +145,6 @@ public abstract class BaseMainActivity extends AppCompatActivity {
         if (adView != null) {
             adView.resume();
         }
-
-        mTracker.setScreenName(this.getClass().getSimpleName());
-        mTracker.send(new HitBuilders.ScreenViewBuilder().build());
     }
 
     @Override
@@ -259,7 +229,9 @@ public abstract class BaseMainActivity extends AppCompatActivity {
             ExplorerFragment fragment = getExplorerFragment();
             if (fragment != null) {
                 fragment.sortFileWithDialog();
+                return true;
             }
+            return false;
         }
 
         if (id == R.id.action_open_lastbook) {
@@ -307,6 +279,13 @@ public abstract class BaseMainActivity extends AppCompatActivity {
                             dialogInterface.dismiss();
                         }
                     }, null, true);
+            return true;
+        }
+
+        if (id == R.id.action_setting) {
+            Intent intent = SettingActivity.getLocalIntent(this);
+            startActivity(intent);
+            return true;
         }
 
         return super.onOptionsItemSelected(item);

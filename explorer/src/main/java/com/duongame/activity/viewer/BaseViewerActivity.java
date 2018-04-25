@@ -6,7 +6,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
 import android.view.Display;
 import android.view.KeyCharacterMap;
@@ -21,30 +20,21 @@ import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
-import com.crashlytics.android.Crashlytics;
-import com.duongame.AnalyticsApplication;
 import com.duongame.R;
+import com.duongame.activity.BaseActivity;
 import com.duongame.bitmap.BitmapCacheManager;
 import com.duongame.helper.PreferenceHelper;
 import com.duongame.manager.AdBannerManager;
 import com.duongame.manager.AdInterstitialManager;
 import com.google.android.gms.ads.AdView;
-import com.google.android.gms.analytics.HitBuilders;
-import com.google.android.gms.analytics.Tracker;
-import com.google.firebase.analytics.FirebaseAnalytics;
-
-import io.fabric.sdk.android.Fabric;
 
 /**
  * Created by namjungsoo on 2016-11-16.
  */
 
 // 전체 화면을 지원한다.
-public class BaseViewerActivity extends AppCompatActivity {
+public class BaseViewerActivity extends BaseActivity {
     private static final String TAG = "ComicViewerActivity";
-
-    private FirebaseAnalytics mFirebaseAnalytics;
-    private Tracker mTracker;
 
     protected boolean isFullscreen = true;
     protected ActionBar actionBar;
@@ -65,21 +55,12 @@ public class BaseViewerActivity extends AppCompatActivity {
     //private View mainView;
     private AdView adView;
 
-    protected AnalyticsApplication application;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Fabric.with(this, new Crashlytics());
 
         initContentView();
-
         initActionBar();
-
-        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
-
-        application = (AnalyticsApplication) getApplication();
-        mTracker = application.getDefaultTracker();
     }
 
     protected void initContentView() {
@@ -152,9 +133,6 @@ public class BaseViewerActivity extends AppCompatActivity {
         if (adView != null) {
             adView.resume();
         }
-
-        mTracker.setScreenName(this.getClass().getSimpleName());
-        mTracker.send(new HitBuilders.ScreenViewBuilder().build());
     }
 
     void showInterstitialAd() {
@@ -235,9 +213,6 @@ public class BaseViewerActivity extends AppCompatActivity {
 
             }
         });
-
-//        int height = getNavigationBarHeight();
-//        bottomPanel.setY(bottomPanel.getY() - height);
     }
 
     public boolean getFullscreen() {
