@@ -2,8 +2,6 @@ package com.duongame.adapter;
 
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.graphics.pdf.PdfRenderer;
 import android.os.Build;
 import android.view.View;
@@ -14,6 +12,7 @@ import android.widget.ImageView;
 import com.duongame.R;
 import com.duongame.activity.viewer.PagerActivity;
 import com.duongame.attacher.ImageViewAttacher;
+import com.duongame.bitmap.BitmapCacheManager;
 import com.duongame.listener.PagerOnTouchListener;
 
 /**
@@ -24,7 +23,7 @@ public class PdfPagerAdapter extends ViewerPagerAdapter {
     private final static String TAG = "PdfPagerAdapter";
 
     private PdfRenderer renderer;
-//    private Bitmap bitmap;
+    //    private Bitmap bitmap;
     PagerOnTouchListener mPagerOnTouchListener;
 
     public PdfPagerAdapter(PagerActivity context) {
@@ -142,17 +141,21 @@ public class PdfPagerAdapter extends ViewerPagerAdapter {
             return;
 
         final ViewGroup rootView = (ViewGroup) object;
-        final ImageView imageView = (ImageView) rootView.findViewById(R.id.image_viewer);
+        final ImageView imageView = rootView.findViewById(R.id.image_viewer);
 
         //TODO: 이부분 살펴봐야함
-        final Drawable d = imageView.getDrawable();
-        if (d instanceof BitmapDrawable) {
-            Bitmap b = ((BitmapDrawable) d).getBitmap();
-            b.recycle();
-        }
-
+        //FIX: recycle을 직접 하지 않기로 함
+//        final Drawable d = imageView.getDrawable();
+//        if (d != null) {
+//            if (d instanceof BitmapDrawable) {
+//                Bitmap b = ((BitmapDrawable) d).getBitmap();
+//                if (b != null && !b.isRecycled()) {
+//                    b.recycle();
+//                }
+//            }
+//        }
         imageView.setImageBitmap(null);
-//        BitmapCacheManager.removeBitmap(item.path);
+        BitmapCacheManager.removeBitmap(item.path);
     }
 
     @Override
