@@ -318,30 +318,28 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
 
     // 새로운 파일이 추가 되었을때 스캔을 하라는 의미이다.
     // 쓰레드에서 동작하므로 여러가지 문제점이 생겼다.
-    // 일단은 imageList를 복사하고 나서 작업을 시작하자
+    // 일단은 imageList를 복사하고 나서 작업을 시작하자.
+    // 중요하지 않은 작업이므로 전체 try-catch를 건다.
     @SuppressWarnings("unchecked")
     void requestThumbnailScan() {
-        //ArrayList<ExplorerItem> imageList = (ArrayList<ExplorerItem>) FileSearcher.getImageList().clone();
-        if (searchResult == null || searchResult.imageList == null)
-            return;
+        try {
+            if (searchResult == null)
+                return;
 
-        Object imageListObj = searchResult.imageList.clone();
-        if (imageListObj == null)
-            return;
-        ArrayList<ExplorerItem> imageList;
-        if (imageListObj instanceof ArrayList) {
-            imageList = (ArrayList<ExplorerItem>) imageListObj;
-        } else {
-            return;
-        }
+            ArrayList<ExplorerItem> imageList = searchResult.imageList;
+            if (imageList == null)
+                return;
 
-        FragmentActivity activity = getActivity();
-        for (ExplorerItem item : imageList) {
-            if (activity == null)
-                break;
-            if (item == null || item.path == null)
-                continue;
-            activity.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse("file://" + item.path)));
+            FragmentActivity activity = getActivity();
+            for (ExplorerItem item : imageList) {
+                if (activity == null)
+                    break;
+                if (item == null || item.path == null)
+                    continue;
+                activity.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse("file://" + item.path)));
+            }
+        } catch (Exception e) {
+
         }
     }
 
