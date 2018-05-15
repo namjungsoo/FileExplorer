@@ -1080,7 +1080,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
                                 onRefresh();
                             }
                         });
-                        task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                        task.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR);
 
                         // 이벤트를 보냄
                         sendEventTracker(new HitBuilders.EventBuilder().setCategory("File").setAction("Delete").build());
