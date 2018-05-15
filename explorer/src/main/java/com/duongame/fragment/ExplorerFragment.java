@@ -416,7 +416,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
         }
 
         FragmentActivity activity = getActivity();
-        if (activity != null)
+        if (activity == null)
             return;
 
         UnzipTask task = new UnzipTask(activity);
@@ -1170,7 +1170,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
 
     void runPasteTask(String pastePath) {
         FragmentActivity activity = getActivity();
-        if (activity != null)
+        if (activity == null)
             return;
 
         PasteTask task = new PasteTask(activity);
@@ -1236,7 +1236,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
         String zipPath = path + "/" + name + ext;
 
         FragmentActivity activity = getActivity();
-        if (activity != null)
+        if (activity == null)
             return;
 
         ZipTask task = new ZipTask(activity);
