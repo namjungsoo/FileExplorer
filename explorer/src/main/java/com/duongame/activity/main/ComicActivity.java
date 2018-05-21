@@ -25,7 +25,7 @@ public class ComicActivity extends BaseMainActivity {
 
     @Override
     protected int getLayoutResId() {
-        return R.layout.activity_comic;
+        return R.layout.activity_main_comic;
     }
 
     @Override

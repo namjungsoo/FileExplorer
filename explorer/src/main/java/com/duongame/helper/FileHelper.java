@@ -57,6 +57,8 @@ public class FileHelper {
         if (file.isDirectory()) {
             base = path;
         } else {
+            // 여기서 확장자가 없을수도 있음
+            // base, ext 둘다 에러 발생 가능함
             base = path.substring(0, path.lastIndexOf("."));
             ext = path.substring(path.lastIndexOf("."));
         }
