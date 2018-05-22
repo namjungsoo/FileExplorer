@@ -9,6 +9,7 @@ import com.duongame.BuildConfig;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.google.firebase.analytics.FirebaseAnalytics;
+import com.google.firebase.crash.FirebaseCrash;
 
 import io.fabric.sdk.android.Fabric;
 
@@ -29,6 +30,13 @@ public class BaseActivity extends AppCompatActivity {
         application = (AnalyticsApplication) getApplication();
 
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
+
+        // 디버그 개발중에는 크래쉬 오류 보고 하지 않음
+        if(BuildConfig.DEBUG)
+            FirebaseCrash.setCrashCollectionEnabled(false);
+        else
+            FirebaseCrash.setCrashCollectionEnabled(true);
+        
         mTracker = application.getDefaultTracker();
     }
 
