@@ -942,8 +942,16 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
 
     @Override
     public void onBackPressed() {
-        // 선택모드이면 선택모드를 취소하는 방향으로
+        // Drawer가 열려 있으면 닫아야 함
+        BaseMainActivity activity = (BaseMainActivity) getActivity();
+        if(activity != null) {
+            if(activity.isDrawerOpened()) {
+                activity.closeDrawer();
+                return;
+            }
+        }
 
+        // 선택모드이면 선택모드를 취소하는 방향으로
         // 둘다 normal mode로 돌아간다.
         if (pasteMode || selectMode) {
             onNormalMode();

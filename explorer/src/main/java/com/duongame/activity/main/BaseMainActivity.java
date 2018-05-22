@@ -2,6 +2,7 @@ package com.duongame.activity.main;
 
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -17,6 +18,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -77,6 +79,8 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
     ImageButton btnDelete;
 
     protected boolean showReview;
+    protected boolean drawerOpened;
+    DrawerLayout drawer;
 
     public boolean getShowReview() {
         return showReview;
@@ -399,17 +403,53 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
         });
     }
 
+    class MyActionBarDrawerToggle extends ActionBarDrawerToggle {
+
+        public MyActionBarDrawerToggle(Activity activity, DrawerLayout drawerLayout, Toolbar toolbar, int openDrawerContentDescRes, int closeDrawerContentDescRes) {
+            super(activity, drawerLayout, toolbar, openDrawerContentDescRes, closeDrawerContentDescRes);
+        }
+
+        @Override
+        public void onDrawerStateChanged(int newState) {
+            super.onDrawerStateChanged(newState);
+
+            Log.e("Jungsoo", "onDrawerStateChanged " + newState);
+        }
+
+        @Override
+        public void onDrawerOpened(View drawerView) {
+            super.onDrawerOpened(drawerView);
+            Log.e("Jungsoo", "onDrawerOpened ");
+            drawerOpened = true;
+        }
+
+        @Override
+        public void onDrawerClosed(View drawerView) {
+            super.onDrawerClosed(drawerView);
+            Log.e("Jungsoo", "onDrawerClosed ");
+            drawerOpened = false;
+        }
+    }
+
     void initDrawer() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new MyActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+    }
+
+    public boolean isDrawerOpened() {
+        return drawerOpened;
+    }
+
+    public void closeDrawer() {
+        drawer.closeDrawers();
     }
 
     @Override
