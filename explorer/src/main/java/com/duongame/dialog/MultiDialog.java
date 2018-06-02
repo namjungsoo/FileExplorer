@@ -79,6 +79,10 @@ public abstract class MultiDialog extends DialogFragment {
         if(activity == null)
             return null;
 
+        //FIX: String resource ID #0x0
+        if(messageResId == 0)
+            return null;
+
         AlertDialog.Builder builder = new AlertDialog.Builder(activity);
         View view = activity.getLayoutInflater().inflate(R.layout.dialog_multi, null, false);
 
