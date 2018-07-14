@@ -128,39 +128,43 @@ android {
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    //implementation files('libs/sevenzip4j.jar')
+    implementation project(path: ':lib7z')
+    implementation project(path: ':unrar-android')
+
     //android
     implementation 'com.android.support:appcompat-v7:27.1.1'
     implementation 'com.android.support:design:27.1.1'
+
     //zip
     implementation 'net.lingala.zip4j:zip4j:1.2.4'
+
     //encoding
     implementation 'com.googlecode.juniversalchardet:juniversalchardet:1.0.3'
+
     //GIF
     implementation 'com.felipecsl:gifimageview:2.1.0'
     implementation 'com.github.chrisbanes:PhotoView:2.0.0'
+
     //GLIDE
     implementation 'com.github.bumptech.glide:glide:4.7.1'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.7.1'
-    //firebase - 12.0.1에서 변경하지 말것
-    implementation 'com.google.firebase:firebase-crash:12.0.1'
-    implementation 'com.google.firebase:firebase-core:12.0.1'
-    implementation 'com.google.android.gms:play-services-analytics:12.0.1'
-    implementation 'com.google.android.gms:play-services-ads:12.0.1'
-    implementation 'com.google.firebase:firebase-config:12.0.1'
+
+    //firebase
+    implementation 'com.google.firebase:firebase-crash:16.0.1'
+    implementation 'com.google.firebase:firebase-core:16.0.1'
+    implementation 'com.google.android.gms:play-services-analytics:16.0.1'
+    implementation 'com.google.android.gms:play-services-ads:15.0.1'
+    implementation 'com.google.firebase:firebase-config:16.0.0'
     implementation 'joda-time:joda-time:2.9.9'
+
     //FileUtils
     implementation 'commons-io:commons-io:2.6'
     implementation 'org.apache.commons:commons-compress:1.15'
-    implementation project(':lib7z')
-    implementation project(':unrar-android')
     implementation 'com.github.GrenderG:Toasty:1.2.8'
-    implementation('com.crashlytics.sdk.android:crashlytics:2.9.1@aar') {
+    implementation('com.crashlytics.sdk.android:crashlytics:2.9.4@aar') {
         transitive = true
     }
-
-    implementation 'com.android.support.constraint:constraint-layout:1.1.0'
-
+    implementation 'com.android.support.constraint:constraint-layout:1.1.2'
 }
 
 apply plugin: 'io.fabric'
@@ -172,4 +176,3 @@ repositories {
 
 // ADD THIS AT THE BOTTOM
 apply plugin: 'com.google.gms.google-services'
-
