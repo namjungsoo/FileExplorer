@@ -27,7 +27,8 @@ public class AdInterstitialManager {
 
     private static void requestNewInterstitial() {
         final AdRequest adRequest = new AdRequest.Builder()
-//                .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+                .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+                .addTestDevice("E7D6AF2C21297EECB65D16AD42FDF992")
                 .build();
 
         interstitialAD.loadAd(adRequest);
