@@ -8,8 +8,9 @@ import android.view.View;
 import com.duongame.R;
 import com.duongame.adapter.ExplorerItem;
 import com.duongame.dialog.DeleteDialog;
-import com.duongame.helper.FileHelper;
-import com.duongame.helper.FileSearcher;
+import com.duongame.file.FileExplorer;
+import com.duongame.file.FileHelper;
+import com.duongame.file.LocalFileExplorer;
 import com.duongame.helper.ToastHelper;
 
 import java.io.File;
@@ -81,8 +82,8 @@ public class DeleteTask extends AsyncTask<Void, Integer, Boolean> {
 
             if (item.type == ExplorerItem.FILETYPE_FOLDER) {
                 // 폴더의 경우 하위 모든 아이템을 찾은뒤에 더한다.
-                FileSearcher searcher = new FileSearcher();
-                FileSearcher.Result result = searcher.setRecursiveDirectory(true)
+                FileExplorer explorer = new LocalFileExplorer();
+                FileExplorer.Result result = explorer.setRecursiveDirectory(true)
                         .setHiddenFile(true)
                         .setExcludeDirectory(false)
                         .setImageListEnable(false)

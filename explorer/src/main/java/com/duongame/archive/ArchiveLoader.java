@@ -6,7 +6,7 @@ import android.os.AsyncTask;
 
 import com.duongame.adapter.ExplorerItem;
 import com.duongame.bitmap.BitmapLoader;
-import com.duongame.helper.FileHelper;
+import com.duongame.file.FileHelper;
 import com.duongame.task.zip.LoadBookTask;
 import com.duongame.task.zip.UnzipBookTask;
 

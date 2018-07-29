@@ -13,7 +13,7 @@ import android.widget.TextView;
 
 import com.duongame.R;
 import com.duongame.bitmap.BitmapCacheManager;
-import com.duongame.helper.FileHelper;
+import com.duongame.file.FileHelper;
 import com.duongame.helper.UnitHelper;
 import com.duongame.task.thumbnail.LoadPdfThumbnailTask;
 import com.duongame.task.thumbnail.LoadZipThumbnailTask;

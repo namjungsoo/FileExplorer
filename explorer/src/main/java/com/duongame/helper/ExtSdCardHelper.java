@@ -4,7 +4,7 @@ import java.io.InputStream;
 import java.util.HashSet;
 import java.util.Locale;
 
-import static com.duongame.helper.FileHelper.BLOCK_SIZE;
+import static com.duongame.file.FileHelper.BLOCK_SIZE;
 
 /**
  * Created by namjungsoo on 2017-01-22.

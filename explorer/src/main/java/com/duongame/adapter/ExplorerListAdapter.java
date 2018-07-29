@@ -7,7 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.duongame.R;
-import com.duongame.helper.FileHelper;
+import com.duongame.file.FileHelper;
 
 import java.util.ArrayList;
 

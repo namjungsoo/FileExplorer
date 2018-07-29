@@ -38,11 +38,11 @@ import com.duongame.adapter.ExplorerScrollListener;
 import com.duongame.bitmap.BitmapCacheManager;
 import com.duongame.db.BookLoader;
 import com.duongame.dialog.SortDialog;
+import com.duongame.file.FileExplorer;
+import com.duongame.file.FileHelper;
 import com.duongame.helper.AlertHelper;
 import com.duongame.helper.AppHelper;
 import com.duongame.helper.ExtSdCardHelper;
-import com.duongame.helper.FileHelper;
-import com.duongame.helper.FileSearcher;
 import com.duongame.helper.PreferenceHelper;
 import com.duongame.helper.ToastHelper;
 import com.duongame.manager.PermissionManager;
@@ -323,10 +323,10 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
     @SuppressWarnings("unchecked")
     void requestThumbnailScan() {
         try {
-            if (searchResult == null)
+            if (fileResult == null)
                 return;
 
-            ArrayList<ExplorerItem> imageList = searchResult.imageList;
+            ArrayList<ExplorerItem> imageList = fileResult.imageList;
             if (imageList == null)
                 return;
 
@@ -683,8 +683,8 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
 
     //TODO: 나중에 구현
     void backupPosition() {
-//        PositionManager.setPosition(FileSearcher.getLastPath(), currentView.getFirstVisiblePosition());
-//        PositionManager.setTop(FileSearcher.getLastPath(), getCurrentViewScrollTop());
+//        PositionManager.setPosition(LocalFileExplorer.getLastPath(), currentView.getFirstVisiblePosition());
+//        PositionManager.setTop(LocalFileExplorer.getLastPath(), getCurrentViewScrollTop());
     }
 
     int getCurrentViewScrollTop() {
@@ -731,7 +731,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
         }
     }
 
-    class SearchTask extends AsyncTask<String, Void, FileSearcher.Result> {
+    class SearchTask extends AsyncTask<String, Void, FileExplorer.Result> {
         WeakReference<ExplorerFragment> fragmentWeakReference;
         boolean pathChanged;
         String path;
@@ -781,7 +781,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
         }
 
         @Override
-        protected FileSearcher.Result doInBackground(String... params) {
+        protected FileExplorer.Result doInBackground(String... params) {
             path = params[0];
             updateComparator();
 
@@ -789,7 +789,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
             if (fragment == null)
                 return null;
 
-            FileSearcher.Result result = fragment.fileSearcher
+            FileExplorer.Result result = fragment.fileExplorer
                     .setRecursiveDirectory(false)
                     .setExcludeDirectory(false)
                     .setComparator(comparator)
@@ -798,9 +798,9 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
                     .search(path);
 
             if (result == null) {
-                result = new FileSearcher.Result();
+                result = new FileExplorer.Result();
             }
-            fragment.searchResult = result;
+            fragment.fileResult = result;
 
             return result;
         }
@@ -813,7 +813,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
         }
 
         @Override
-        protected void onPostExecute(FileSearcher.Result result) {
+        protected void onPostExecute(FileExplorer.Result result) {
             super.onPostExecute(result);// AsyncTask는 아무것도 안함
 
             if (isCancelled())

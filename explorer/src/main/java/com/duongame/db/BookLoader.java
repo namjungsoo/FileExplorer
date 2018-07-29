@@ -19,7 +19,7 @@ import com.duongame.adapter.HistoryRecyclerAdapter;
 import com.duongame.bitmap.BitmapCacheManager;
 import com.duongame.helper.AppHelper;
 import com.duongame.helper.DateHelper;
-import com.duongame.helper.FileHelper;
+import com.duongame.file.FileHelper;
 import com.duongame.task.thumbnail.LoadPdfThumbnailTask;
 import com.duongame.task.thumbnail.LoadZipThumbnailTask;
 

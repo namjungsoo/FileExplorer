@@ -21,7 +21,7 @@ import android.provider.MediaStore;
 import com.duongame.R;
 import com.duongame.adapter.ExplorerItem;
 import com.duongame.archive.ArchiveLoader;
-import com.duongame.helper.FileHelper;
+import com.duongame.file.FileHelper;
 import com.duongame.helper.JLog;
 
 import net.lingala.zip4j.exception.ZipException;

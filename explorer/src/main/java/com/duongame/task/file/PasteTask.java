@@ -9,8 +9,9 @@ import com.duongame.R;
 import com.duongame.adapter.ExplorerItem;
 import com.duongame.dialog.OverwriteDialog;
 import com.duongame.dialog.PasteDialog;
-import com.duongame.helper.FileHelper;
-import com.duongame.helper.FileSearcher;
+import com.duongame.file.FileExplorer;
+import com.duongame.file.FileHelper;
+import com.duongame.file.LocalFileExplorer;
 import com.duongame.helper.JLog;
 import com.duongame.helper.ToastHelper;
 
@@ -25,7 +26,7 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import static com.duongame.helper.FileHelper.BLOCK_SIZE;
+import static com.duongame.file.FileHelper.BLOCK_SIZE;
 
 /**
  * Created by namjungsoo on 2017-12-29.
@@ -110,9 +111,9 @@ public class PasteTask extends AsyncTask<Void, FileHelper.Progress, Boolean> {
         }
     }
 
-    FileSearcher.Result searchFile(String path) {
-        FileSearcher searcher = new FileSearcher();
-        FileSearcher.Result result = searcher.setRecursiveDirectory(true)
+    FileExplorer.Result searchFile(String path) {
+        FileExplorer explorer = new LocalFileExplorer();
+        FileExplorer.Result result = explorer.setRecursiveDirectory(true)
                 .setHiddenFile(true)
                 .setExcludeDirectory(false)
                 .setImageListEnable(false)
@@ -120,7 +121,7 @@ public class PasteTask extends AsyncTask<Void, FileHelper.Progress, Boolean> {
         return result;
     }
 
-    void prepareFolder(FileSearcher.Result result, String path) {
+    void prepareFolder(FileExplorer.Result result, String path) {
         // 폴더 하위 파일의 경우에는 폴더 이름과 파일명을 적어줌
         if (result != null && result.fileList != null) {
             for (int j = 0; j < result.fileList.size(); j++) {
@@ -131,7 +132,7 @@ public class PasteTask extends AsyncTask<Void, FileHelper.Progress, Boolean> {
         }
     }
 
-    void prepareLocalPathToName(FileSearcher.Result result, String path, int j) {
+    void prepareLocalPathToName(FileExplorer.Result result, String path, int j) {
         // 선택된 폴더의 최상위 폴더의 폴더명을 제외한 나머지가 name임
         ExplorerItem subItem = result.fileList.get(j);
         if (!subItem.path.startsWith(path))
@@ -156,7 +157,7 @@ public class PasteTask extends AsyncTask<Void, FileHelper.Progress, Boolean> {
             if (item.type == ExplorerItem.FILETYPE_FOLDER) {
 
                 // 폴더의 경우 하위 모든 아이템을 찾은뒤에 더한다.
-                FileSearcher.Result result = searchFile(item.path);
+                FileExplorer.Result result = searchFile(item.path);
                 for (int j = 0; j < result.fileList.size(); j++) {
                     JLog.e("TAG", "fileList j=" + j + " " + result.fileList.get(j).path);
                 }

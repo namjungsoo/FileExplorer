@@ -5,7 +5,7 @@ import android.widget.ImageView;
 
 import com.duongame.activity.viewer.PagerActivity;
 import com.duongame.adapter.ExplorerItem;
-import com.duongame.helper.FileHelper;
+import com.duongame.file.FileHelper;
 
 import java.lang.ref.WeakReference;
 

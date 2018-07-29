@@ -7,7 +7,7 @@ import android.os.AsyncTask;
 import com.duongame.adapter.ExplorerItem;
 import com.duongame.bitmap.BitmapCacheManager;
 import com.duongame.bitmap.BitmapLoader;
-import com.duongame.helper.FileHelper;
+import com.duongame.file.FileHelper;
 
 /**
  * Created by namjungsoo on 2016-12-17.

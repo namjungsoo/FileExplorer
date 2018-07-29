@@ -20,7 +20,8 @@ import com.duongame.R;
 import com.duongame.adapter.ExplorerItem;
 import com.duongame.adapter.SearchRecyclerAdapter;
 import com.duongame.db.BookLoader;
-import com.duongame.helper.FileSearcher;
+import com.duongame.file.FileExplorer;
+import com.duongame.file.LocalFileExplorer;
 import com.duongame.view.DividerItemDecoration;
 
 import java.lang.ref.WeakReference;
@@ -40,7 +41,7 @@ public class SearchFragment extends BaseFragment {
     private ArrayList<ExplorerItem> fileList;
     private SearchRecyclerAdapter adapter;
 
-    private FileSearcher fileSearcher;
+    private FileExplorer fileExplorer;
 
     static class SearchTask extends AsyncTask<Void, Void, Boolean> {
         WeakReference<SearchFragment> fragmentWeakReference;
@@ -60,7 +61,7 @@ public class SearchFragment extends BaseFragment {
                 return false;
             }
 
-            fragment.searchResult = fragment.fileSearcher.setKeyword(keyword)
+            fragment.fileResult = fragment.fileExplorer.setKeyword(keyword)
                     .setExtensions(ext)
                     .setRecursiveDirectory(true)
                     .setExcludeDirectory(true)
@@ -78,11 +79,11 @@ public class SearchFragment extends BaseFragment {
             }
 
             //FIX: NPE
-            if (fragment.searchResult == null) {
+            if (fragment.fileResult == null) {
                 return false;
             }
 
-            fragment.fileList = fragment.searchResult.fileList;
+            fragment.fileList = fragment.fileResult.fileList;
             if (fragment.fileList != null && fragment.fileList.size() > 0) {
                 return true;
             }
@@ -176,7 +177,7 @@ public class SearchFragment extends BaseFragment {
             }
         });
 
-        fileSearcher = new FileSearcher();
+        fileExplorer = new LocalFileExplorer();
         return rootView;
     }
 

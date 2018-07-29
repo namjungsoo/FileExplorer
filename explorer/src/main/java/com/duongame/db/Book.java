@@ -1,7 +1,7 @@
 package com.duongame.db;
 
 import com.duongame.adapter.ExplorerItem;
-import com.duongame.helper.FileHelper;
+import com.duongame.file.FileHelper;
 
 import static com.duongame.db.TextBook.LINES_PER_PAGE;
 

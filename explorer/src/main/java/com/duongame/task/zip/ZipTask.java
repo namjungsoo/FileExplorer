@@ -8,8 +8,9 @@ import android.view.View;
 import com.duongame.R;
 import com.duongame.adapter.ExplorerItem;
 import com.duongame.dialog.ZipDialog;
-import com.duongame.helper.FileHelper;
-import com.duongame.helper.FileSearcher;
+import com.duongame.file.FileExplorer;
+import com.duongame.file.FileHelper;
+import com.duongame.file.LocalFileExplorer;
 import com.duongame.helper.ToastHelper;
 
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
@@ -28,7 +29,7 @@ import java.util.ArrayList;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
-import static com.duongame.helper.FileHelper.BLOCK_SIZE;
+import static com.duongame.file.FileHelper.BLOCK_SIZE;
 
 /**
  * Created by namjungsoo on 2017-12-31.
@@ -283,8 +284,8 @@ public class ZipTask extends AsyncTask<Void, FileHelper.Progress, Boolean> {
 
             if (item.type == ExplorerItem.FILETYPE_FOLDER) {
                 // 폴더의 경우 하위 모든 아이템을 찾은뒤에 더한다.
-                FileSearcher searcher = new FileSearcher();
-                FileSearcher.Result result = searcher.setRecursiveDirectory(true)
+                FileExplorer explorer = new LocalFileExplorer();
+                FileExplorer.Result result = explorer.setRecursiveDirectory(true)
                         .setHiddenFile(true)
                         .setExcludeDirectory(false)
                         .setImageListEnable(false)

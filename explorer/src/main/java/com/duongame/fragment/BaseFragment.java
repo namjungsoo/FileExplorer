@@ -6,7 +6,8 @@ import android.support.v4.app.FragmentActivity;
 
 import com.duongame.AnalyticsApplication;
 import com.duongame.R;
-import com.duongame.helper.FileSearcher;
+import com.duongame.file.FileExplorer;
+import com.duongame.file.LocalFileExplorer;
 import com.duongame.helper.ToastHelper;
 
 /**
@@ -19,8 +20,8 @@ public class BaseFragment extends Fragment {
 
     // Search
     protected AnalyticsApplication application;
-    protected FileSearcher fileSearcher;
-    protected FileSearcher.Result searchResult;
+    protected FileExplorer fileExplorer;
+    protected FileExplorer.Result fileResult;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -30,7 +31,7 @@ public class BaseFragment extends Fragment {
         if(activity != null) {
             application = (AnalyticsApplication) activity.getApplication();
         }
-        fileSearcher = new FileSearcher();
+        fileExplorer = new LocalFileExplorer();
     }
 
     //FIX:
@@ -44,8 +45,8 @@ public class BaseFragment extends Fragment {
             }
         }
 
-        if(fileSearcher == null) {
-            fileSearcher = new FileSearcher();
+        if(fileExplorer == null) {
+            fileExplorer = new LocalFileExplorer();
         }
     }
 

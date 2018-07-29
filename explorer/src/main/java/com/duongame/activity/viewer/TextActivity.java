@@ -16,7 +16,7 @@ import com.duongame.R;
 import com.duongame.db.Book;
 import com.duongame.db.BookDB;
 import com.duongame.db.TextBook;
-import com.duongame.helper.FileHelper;
+import com.duongame.file.FileHelper;
 import com.duongame.listener.TextOnTouchListener;
 import com.duongame.manager.FontManager;
 
@@ -31,7 +31,7 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
 import static com.duongame.db.TextBook.LINES_PER_PAGE;
-import static com.duongame.helper.FileHelper.BLOCK_SIZE;
+import static com.duongame.file.FileHelper.BLOCK_SIZE;
 
 /**
  * Created by namjungsoo on 2016-11-18.

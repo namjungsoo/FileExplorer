@@ -11,7 +11,7 @@ import com.duongame.archive.ArchiveHeader;
 import com.duongame.archive.RarFile;
 import com.duongame.archive.Zip4jFile;
 import com.duongame.dialog.UnzipDialog;
-import com.duongame.helper.FileHelper;
+import com.duongame.file.FileHelper;
 import com.duongame.helper.JLog;
 import com.duongame.helper.ToastHelper;
 import com.hzy.lib7z.ExtractCallback;
@@ -30,7 +30,7 @@ import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
-import static com.duongame.helper.FileHelper.BLOCK_SIZE;
+import static com.duongame.file.FileHelper.BLOCK_SIZE;
 
 /**
  * Created by namjungsoo on 2017-12-31.

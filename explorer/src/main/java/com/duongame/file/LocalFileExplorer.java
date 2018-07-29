@@ -1,93 +1,23 @@
-package com.duongame.helper;
+package com.duongame.file;
 
 import com.duongame.adapter.ExplorerItem;
+import com.duongame.helper.DateHelper;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 
-import static com.duongame.helper.FileHelper.getFileType;
+import static com.duongame.file.FileHelper.getFileType;
 
 /**
  * Created by namjungsoo on 2016-11-06.
  */
 
-public class FileSearcher {
-    public static class Result {
-        public ArrayList<ExplorerItem> fileList;
-        public ArrayList<ExplorerItem> imageList;
-    }
-
-    private ArrayList<String> extensions;
-    private String keyword;
-    private Comparator<ExplorerItem> comparator;
-
-    private boolean excludeDirectory;
-    private boolean recursiveDirectory;
-    private boolean hiddenFile;
-    private boolean imageListEnable;
-
-    public FileSearcher setExtensions(ArrayList<String> extensions) {
-        this.extensions = extensions;
-        return this;
-    }
-
-    public FileSearcher setExtension(String ext) {
-        //this.extension = ext;
-        if(extensions == null) {
-            extensions = new ArrayList<>();
-        }
-        extensions.clear();
-        extensions.add(ext);
-        return this;
-    }
-
-    public FileSearcher setKeyword(String keyword) {
-        this.keyword = keyword;
-        return this;
-    }
-
-    public FileSearcher setExcludeDirectory(boolean b) {
-        this.excludeDirectory = b;
-        return this;
-    }
-
-    public FileSearcher setRecursiveDirectory(boolean b) {
-        this.recursiveDirectory = b;
-        return this;
-    }
-
-    public FileSearcher setComparator(Comparator<ExplorerItem> comparator) {
-        this.comparator = comparator;
-        return this;
-    }
-
-    public FileSearcher setHiddenFile(boolean b) {
-        this.hiddenFile = b;
-        return this;
-    }
-
-    public FileSearcher setImageListEnable(boolean b) {
-        this.imageListEnable = b;
-        return this;
-    }
-
-    public static class DirectoryPreferComparator implements Comparator<File> {
-        @Override
-        public int compare(File lhs, File rhs) {
-            if(lhs.isDirectory())
-                return -1;
-            if(rhs.isDirectory())
-                return 1;
-            return 0;
-        }
-    }
-
-
-    public Result search(String path) {
+public class LocalFileExplorer extends FileExplorer {
+    @Override
+    public FileExplorer.Result search(String path) {
         File file = new File(path);
         if (file == null)
             return null;
@@ -98,18 +28,18 @@ public class FileSearcher {
             return null;
 
         // 폴더를 우선하도록 정렬 해야 함
-        Collections.sort(Arrays.asList(files), new DirectoryPreferComparator());
+        Collections.sort(Arrays.asList(files), new FileExplorer.DirectoryPreferComparator());
 
         ArrayList<ExplorerItem> fileList = new ArrayList<ExplorerItem>();
         ArrayList<ExplorerItem> directoryList = new ArrayList<ExplorerItem>();
         ArrayList<ExplorerItem> normalList = new ArrayList<ExplorerItem>();
-        Result result = new Result();
+        FileExplorer.Result result = new FileExplorer.Result();
 
         // 파일로 아이템을 만듬
         for (int i = 0; i < files.length; i++) {
             File eachFile = files[i];
             //if (eachFile.getName().equals(".") || eachFile.getName().equals("..")) {// .으로 시작되면 패스 함
-            if (!hiddenFile && eachFile.getName().startsWith(".")) {// .으로 시작되면 패스 함 (숨김파일임)
+            if (!isHiddenFile() && eachFile.getName().startsWith(".")) {// .으로 시작되면 패스 함 (숨김파일임)
                 continue;
             }
 
@@ -126,12 +56,12 @@ public class FileSearcher {
             ExplorerItem item = new ExplorerItem(fullPath, name, date, size, type);
 
             if (type == ExplorerItem.FILETYPE_FOLDER) {
-                if (!excludeDirectory) {
+                if (!isExcludeDirectory()) {
                     item.size = -1;
                     directoryList.add(item);
                 }
 
-                if (recursiveDirectory) {
+                if (isRecursiveDirectory()) {
                     Result subFileList = search(fullPath);
 
                     if (subFileList != null) {
@@ -147,15 +77,15 @@ public class FileSearcher {
             } else {
                 // 파일이므로 더할지 말지 결정을 해야 함
                 boolean willAdd = true;
-                if (extensions != null) {// 확장자가 맞으므로 더함
+                if (getExtensions() != null) {// 확장자가 맞으므로 더함
                     willAdd = false;
-                    for(String ext : extensions) {
+                    for (String ext : getExtensions()) {
                         willAdd |= item.name.endsWith(ext);
                     }
                 }
 
-                if (keyword != null && willAdd) {// 키워드를 포함하므로 더함
-                    willAdd = item.name.contains(keyword);
+                if (getKeyword() != null && willAdd) {// 키워드를 포함하므로 더함
+                    willAdd = item.name.contains(getKeyword());
                 }
 
                 if (willAdd)
@@ -167,10 +97,10 @@ public class FileSearcher {
 //            comparator = new FileHelper.NameAscComparator();
 //        }
 
-        if(comparator != null) {
+        if (getComparator() != null) {
             // 디렉토리 우선 정렬 및 가나다 정렬
-            Collections.sort(directoryList, comparator);
-            Collections.sort(normalList, comparator);
+            Collections.sort(directoryList, getComparator());
+            Collections.sort(normalList, getComparator());
             fileList.addAll(directoryList);
             fileList.addAll(normalList);
         } else {
@@ -179,7 +109,7 @@ public class FileSearcher {
             fileList.addAll(directoryList);
         }
 
-        if(imageListEnable) {
+        if (isImageListEnable()) {
             ArrayList<ExplorerItem> imageList = new ArrayList<ExplorerItem>();
 
             // 이미지는 마지막에 모아서 처리한다.
