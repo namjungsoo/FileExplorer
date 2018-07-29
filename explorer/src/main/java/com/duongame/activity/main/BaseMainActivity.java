@@ -292,11 +292,12 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
             return true;
         }
 
-        if (id == R.id.action_setting) {
-            Intent intent = SettingActivity.getLocalIntent(this);
-            startActivity(intent);
-            return true;
-        }
+        //action_setting
+//        if (id == R.id.action_setting) {
+//            Intent intent = SettingActivity.getLocalIntent(this);
+//            startActivity(intent);
+//            return true;
+//        }
 
         return super.onOptionsItemSelected(item);
     }
