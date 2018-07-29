@@ -683,8 +683,8 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
 
     //TODO: 나중에 구현
     void backupPosition() {
-//        PositionManager.setPosition(LocalFileExplorer.getLastPath(), currentView.getFirstVisiblePosition());
-//        PositionManager.setTop(LocalFileExplorer.getLastPath(), getCurrentViewScrollTop());
+//        PositionManager.setPosition(SdCardExplorer.getLastPath(), currentView.getFirstVisiblePosition());
+//        PositionManager.setTop(SdCardExplorer.getLastPath(), getCurrentViewScrollTop());
     }
 
     int getCurrentViewScrollTop() {

@@ -30,6 +30,9 @@ public class PreferenceHelper {
     private static final String SORT_TYPE = "sort_type";
     private static final String SORT_DIRECTION = "sort_direction";
 
+    private static final String ACCOUNT_DROPBOX = "account_dropbox";
+    private static final String ACCOUNT_GOOGLE_DRIVE = "account_google_drive";
+
     private static SharedPreferences pref = null;
 
     private static void checkPrefManager(Context context) {
@@ -185,4 +188,29 @@ public class PreferenceHelper {
         editor.apply();
     }
 
+    //BEGIN: Cloud Drive
+    public static String getAccountDropbox(Context context) {
+        checkPrefManager(context);
+        return pref.getString(ACCOUNT_DROPBOX, null);
+    }
+
+    public static void setAccountDropbox(Context context, String accountDropbox) {
+        checkPrefManager(context);
+        final SharedPreferences.Editor editor = pref.edit();
+        editor.putString(ACCOUNT_DROPBOX, accountDropbox);
+        editor.apply();
+    }
+
+    public static String getAccountGoogleDrive(Context context) {
+        checkPrefManager(context);
+        return pref.getString(ACCOUNT_GOOGLE_DRIVE, null);
+    }
+
+    public static void setAccountGoogleDrive(Context context, String accountGoogleDrive) {
+        checkPrefManager(context);
+        final SharedPreferences.Editor editor = pref.edit();
+        editor.putString(ACCOUNT_GOOGLE_DRIVE, accountGoogleDrive);
+        editor.apply();
+    }
+    //END: Cloud Drive
 }

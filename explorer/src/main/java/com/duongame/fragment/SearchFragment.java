@@ -21,7 +21,7 @@ import com.duongame.adapter.ExplorerItem;
 import com.duongame.adapter.SearchRecyclerAdapter;
 import com.duongame.db.BookLoader;
 import com.duongame.file.FileExplorer;
-import com.duongame.file.LocalFileExplorer;
+import com.duongame.file.SdCardExplorer;
 import com.duongame.view.DividerItemDecoration;
 
 import java.lang.ref.WeakReference;
@@ -177,7 +177,7 @@ public class SearchFragment extends BaseFragment {
             }
         });
 
-        fileExplorer = new LocalFileExplorer();
+        fileExplorer = new SdCardExplorer();
         return rootView;
     }
 

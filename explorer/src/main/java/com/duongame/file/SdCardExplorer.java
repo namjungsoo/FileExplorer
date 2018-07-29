@@ -15,7 +15,7 @@ import static com.duongame.file.FileHelper.getFileType;
  * Created by namjungsoo on 2016-11-06.
  */
 
-public class LocalFileExplorer extends FileExplorer {
+public class SdCardExplorer extends FileExplorer {
     @Override
     public FileExplorer.Result search(String path) {
         File file = new File(path);
