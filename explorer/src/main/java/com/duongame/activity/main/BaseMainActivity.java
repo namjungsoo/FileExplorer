@@ -171,6 +171,7 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
             accessToken = Auth.getOAuth2Token();
             if(accessToken != null) {
                 PreferenceHelper.setAccountDropbox(this, accessToken);
+                initDropbox(accessToken);
             }
         }
         else {
