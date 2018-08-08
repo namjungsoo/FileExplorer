@@ -172,7 +172,7 @@ dependencies {
 
     //dropbox
     implementation 'com.dropbox.core:dropbox-core-sdk:3.0.7'
-
+    api 'com.squareup.okhttp:okhttp:2.7.5'
 }
 
 apply plugin: 'io.fabric'

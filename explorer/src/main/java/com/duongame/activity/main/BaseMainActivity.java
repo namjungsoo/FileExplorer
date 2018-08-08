@@ -30,10 +30,13 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import com.dropbox.core.android.Auth;
+import com.dropbox.core.v2.users.FullAccount;
 import com.duongame.BuildConfig;
 import com.duongame.R;
 import com.duongame.activity.BaseActivity;
 import com.duongame.bitmap.BitmapCacheManager;
+import com.duongame.cloud.dropbox.DropboxClientFactory;
+import com.duongame.cloud.dropbox.GetCurrentAccountTask;
 import com.duongame.db.BookDB;
 import com.duongame.db.BookLoader;
 import com.duongame.fragment.BaseFragment;
@@ -82,6 +85,7 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
     protected boolean drawerOpened;
     DrawerLayout drawer;
     ColorStateList grayStateList;
+    NavigationView navigationView;
 
     public boolean getShowReview() {
         return showReview;
@@ -156,6 +160,55 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
         if (adView != null) {
             adView.resume();
         }
+
+        onResumeDropbox();
+    }
+
+    void onResumeDropbox() {
+        // Token을 저장한다.
+        String accessToken = PreferenceHelper.getAccountDropbox(this);
+        if(accessToken == null) {
+            accessToken = Auth.getOAuth2Token();
+            if(accessToken != null) {
+                PreferenceHelper.setAccountDropbox(this, accessToken);
+            }
+        }
+        else {
+            initDropbox(accessToken);
+        }
+    }
+
+    void initDropbox(String accessToken) {
+        DropboxClientFactory.init(accessToken);
+        loadDropbox();
+    }
+
+    private void loadDropbox() {
+        new GetCurrentAccountTask(DropboxClientFactory.getClient(), new GetCurrentAccountTask.Callback() {
+            @Override
+            public void onComplete(FullAccount result) {
+//                ((TextView) findViewById(R.id.email_text)).setText(result.getEmail());
+//                ((TextView) findViewById(R.id.name_text)).setText(result.getName().getDisplayName());
+//                ((TextView) findViewById(R.id.type_text)).setText(result.getAccountType().name());// BASIC
+
+                String email = result.getEmail();
+                String name = result.getName().getDisplayName();
+
+                MenuItem dropboxItem = navigationView.getMenu().findItem(R.id.nav_dropbox);
+                if(dropboxItem != null) {
+
+                    // 로그인이 되었으므로 타이틀을 바꿔준다.
+                    // 이제 목록을 업데이트 하자.
+                    dropboxItem.setTitle(email);
+                }
+            }
+
+            @Override
+            public void onError(Exception e) {
+                Log.e(getClass().getName(), "Failed to get account details.", e);
+            }
+        }).execute();
+
     }
 
     @Override
@@ -442,7 +495,7 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         grayStateList = navigationView.getItemIconTintList();
     }
@@ -651,9 +704,10 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
     private void onDropbox(final MenuItem item) {
         final String account = PreferenceHelper.getAccountDropbox(this);
         if(account == null) {
-            // 로그인이 안되어 있으면 로그인을
+            item.setChecked(true);
+
+            // 로그인이 안되어 있으면 로그인을 한다.
             Auth.startOAuth2Authentication(this, getString(R.string.app_key_dropbox));
-            item.setTitle(Auth.getUid());
 
         } else {
             // 로그인이 되어 있으면 팝업후에 로그아웃을 하고, account를 null로 만든다.
