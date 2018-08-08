@@ -87,6 +87,4 @@
     <string name="msg_file_zip">The selected files will be zipped.</string>
     <string name="toast_file_zip">The files have been zipped.</string>
     <string name="toast_new_version">A new version has been released.</string>
-
-    <string name="cloud_storage">Cloud Storage</string>
 </resources>

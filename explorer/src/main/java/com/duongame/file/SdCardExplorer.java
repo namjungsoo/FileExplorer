@@ -28,6 +28,7 @@ public class SdCardExplorer extends FileExplorer {
             return null;
 
         // 폴더를 우선하도록 정렬 해야 함
+        // 안드로이드는 폴더와 파일을 섞어서 리턴을 해준다.
         Collections.sort(Arrays.asList(files), new FileExplorer.DirectoryPreferComparator());
 
         ArrayList<ExplorerItem> fileList = new ArrayList<ExplorerItem>();
@@ -109,6 +110,7 @@ public class SdCardExplorer extends FileExplorer {
             fileList.addAll(directoryList);
         }
 
+        // 이미지 리스트를 따로 모을 것인지?
         if (isImageListEnable()) {
             ArrayList<ExplorerItem> imageList = new ArrayList<ExplorerItem>();
 

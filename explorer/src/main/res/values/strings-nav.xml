@@ -5,4 +5,10 @@
     <string name="nav_header_title">Android Studio</string>
     <string name="nav_header_subtitle">android.studio@android.com</string>
     <string name="nav_header_desc">Navigation header</string>
+
+    <string name="app_key_dropbox">k78nqdn19p4864o</string>
+    <string name="cloud_storage">Cloud Storage</string>
+    <string name="dropbox">Dropbox</string>
+    <string name="google_drive">Google Drive</string>
+    <string name="message_cloud_logout">Do you want to logout from %s?</string>
 </resources>

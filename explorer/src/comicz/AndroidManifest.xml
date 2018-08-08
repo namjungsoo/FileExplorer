@@ -45,6 +45,23 @@
                 android:resource="@xml/provider_paths" />
         </provider>
 
+        <!-- Dropbox -->
+        <activity
+            android:name="com.dropbox.core.android.AuthActivity"
+            android:configChanges="orientation|keyboard"
+            android:launchMode="singleTask">
+            <intent-filter>
+
+                <!-- Change this to be db- followed by your app key -->
+                <data android:scheme="db-k78nqdn19p4864o" />
+
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.BROWSABLE" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
     </application>
 
     <protected-broadcast android:name="android.intent.action.MEDIA_MOUNTED" />
@@ -65,4 +82,5 @@
     <meta-data
         android:name="firebase_crashlytics_collection_enabled"
         android:value="true" />
+
 </manifest>

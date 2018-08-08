@@ -5,7 +5,7 @@ import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.os.Build;
@@ -29,10 +29,10 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
+import com.dropbox.core.android.Auth;
 import com.duongame.BuildConfig;
 import com.duongame.R;
 import com.duongame.activity.BaseActivity;
-import com.duongame.activity.SettingActivity;
 import com.duongame.bitmap.BitmapCacheManager;
 import com.duongame.db.BookDB;
 import com.duongame.db.BookLoader;
@@ -81,6 +81,7 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
     protected boolean showReview;
     protected boolean drawerOpened;
     DrawerLayout drawer;
+    ColorStateList grayStateList;
 
     public boolean getShowReview() {
         return showReview;
@@ -443,6 +444,7 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        grayStateList = navigationView.getItemIconTintList();
     }
 
     public boolean isDrawerOpened() {
@@ -645,12 +647,54 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
         updateSelectMenuIcon(false, true);
     }
 
+    // 드롭박스 클릭시
+    private void onDropbox(final MenuItem item) {
+        final String account = PreferenceHelper.getAccountDropbox(this);
+        if(account == null) {
+            // 로그인이 안되어 있으면 로그인을
+            Auth.startOAuth2Authentication(this, getString(R.string.app_key_dropbox));
+            item.setTitle(Auth.getUid());
+
+        } else {
+            // 로그인이 되어 있으면 팝업후에 로그아웃을 하고, account를 null로 만든다.
+            AlertHelper.showAlertWithAd(this, AppHelper.getAppName(this),
+                    String.format(getString(R.string.message_cloud_logout), getString(R.string.dropbox)),
+                    new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            item.setTitle(getString(R.string.dropbox));
+                            PreferenceHelper.setAccountDropbox(BaseMainActivity.this, null);
+                        }
+                    },
+                    null,
+                    false);
+        }
+    }
+
+    // 구글 드라이브 클릭시
+    private void onGoogleDrive(final MenuItem item) {
+        final String account = PreferenceHelper.getAccountGoogleDrive(this);
+        if(account == null) {
+        }
+        else {
+            // 로그인이 되어 있으면 팝업후에 로그아웃을 하고, account를 null로 만든다.
+            item.setTitle(getString(R.string.dropbox));
+            PreferenceHelper.setAccountDropbox(this, null);
+        }
+    }
+
     //TODO: 나중에 직접 구현할것
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
+
+        if(id == R.id.nav_dropbox) {
+            onDropbox(item);
+        } else if(id == R.id.nav_google_drive) {
+//            onGoogleDrive(item);
+        }
 
 //        if (id == R.id.nav_camera) {
 //            // Handle the camera action
