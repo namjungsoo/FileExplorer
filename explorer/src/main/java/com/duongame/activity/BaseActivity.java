@@ -24,8 +24,13 @@ public class BaseActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Crashlytics crashlytics = new Crashlytics.Builder().disabled(BuildConfig.DEBUG).build();
-        Fabric.with(this, crashlytics);
+//        Crashlytics crashlytics = new Crashlytics.Builder().disabled(BuildConfig.DEBUG).build();
+//        Fabric.with(this, crashlytics);
+        final Fabric fabric = new Fabric.Builder(this)
+                .kits(new Crashlytics())
+                .debuggable(BuildConfig.DEBUG)           // Enables Crashlytics debugger
+                .build();
+        Fabric.with(fabric);
 
         application = (AnalyticsApplication) getApplication();
 
