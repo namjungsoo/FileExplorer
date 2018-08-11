@@ -68,6 +68,36 @@
                 android:tint="@color/colorPrimary"
                 android:visibility="gone" />
 
+            <ImageButton
+                android:id="@+id/btn_dropbox"
+                style="@style/ExplorerButton"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginLeft="-4dp"
+                android:paddingBottom="8dp"
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp"
+                android:paddingTop="8dp"
+                android:scaleType="fitXY"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:src="@drawable/dropbox"
+                android:visibility="gone" />
+
+            <ImageButton
+                android:id="@+id/btn_gdrive"
+                style="@style/ExplorerButton"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginLeft="-4dp"
+                android:paddingBottom="8dp"
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp"
+                android:paddingTop="8dp"
+                android:scaleType="fitXY"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:src="@drawable/gdrive"
+                android:visibility="gone" />
+
             <HorizontalScrollView
                 android:id="@+id/scroll_path"
                 android:layout_width="wrap_content"

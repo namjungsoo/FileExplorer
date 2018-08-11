@@ -29,7 +29,11 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
+import com.dropbox.core.DbxException;
 import com.dropbox.core.android.Auth;
+import com.dropbox.core.v2.DbxClientV2;
+import com.dropbox.core.v2.files.DbxUserFilesRequests;
+import com.dropbox.core.v2.files.ListFolderResult;
 import com.dropbox.core.v2.users.FullAccount;
 import com.duongame.BuildConfig;
 import com.duongame.R;
@@ -167,14 +171,13 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
     void onResumeDropbox() {
         // Token을 저장한다.
         String accessToken = PreferenceHelper.getAccountDropbox(this);
-        if(accessToken == null) {
+        if (accessToken == null) {
             accessToken = Auth.getOAuth2Token();
-            if(accessToken != null) {
+            if (accessToken != null) {
                 PreferenceHelper.setAccountDropbox(this, accessToken);
                 initDropbox(accessToken);
             }
-        }
-        else {
+        } else {
             initDropbox(accessToken);
         }
     }
@@ -182,6 +185,31 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
     void initDropbox(String accessToken) {
         DropboxClientFactory.init(accessToken);
         loadDropbox();
+    }
+
+    void updateDropbox() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                DbxClientV2 client = DropboxClientFactory.getClient();
+                try {
+                    DbxUserFilesRequests requests = client.files();
+                    ListFolderResult result = requests.listFolder("");
+                    if (result != null) {
+                        for (int i = 0; i < result.getEntries().size(); i++) {
+                            String name = result.getEntries().get(i).getName();
+
+                            Log.e("Jungsoo", "i=" + i + " name=" + name);
+                        }
+                    }
+//            SearchResult result = requests.search("/", "");
+//            List<SearchMatch> matches = result.getMatches();
+//            Log.e("Jungsoo", "+"+matches.size());
+                } catch (DbxException e) {
+                    Log.e("Jungsoo", e.getLocalizedMessage());
+                }
+            }
+        }).start();
     }
 
     private void loadDropbox() {
@@ -196,11 +224,12 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
                 String name = result.getName().getDisplayName();
 
                 MenuItem dropboxItem = navigationView.getMenu().findItem(R.id.nav_dropbox);
-                if(dropboxItem != null) {
-
+                if (dropboxItem != null) {
                     // 로그인이 되었으므로 타이틀을 바꿔준다.
-                    // 이제 목록을 업데이트 하자.
                     dropboxItem.setTitle(email);
+
+                    // 이제 목록을 업데이트 하자.
+                    updateDropbox();
                 }
             }
 
@@ -209,7 +238,6 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
                 Log.e(getClass().getName(), "Failed to get account details.", e);
             }
         }).execute();
-
     }
 
     @Override
@@ -468,7 +496,6 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
         @Override
         public void onDrawerStateChanged(int newState) {
             super.onDrawerStateChanged(newState);
-
             Log.e("Jungsoo", "onDrawerStateChanged " + newState);
         }
 
@@ -498,6 +525,7 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
 
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        navigationView.setItemIconTintList(null);
         grayStateList = navigationView.getItemIconTintList();
     }
 
@@ -704,12 +732,11 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
     // 드롭박스 클릭시
     private void onDropbox(final MenuItem item) {
         final String account = PreferenceHelper.getAccountDropbox(this);
-        if(account == null) {
+        if (account == null) {
             item.setChecked(true);
 
             // 로그인이 안되어 있으면 로그인을 한다.
             Auth.startOAuth2Authentication(this, getString(R.string.app_key_dropbox));
-
         } else {
             // 로그인이 되어 있으면 팝업후에 로그아웃을 하고, account를 null로 만든다.
             AlertHelper.showAlertWithAd(this, AppHelper.getAppName(this),
@@ -719,6 +746,7 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
                         public void onClick(DialogInterface dialog, int which) {
                             item.setTitle(getString(R.string.dropbox));
                             PreferenceHelper.setAccountDropbox(BaseMainActivity.this, null);
+                            item.setChecked(false);
                         }
                     },
                     null,
@@ -729,9 +757,8 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
     // 구글 드라이브 클릭시
     private void onGoogleDrive(final MenuItem item) {
         final String account = PreferenceHelper.getAccountGoogleDrive(this);
-        if(account == null) {
-        }
-        else {
+        if (account == null) {
+        } else {
             // 로그인이 되어 있으면 팝업후에 로그아웃을 하고, account를 null로 만든다.
             item.setTitle(getString(R.string.dropbox));
             PreferenceHelper.setAccountDropbox(this, null);
@@ -745,9 +772,9 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if(id == R.id.nav_dropbox) {
+        if (id == R.id.nav_dropbox) {
             onDropbox(item);
-        } else if(id == R.id.nav_google_drive) {
+        } else if (id == R.id.nav_google_drive) {
 //            onGoogleDrive(item);
         }
 

@@ -76,6 +76,12 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
     public final static int SWITCH_LIST = 0;
     public final static int SWITCH_GRID = 1;
 
+    public final static int CLOUD_LOCAL = 0;
+    public final static int CLOUD_DROPBOX = 1;
+    public final static int CLOUD_GOOGLEDRIVE = 2;
+
+    private int cloud = CLOUD_LOCAL;
+
     // 파일 관련
     private ExplorerAdapter adapter;
     private ArrayList<ExplorerItem> fileList;
@@ -103,6 +109,9 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
     private ImageButton sdcard = null;
     private String extSdCard = null;
     private SearchTask searchTask = null;
+
+    private ImageButton dropbox = null;
+    private ImageButton googleDrive = null;
 
     // 선택
     private boolean selectMode = false;
@@ -244,6 +253,24 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
             }
         });
 
+        dropbox = rootView.findViewById(R.id.btn_dropbox);
+        dropbox.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                cloud = CLOUD_DROPBOX;
+                updateFileList(null);
+            }
+        });
+
+        googleDrive = rootView.findViewById(R.id.btn_gdrive);
+        googleDrive.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                cloud = CLOUD_GOOGLEDRIVE;
+                updateFileList(null);
+            }
+        });
+
         textNoFiles = rootView.findViewById(R.id.text_no_files);
         permButton = rootView.findViewById(R.id.btn_permission);
         if (permButton != null) {
@@ -253,6 +280,22 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
                     PermissionManager.checkStoragePermissions(getActivity());
                 }
             });
+        }
+    }
+
+    public void updateDropboxUI(boolean show) {
+        if (show) {
+            dropbox.setVisibility(View.VISIBLE);
+        } else {
+            dropbox.setVisibility(View.GONE);
+        }
+    }
+
+    public void updateGoogleDriveUI(boolean show) {
+        if (show) {
+            googleDrive.setVisibility(View.VISIBLE);
+        } else {
+            googleDrive.setVisibility(View.GONE);
         }
     }
 
@@ -536,7 +579,6 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
     }
 
     public void sortFileWithDialog() {
-
         SortDialog dialog = new SortDialog();
         dialog.setTypeAndDirection(sortType, sortDirection);
         dialog.setOnSortListener(new SortDialog.OnSortListener() {
@@ -916,10 +958,24 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
     //HACK: 모두 전체 새로 읽기로 수정함
     public void updateFileList(final String path) {
         //updateFileList(path, isPathChanged(path));
-        if (path == null)
-            updateFileList(null, true);
-        else
-            updateFileList(path, isPathChanged(path));
+        if(cloud == CLOUD_LOCAL) {
+            if (path == null)
+                updateFileList(null, true);
+            else
+                updateFileList(path, isPathChanged(path));
+        } else if(cloud == CLOUD_DROPBOX) {
+            updateDropboxList(path);
+        } else if(cloud == CLOUD_GOOGLEDRIVE) {
+            updateGoogleDriveList(path);
+        }
+    }
+    
+    void updateDropboxList(final String path) {
+
+    }
+
+    void updateGoogleDriveList(final String path) {
+
     }
 
     private boolean isPathChanged(String path) {
@@ -944,8 +1000,8 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
     public void onBackPressed() {
         // Drawer가 열려 있으면 닫아야 함
         BaseMainActivity activity = (BaseMainActivity) getActivity();
-        if(activity != null) {
-            if(activity.isDrawerOpened()) {
+        if (activity != null) {
+            if (activity.isDrawerOpened()) {
                 activity.closeDrawer();
                 return;
             }
