@@ -15,13 +15,18 @@ import com.duongame.helper.ToastHelper;
  */
 
 public class BaseFragment extends Fragment {
-    private long lastBackPressed = 0;
     private final static int TIME_MS = 2000;
+    protected final static int CLOUD_LOCAL = 0;
+    protected final static int CLOUD_DROPBOX = 1;
+    protected final static int CLOUD_GOOGLEDRIVE = 2;
 
     // Search
     protected AnalyticsApplication application;
     protected FileExplorer fileExplorer;
     protected FileExplorer.Result fileResult;
+
+    protected int cloud = CLOUD_LOCAL;
+    private long lastBackPressed = 0;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

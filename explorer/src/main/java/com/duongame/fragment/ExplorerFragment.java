@@ -76,12 +76,6 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
     public final static int SWITCH_LIST = 0;
     public final static int SWITCH_GRID = 1;
 
-    public final static int CLOUD_LOCAL = 0;
-    public final static int CLOUD_DROPBOX = 1;
-    public final static int CLOUD_GOOGLEDRIVE = 2;
-
-    private int cloud = CLOUD_LOCAL;
-
     // 파일 관련
     private ExplorerAdapter adapter;
     private ArrayList<ExplorerItem> fileList;
@@ -101,7 +95,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
     // 뷰 스위처
     private ViewSwitcher switcherViewType;
     private ViewSwitcher switcherContents;
-    private Button permButton;
+    private Button permissionButton;
     private TextView textNoFiles;
     private int viewType = SWITCH_LIST;
 
@@ -273,9 +267,9 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
         });
 
         textNoFiles = rootView.findViewById(R.id.text_no_files);
-        permButton = rootView.findViewById(R.id.btn_permission);
-        if (permButton != null) {
-            permButton.setOnClickListener(new View.OnClickListener() {
+        permissionButton = rootView.findViewById(R.id.btn_permission);
+        if (permissionButton != null) {
+            permissionButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     PermissionManager.checkStoragePermissions(getActivity());
@@ -895,16 +889,40 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
 
                     // 퍼미션이 있으면 퍼미션 버튼을 보이지 않게 함
                     if (PermissionManager.checkStoragePermissions()) {
-                        fragment.permButton.setVisibility(GONE);
+                        fragment.permissionButton.setVisibility(GONE);
                         fragment.textNoFiles.setVisibility(View.VISIBLE);
                     } else {
-                        fragment.permButton.setVisibility(View.VISIBLE);
+                        fragment.permissionButton.setVisibility(View.VISIBLE);
                         fragment.textNoFiles.setVisibility(GONE);
                     }
                 } else {
                     fragment.switcherContents.setDisplayedChild(0);
                 }
             }
+
+            canClick = true;
+        }
+    }
+
+    class DropboxSearchTask extends AsyncTask<String, Void, FileExplorer.Result> {
+
+        @Override
+        protected FileExplorer.Result doInBackground(String... strings) {
+            return null;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();// AsyncTask는 아무것도 안함
+
+            canClick = false;// 이제부터 클릭할수 없음
+        }
+
+        @Override
+        protected void onPostExecute(FileExplorer.Result result) {
+            super.onPostExecute(result);// AsyncTask는 아무것도 안함
+
+
 
             canClick = true;
         }
@@ -959,14 +977,14 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
     //HACK: 모두 전체 새로 읽기로 수정함
     public void updateFileList(final String path) {
         //updateFileList(path, isPathChanged(path));
-        if(cloud == CLOUD_LOCAL) {
+        if (cloud == CLOUD_LOCAL) {
             if (path == null)
                 updateFileList(null, true);
             else
                 updateFileList(path, isPathChanged(path));
-        } else if(cloud == CLOUD_DROPBOX) {
+        } else if (cloud == CLOUD_DROPBOX) {
             updateDropboxList(path);
-        } else if(cloud == CLOUD_GOOGLEDRIVE) {
+        } else if (cloud == CLOUD_GOOGLEDRIVE) {
             updateGoogleDriveList(path);
         }
     }

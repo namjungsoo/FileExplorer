@@ -29,11 +29,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
-import com.dropbox.core.DbxException;
 import com.dropbox.core.android.Auth;
-import com.dropbox.core.v2.DbxClientV2;
-import com.dropbox.core.v2.files.DbxUserFilesRequests;
-import com.dropbox.core.v2.files.ListFolderResult;
 import com.dropbox.core.v2.users.FullAccount;
 import com.duongame.BuildConfig;
 import com.duongame.R;
@@ -176,6 +172,8 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
             if (accessToken != null) {
                 PreferenceHelper.setAccountDropbox(this, accessToken);
                 initDropbox(accessToken);
+            } else {
+                getExplorerFragment().updateDropboxUI(false);
             }
         } else {
             initDropbox(accessToken);
@@ -188,6 +186,10 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
     }
 
     void updateDropbox() {
+        // 드롭박스 파일리스트를 업데이트 해야함
+        getExplorerFragment().updateDropboxUI(true);
+
+        /*
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -210,6 +212,7 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
                 }
             }
         }).start();
+        */
     }
 
     private void loadDropbox() {
@@ -229,13 +232,15 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
                     dropboxItem.setTitle(email);
 
                     // 이제 목록을 업데이트 하자.
-                    updateDropbox();
+                    //updateDropbox();
+                    getExplorerFragment().updateDropboxUI(true);
                 }
             }
 
             @Override
             public void onError(Exception e) {
                 Log.e(getClass().getName(), "Failed to get account details.", e);
+                getExplorerFragment().updateDropboxUI(false);
             }
         }).execute();
     }
