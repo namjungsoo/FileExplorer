@@ -108,7 +108,8 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
     // 기타
     private ImageButton sdcard = null;
     private String extSdCard = null;
-    private SearchTask searchTask = null;
+
+    private LocalSearchTask localSearchTask = null;
 
     private ImageButton dropbox = null;
     private ImageButton googleDrive = null;
@@ -773,13 +774,13 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
         }
     }
 
-    class SearchTask extends AsyncTask<String, Void, FileExplorer.Result> {
+    class LocalSearchTask extends AsyncTask<String, Void, FileExplorer.Result> {
         WeakReference<ExplorerFragment> fragmentWeakReference;
         boolean pathChanged;
         String path;
         Comparator<ExplorerItem> comparator;
 
-        SearchTask(ExplorerFragment fragment, boolean pathChanged) {
+        LocalSearchTask(ExplorerFragment fragment, boolean pathChanged) {
             this.pathChanged = pathChanged;
             fragmentWeakReference = new WeakReference<>(fragment);
         }
@@ -923,13 +924,13 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
         }
 
         //FIX:
-        //SearchTask task = new SearchTask(isPathChanged(path));
+        //LocalSearchTask task = new LocalSearchTask(isPathChanged(path));
         //task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, path);
-        if (searchTask != null) {
-            searchTask.cancel(true);
+        if (localSearchTask != null) {
+            localSearchTask.cancel(true);
         }
-        searchTask = new SearchTask(this, isPathChanged);
-        searchTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, path);
+        localSearchTask = new LocalSearchTask(this, isPathChanged);
+        localSearchTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, path);
 
         // 패스 UI를 가장 오른쪽으로 스크롤
         // 이동이 완료되기전에 이미 이동한다.
