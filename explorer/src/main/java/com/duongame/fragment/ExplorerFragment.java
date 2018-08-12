@@ -14,6 +14,7 @@ import android.support.v4.content.FileProvider;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,6 +27,13 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.ViewSwitcher;
 
+import com.dropbox.core.DbxException;
+import com.dropbox.core.v2.DbxClientV2;
+import com.dropbox.core.v2.files.DbxUserFilesRequests;
+import com.dropbox.core.v2.files.FileMetadata;
+import com.dropbox.core.v2.files.FolderMetadata;
+import com.dropbox.core.v2.files.ListFolderResult;
+import com.dropbox.core.v2.files.Metadata;
 import com.duongame.AnalyticsApplication;
 import com.duongame.R;
 import com.duongame.activity.main.BaseMainActivity;
@@ -36,6 +44,7 @@ import com.duongame.adapter.ExplorerItem;
 import com.duongame.adapter.ExplorerListAdapter;
 import com.duongame.adapter.ExplorerScrollListener;
 import com.duongame.bitmap.BitmapCacheManager;
+import com.duongame.cloud.dropbox.DropboxClientFactory;
 import com.duongame.db.BookLoader;
 import com.duongame.dialog.SortDialog;
 import com.duongame.file.FileExplorer;
@@ -59,6 +68,7 @@ import java.io.File;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.List;
 import java.util.Map;
 
 import static android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION;
@@ -104,6 +114,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
     private String extSdCard = null;
 
     private LocalSearchTask localSearchTask = null;
+    private DropboxSearchTask dropboxSearchTask = null;
 
     private ImageButton dropbox = null;
     private ImageButton googleDrive = null;
@@ -837,7 +848,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
             if (result == null) {
                 result = new FileExplorer.Result();
             }
-            fragment.fileResult = result;
+//            fragment.fileResult = result;
 
             return result;
         }
@@ -905,10 +916,11 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
     }
 
     class DropboxSearchTask extends AsyncTask<String, Void, FileExplorer.Result> {
+        WeakReference<ExplorerFragment> fragmentWeakReference;
+        String path;
 
-        @Override
-        protected FileExplorer.Result doInBackground(String... strings) {
-            return null;
+        DropboxSearchTask(ExplorerFragment fragment) {
+            fragmentWeakReference = new WeakReference<>(fragment);
         }
 
         @Override
@@ -918,11 +930,87 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
             canClick = false;// 이제부터 클릭할수 없음
         }
 
+        ExplorerItem createFolder(FolderMetadata metadata) {
+            ExplorerItem item = new ExplorerItem(metadata.getPathDisplay(), metadata.getName(), null, 0, ExplorerItem.FILETYPE_FOLDER);
+            return item;
+        }
+
+        ExplorerItem createFile(FileMetadata metadata) {
+            ExplorerItem item = new ExplorerItem(metadata.getPathDisplay(), metadata.getName(), metadata.getServerModified().toString(), metadata.getSize(), ExplorerItem.FILETYPE_FILE);
+            return item;
+        }
+
+        @Override
+        protected FileExplorer.Result doInBackground(String... strings) {
+            path = strings[0];
+            if(path == null)
+                path = "";
+//            ExplorerFragment fragment = fragmentWeakReference.get();
+//            if (fragment == null)
+//                return null;
+
+            DbxClientV2 client = DropboxClientFactory.getClient();
+            try {
+                DbxUserFilesRequests requests = client.files();
+                ListFolderResult listFolderResult = requests.listFolder(path);
+                ArrayList<ExplorerItem> fileList = new ArrayList<>();
+
+                if (listFolderResult != null) {
+                    List<Metadata> entries = listFolderResult.getEntries();
+                    if (entries != null) {
+                        for (int i = 0; i < entries.size(); i++) {
+                            Metadata metadata = entries.get(i);
+                            if (metadata == null)
+                                continue;
+
+                            ExplorerItem item = null;
+                            if (metadata instanceof FileMetadata) {
+                                item = createFile((FileMetadata) metadata);
+                            } else if (metadata instanceof FolderMetadata) {
+                                item = createFolder((FolderMetadata) metadata);
+                            } else
+                                continue;
+
+                            // 패스를 찾았다. 리스트에 더해주자.
+                            fileList.add(item);
+                            Log.e("Jungsoo", "i=" + i + " " + item.toString());
+                        }
+                    }
+
+                    FileExplorer.Result result = new FileExplorer.Result();
+                    result.fileList = fileList;
+                    return result;
+                }
+            } catch (DbxException e) {
+                Log.e("Jungsoo", e.getLocalizedMessage());
+            }
+
+            return null;
+        }
+
         @Override
         protected void onPostExecute(FileExplorer.Result result) {
             super.onPostExecute(result);// AsyncTask는 아무것도 안함
 
+            if (isCancelled())
+                return;
 
+            ExplorerFragment fragment = fragmentWeakReference.get();
+            if (fragment == null)
+                return;
+
+            //FIX: Index Out of Bound
+            // 쓰레드에서 메인쓰레드로 옮김
+            fragment.fileList = result.fileList;
+            fragment.application.setImageList(result.imageList);
+            fragment.adapter.setFileList(fragment.fileList);
+
+            fragment.adapter.notifyDataSetChanged();
+
+            // 성공했을때 현재 패스를 업데이트
+            fragment.application.setLastPath(path);
+            fragment.textPath.setText(path);
+            fragment.textPath.requestLayout();
 
             canClick = true;
         }
@@ -990,6 +1078,40 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
     }
 
     void updateDropboxList(final String path) {
+        if (adapter == null) {
+            return;
+        }
+
+        // 선택모드인지 설정해준다.
+        adapter.setSelectMode(selectMode);
+
+        // 썸네일이 꽉찼을때는 비워준다.
+        if (BitmapCacheManager.getThumbnailCount() > MAX_THUMBNAILS) {
+            BitmapCacheManager.removeAllThumbnails();
+        }
+
+        //FIX:
+        //LocalSearchTask task = new LocalSearchTask(isPathChanged(path));
+        //task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, path);
+        if (dropboxSearchTask != null) {
+            dropboxSearchTask.cancel(true);
+        }
+        dropboxSearchTask = new DropboxSearchTask(this);
+        dropboxSearchTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, path);
+
+        // 패스 UI를 가장 오른쪽으로 스크롤
+        // 이동이 완료되기전에 이미 이동한다.
+        scrollPath.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                scrollPath.fullScroll(View.FOCUS_RIGHT);
+                            }
+                        }
+        );
+
+        // preference는 쓰레드로 사용하지 않기로 함
+        // 현재 패스를 저장
+        PreferenceHelper.setLastPath(getActivity(), path);
 
     }
 
