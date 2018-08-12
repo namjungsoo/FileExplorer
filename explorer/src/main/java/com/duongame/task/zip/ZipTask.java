@@ -10,7 +10,7 @@ import com.duongame.adapter.ExplorerItem;
 import com.duongame.dialog.ZipDialog;
 import com.duongame.file.FileExplorer;
 import com.duongame.file.FileHelper;
-import com.duongame.file.SdCardExplorer;
+import com.duongame.file.LocalExplorer;
 import com.duongame.helper.ToastHelper;
 
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
@@ -284,7 +284,7 @@ public class ZipTask extends AsyncTask<Void, FileHelper.Progress, Boolean> {
 
             if (item.type == ExplorerItem.FILETYPE_FOLDER) {
                 // 폴더의 경우 하위 모든 아이템을 찾은뒤에 더한다.
-                FileExplorer explorer = new SdCardExplorer();
+                FileExplorer explorer = new LocalExplorer();
                 FileExplorer.Result result = explorer.setRecursiveDirectory(true)
                         .setHiddenFile(true)
                         .setExcludeDirectory(false)

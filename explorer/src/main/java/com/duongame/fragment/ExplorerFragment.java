@@ -725,8 +725,8 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
 
     //TODO: 나중에 구현
     void backupPosition() {
-//        PositionManager.setPosition(SdCardExplorer.getLastPath(), currentView.getFirstVisiblePosition());
-//        PositionManager.setTop(SdCardExplorer.getLastPath(), getCurrentViewScrollTop());
+//        PositionManager.setPosition(LocalExplorer.getLastPath(), currentView.getFirstVisiblePosition());
+//        PositionManager.setTop(LocalExplorer.getLastPath(), getCurrentViewScrollTop());
     }
 
     int getCurrentViewScrollTop() {
@@ -969,7 +969,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
             updateGoogleDriveList(path);
         }
     }
-    
+
     void updateDropboxList(final String path) {
 
     }

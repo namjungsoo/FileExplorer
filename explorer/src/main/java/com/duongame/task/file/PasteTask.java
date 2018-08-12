@@ -11,7 +11,7 @@ import com.duongame.dialog.OverwriteDialog;
 import com.duongame.dialog.PasteDialog;
 import com.duongame.file.FileExplorer;
 import com.duongame.file.FileHelper;
-import com.duongame.file.SdCardExplorer;
+import com.duongame.file.LocalExplorer;
 import com.duongame.helper.JLog;
 import com.duongame.helper.ToastHelper;
 
@@ -112,7 +112,7 @@ public class PasteTask extends AsyncTask<Void, FileHelper.Progress, Boolean> {
     }
 
     FileExplorer.Result searchFile(String path) {
-        FileExplorer explorer = new SdCardExplorer();
+        FileExplorer explorer = new LocalExplorer();
         FileExplorer.Result result = explorer.setRecursiveDirectory(true)
                 .setHiddenFile(true)
                 .setExcludeDirectory(false)

@@ -7,7 +7,7 @@ import android.support.v4.app.FragmentActivity;
 import com.duongame.AnalyticsApplication;
 import com.duongame.R;
 import com.duongame.file.FileExplorer;
-import com.duongame.file.SdCardExplorer;
+import com.duongame.file.LocalExplorer;
 import com.duongame.helper.ToastHelper;
 
 /**
@@ -31,7 +31,7 @@ public class BaseFragment extends Fragment {
         if(activity != null) {
             application = (AnalyticsApplication) activity.getApplication();
         }
-        fileExplorer = new SdCardExplorer();
+        fileExplorer = new LocalExplorer();
     }
 
     //FIX:
@@ -46,7 +46,7 @@ public class BaseFragment extends Fragment {
         }
 
         if(fileExplorer == null) {
-            fileExplorer = new SdCardExplorer();
+            fileExplorer = new LocalExplorer();
         }
     }
 
