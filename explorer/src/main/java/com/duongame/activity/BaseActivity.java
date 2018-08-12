@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
 import com.crashlytics.android.Crashlytics;
+import com.crashlytics.android.core.CrashlyticsCore;
 import com.duongame.AnalyticsApplication;
 import com.duongame.BuildConfig;
 import com.google.android.gms.analytics.HitBuilders;
@@ -24,24 +25,29 @@ public class BaseActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-//        Crashlytics crashlytics = new Crashlytics.Builder().disabled(BuildConfig.DEBUG).build();
-//        Fabric.with(this, crashlytics);
-        final Fabric fabric = new Fabric.Builder(this)
-                .kits(new Crashlytics())
-                .debuggable(BuildConfig.DEBUG)           // Enables Crashlytics debugger
+        setupFabric();
+        setupFirebase();
+        setupGA();
+    }
+
+    private void setupFabric() {
+        CrashlyticsCore crashlyticsCore = new CrashlyticsCore.Builder()
+                .disabled(BuildConfig.DEBUG)
                 .build();
-        Fabric.with(fabric);
+        Fabric.with(this, new Crashlytics.Builder().core(crashlyticsCore).build());
+    }
 
-        application = (AnalyticsApplication) getApplication();
-
+    private void setupFirebase() {
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
-
         // 디버그 개발중에는 크래쉬 오류 보고 하지 않음
         if(BuildConfig.DEBUG)
             FirebaseCrash.setCrashCollectionEnabled(false);
         else
             FirebaseCrash.setCrashCollectionEnabled(true);
-        
+    }
+
+    private void setupGA() {
+        application = (AnalyticsApplication) getApplication();
         mTracker = application.getDefaultTracker();
     }
 
