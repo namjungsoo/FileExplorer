@@ -13,6 +13,7 @@ android {
     }
 
     defaultConfig {
+        multiDexEnabled true
         applicationId 'com.duongame'
         buildConfigField "boolean", "SHOW_AD", "true"
         buildConfigField "boolean", "PREVIEW_ZIP", "false"
@@ -164,6 +165,7 @@ dependencies {
     //dropbox
     implementation 'com.dropbox.core:dropbox-core-sdk:3.0.7'
     implementation 'com.squareup.okhttp3:okhttp:3.11.0'
+    implementation 'com.android.support:multidex:1.0.3'
 }
 
 apply plugin: 'io.fabric'

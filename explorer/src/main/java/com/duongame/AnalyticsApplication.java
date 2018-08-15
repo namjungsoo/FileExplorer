@@ -2,6 +2,7 @@ package com.duongame;
 
 import android.app.Application;
 import android.os.Environment;
+import android.support.multidex.MultiDexApplication;
 
 import com.duongame.adapter.ExplorerItem;
 import com.google.android.gms.analytics.GoogleAnalytics;
@@ -11,7 +12,7 @@ import com.google.firebase.crash.FirebaseCrash;
 
 import java.util.ArrayList;
 
-public class AnalyticsApplication extends Application {
+public class AnalyticsApplication extends MultiDexApplication {
     private Tracker mTracker;
 
     private ArrayList<ExplorerItem> imageList;

@@ -24,9 +24,28 @@ public class BaseFragment extends Fragment {
     protected AnalyticsApplication application;
     protected FileExplorer fileExplorer;
     protected FileExplorer.Result fileResult;
-
     protected int cloud = CLOUD_LOCAL;
     private long lastBackPressed = 0;
+
+    public AnalyticsApplication getApplication() {
+        return application;
+    }
+
+    public FileExplorer getFileExplorer() {
+        return fileExplorer;
+    }
+
+    public FileExplorer.Result getFileResult() {
+        return fileResult;
+    }
+
+    public int getCloud() {
+        return cloud;
+    }
+
+    public long getLastBackPressed() {
+        return lastBackPressed;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

@@ -14,7 +14,6 @@ import android.support.v4.content.FileProvider;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,13 +26,6 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.ViewSwitcher;
 
-import com.dropbox.core.DbxException;
-import com.dropbox.core.v2.DbxClientV2;
-import com.dropbox.core.v2.files.DbxUserFilesRequests;
-import com.dropbox.core.v2.files.FileMetadata;
-import com.dropbox.core.v2.files.FolderMetadata;
-import com.dropbox.core.v2.files.ListFolderResult;
-import com.dropbox.core.v2.files.Metadata;
 import com.duongame.AnalyticsApplication;
 import com.duongame.R;
 import com.duongame.activity.main.BaseMainActivity;
@@ -44,10 +36,8 @@ import com.duongame.adapter.ExplorerItem;
 import com.duongame.adapter.ExplorerListAdapter;
 import com.duongame.adapter.ExplorerScrollListener;
 import com.duongame.bitmap.BitmapCacheManager;
-import com.duongame.cloud.dropbox.DropboxClientFactory;
 import com.duongame.db.BookLoader;
 import com.duongame.dialog.SortDialog;
-import com.duongame.file.FileExplorer;
 import com.duongame.file.FileHelper;
 import com.duongame.helper.AlertHelper;
 import com.duongame.helper.AppHelper;
@@ -57,6 +47,8 @@ import com.duongame.helper.ToastHelper;
 import com.duongame.manager.PermissionManager;
 import com.duongame.manager.PositionManager;
 import com.duongame.task.file.DeleteTask;
+import com.duongame.task.file.DropboxSearchTask;
+import com.duongame.task.file.LocalSearchTask;
 import com.duongame.task.file.PasteTask;
 import com.duongame.task.zip.UnzipTask;
 import com.duongame.task.zip.ZipTask;
@@ -65,14 +57,10 @@ import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 
 import java.io.File;
-import java.lang.ref.WeakReference;
 import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
 import java.util.Map;
 
 import static android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION;
-import static android.view.View.GONE;
 import static com.duongame.ExplorerConfig.MAX_THUMBNAILS;
 
 /**
@@ -86,14 +74,8 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
     public final static int SWITCH_LIST = 0;
     public final static int SWITCH_GRID = 1;
 
-    // 파일 관련
-    private ExplorerAdapter adapter;
-    private ArrayList<ExplorerItem> fileList;
 
-    // 붙이기 관련
-    private ArrayList<ExplorerItem> selectedFileList;
-    private boolean cut;
-
+    // Android UI 관련
     // 패스 관련
     private TextView textPath;
     private HorizontalScrollView scrollPath;
@@ -107,30 +89,86 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
     private ViewSwitcher switcherContents;
     private Button permissionButton;
     private TextView textNoFiles;
-    private int viewType = SWITCH_LIST;
 
     // 기타
     private ImageButton sdcard = null;
     private String extSdCard = null;
+    private ImageButton dropbox = null;
+    private ImageButton googleDrive = null;
+    private DividerItemDecoration itemDecoration = null;
+
+
+    // Model 관련
+    // 파일 관련
+    private ExplorerAdapter adapter;
+
+    public ViewSwitcher getSwitcherContents() {
+        return switcherContents;
+    }
+
+    public Button getPermissionButton() {
+        return permissionButton;
+    }
+
+    public ArrayList<ExplorerItem> getFileList() {
+        return fileList;
+    }
+
+    public TextView getTextPath() {
+        return textPath;
+    }
+
+    public TextView getTextNoFiles() {
+        return textNoFiles;
+    }
+
+    public ExplorerAdapter getAdapter() {
+        return adapter;
+    }
+
+    public void setFileList(ArrayList<ExplorerItem> fileList) {
+        this.fileList = fileList;
+    }
+
+    private ArrayList<ExplorerItem> fileList;
+
+    // 붙이기 관련
+    private ArrayList<ExplorerItem> selectedFileList;
+    private boolean cut;
 
     private LocalSearchTask localSearchTask = null;
     private DropboxSearchTask dropboxSearchTask = null;
 
-    private ImageButton dropbox = null;
-    private ImageButton googleDrive = null;
-
     // 선택
     private boolean selectMode = false;
     private boolean pasteMode = false;// 붙여넣기 모드는 뒤로가기 버튼이 있고
-    private DividerItemDecoration itemDecoration = null;
-
     private String capturePath;
+
 
     // 정렬
     private int sortType;
     private int sortDirection;
 
     private boolean canClick = true;
+    private int viewType = SWITCH_LIST;
+
+
+    public boolean isCanClick() {
+        return canClick;
+    }
+
+    public void setCanClick(boolean canClick) {
+        this.canClick = canClick;
+    }
+
+    public int getSortType() {
+        return sortType;
+    }
+
+    public int getSortDirection() {
+        return sortDirection;
+    }
+
 
     public Tracker getTracker() {
         FragmentActivity activity = getActivity();
@@ -779,243 +817,6 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
         }
     }
 
-    class LocalSearchTask extends AsyncTask<String, Void, FileExplorer.Result> {
-        WeakReference<ExplorerFragment> fragmentWeakReference;
-        boolean pathChanged;
-        String path;
-        Comparator<ExplorerItem> comparator;
-
-        LocalSearchTask(ExplorerFragment fragment, boolean pathChanged) {
-            this.pathChanged = pathChanged;
-            fragmentWeakReference = new WeakReference<>(fragment);
-        }
-
-        void updateComparator() {
-            ExplorerFragment fragment = fragmentWeakReference.get();
-            if (fragment == null)
-                return;
-
-            if (fragment.sortDirection == 0) {// ascending
-                switch (fragment.sortType) {
-                    case 0:
-                        comparator = new FileHelper.NameAscComparator();
-                        break;
-                    case 1:
-                        comparator = new FileHelper.ExtAscComparator();
-                        break;
-                    case 2:
-                        comparator = new FileHelper.DateAscComparator();
-                        break;
-                    case 3:
-                        comparator = new FileHelper.SizeAscComparator();
-                        break;
-                }
-            } else {
-                switch (fragment.sortType) {// descending
-                    case 0:
-                        comparator = new FileHelper.NameDescComparator();
-                        break;
-                    case 1:
-                        comparator = new FileHelper.ExtDescComparator();
-                        break;
-                    case 2:
-                        comparator = new FileHelper.DateDescComparator();
-                        break;
-                    case 3:
-                        comparator = new FileHelper.SizeDescComparator();
-                        break;
-                }
-            }
-        }
-
-        @Override
-        protected FileExplorer.Result doInBackground(String... params) {
-            path = params[0];
-            updateComparator();
-
-            ExplorerFragment fragment = fragmentWeakReference.get();
-            if (fragment == null)
-                return null;
-
-            FileExplorer.Result result = fragment.fileExplorer
-                    .setRecursiveDirectory(false)
-                    .setExcludeDirectory(false)
-                    .setComparator(comparator)
-                    .setHiddenFile(false)
-                    .setImageListEnable(true)
-                    .search(path);
-
-            if (result == null) {
-                result = new FileExplorer.Result();
-            }
-//            fragment.fileResult = result;
-
-            return result;
-        }
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();// AsyncTask는 아무것도 안함
-
-            canClick = false;// 이제부터 클릭할수 없음
-        }
-
-        @Override
-        protected void onPostExecute(FileExplorer.Result result) {
-            super.onPostExecute(result);// AsyncTask는 아무것도 안함
-
-            if (isCancelled())
-                return;
-
-            ExplorerFragment fragment = fragmentWeakReference.get();
-            if (fragment == null)
-                return;
-
-            //FIX: Index Out of Bound
-            // 쓰레드에서 메인쓰레드로 옮김
-            fragment.fileList = result.fileList;
-            fragment.application.setImageList(result.imageList);
-            fragment.adapter.setFileList(fragment.fileList);
-
-            fragment.adapter.notifyDataSetChanged();
-
-            // SearchTask가 resume
-            if (pathChanged) {
-                synchronized (ExplorerFragment.this) {
-                    if (fragment.fileList != null && fragment.fileList.size() > 0) {
-                        fragment.currentView.scrollToPosition(0);
-                        fragment.currentView.invalidate();
-                    }
-                }
-            }
-
-            // 성공했을때 현재 패스를 업데이트
-            fragment.application.setLastPath(path);
-            fragment.textPath.setText(path);
-            fragment.textPath.requestLayout();
-
-            if (fragment.switcherContents != null) {
-                if (fragment.fileList == null || fragment.fileList.size() <= 0) {
-                    fragment.switcherContents.setDisplayedChild(1);
-
-                    // 퍼미션이 있으면 퍼미션 버튼을 보이지 않게 함
-                    if (PermissionManager.checkStoragePermissions()) {
-                        fragment.permissionButton.setVisibility(GONE);
-                        fragment.textNoFiles.setVisibility(View.VISIBLE);
-                    } else {
-                        fragment.permissionButton.setVisibility(View.VISIBLE);
-                        fragment.textNoFiles.setVisibility(GONE);
-                    }
-                } else {
-                    fragment.switcherContents.setDisplayedChild(0);
-                }
-            }
-
-            canClick = true;
-        }
-    }
-
-    class DropboxSearchTask extends AsyncTask<String, Void, FileExplorer.Result> {
-        WeakReference<ExplorerFragment> fragmentWeakReference;
-        String path;
-
-        DropboxSearchTask(ExplorerFragment fragment) {
-            fragmentWeakReference = new WeakReference<>(fragment);
-        }
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();// AsyncTask는 아무것도 안함
-
-            canClick = false;// 이제부터 클릭할수 없음
-        }
-
-        ExplorerItem createFolder(FolderMetadata metadata) {
-            ExplorerItem item = new ExplorerItem(metadata.getPathDisplay(), metadata.getName(), null, 0, ExplorerItem.FILETYPE_FOLDER);
-            return item;
-        }
-
-        ExplorerItem createFile(FileMetadata metadata) {
-            ExplorerItem item = new ExplorerItem(metadata.getPathDisplay(), metadata.getName(), metadata.getServerModified().toString(), metadata.getSize(), ExplorerItem.FILETYPE_FILE);
-            return item;
-        }
-
-        @Override
-        protected FileExplorer.Result doInBackground(String... strings) {
-            path = strings[0];
-            if(path == null)
-                path = "";
-//            ExplorerFragment fragment = fragmentWeakReference.get();
-//            if (fragment == null)
-//                return null;
-
-            DbxClientV2 client = DropboxClientFactory.getClient();
-            try {
-                DbxUserFilesRequests requests = client.files();
-                ListFolderResult listFolderResult = requests.listFolder(path);
-                ArrayList<ExplorerItem> fileList = new ArrayList<>();
-
-                if (listFolderResult != null) {
-                    List<Metadata> entries = listFolderResult.getEntries();
-                    if (entries != null) {
-                        for (int i = 0; i < entries.size(); i++) {
-                            Metadata metadata = entries.get(i);
-                            if (metadata == null)
-                                continue;
-
-                            ExplorerItem item = null;
-                            if (metadata instanceof FileMetadata) {
-                                item = createFile((FileMetadata) metadata);
-                            } else if (metadata instanceof FolderMetadata) {
-                                item = createFolder((FolderMetadata) metadata);
-                            } else
-                                continue;
-
-                            // 패스를 찾았다. 리스트에 더해주자.
-                            fileList.add(item);
-                            Log.e("Jungsoo", "i=" + i + " " + item.toString());
-                        }
-                    }
-
-                    FileExplorer.Result result = new FileExplorer.Result();
-                    result.fileList = fileList;
-                    return result;
-                }
-            } catch (DbxException e) {
-                Log.e("Jungsoo", e.getLocalizedMessage());
-            }
-
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(FileExplorer.Result result) {
-            super.onPostExecute(result);// AsyncTask는 아무것도 안함
-
-            if (isCancelled())
-                return;
-
-            ExplorerFragment fragment = fragmentWeakReference.get();
-            if (fragment == null)
-                return;
-
-            //FIX: Index Out of Bound
-            // 쓰레드에서 메인쓰레드로 옮김
-            fragment.fileList = result.fileList;
-            fragment.application.setImageList(result.imageList);
-            fragment.adapter.setFileList(fragment.fileList);
-
-            fragment.adapter.notifyDataSetChanged();
-
-            // 성공했을때 현재 패스를 업데이트
-            fragment.application.setLastPath(path);
-            fragment.textPath.setText(path);
-            fragment.textPath.requestLayout();
-
-            canClick = true;
-        }
-    }
-
     public void updateFileList(final String path, boolean isPathChanged) {
         if (adapter == null) {
             return;
@@ -1112,7 +913,6 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
         // preference는 쓰레드로 사용하지 않기로 함
         // 현재 패스를 저장
         PreferenceHelper.setLastPath(getActivity(), path);
-
     }
 
     void updateGoogleDriveList(final String path) {
