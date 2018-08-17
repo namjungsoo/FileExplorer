@@ -40,7 +40,7 @@ public class BaseActivity extends AppCompatActivity {
     private void setupFirebase() {
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
         // 디버그 개발중에는 크래쉬 오류 보고 하지 않음
-        if(BuildConfig.DEBUG)
+        if (BuildConfig.DEBUG)
             FirebaseCrash.setCrashCollectionEnabled(false);
         else
             FirebaseCrash.setCrashCollectionEnabled(true);

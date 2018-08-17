@@ -103,6 +103,9 @@ public class DropboxSearchTask extends AsyncTask<String, Void, FileExplorer.Resu
         if (isCancelled())
             return;
 
+        if(result == null)
+            return;
+
         ExplorerFragment fragment = fragmentWeakReference.get();
         if (fragment == null)
             return;

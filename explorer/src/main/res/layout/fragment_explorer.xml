@@ -116,6 +116,12 @@
 
         </LinearLayout>
 
+        <com.duongame.view.Indicator
+            android:id="@+id/storage_indicator"
+            android:layout_width="match_parent"
+            android:layout_marginTop="-4dp"
+            android:layout_height="4dp" />
+
         <View
             android:layout_width="match_parent"
             android:layout_height="0.5dp"

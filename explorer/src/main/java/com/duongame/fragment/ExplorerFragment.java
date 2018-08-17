@@ -53,6 +53,7 @@ import com.duongame.task.file.PasteTask;
 import com.duongame.task.zip.UnzipTask;
 import com.duongame.task.zip.ZipTask;
 import com.duongame.view.DividerItemDecoration;
+import com.duongame.view.Indicator;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 
@@ -97,6 +98,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
     private ImageButton googleDrive = null;
     private DividerItemDecoration itemDecoration = null;
 
+    private Indicator storageIndicator = null;
 
     // Model 관련
     // 파일 관련
@@ -297,11 +299,14 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
             }
         });
 
+        storageIndicator = rootView.findViewById(R.id.storage_indicator);
+
         dropbox = rootView.findViewById(R.id.btn_dropbox);
         dropbox.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 cloud = CLOUD_DROPBOX;
+                storageIndicator.setTargetView(dropbox);
                 updateFileList(null);
             }
         });
@@ -328,6 +333,9 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
     }
 
     public void updateDropboxUI(boolean show) {
+        if(dropbox == null)
+            return;
+
         if (show) {
             dropbox.setVisibility(View.VISIBLE);
         } else {
@@ -336,6 +344,9 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
     }
 
     public void updateGoogleDriveUI(boolean show) {
+        if(googleDrive == null)
+            return;
+
         if (show) {
             googleDrive.setVisibility(View.VISIBLE);
         } else {
