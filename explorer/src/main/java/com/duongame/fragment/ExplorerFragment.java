@@ -505,7 +505,13 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
         FragmentActivity activity = getActivity();
         if (activity == null)
             return;
-        BookLoader.load(activity, item, false);
+
+        if(cloud == CLOUD_LOCAL) {
+            BookLoader.load(activity, item, false);
+        } else {
+            // 다운로드를 받은후에 로딩함
+
+        }
     }
 
     void onClickZip(ExplorerItem item) {
@@ -871,6 +877,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
         // preference는 쓰레드로 사용하지 않기로 함
         // 현재 패스를 저장
         PreferenceHelper.setLastPath(getActivity(), path);
+        PreferenceHelper.setLastCloud(getActivity(), cloud);
 
         // 오래 걸림. 이것도 쓰레드로...
         new Thread(new Runnable() {
@@ -932,6 +939,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
         // preference는 쓰레드로 사용하지 않기로 함
         // 현재 패스를 저장
         PreferenceHelper.setLastPath(getActivity(), path);
+        PreferenceHelper.setLastCloud(getActivity(), cloud);
     }
 
     void updateGoogleDriveList(final String path) {

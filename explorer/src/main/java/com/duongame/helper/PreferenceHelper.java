@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Environment;
 
+import static com.duongame.fragment.BaseFragment.CLOUD_LOCAL;
+
 /**
  * Created by 정수 on 2015-11-15.
  */
@@ -32,6 +34,8 @@ public class PreferenceHelper {
 
     private static final String ACCOUNT_DROPBOX = "account_dropbox";
     private static final String ACCOUNT_GOOGLE_DRIVE = "account_google_drive";
+
+    private static final String LAST_CLOUD = "last_cloud";
 
     private static SharedPreferences pref = null;
 
@@ -212,5 +216,18 @@ public class PreferenceHelper {
         editor.putString(ACCOUNT_GOOGLE_DRIVE, accountGoogleDrive);
         editor.apply();
     }
+
+    public static int getLastCloud(Context context) {
+        checkPrefManager(context);
+        return pref.getInt(LAST_CLOUD, CLOUD_LOCAL);
+    }
+
+    public static void setLastCloud(Context context, int cloud) {
+        checkPrefManager(context);
+        final SharedPreferences.Editor editor = pref.edit();
+        editor.putInt(LAST_CLOUD, cloud);
+        editor.apply();
+    }
+
     //END: Cloud Drive
 }

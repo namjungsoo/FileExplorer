@@ -16,9 +16,10 @@ import com.duongame.helper.ToastHelper;
 
 public class BaseFragment extends Fragment {
     private final static int TIME_MS = 2000;
-    protected final static int CLOUD_LOCAL = 0;
-    protected final static int CLOUD_DROPBOX = 1;
-    protected final static int CLOUD_GOOGLEDRIVE = 2;
+
+    public final static int CLOUD_LOCAL = 0;
+    public final static int CLOUD_DROPBOX = 1;
+    public final static int CLOUD_GOOGLEDRIVE = 2;
 
     // Search
     protected AnalyticsApplication application;

@@ -13,7 +13,10 @@ import com.dropbox.core.v2.files.Metadata;
 import com.duongame.adapter.ExplorerItem;
 import com.duongame.cloud.dropbox.DropboxClientFactory;
 import com.duongame.file.FileExplorer;
+import com.duongame.file.FileHelper;
 import com.duongame.fragment.ExplorerFragment;
+
+import org.apache.commons.compress.archivers.dump.DumpArchiveConstants;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -44,7 +47,12 @@ public class DropboxSearchTask extends AsyncTask<String, Void, FileExplorer.Resu
     }
 
     ExplorerItem createFile(FileMetadata metadata) {
-        ExplorerItem item = new ExplorerItem(metadata.getPathDisplay(), metadata.getName(), metadata.getServerModified().toString(), metadata.getSize(), ExplorerItem.FILETYPE_FILE);
+        int type = ExplorerItem.FILETYPE_FILE;
+        if (FileHelper.getCompressType(metadata.getName()) != ExplorerItem.COMPRESSTYPE_OTHER) {
+            type = ExplorerItem.FILETYPE_ZIP;
+        }
+
+        ExplorerItem item = new ExplorerItem(metadata.getPathDisplay(), metadata.getName(), metadata.getServerModified().toString(), metadata.getSize(), type);
         return item;
     }
 
@@ -57,7 +65,7 @@ public class DropboxSearchTask extends AsyncTask<String, Void, FileExplorer.Resu
 //            if (fragment == null)
 //                return null;
 
-        if(path.equals("/"))
+        if (path.equals("/"))
             path = path.replace("/", "");
 
         DbxClientV2 client = DropboxClientFactory.getClient();
@@ -106,7 +114,7 @@ public class DropboxSearchTask extends AsyncTask<String, Void, FileExplorer.Resu
         if (isCancelled())
             return;
 
-        if(result == null)
+        if (result == null)
             return;
 
         ExplorerFragment fragment = fragmentWeakReference.get();
@@ -122,7 +130,7 @@ public class DropboxSearchTask extends AsyncTask<String, Void, FileExplorer.Resu
         fragment.getAdapter().notifyDataSetChanged();
 
         // 성공했을때 현재 패스를 업데이트
-        if(path.length() == 0)
+        if (path.length() == 0)
             path = "/";
 
         fragment.getApplication().setLastPath(path);
