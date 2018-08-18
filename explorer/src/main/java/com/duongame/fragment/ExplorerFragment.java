@@ -284,7 +284,6 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
             @Override
             public void onClick(View view) {
                 cloud = CLOUD_LOCAL;
-                storageIndicator.setTargetView(null);
                 updateFileList(application.getInitialPath());
             }
         });
@@ -303,7 +302,6 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
             public void onClick(View v) {
                 if (extSdCard != null) {
                     cloud = CLOUD_LOCAL;
-                    storageIndicator.setTargetView(sdcard);
                     updateFileList(extSdCard);
                 }
             }
@@ -316,7 +314,6 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
             @Override
             public void onClick(View v) {
                 cloud = CLOUD_DROPBOX;
-                storageIndicator.setTargetView(dropbox);
                 updateFileList(null);
             }
         });
@@ -326,7 +323,6 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
             @Override
             public void onClick(View v) {
                 cloud = CLOUD_GOOGLEDRIVE;
-                storageIndicator.setTargetView(googleDrive);
                 updateFileList(null);
             }
         });
@@ -896,6 +892,17 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
         PreferenceHelper.setLastPath(getActivity(), path);
         PreferenceHelper.setLastCloud(getActivity(), cloud);
 
+        // 외장 패스인지 체크하여
+        boolean isExtSdCard = false;
+        if(extSdCard != null && path.startsWith(extSdCard))
+            isExtSdCard = true;
+
+        if(isExtSdCard) {
+            storageIndicator.setTargetView(sdcard);
+        } else {
+            storageIndicator.setTargetView(home);
+        }
+
         // 오래 걸림. 이것도 쓰레드로...
         new Thread(new Runnable() {
             @Override
@@ -957,10 +964,12 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
         // 현재 패스를 저장
         PreferenceHelper.setLastPath(getActivity(), path);
         PreferenceHelper.setLastCloud(getActivity(), cloud);
+
+        storageIndicator.setTargetView(dropbox);
     }
 
     void updateGoogleDriveList(final String path) {
-
+        storageIndicator.setTargetView(googleDrive);
     }
 
     private boolean isPathChanged(String path) {
@@ -978,6 +987,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
     @Override
     public void onRefresh() {
         // 외부 resume시에 들어올수도 있으므로 pref에서 읽는다.
+        cloud = PreferenceHelper.getLastCloud(getContext());
         updateFileList(PreferenceHelper.getLastPath(getContext()));
     }
 
