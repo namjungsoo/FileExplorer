@@ -1,0 +1,57 @@
+package com.duongame.cloud.googledrive;
+
+import android.accounts.AccountManager;
+import android.app.Activity;
+import android.content.Intent;
+
+import com.google.api.client.extensions.android.http.AndroidHttp;
+import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
+import com.google.api.client.http.HttpTransport;
+import com.google.api.client.json.gson.GsonFactory;
+import com.google.api.services.drive.Drive;
+import com.google.api.services.drive.DriveScopes;
+
+import java.util.Collections;
+
+public class GoogleDriveManager {
+    public static final int REQUEST_CODE_RESOLUTION = 1;
+    public static final int REQUEST_AUTHORIZATION = 1;
+    public static final int REQUEST_ACCOUNT_PICKER = 2;
+
+    private static final HttpTransport m_transport = AndroidHttp.newCompatibleTransport();
+    private static final com.google.api.client.json.JsonFactory m_jsonFactory = GsonFactory.getDefaultInstance();
+    private static GoogleAccountCredential m_credential;
+    private static Drive m_client;
+
+    public static void login(Activity context) {
+        // Google Accounts using OAuth2
+        m_credential = GoogleAccountCredential.usingOAuth2(context, Collections.singleton(DriveScopes.DRIVE));
+
+        m_client = new com.google.api.services.drive.Drive.Builder(
+                m_transport, m_jsonFactory, m_credential).setApplicationName("AppName/1.0")
+                .build();
+
+        context.startActivityForResult(m_credential.newChooseAccountIntent(), REQUEST_ACCOUNT_PICKER);
+    }
+
+    public static void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if ((requestCode == REQUEST_ACCOUNT_PICKER || requestCode == REQUEST_CODE_RESOLUTION)) {
+            if (resultCode == Activity.RESULT_OK) {
+                if (data != null && data.getExtras() != null) {
+                    String accountName = data.getExtras().getString(AccountManager.KEY_ACCOUNT_NAME);
+                    if (accountName != null) {
+                        m_credential.setSelectedAccountName(accountName);
+                    }
+                }
+            }
+        }
+    }
+
+    public static GoogleAccountCredential getCredential() {
+        return m_credential;
+    }
+
+    public static Drive getClient() {
+        return m_client;
+    }
+}

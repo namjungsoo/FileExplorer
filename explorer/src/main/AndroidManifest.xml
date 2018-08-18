@@ -88,4 +88,6 @@
         android:name="firebase_crashlytics_collection_enabled"
         android:value="false" />
 
+    <!-- google drive -->
+    <uses-permission android:name="android.permission.GET_ACCOUNTS"/>
 </manifest>

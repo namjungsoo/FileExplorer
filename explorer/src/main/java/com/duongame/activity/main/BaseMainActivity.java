@@ -5,6 +5,7 @@ import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
@@ -37,6 +38,7 @@ import com.duongame.activity.BaseActivity;
 import com.duongame.bitmap.BitmapCacheManager;
 import com.duongame.cloud.dropbox.DropboxClientFactory;
 import com.duongame.cloud.dropbox.GetCurrentAccountTask;
+import com.duongame.cloud.googledrive.GoogleDriveManager;
 import com.duongame.db.BookDB;
 import com.duongame.db.BookLoader;
 import com.duongame.fragment.BaseFragment;
@@ -196,6 +198,7 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
                 if (dropboxItem != null) {
                     // 로그인이 되었으므로 타이틀을 바꿔준다.
                     dropboxItem.setTitle(email);
+                    dropboxItem.setChecked(true);
 
                     // 이제 목록을 업데이트 하자.
                     //updateDropbox();
@@ -512,6 +515,12 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         PermissionManager.onRequestStoragePermissionsResult(requestCode, permissions, grantResults);
+
+        PermissionManager.onRequestContactsPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == PermissionManager.PERMISSION_CONTACTS) {
+            // 구글 로그인 중이다.
+            GoogleDriveManager.login(this);
+        }
     }
 
     protected void updateViewTypeMenuIcon() {
@@ -701,12 +710,10 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
     }
 
     void loginDropbox(final MenuItem item) {
-        item.setChecked(true);
-
         // 로그인이 안되어 있으면 로그인을 한다.
         Auth.startOAuth2Authentication(this, getString(R.string.app_key_dropbox));
 
-        // 최종적으로 로그인을 하고 나서는 explorer에서 dropbox로 가야한다.
+        // 최종적으로 로그인을 하고 나서는 explorer에서 dropbox로 가야한다. -> 이건 선택으로 남겨놓자.
     }
 
     void logoutDropbox(final MenuItem item) {
@@ -717,17 +724,16 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         item.setTitle(getString(R.string.dropbox));
-                        PreferenceHelper.setAccountDropbox(BaseMainActivity.this, null);
                         item.setChecked(false);
+                        PreferenceHelper.setAccountDropbox(BaseMainActivity.this, null);
+                        // 로그아웃후에는 explorer에서 toolbar에서 dropbox image button을 삭제해야 한다.
+                        // 그리고 갈곳이 없으니 home으로 간다.
+                        getExplorerFragment().updateDropboxUI(false);
                     }
                 },
                 null,
                 false);
 
-        // 로그아웃후에는 explorer에서 toolbar에서 dropbox image button을 삭제해야 한다.
-        getExplorerFragment().updateDropboxUI(false);
-
-        // 그리고 갈곳이 없으니 home으로 간다.
     }
 
     // 드롭박스 클릭시
@@ -740,14 +746,43 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
         }
     }
 
+    void loginGoogleDrive(MenuItem item) {
+        if (PermissionManager.checkContactsPermission(this)) {
+            // 퍼미션이 있을경우 여기서 로그인을 함
+            GoogleDriveManager.login(this);
+        }
+    }
+
+    void logoutGoogleDrive(final MenuItem item) {
+
+        // 로그인이 되어 있으면 팝업후에 로그아웃을 하고, account를 null로 만든다.
+        AlertHelper.showAlertWithAd(this, AppHelper.getAppName(this),
+                String.format(getString(R.string.message_cloud_logout), getString(R.string.google_drive)),
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        item.setTitle(getString(R.string.google_drive));
+                        item.setChecked(false);
+                        // 로그인이 되어 있으면 팝업후에 로그아웃을 하고, account를 null로 만든다.
+                        PreferenceHelper.setAccountGoogleDrive(BaseMainActivity.this, null);
+
+                        // 로그아웃후에는 explorer에서 toolbar에서 dropbox image button을 삭제해야 한다.
+                        // 그리고 갈곳이 없으니 home으로 간다.
+                        getExplorerFragment().updateGoogleDriveUI(false);
+                    }
+                },
+                null,
+                false);
+
+    }
+
     // 구글 드라이브 클릭시
     private void onGoogleDrive(final MenuItem item) {
         final String account = PreferenceHelper.getAccountGoogleDrive(this);
         if (account == null) {
+            loginGoogleDrive(item);
         } else {
-            // 로그인이 되어 있으면 팝업후에 로그아웃을 하고, account를 null로 만든다.
-            item.setTitle(getString(R.string.dropbox));
-            PreferenceHelper.setAccountDropbox(this, null);
+            logoutGoogleDrive(item);
         }
     }
 
@@ -761,7 +796,7 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
         if (id == R.id.nav_dropbox) {
             onDropbox(item);
         } else if (id == R.id.nav_google_drive) {
-//            onGoogleDrive(item);
+            onGoogleDrive(item);
         }
 
 //        if (id == R.id.nav_camera) {
@@ -782,4 +817,33 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        GoogleDriveManager.onActivityResult(requestCode, resultCode, data);
+
+        // 구글이 정확하게 로그인 되었는지는 selected account name을 보면됨
+        String accountName = GoogleDriveManager.getCredential().getSelectedAccountName();
+        loadGoogleDrive(accountName);
+    }
+
+    void loadGoogleDrive(String accountName) {
+        // 로그인이 성공했다고 봄
+        MenuItem googleDriveItem = navigationView.getMenu().findItem(R.id.nav_google_drive);
+        if(accountName != null && accountName.length() > 0) {
+            if(googleDriveItem != null) {
+                googleDriveItem.setChecked(true);
+                googleDriveItem.setTitle(accountName);
+                getExplorerFragment().updateGoogleDriveUI(true);
+                PreferenceHelper.setAccountGoogleDrive(BaseMainActivity.this, accountName);
+            }
+        } else {
+            googleDriveItem.setChecked(false);
+            googleDriveItem.setTitle(getString(R.string.google_drive));
+            getExplorerFragment().updateGoogleDriveUI(false);
+        }
+    }
+
 }

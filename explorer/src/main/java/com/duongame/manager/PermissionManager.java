@@ -11,18 +11,49 @@ import android.support.v4.app.ActivityCompat;
  */
 
 public class PermissionManager {
-    private final static int PERMISSION_STORAGE = 1;
+    public final static int PERMISSION_STORAGE = 1;
+    public final static int PERMISSION_CONTACTS = 2;
+
     private static boolean isStoragePermissions = false;
+    private static boolean isContactsPermissions = false;
 
     public static boolean checkStoragePermissions() {
         return isStoragePermissions;
+    }
+
+    public static boolean checkContactsPermission() {
+        return isContactsPermissions;
+    }
+
+    public static boolean checkContactsPermission(Activity context) {
+        if (isContactsPermissions)
+            return true;
+
+        if (context == null)
+            return true;
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            // get accounts 권한이 없으면 요청하자
+            if (context.checkSelfPermission(Manifest.permission.GET_ACCOUNTS) != PackageManager.PERMISSION_GRANTED) {
+                context.requestPermissions(
+                        new String[]{Manifest.permission.GET_ACCOUNTS},
+                        PERMISSION_CONTACTS);
+                isContactsPermissions = false;
+                return false;
+            } else {
+                isContactsPermissions = true;
+            }
+        } else {
+            isContactsPermissions = true;
+        }
+        return true;
     }
 
     public static boolean checkStoragePermissions(Activity context) {
         if (isStoragePermissions)
             return true;
 
-        if(context == null)
+        if (context == null)
             return true;
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -61,5 +92,20 @@ public class PermissionManager {
             // 최초 이므로 무조건 null
             isStoragePermissions = true;
         }
+    }
+
+    public static void onRequestContactsPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        if(requestCode != PERMISSION_CONTACTS)
+            return;
+
+        if(permissions == null || permissions.length == 0)
+            return;
+
+        if(grantResults == null || grantResults.length == 0)
+            return;
+
+        if(Manifest.permission.GET_ACCOUNTS.equals(permissions[0]) &&
+                grantResults[0] == 0)
+            isContactsPermissions = true;
     }
 }

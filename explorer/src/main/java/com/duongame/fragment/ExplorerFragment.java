@@ -51,6 +51,7 @@ import com.duongame.manager.PositionManager;
 import com.duongame.task.download.DropboxDownloadTask;
 import com.duongame.task.file.DeleteTask;
 import com.duongame.task.file.DropboxSearchTask;
+import com.duongame.task.file.GoogleDriveSearchTask;
 import com.duongame.task.file.LocalSearchTask;
 import com.duongame.task.file.PasteTask;
 import com.duongame.task.zip.UnzipTask;
@@ -146,6 +147,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
 
     private LocalSearchTask localSearchTask = null;
     private DropboxSearchTask dropboxSearchTask = null;
+    private GoogleDriveSearchTask googleDriveSearchTask = null;
 
     // 선택
     private boolean selectMode = false;
@@ -362,6 +364,10 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
             googleDrive.setVisibility(View.VISIBLE);
         } else {
             googleDrive.setVisibility(View.GONE);
+
+            // 로그아웃인 상황이니 최초로 간다.
+            cloud = CLOUD_LOCAL;
+            updateFileList(application.getInitialPath());
         }
     }
 
@@ -973,6 +979,42 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
     }
 
     void updateGoogleDriveList(final String path) {
+        if (adapter == null) {
+            return;
+        }
+
+        // 선택모드인지 설정해준다.
+        adapter.setSelectMode(selectMode);
+
+        // 썸네일이 꽉찼을때는 비워준다.
+        if (BitmapCacheManager.getThumbnailCount() > MAX_THUMBNAILS) {
+            BitmapCacheManager.removeAllThumbnails();
+        }
+
+        //FIX:
+        //LocalSearchTask task = new LocalSearchTask(isPathChanged(path));
+        //task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, path);
+        if (googleDriveSearchTask != null) {
+            googleDriveSearchTask.cancel(true);
+        }
+        googleDriveSearchTask = new GoogleDriveSearchTask(this);
+        googleDriveSearchTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, path);
+
+        // 패스 UI를 가장 오른쪽으로 스크롤
+        // 이동이 완료되기전에 이미 이동한다.
+        scrollPath.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                scrollPath.fullScroll(View.FOCUS_RIGHT);
+                            }
+                        }
+        );
+
+        // preference는 쓰레드로 사용하지 않기로 함
+        // 현재 패스를 저장
+        PreferenceHelper.setLastPath(getActivity(), path);
+        PreferenceHelper.setLastCloud(getActivity(), cloud);
+
         storageIndicator.setTargetView(googleDrive);
     }
 
