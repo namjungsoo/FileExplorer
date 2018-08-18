@@ -185,46 +185,10 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
         loadDropbox();
     }
 
-    //TEST
-    // 현재 사용하지 않음
-    void updateDropbox() {
-        // 드롭박스 파일리스트를 업데이트 해야함
-        getExplorerFragment().updateDropboxUI(true);
-
-        /*
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                DbxClientV2 client = DropboxClientFactory.getClient();
-                try {
-                    DbxUserFilesRequests requests = client.files();
-                    ListFolderResult result = requests.listFolder("");
-                    if (result != null) {
-                        for (int i = 0; i < result.getEntries().size(); i++) {
-                            String name = result.getEntries().get(i).getName();
-
-                            Log.e("Jungsoo", "i=" + i + " name=" + name);
-                        }
-                    }
-//            SearchResult result = requests.search("/", "");
-//            List<SearchMatch> matches = result.getMatches();
-//            Log.e("Jungsoo", "+"+matches.size());
-                } catch (DbxException e) {
-                    Log.e("Jungsoo", e.getLocalizedMessage());
-                }
-            }
-        }).start();
-        */
-    }
-
     private void loadDropbox() {
         new GetCurrentAccountTask(DropboxClientFactory.getClient(), new GetCurrentAccountTask.Callback() {
             @Override
             public void onComplete(FullAccount result) {
-//                ((TextView) findViewById(R.id.email_text)).setText(result.getEmail());
-//                ((TextView) findViewById(R.id.name_text)).setText(result.getName().getDisplayName());
-//                ((TextView) findViewById(R.id.type_text)).setText(result.getAccountType().name());// BASIC
-
                 String email = result.getEmail();
                 String name = result.getName().getDisplayName();
 
