@@ -16,8 +16,6 @@ import com.duongame.file.FileExplorer;
 import com.duongame.file.FileHelper;
 import com.duongame.fragment.ExplorerFragment;
 
-import org.apache.commons.compress.archivers.dump.DumpArchiveConstants;
-
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
@@ -43,6 +41,7 @@ public class DropboxSearchTask extends AsyncTask<String, Void, FileExplorer.Resu
 
     ExplorerItem createFolder(FolderMetadata metadata) {
         ExplorerItem item = new ExplorerItem(metadata.getPathDisplay(), metadata.getName(), null, 0, ExplorerItem.FILETYPE_FOLDER);
+        item.metadata = metadata;
         return item;
     }
 
@@ -53,6 +52,7 @@ public class DropboxSearchTask extends AsyncTask<String, Void, FileExplorer.Resu
         }
 
         ExplorerItem item = new ExplorerItem(metadata.getPathDisplay(), metadata.getName(), metadata.getServerModified().toString(), metadata.getSize(), type);
+        item.metadata = metadata;
         return item;
     }
 

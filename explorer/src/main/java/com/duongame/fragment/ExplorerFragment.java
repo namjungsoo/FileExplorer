@@ -26,6 +26,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.ViewSwitcher;
 
+import com.dropbox.core.v2.files.FileMetadata;
 import com.duongame.AnalyticsApplication;
 import com.duongame.R;
 import com.duongame.activity.main.BaseMainActivity;
@@ -36,6 +37,7 @@ import com.duongame.adapter.ExplorerItem;
 import com.duongame.adapter.ExplorerListAdapter;
 import com.duongame.adapter.ExplorerScrollListener;
 import com.duongame.bitmap.BitmapCacheManager;
+import com.duongame.cloud.dropbox.DropboxClientFactory;
 import com.duongame.db.BookLoader;
 import com.duongame.dialog.SortDialog;
 import com.duongame.file.FileHelper;
@@ -46,6 +48,7 @@ import com.duongame.helper.PreferenceHelper;
 import com.duongame.helper.ToastHelper;
 import com.duongame.manager.PermissionManager;
 import com.duongame.manager.PositionManager;
+import com.duongame.task.download.DropboxDownloadTask;
 import com.duongame.task.file.DeleteTask;
 import com.duongame.task.file.DropboxSearchTask;
 import com.duongame.task.file.LocalSearchTask;
@@ -501,8 +504,8 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
         }
     }
 
-    void onClickBook(ExplorerItem item) {
-        FragmentActivity activity = getActivity();
+    void onClickBook(final ExplorerItem item) {
+        final FragmentActivity activity = getActivity();
         if (activity == null)
             return;
 
@@ -510,7 +513,19 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
             BookLoader.load(activity, item, false);
         } else {
             // 다운로드를 받은후에 로딩함
+            DropboxDownloadTask task = new DropboxDownloadTask(activity, DropboxClientFactory.getClient(), new DropboxDownloadTask.Callback() {
+                @Override
+                public void onDownloadComplete(File result) {
+                    item.path = result.getAbsolutePath();
+                    BookLoader.load(activity, item, false);
+                }
 
+                @Override
+                public void onError(Exception e) {
+                    ToastHelper.error(activity, R.string.toast_error);
+                }
+            });
+            task.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, (FileMetadata)item.metadata);
         }
     }
 

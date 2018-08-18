@@ -69,6 +69,7 @@ public class ExplorerItem implements Cloneable {
 
     //    public WeakReference<ImageView> imageViewRef;
     public ImageViewAttacher attacher;
+    public Object metadata;
 
     public ExplorerItem(String path, String name, String date, long size, int type) {
         this.path = path;
