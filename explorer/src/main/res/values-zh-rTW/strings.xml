@@ -32,18 +32,6 @@
     <string name="msg_clear_cache">緩存文件已被刪除。</string>
     <string name="msg_clear_history">最近的文件列表已被刪除。</string>
     <string name="hide_completed_file">隱藏完成的文件</string>
-    <string name="each_text">%d%%</string>
-    <string name="total_text">%1$d/%2$d (%3$d%%)</string>
-    <string-array name="search_file">
-        <item>ZIP,RAR,7Z</item>
-        <item>TXT</item>
-        <item>PDF</item>
-    </string-array>
-    <string-array name="compress_type">
-        <item>.zip</item>
-        <item>.tar</item>
-        <item>.tar.gz</item>
-    </string-array>
 
     <!-- 새로운 부분 -->
     <string name="copy">複製</string>

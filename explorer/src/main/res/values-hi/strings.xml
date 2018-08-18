@@ -32,18 +32,6 @@
     <string name="msg_clear_cache">कैश फ़ाइलें हटाई गईं</string>
     <string name="msg_clear_history">हाल की फ़ाइलें सूची हटा दी गई थी।</string>
     <string name="hide_completed_file">पूरी हुई फ़ाइलें छुपाएं</string>
-    <string name="each_text">%d%%</string>
-    <string name="total_text">%1$d/%2$d (%3$d%%)</string>
-    <string-array name="search_file">
-        <item>ZIP,RAR,7Z</item>
-        <item>TXT</item>
-        <item>PDF</item>
-    </string-array>
-    <string-array name="compress_type">
-        <item>.zip</item>
-        <item>.tar</item>
-        <item>.tar.gz</item>
-    </string-array>
 
     <!-- 새로운 부분 -->
     <string name="copy">प्रतिलिपि</string>
