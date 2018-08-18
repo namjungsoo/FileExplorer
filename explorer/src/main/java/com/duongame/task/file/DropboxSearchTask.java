@@ -52,10 +52,13 @@ public class DropboxSearchTask extends AsyncTask<String, Void, FileExplorer.Resu
     protected FileExplorer.Result doInBackground(String... strings) {
         path = strings[0];
         if (path == null)
-            path = "";
+            path = "/";
 //            ExplorerFragment fragment = fragmentWeakReference.get();
 //            if (fragment == null)
 //                return null;
+
+        if(path.equals("/"))
+            path = path.replace("/", "");
 
         DbxClientV2 client = DropboxClientFactory.getClient();
         try {
@@ -119,6 +122,9 @@ public class DropboxSearchTask extends AsyncTask<String, Void, FileExplorer.Resu
         fragment.getAdapter().notifyDataSetChanged();
 
         // 성공했을때 현재 패스를 업데이트
+        if(path.length() == 0)
+            path = "/";
+
         fragment.getApplication().setLastPath(path);
         fragment.getTextPath().setText(path);
         fragment.getTextPath().requestLayout();

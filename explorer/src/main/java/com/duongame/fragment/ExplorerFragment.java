@@ -92,6 +92,9 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
     private TextView textNoFiles;
 
     // 기타
+    private ImageButton home = null;
+    private ImageButton up = null;
+
     private ImageButton sdcard = null;
     private String extSdCard = null;
     private ImageButton dropbox = null;
@@ -273,15 +276,17 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
         scrollPath = rootView.findViewById(R.id.scroll_path);
         fileList = new ArrayList<>();
 
-        final ImageButton home = rootView.findViewById(R.id.btn_home);
+        home = rootView.findViewById(R.id.btn_home);
         home.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                cloud = CLOUD_LOCAL;
+                storageIndicator.setTargetView(null);
                 updateFileList(application.getInitialPath());
             }
         });
 
-        final ImageButton up = rootView.findViewById(R.id.btn_up);
+        up = rootView.findViewById(R.id.btn_up);
         up.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -294,6 +299,8 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
             @Override
             public void onClick(View v) {
                 if (extSdCard != null) {
+                    cloud = CLOUD_LOCAL;
+                    storageIndicator.setTargetView(sdcard);
                     updateFileList(extSdCard);
                 }
             }
@@ -316,6 +323,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
             @Override
             public void onClick(View v) {
                 cloud = CLOUD_GOOGLEDRIVE;
+                storageIndicator.setTargetView(googleDrive);
                 updateFileList(null);
             }
         });
@@ -333,7 +341,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
     }
 
     public void updateDropboxUI(boolean show) {
-        if(dropbox == null)
+        if (dropbox == null)
             return;
 
         if (show) {
@@ -344,7 +352,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
     }
 
     public void updateGoogleDriveUI(boolean show) {
-        if(googleDrive == null)
+        if (googleDrive == null)
             return;
 
         if (show) {
