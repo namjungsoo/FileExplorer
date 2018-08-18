@@ -75,4 +75,9 @@
     <string name="msg_file_zip">سيتم ضغط الملفات المحددة.</string>
     <string name="toast_file_zip">تم ضغط الملفات.</string>
     <string name="toast_new_version">تم إصدار إصدار جديد.</string>
+
+    <string name="cloud_storage">Cloud Storage</string>
+    <string name="message_cloud_logout">Do you want to logout from %s?</string>
+    <string name="message_cloud_download">Downloading %s&#8230;</string>
+    <string name="message_cloud_complete">File download is complete.</string>
 </resources>

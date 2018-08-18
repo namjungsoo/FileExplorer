@@ -517,6 +517,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
                 @Override
                 public void onDownloadComplete(File result) {
                     item.path = result.getAbsolutePath();
+                    ToastHelper.info(activity, R.string.message_cloud_complete);
                     BookLoader.load(activity, item, false);
                 }
 
@@ -526,6 +527,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
                 }
             });
             task.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, (FileMetadata)item.metadata);
+            ToastHelper.showToast(activity, String.format(getResources().getString(R.string.message_cloud_download), item.name));
         }
     }
 

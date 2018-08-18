@@ -4,8 +4,6 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <string name="app_key_dropbox">k78nqdn19p4864o</string>
-    <string name="cloud_storage">Cloud Storage</string>
     <string name="dropbox">Dropbox</string>
     <string name="google_drive">Google Drive</string>
-    <string name="message_cloud_logout">Do you want to logout from %s?</string>
 </resources>

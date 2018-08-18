@@ -75,4 +75,9 @@
     <string name="msg_file_zip">The selected files will be zipped.</string>
     <string name="toast_file_zip">The files have been zipped.</string>
     <string name="toast_new_version">A new version has been released.</string>
+
+    <string name="cloud_storage">Cloud Storage</string>
+    <string name="message_cloud_logout">Do you want to logout from %s?</string>
+    <string name="message_cloud_download">Downloading %s&#8230;</string>
+    <string name="message_cloud_complete">File download is complete.</string>
 </resources>
