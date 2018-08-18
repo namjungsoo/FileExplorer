@@ -347,6 +347,10 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
             dropbox.setVisibility(View.VISIBLE);
         } else {
             dropbox.setVisibility(View.GONE);
+
+            // 로그아웃인 상황이니 최초로 간다.
+            cloud = CLOUD_LOCAL;
+            updateFileList(application.getInitialPath());
         }
     }
 

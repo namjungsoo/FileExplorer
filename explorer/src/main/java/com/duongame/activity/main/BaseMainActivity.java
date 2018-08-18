@@ -185,6 +185,8 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
         loadDropbox();
     }
 
+    //TEST
+    // 현재 사용하지 않음
     void updateDropbox() {
         // 드롭박스 파일리스트를 업데이트 해야함
         getExplorerFragment().updateDropboxUI(true);
@@ -734,28 +736,43 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
         updateSelectMenuIcon(false, true);
     }
 
+    void loginDropbox(final MenuItem item) {
+        item.setChecked(true);
+
+        // 로그인이 안되어 있으면 로그인을 한다.
+        Auth.startOAuth2Authentication(this, getString(R.string.app_key_dropbox));
+
+        // 최종적으로 로그인을 하고 나서는 explorer에서 dropbox로 가야한다.
+    }
+
+    void logoutDropbox(final MenuItem item) {
+        // 로그인이 되어 있으면 팝업후에 로그아웃을 하고, account를 null로 만든다.
+        AlertHelper.showAlertWithAd(this, AppHelper.getAppName(this),
+                String.format(getString(R.string.message_cloud_logout), getString(R.string.dropbox)),
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        item.setTitle(getString(R.string.dropbox));
+                        PreferenceHelper.setAccountDropbox(BaseMainActivity.this, null);
+                        item.setChecked(false);
+                    }
+                },
+                null,
+                false);
+
+        // 로그아웃후에는 explorer에서 toolbar에서 dropbox image button을 삭제해야 한다.
+        getExplorerFragment().updateDropboxUI(false);
+
+        // 그리고 갈곳이 없으니 home으로 간다.
+    }
+
     // 드롭박스 클릭시
     private void onDropbox(final MenuItem item) {
         final String account = PreferenceHelper.getAccountDropbox(this);
         if (account == null) {
-            item.setChecked(true);
-
-            // 로그인이 안되어 있으면 로그인을 한다.
-            Auth.startOAuth2Authentication(this, getString(R.string.app_key_dropbox));
+            loginDropbox(item);
         } else {
-            // 로그인이 되어 있으면 팝업후에 로그아웃을 하고, account를 null로 만든다.
-            AlertHelper.showAlertWithAd(this, AppHelper.getAppName(this),
-                    String.format(getString(R.string.message_cloud_logout), getString(R.string.dropbox)),
-                    new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            item.setTitle(getString(R.string.dropbox));
-                            PreferenceHelper.setAccountDropbox(BaseMainActivity.this, null);
-                            item.setChecked(false);
-                        }
-                    },
-                    null,
-                    false);
+            logoutDropbox(item);
         }
     }
 
