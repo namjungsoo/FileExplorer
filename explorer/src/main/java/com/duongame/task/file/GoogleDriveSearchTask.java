@@ -34,6 +34,37 @@ public class GoogleDriveSearchTask extends AsyncTask<String, Void, FileExplorer.
         fragment.setCanClick(false);// 이제부터 클릭할수 없음
     }
 
+    String getFolderFileId(String parent, String name) {
+        Drive driveService = GoogleDriveManager.getClient();
+        if (driveService == null)
+            return null;
+
+        String fileId = null;
+        String pageToken = null;
+        do {
+            FileList result = null;
+            try {
+                result = driveService.files().list()
+                        .setQ("'" + parent + "' in parents and name='" + name + "'")
+                        .setFields("nextPageToken, files(id, name, createdTime, mimeType)")
+                        .setPageToken(pageToken)
+                        .execute();
+            } catch (IOException e) {
+                e.printStackTrace();
+                return null;
+            }
+
+            for (File file : result.getFiles()) {
+                fileId = file.getId();
+                return fileId;
+            }
+
+            pageToken = result.getNextPageToken();
+        } while (pageToken != null);
+        return fileId;
+    }
+
+    // /개인적인/남채은
     @Override
     protected FileExplorer.Result doInBackground(String... strings) {
         path = strings[0];
@@ -44,23 +75,26 @@ public class GoogleDriveSearchTask extends AsyncTask<String, Void, FileExplorer.
         if (fragment == null)
             return null;
 
-        // 현재 폴더에서 하위로 가는 명령어임
+        /*
+        [0] = ""
+        [1] = "개인적인"
+        [2] = "남채은"
+         */
         String fileId = null;
-        int last = path.lastIndexOf("/");
-        if (last != -1) {
-            String folderName = path.substring(last + 1);
-            ArrayList<ExplorerItem> oldFileList = fragment.getFileList();
-            for (int i = 0; i < oldFileList.size(); i++) {
-                ExplorerItem item = oldFileList.get(i);
-                if (item.type == ExplorerItem.FILETYPE_FOLDER && item.name.equals(folderName)) {
-                    fileId = (String) item.metadata;
-                    break;
+        String[] folders = path.split("/");
+        if (folders.length < 2) {
+            fileId = "root";
+        } else {
+            for (int i = 1; i < folders.length; i++) {
+                if (i == 1) {
+                    fileId = getFolderFileId("root", folders[i]);
+                } else {
+                    fileId = getFolderFileId(fileId, folders[i]);
                 }
+                if (fileId == null)
+                    return null;
             }
         }
-        
-        if (fileId == null)
-            fileId = "root";
 
         // GoogleDrive에서 찾기 시작
         Drive driveService = GoogleDriveManager.getClient();
@@ -69,15 +103,12 @@ public class GoogleDriveSearchTask extends AsyncTask<String, Void, FileExplorer.
 
         String pageToken = null;
         ArrayList<ExplorerItem> fileList = new ArrayList<>();
-
         do {
             FileList result = null;
 
             try {
                 result = driveService.files().list()
                         .setQ("'" + fileId + "' in parents")
-//                        .setQ("'root' in parents")
-//                        .setSpaces("drive")
                         .setFields("nextPageToken, files(id, name, createdTime, mimeType)")
                         .setPageToken(pageToken)
                         .execute();
@@ -90,6 +121,7 @@ public class GoogleDriveSearchTask extends AsyncTask<String, Void, FileExplorer.
                 int type = ExplorerItem.FILETYPE_FILE;
                 if (file.getMimeType().equals("application/vnd.google-apps.folder"))
                     type = ExplorerItem.FILETYPE_FOLDER;
+
                 ExplorerItem item = new ExplorerItem(file.getName(), file.getName(), file.getCreatedTime().toString(), 0, type);
                 fileList.add(item);
                 item.metadata = file.getId();
@@ -98,7 +130,6 @@ public class GoogleDriveSearchTask extends AsyncTask<String, Void, FileExplorer.
             }
             pageToken = result.getNextPageToken();
         } while (pageToken != null);
-
 
         FileExplorer.Result result = new FileExplorer.Result();
         result.fileList = fileList;
