@@ -1,5 +1,6 @@
 package com.duongame.fragment;
 
+import android.app.Activity;
 import android.app.Application;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -320,7 +321,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
             @Override
             public void onClick(View v) {
                 cloud = CLOUD_DROPBOX;
-                updateFileList(null);
+                updateFileList("/");
             }
         });
         dropbox.setVisibility(backupDropbox ? View.VISIBLE : View.GONE);
@@ -330,7 +331,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
             @Override
             public void onClick(View v) {
                 cloud = CLOUD_GOOGLEDRIVE;
-                updateFileList(null);
+                updateFileList("/");
             }
         });
         googleDrive.setVisibility(backupGoogleDrive ? View.VISIBLE : View.GONE);
@@ -528,6 +529,29 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
         }
     }
 
+    void onClickBookDropbox(final Activity activity, final ExplorerItem item) {
+        // 다운로드를 받은후에 로딩함
+        DropboxDownloadTask task = new DropboxDownloadTask(activity, DropboxClientFactory.getClient(), new DropboxDownloadTask.Callback() {
+            @Override
+            public void onDownloadComplete(File result) {
+                item.path = result.getAbsolutePath();
+                ToastHelper.info(activity, R.string.message_cloud_complete);
+                BookLoader.load(activity, item, false);
+            }
+
+            @Override
+            public void onError(Exception e) {
+                ToastHelper.error(activity, R.string.toast_error);
+            }
+        });
+        task.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, (FileMetadata)item.metadata);
+        ToastHelper.showToast(activity, String.format(getResources().getString(R.string.message_cloud_download), item.name));
+    }
+
+    void onClickBookGoogleDrive(final Activity activity, final ExplorerItem item) {
+
+    }
+
     void onClickBook(final ExplorerItem item) {
         final FragmentActivity activity = getActivity();
         if (activity == null)
@@ -535,23 +559,10 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
 
         if(cloud == CLOUD_LOCAL) {
             BookLoader.load(activity, item, false);
-        } else {
-            // 다운로드를 받은후에 로딩함
-            DropboxDownloadTask task = new DropboxDownloadTask(activity, DropboxClientFactory.getClient(), new DropboxDownloadTask.Callback() {
-                @Override
-                public void onDownloadComplete(File result) {
-                    item.path = result.getAbsolutePath();
-                    ToastHelper.info(activity, R.string.message_cloud_complete);
-                    BookLoader.load(activity, item, false);
-                }
-
-                @Override
-                public void onError(Exception e) {
-                    ToastHelper.error(activity, R.string.toast_error);
-                }
-            });
-            task.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, (FileMetadata)item.metadata);
-            ToastHelper.showToast(activity, String.format(getResources().getString(R.string.message_cloud_download), item.name));
+        } else if(cloud == CLOUD_DROPBOX) {
+            onClickBookDropbox(activity, item);
+        } else if(cloud == CLOUD_GOOGLEDRIVE) {
+            onClickBookGoogleDrive(activity, item);
         }
     }
 

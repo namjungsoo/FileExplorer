@@ -55,7 +55,7 @@ public class GoogleDriveSearchTask extends AsyncTask<String, Void, FileExplorer.
                 result = driveService.files().list()
                         .setQ("'root' in parents")
 //                        .setSpaces("drive")
-                        .setFields("nextPageToken, files(id, name, createdTime)")
+                        .setFields("nextPageToken, files(id, name, createdTime, mimeType, size)")
                         .setPageToken(pageToken)
                         .execute();
             } catch (IOException e) {
@@ -65,10 +65,13 @@ public class GoogleDriveSearchTask extends AsyncTask<String, Void, FileExplorer.
 
             for (File file : result.getFiles()) {
                 int type = ExplorerItem.FILETYPE_FILE;
-//                ExplorerItem item = new ExplorerItem(file.getName(), file.getName(), file.getModifiedTime().toString(), file.getSize(), type);
-//                fileList.add(item);
+                if (file.getMimeType().equals("application/vnd.google-apps.folder"))
+                    type = ExplorerItem.FILETYPE_FOLDER;
+                ExplorerItem item = new ExplorerItem(file.getName(), file.getName(), file.getCreatedTime().toString(), 0, type);
+                fileList.add(item);
+                item.metadata = file.getId();
 
-                Log.e("Jungsoo", file.getName() + " " + file.getCreatedTime());
+                Log.e("Jungsoo", "name=" + file.getName() + " createdTime=" + file.getCreatedTime() + " fileId=" + file.getId() + " mime=" + file.getMimeType());
             }
             pageToken = result.getNextPageToken();
         } while (pageToken != null);
