@@ -50,4 +50,10 @@ public class Indicator extends View {
         targetRect = null;
         invalidate();
     }
+
+    // GONE -> VISIBLE로 변경되는 view가 여러개가 있으면 위치가 변경될수 있어서 refresh를 명시적으로 호출해 주어야 한다.
+    public void refresh() {
+        targetRect = null;
+        invalidate();
+    }
 }

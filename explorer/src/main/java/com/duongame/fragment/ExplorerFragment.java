@@ -335,6 +335,8 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
         });
         googleDrive.setVisibility(backupGoogleDrive ? View.VISIBLE : View.GONE);
 
+        storageIndicator.refresh();
+
         textNoFiles = rootView.findViewById(R.id.text_no_files);
         permissionButton = rootView.findViewById(R.id.btn_permission);
         if (permissionButton != null) {
@@ -363,6 +365,8 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
             cloud = CLOUD_LOCAL;
             updateFileList(application.getInitialPath());
         }
+
+        storageIndicator.refresh();
     }
 
     public void updateGoogleDriveUI(boolean show) {
@@ -381,6 +385,8 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
             cloud = CLOUD_LOCAL;
             updateFileList(application.getInitialPath());
         }
+
+        storageIndicator.refresh();
     }
 
     void initViewType() {
