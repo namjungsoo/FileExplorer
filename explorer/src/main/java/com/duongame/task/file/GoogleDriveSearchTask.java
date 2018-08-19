@@ -6,6 +6,7 @@ import android.util.Log;
 import com.duongame.adapter.ExplorerItem;
 import com.duongame.cloud.googledrive.GoogleDriveManager;
 import com.duongame.file.FileExplorer;
+import com.duongame.file.FileHelper;
 import com.duongame.fragment.ExplorerFragment;
 import com.google.api.services.drive.Drive;
 import com.google.api.services.drive.model.File;
@@ -14,6 +15,7 @@ import com.google.api.services.drive.model.FileList;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class GoogleDriveSearchTask extends AsyncTask<String, Void, FileExplorer.Result> {
     private WeakReference<ExplorerFragment> fragmentWeakReference;
@@ -46,7 +48,7 @@ public class GoogleDriveSearchTask extends AsyncTask<String, Void, FileExplorer.
             try {
                 result = driveService.files().list()
                         .setQ("'" + parent + "' in parents and name='" + name + "'")
-                        .setFields("nextPageToken, files(id, name, createdTime, mimeType)")
+                        .setFields("nextPageToken, files(id)")
                         .setPageToken(pageToken)
                         .execute();
             } catch (IOException e) {
@@ -103,13 +105,17 @@ public class GoogleDriveSearchTask extends AsyncTask<String, Void, FileExplorer.
 
         String pageToken = null;
         ArrayList<ExplorerItem> fileList = new ArrayList<>();
+
+        ArrayList<ExplorerItem> folderList = new ArrayList<>();
+        ArrayList<ExplorerItem> normalList = new ArrayList<>();
+
         do {
             FileList result = null;
 
             try {
                 result = driveService.files().list()
                         .setQ("'" + fileId + "' in parents")
-                        .setFields("nextPageToken, files(id, name, createdTime, mimeType)")
+                        .setFields("nextPageToken, files(*)")
                         .setPageToken(pageToken)
                         .execute();
             } catch (IOException e) {
@@ -122,14 +128,27 @@ public class GoogleDriveSearchTask extends AsyncTask<String, Void, FileExplorer.
                 if (file.getMimeType().equals("application/vnd.google-apps.folder"))
                     type = ExplorerItem.FILETYPE_FOLDER;
 
-                ExplorerItem item = new ExplorerItem(file.getName(), file.getName(), file.getCreatedTime().toString(), 0, type);
-                fileList.add(item);
+                long size = file.getSize() != null ? file.getSize().longValue() : 0;
+                ExplorerItem item = new ExplorerItem(file.getName(), file.getName(), file.getCreatedTime().toString(), size, type);
                 item.metadata = file.getId();
+
+                if(type == ExplorerItem.FILETYPE_FOLDER) {
+                    folderList.add(item);
+                } else {
+                    normalList.add(item);
+                }
+                //fileList.add(item);
 
                 Log.e("Jungsoo", "name=" + file.getName() + " createdTime=" + file.getCreatedTime() + " fileId=" + file.getId() + " mime=" + file.getMimeType());
             }
             pageToken = result.getNextPageToken();
         } while (pageToken != null);
+
+        FileHelper.NameAscComparator comparator = new FileHelper.NameAscComparator();
+        Collections.sort(folderList, comparator);
+        Collections.sort(normalList, comparator);
+        fileList.addAll(folderList);
+        fileList.addAll(normalList);
 
         FileExplorer.Result result = new FileExplorer.Result();
         result.fileList = fileList;
