@@ -40,6 +40,28 @@ public class GoogleDriveSearchTask extends AsyncTask<String, Void, FileExplorer.
         if (path == null)
             path = "/";
 
+        ExplorerFragment fragment = fragmentWeakReference.get();
+        if (fragment == null)
+            return null;
+
+        // 현재 폴더에서 하위로 가는 명령어임
+        String fileId = null;
+        int last = path.lastIndexOf("/");
+        if (last != -1) {
+            String folderName = path.substring(last + 1);
+            ArrayList<ExplorerItem> oldFileList = fragment.getFileList();
+            for (int i = 0; i < oldFileList.size(); i++) {
+                ExplorerItem item = oldFileList.get(i);
+                if (item.type == ExplorerItem.FILETYPE_FOLDER && item.name.equals(folderName)) {
+                    fileId = (String) item.metadata;
+                    break;
+                }
+            }
+        }
+        
+        if (fileId == null)
+            fileId = "root";
+
         // GoogleDrive에서 찾기 시작
         Drive driveService = GoogleDriveManager.getClient();
         if (driveService == null)
@@ -53,9 +75,10 @@ public class GoogleDriveSearchTask extends AsyncTask<String, Void, FileExplorer.
 
             try {
                 result = driveService.files().list()
-                        .setQ("'root' in parents")
+                        .setQ("'" + fileId + "' in parents")
+//                        .setQ("'root' in parents")
 //                        .setSpaces("drive")
-                        .setFields("nextPageToken, files(id, name, createdTime, mimeType, size)")
+                        .setFields("nextPageToken, files(id, name, createdTime, mimeType)")
                         .setPageToken(pageToken)
                         .execute();
             } catch (IOException e) {
