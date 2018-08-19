@@ -23,14 +23,22 @@ public class GoogleDriveManager {
     private static GoogleAccountCredential m_credential;
     private static Drive m_client;
 
-    public static void login(Activity context) {
+    private static void loginCore(Activity context) {
         // Google Accounts using OAuth2
         m_credential = GoogleAccountCredential.usingOAuth2(context, Collections.singleton(DriveScopes.DRIVE));
 
         m_client = new com.google.api.services.drive.Drive.Builder(
                 m_transport, m_jsonFactory, m_credential).setApplicationName("AppName/1.0")
                 .build();
+    }
 
+    public static void login(Activity context, String accountName) {
+        loginCore(context);
+        m_credential.setSelectedAccountName(accountName);
+    }
+
+    public static void login(Activity context) {
+        loginCore(context);
         context.startActivityForResult(m_credential.newChooseAccountIntent(), REQUEST_ACCOUNT_PICKER);
     }
 

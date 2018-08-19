@@ -162,11 +162,22 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
         if (adView != null) {
             adView.resume();
         }
+        Log.e("Jungsoo", "onResume");
 
         onResumeDropbox();
+        onResumeGoogleDrive();
+    }
+
+    void onResumeGoogleDrive() {
+        Log.e("Jungsoo", "onResumeGoogleDrive");
+        String accountName = PreferenceHelper.getAccountGoogleDrive(this);
+        //loadGoogleDrive(accountName);
+        GoogleDriveManager.login(this, accountName);
+        loadGoogleDrive(accountName);
     }
 
     void onResumeDropbox() {
+        Log.e("Jungsoo", "onResumeDropbox");
         // Token을 저장한다.
         String accessToken = PreferenceHelper.getAccountDropbox(this);
         if (accessToken == null) {
@@ -830,10 +841,11 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
     }
 
     void loadGoogleDrive(String accountName) {
+        Log.e("Jungsoo", "loadGoogleDrive");
         // 로그인이 성공했다고 봄
         MenuItem googleDriveItem = navigationView.getMenu().findItem(R.id.nav_google_drive);
-        if(accountName != null && accountName.length() > 0) {
-            if(googleDriveItem != null) {
+        if (accountName != null && accountName.length() > 0) {
+            if (googleDriveItem != null) {
                 googleDriveItem.setChecked(true);
                 googleDriveItem.setTitle(accountName);
                 getExplorerFragment().updateGoogleDriveUI(true);

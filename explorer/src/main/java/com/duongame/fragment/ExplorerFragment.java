@@ -14,6 +14,7 @@ import android.support.v4.content.FileProvider;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -161,6 +162,9 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
 
     private boolean canClick = true;
     private int viewType = SWITCH_LIST;
+
+    private boolean backupDropbox = false;
+    private boolean backupGoogleDrive = false;
 
 
     public boolean isCanClick() {
@@ -319,6 +323,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
                 updateFileList(null);
             }
         });
+        dropbox.setVisibility(backupDropbox ? View.VISIBLE : View.GONE);
 
         googleDrive = rootView.findViewById(R.id.btn_gdrive);
         googleDrive.setOnClickListener(new View.OnClickListener() {
@@ -328,6 +333,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
                 updateFileList(null);
             }
         });
+        googleDrive.setVisibility(backupGoogleDrive ? View.VISIBLE : View.GONE);
 
         textNoFiles = rootView.findViewById(R.id.text_no_files);
         permissionButton = rootView.findViewById(R.id.btn_permission);
@@ -342,8 +348,11 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
     }
 
     public void updateDropboxUI(boolean show) {
-        if (dropbox == null)
+        Log.e("Jungsoo", "updateDropboxUI "+show);
+        if (dropbox == null) {
+            backupDropbox = show;
             return;
+        }
 
         if (show) {
             dropbox.setVisibility(View.VISIBLE);
@@ -357,8 +366,11 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
     }
 
     public void updateGoogleDriveUI(boolean show) {
-        if (googleDrive == null)
+        Log.e("Jungsoo", "updateGoogleDriveUI "+show);
+        if (googleDrive == null) {
+            backupGoogleDrive = show;
             return;
+        }
 
         if (show) {
             googleDrive.setVisibility(View.VISIBLE);
