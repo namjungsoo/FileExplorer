@@ -24,7 +24,6 @@ public class DropboxDownloadTask extends AsyncTask<FileMetadata, Void, File> {
 
     public interface Callback {
         void onDownloadComplete(File result);
-
         void onError(Exception e);
     }
 

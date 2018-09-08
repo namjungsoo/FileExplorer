@@ -52,6 +52,7 @@ import com.duongame.helper.ToastHelper;
 import com.duongame.manager.PermissionManager;
 import com.duongame.manager.PositionManager;
 import com.duongame.task.download.DropboxDownloadTask;
+import com.duongame.task.download.GoogleDriveDownloadTask;
 import com.duongame.task.file.DeleteTask;
 import com.duongame.task.file.DropboxSearchTask;
 import com.duongame.task.file.GoogleDriveSearchTask;
@@ -563,7 +564,22 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
     }
 
     void onClickBookGoogleDrive(final Activity activity, final ExplorerItem item) {
+        // 다운로드를 받은후에 로딩함
+        GoogleDriveDownloadTask task = new GoogleDriveDownloadTask(activity, new GoogleDriveDownloadTask.Callback() {
+            @Override
+            public void onDownloadComplete(File result) {
+                item.path = result.getAbsolutePath();
+                ToastHelper.info(activity, R.string.message_cloud_complete);
+                BookLoader.load(activity, item, false);
+            }
 
+            @Override
+            public void onError(Exception e) {
+                ToastHelper.error(activity, R.string.toast_error);
+            }
+        });
+        task.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, item.name, (String)item.metadata);// metadata = fileId
+        ToastHelper.showToast(activity, String.format(getResources().getString(R.string.message_cloud_download), item.name));
     }
 
     void onClickBook(final ExplorerItem item) {
