@@ -46,6 +46,7 @@ import com.duongame.fragment.BaseFragment;
 import com.duongame.fragment.ExplorerFragment;
 import com.duongame.helper.AlertHelper;
 import com.duongame.helper.AppHelper;
+import com.duongame.helper.JLog;
 import com.duongame.helper.PreferenceHelper;
 import com.duongame.helper.ToastHelper;
 import com.duongame.helper.UnitHelper;
@@ -115,13 +116,13 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
                 AdBannerManager.init(BaseMainActivity.this);
                 AdInterstitialManager.init(BaseMainActivity.this);
 
-                Log.e("Jungsoo", "initContentView begin");
+                JLog.e("Jungsoo", "initContentView begin");
                 initContentView();
-                Log.e("Jungsoo", "initContentView end");
+                JLog.e("Jungsoo", "initContentView end");
                 initToolbar();
-                Log.e("Jungsoo", "initToolbar end");
+                JLog.e("Jungsoo", "initToolbar end");
                 initDrawer();
-                Log.e("Jungsoo", "initDrawer end");
+                JLog.e("Jungsoo", "initDrawer end");
 
                 showReview = ReviewManager.checkReview(BaseMainActivity.this);
 
@@ -175,14 +176,14 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
             adView.resume();
         }
 
-        Log.e("Jungsoo", "onResume begin");
+        JLog.e("Jungsoo", "onResume begin");
         onResumeDropbox();
         onResumeGoogleDrive();
-        Log.e("Jungsoo", "onResume end");
+        JLog.e("Jungsoo", "onResume end");
     }
 
     void onResumeGoogleDrive() {
-        Log.e("Jungsoo", "onResumeGoogleDrive");
+        JLog.e("Jungsoo", "onResumeGoogleDrive");
         String accountName = PreferenceHelper.getAccountGoogleDrive(this);
         //loadGoogleDrive(accountName);
         GoogleDriveManager.login(this, accountName);
@@ -190,7 +191,7 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
     }
 
     void onResumeDropbox() {
-        Log.e("Jungsoo", "onResumeDropbox");
+        JLog.e("Jungsoo", "onResumeDropbox");
         // Token을 저장한다.
         String accessToken = PreferenceHelper.getAccountDropbox(this);
         if (accessToken == null) {
@@ -500,20 +501,20 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
         @Override
         public void onDrawerStateChanged(int newState) {
             super.onDrawerStateChanged(newState);
-            Log.e("Jungsoo", "onDrawerStateChanged " + newState);
+            JLog.e("Jungsoo", "onDrawerStateChanged " + newState);
         }
 
         @Override
         public void onDrawerOpened(View drawerView) {
             super.onDrawerOpened(drawerView);
-            Log.e("Jungsoo", "onDrawerOpened ");
+            JLog.e("Jungsoo", "onDrawerOpened ");
             drawerOpened = true;
         }
 
         @Override
         public void onDrawerClosed(View drawerView) {
             super.onDrawerClosed(drawerView);
-            Log.e("Jungsoo", "onDrawerClosed ");
+            JLog.e("Jungsoo", "onDrawerClosed ");
             drawerOpened = false;
         }
     }
@@ -860,7 +861,7 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
     }
 
     void loadGoogleDrive(String accountName) {
-        Log.e("Jungsoo", "loadGoogleDrive");
+        JLog.e("Jungsoo", "loadGoogleDrive");
         // 로그인이 성공했다고 봄
         MenuItem googleDriveItem = navigationView.getMenu().findItem(R.id.nav_google_drive);
         if (accountName != null && accountName.length() > 0) {

@@ -2,12 +2,12 @@ package com.duongame.activity;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 
 import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.core.CrashlyticsCore;
 import com.duongame.AnalyticsApplication;
 import com.duongame.BuildConfig;
+import com.duongame.helper.JLog;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.google.firebase.analytics.FirebaseAnalytics;
@@ -26,13 +26,13 @@ public class BaseActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Log.e("Jungsoo", "setupFabric begin");
+        JLog.e("Jungsoo", "setupFabric begin");
         setupFabric();
-        Log.e("Jungsoo", "setupFabric end");
+        JLog.e("Jungsoo", "setupFabric end");
         setupFirebase();
-        Log.e("Jungsoo", "setupFirebase end");
+        JLog.e("Jungsoo", "setupFirebase end");
         setupGA();
-        Log.e("Jungsoo", "setupGA end");
+        JLog.e("Jungsoo", "setupGA end");
     }
 
     private void setupFabric() {

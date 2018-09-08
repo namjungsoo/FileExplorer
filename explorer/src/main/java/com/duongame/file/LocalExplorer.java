@@ -1,9 +1,8 @@
 package com.duongame.file;
 
-import android.util.Log;
-
 import com.duongame.adapter.ExplorerItem;
 import com.duongame.helper.DateHelper;
+import com.duongame.helper.JLog;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -20,7 +19,7 @@ import static com.duongame.file.FileHelper.getFileType;
 public class LocalExplorer extends FileExplorer {
     @Override
     public FileExplorer.Result search(String path) {
-        Log.e("Jungsoo", "LocalExplorer search begin");
+        JLog.e("Jungsoo", "LocalExplorer search begin");
         File file = new File(path);
         if (file == null)
             return null;
@@ -30,12 +29,12 @@ public class LocalExplorer extends FileExplorer {
         if (files == null)
             return null;
 
-        Log.e("Jungsoo", "LocalExplorer listFiles end "+files.length);
+        JLog.e("Jungsoo", "LocalExplorer listFiles end "+files.length);
 
         // 폴더를 우선하도록 정렬 해야 함
         // 안드로이드는 폴더와 파일을 섞어서 리턴을 해준다.
         Collections.sort(Arrays.asList(files), new FileExplorer.DirectoryPreferComparator());
-        Log.e("Jungsoo", "LocalExplorer listFiles sort end");
+        JLog.e("Jungsoo", "LocalExplorer listFiles sort end");
 
         ArrayList<ExplorerItem> fileList = new ArrayList<ExplorerItem>();
         ArrayList<ExplorerItem> directoryList = new ArrayList<ExplorerItem>();
@@ -101,7 +100,7 @@ public class LocalExplorer extends FileExplorer {
             }
         }
 
-        Log.e("Jungsoo", "LocalExplorer file item end");
+        JLog.e("Jungsoo", "LocalExplorer file item end");
 //        if (comparator == null) {
 //            comparator = new FileHelper.NameAscComparator();
 //        }
@@ -117,7 +116,7 @@ public class LocalExplorer extends FileExplorer {
             fileList.addAll(normalList);
             fileList.addAll(directoryList);
         }
-        Log.e("Jungsoo", "LocalExplorer file item sort end");
+        JLog.e("Jungsoo", "LocalExplorer file item sort end");
 
         // 이미지 리스트를 따로 모을 것인지?
         if (isImageListEnable()) {
@@ -132,10 +131,10 @@ public class LocalExplorer extends FileExplorer {
 
             result.imageList = imageList;
         }
-        Log.e("Jungsoo", "LocalExplorer image list end");
+        JLog.e("Jungsoo", "LocalExplorer image list end");
 
         result.fileList = fileList;
-        Log.e("Jungsoo", "LocalExplorer search end");
+        JLog.e("Jungsoo", "LocalExplorer search end");
         return result;
     }
 }

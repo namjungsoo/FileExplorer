@@ -3,9 +3,9 @@ package com.duongame;
 import android.app.Application;
 import android.os.Environment;
 import android.support.multidex.MultiDexApplication;
-import android.util.Log;
 
 import com.duongame.adapter.ExplorerItem;
+import com.duongame.helper.JLog;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.Tracker;
 import com.google.firebase.analytics.FirebaseAnalytics;
@@ -23,7 +23,7 @@ public class AnalyticsApplication extends MultiDexApplication {
     @Override
     public void onCreate() {
         super.onCreate();
-        Log.e("Jungsoo", "onCreate end");
+        JLog.e("Jungsoo", "onCreate end");
     }
 
     /**

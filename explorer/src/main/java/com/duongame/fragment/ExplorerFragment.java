@@ -15,7 +15,6 @@ import android.support.v4.content.FileProvider;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,6 +46,7 @@ import com.duongame.file.FileHelper;
 import com.duongame.helper.AlertHelper;
 import com.duongame.helper.AppHelper;
 import com.duongame.helper.ExtSdCardHelper;
+import com.duongame.helper.JLog;
 import com.duongame.helper.PreferenceHelper;
 import com.duongame.helper.ToastHelper;
 import com.duongame.manager.PermissionManager;
@@ -220,10 +220,10 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
         rootView = inflater.inflate(R.layout.fragment_explorer, container, false);
 
         initUI();
-        Log.e("Jungsoo", "initUI end");
+        JLog.e("Jungsoo", "initUI end");
 
         initViewType();
-        Log.e("Jungsoo", "initViewType end");
+        JLog.e("Jungsoo", "initViewType end");
 
         FragmentActivity activity = getActivity();
         if (activity != null) {
@@ -242,7 +242,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
         String path = PreferenceHelper.getLastPath(getContext());
         application.setLastPath(path);
 
-        Log.e("Jungsoo", "onCreateView end");
+        JLog.e("Jungsoo", "onCreateView end");
         return rootView;
     }
 
@@ -258,7 +258,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
                 }
             }
         }
-        Log.e("Jungsoo", "onActivityCreated end");
+        JLog.e("Jungsoo", "onActivityCreated end");
     }
 
     @Override
@@ -365,7 +365,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
     }
 
     public void updateDropboxUI(boolean show) {
-        Log.e("Jungsoo", "updateDropboxUI "+show);
+        JLog.e("Jungsoo", "updateDropboxUI "+show);
         if (dropbox == null) {
             backupDropbox = show;
             return;
@@ -385,7 +385,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
     }
 
     public void updateGoogleDriveUI(boolean show) {
-        Log.e("Jungsoo", "updateGoogleDriveUI "+show);
+        JLog.e("Jungsoo", "updateGoogleDriveUI "+show);
         if (googleDrive == null) {
             backupGoogleDrive = show;
             return;
@@ -1075,11 +1075,11 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
 
     @Override
     public void onRefresh() {
-        Log.e("Jungsoo", "onRefresh begin");
+        JLog.e("Jungsoo", "onRefresh begin");
         // 외부 resume시에 들어올수도 있으므로 pref에서 읽는다.
         cloud = PreferenceHelper.getLastCloud(getContext());
         updateFileList(PreferenceHelper.getLastPath(getContext()));
-        Log.e("Jungsoo", "onRefresh end");
+        JLog.e("Jungsoo", "onRefresh end");
     }
 
     @Override

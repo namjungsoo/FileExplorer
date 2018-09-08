@@ -1,13 +1,13 @@
 package com.duongame.task.file;
 
 import android.os.AsyncTask;
-import android.util.Log;
 
 import com.duongame.adapter.ExplorerItem;
 import com.duongame.cloud.googledrive.GoogleDriveManager;
 import com.duongame.file.FileExplorer;
 import com.duongame.file.FileHelper;
 import com.duongame.fragment.ExplorerFragment;
+import com.duongame.helper.JLog;
 import com.google.api.services.drive.Drive;
 import com.google.api.services.drive.model.File;
 import com.google.api.services.drive.model.FileList;
@@ -139,7 +139,7 @@ public class GoogleDriveSearchTask extends AsyncTask<String, Void, FileExplorer.
                 }
                 //fileList.add(item);
 
-                Log.e("Jungsoo", "name=" + file.getName() + " createdTime=" + file.getCreatedTime() + " fileId=" + file.getId() + " mime=" + file.getMimeType());
+                JLog.e("Jungsoo", "name=" + file.getName() + " createdTime=" + file.getCreatedTime() + " fileId=" + file.getId() + " mime=" + file.getMimeType());
             }
             pageToken = result.getNextPageToken();
         } while (pageToken != null);

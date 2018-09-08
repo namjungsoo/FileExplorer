@@ -1,7 +1,6 @@
 package com.duongame.task.file;
 
 import android.os.AsyncTask;
-import android.util.Log;
 
 import com.dropbox.core.DbxException;
 import com.dropbox.core.v2.DbxClientV2;
@@ -15,6 +14,7 @@ import com.duongame.cloud.dropbox.DropboxClientFactory;
 import com.duongame.file.FileExplorer;
 import com.duongame.file.FileHelper;
 import com.duongame.fragment.ExplorerFragment;
+import com.duongame.helper.JLog;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -92,7 +92,7 @@ public class DropboxSearchTask extends AsyncTask<String, Void, FileExplorer.Resu
 
                         // 패스를 찾았다. 리스트에 더해주자.
                         fileList.add(item);
-                        Log.e("Jungsoo", "i=" + i + " " + item.toString());
+                        JLog.e("Jungsoo", "i=" + i + " " + item.toString());
                     }
                 }
 
@@ -101,7 +101,7 @@ public class DropboxSearchTask extends AsyncTask<String, Void, FileExplorer.Resu
                 return result;
             }
         } catch (DbxException e) {
-            Log.e("Jungsoo", e.getLocalizedMessage());
+            JLog.e("Jungsoo", e.getLocalizedMessage());
         }
 
         return null;

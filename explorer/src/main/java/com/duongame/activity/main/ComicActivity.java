@@ -3,12 +3,12 @@ package com.duongame.activity.main;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 
 import com.duongame.R;
 import com.duongame.adapter.ComicPagerAdapter;
 import com.duongame.fragment.BaseFragment;
 import com.duongame.fragment.ExplorerFragment;
+import com.duongame.helper.JLog;
 
 public class ComicActivity extends BaseMainActivity {
     private final static String TAG = ComicActivity.class.getSimpleName();
@@ -24,9 +24,9 @@ public class ComicActivity extends BaseMainActivity {
 
         super.onCreate(savedInstanceState);
 
-        Log.e("Jungsoo", "initTabs begin");
+        JLog.e("Jungsoo", "initTabs begin");
         initTabs();
-        Log.e("Jungsoo", "initTabs end");
+        JLog.e("Jungsoo", "initTabs end");
     }
 
     @Override
