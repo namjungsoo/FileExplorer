@@ -3,6 +3,7 @@ package com.duongame.activity.main;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 
 import com.duongame.R;
 import com.duongame.adapter.ComicPagerAdapter;
@@ -20,7 +21,9 @@ public class ComicActivity extends BaseMainActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        Log.e("Jungsoo", "initTabs begin");
         initTabs();
+        Log.e("Jungsoo", "initTabs end");
     }
 
     @Override

@@ -1,8 +1,8 @@
 package com.duongame.helper;
 
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
+import org.apache.commons.lang3.time.FastDateFormat;
 
+import java.text.ParseException;
 import java.util.Date;
 
 /**
@@ -11,26 +11,38 @@ import java.util.Date;
 
 public class DateHelper {
     //FIX:
-    // Thread-safe 문제를 해결함. YodaTime을 사용하면 해결됨.
-    private static final DateTimeFormatter explorerFormat = DateTimeFormat.forPattern("yy-MM-dd(E) hh:mm:ss a");
-    private static final DateTimeFormatter dbFormat = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss");
+    // Thread-safe 문제를 해결함
+    // YodaTime을 사용하면 해결됨
+    // FastDateFormat으로 변경
+    private static final String dbPattern = "yyyy-MM-dd HH:mm:ss";
+    private static final String explorerPattern = "yy-MM-dd(E) hh:mm:ss a";
 
     public static String getExplorerDateString(long dateLong) {
-        return explorerFormat.print(dateLong);
+        return FastDateFormat.getInstance(explorerPattern).format(dateLong);
     }
 
     public static String getExplorerDateString(Date date) {
-        return explorerFormat.print(date.getTime());
+        return FastDateFormat.getInstance(explorerPattern).format(date);
     }
 
-    public static String getExplorerDateString(String dbDate) {
-        final long dateLong = dbFormat.parseDateTime(dbDate).getMillis();
-        return getExplorerDateString(dateLong);
+    public static String getExplorerDateStringFromDbDateString(String dbDate) {
+        try {
+            final long dateLong = FastDateFormat.getInstance(dbPattern).parse(dbDate).getTime();
+            return getExplorerDateString(dateLong);
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return "";
+        }
     }
 
-    public static Date getDateFromExplorerDate(String explorerDate) {
-        final long dateLong = explorerFormat.parseDateTime(explorerDate).getMillis();
-        Date date = new Date(dateLong);
-        return date;
+    public static Date getDateFromExplorerDateString(String explorerDate) {
+        try {
+            final long dateLong = FastDateFormat.getInstance(explorerPattern).parse(explorerDate).getTime();
+            Date date = new Date(dateLong);
+            return date;
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return new Date();
+        }
     }
 }

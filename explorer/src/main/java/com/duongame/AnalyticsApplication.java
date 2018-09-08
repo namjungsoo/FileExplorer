@@ -3,6 +3,7 @@ package com.duongame;
 import android.app.Application;
 import android.os.Environment;
 import android.support.multidex.MultiDexApplication;
+import android.util.Log;
 
 import com.duongame.adapter.ExplorerItem;
 import com.google.android.gms.analytics.GoogleAnalytics;
@@ -18,6 +19,12 @@ public class AnalyticsApplication extends MultiDexApplication {
     private ArrayList<ExplorerItem> imageList;
     private final String initialPath = Environment.getExternalStorageDirectory().getAbsolutePath();
     private String lastPath;
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        Log.e("Jungsoo", "onCreate end");
+    }
 
     /**
      * Gets the default {@link Tracker} for this {@link Application}.

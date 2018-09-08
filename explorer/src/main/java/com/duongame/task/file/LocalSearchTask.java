@@ -1,6 +1,7 @@
 package com.duongame.task.file;
 
 import android.os.AsyncTask;
+import android.util.Log;
 import android.view.View;
 
 import com.duongame.adapter.ExplorerItem;
@@ -23,6 +24,8 @@ public class LocalSearchTask extends AsyncTask<String, Void, FileExplorer.Result
     public LocalSearchTask(ExplorerFragment fragment, boolean pathChanged) {
         this.pathChanged = pathChanged;
         fragmentWeakReference = new WeakReference<>(fragment);
+
+        Log.e("Jungsoo", "LocalSearchTask begin");
     }
 
     void updateComparator() {
@@ -65,6 +68,7 @@ public class LocalSearchTask extends AsyncTask<String, Void, FileExplorer.Result
 
     @Override
     protected FileExplorer.Result doInBackground(String... params) {
+        Log.e("Jungsoo", "LocalSearchTask doInBackground begin");
         path = params[0];
         updateComparator();
 
@@ -85,6 +89,7 @@ public class LocalSearchTask extends AsyncTask<String, Void, FileExplorer.Result
         }
 //            fragment.fileResult = result;
 
+        Log.e("Jungsoo", "LocalSearchTask doInBackground end");
         return result;
     }
 
@@ -101,6 +106,7 @@ public class LocalSearchTask extends AsyncTask<String, Void, FileExplorer.Result
 
     @Override
     protected void onPostExecute(FileExplorer.Result result) {
+        Log.e("Jungsoo", "LocalSearchTask onPostExecute begin");
         super.onPostExecute(result);// AsyncTask는 아무것도 안함
 
         if (isCancelled())
@@ -151,5 +157,6 @@ public class LocalSearchTask extends AsyncTask<String, Void, FileExplorer.Result
         }
 
         fragment.setCanClick(true);
+        Log.e("Jungsoo", "LocalSearchTask onPostExecute end");
     }
 }
