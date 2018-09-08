@@ -50,4 +50,9 @@
 
     <include layout="@layout/explorer_bottom" />
 
+    <ProgressBar
+        android:id="@+id/progress_loading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"/>
 </FrameLayout>

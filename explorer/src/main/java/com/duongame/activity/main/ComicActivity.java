@@ -19,6 +19,9 @@ public class ComicActivity extends BaseMainActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        // 무조건 onCreate 이전에 셋팅 되어야 함
+        setTheme(R.style.ExplorerTheme);
+
         super.onCreate(savedInstanceState);
 
         Log.e("Jungsoo", "initTabs begin");

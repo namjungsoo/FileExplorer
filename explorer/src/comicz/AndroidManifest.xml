@@ -9,12 +9,11 @@
         android:icon="@mipmap/comicz"
         android:label="${APP_NAME}"
         android:largeHeap="true"
-        android:theme="@style/ExplorerTheme">
+        android:theme="@style/SplashTheme">
 
         <activity android:name=".activity.main.ComicActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -88,4 +87,6 @@
         android:name="firebase_crashlytics_collection_enabled"
         android:value="false" />
 
+    <!-- google drive -->
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
 </manifest>
