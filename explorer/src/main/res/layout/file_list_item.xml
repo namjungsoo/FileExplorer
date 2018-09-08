@@ -40,6 +40,11 @@
                 android:id="@+id/text_name"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
+
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:singleLine="false"
+
                 android:gravity="bottom|left"
                 android:textColor="#000000"
                 android:textSize="14dp" />

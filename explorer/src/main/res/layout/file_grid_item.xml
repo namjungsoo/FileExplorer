@@ -31,11 +31,13 @@
             android:id="@+id/text_name"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:ellipsize="end"
             android:gravity="center_horizontal"
-            android:singleLine="false"
-            android:textColor="#000000"
+
+            android:ellipsize="end"
             android:maxLines="2"
+            android:singleLine="false"
+
+            android:textColor="#000000"
             android:textSize="12dp" />
     </LinearLayout>
 
