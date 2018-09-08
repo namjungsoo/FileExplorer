@@ -28,6 +28,7 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 
 import com.dropbox.core.android.Auth;
@@ -89,6 +90,8 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
     ColorStateList grayStateList;
     NavigationView navigationView;
 
+    ProgressBar loadingProgressBar;
+
     public boolean getShowReview() {
         return showReview;
     }
@@ -105,29 +108,38 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        AdBannerManager.init(this);
-        AdInterstitialManager.init(this);
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
 
-        initContentView();
-        initToolbar();
+                AdBannerManager.init(BaseMainActivity.this);
+                AdInterstitialManager.init(BaseMainActivity.this);
 
-        initDrawer();
+                Log.e("Jungsoo", "initContentView begin");
+                initContentView();
+                Log.e("Jungsoo", "initContentView end");
+                initToolbar();
+                Log.e("Jungsoo", "initToolbar end");
+                initDrawer();
+                Log.e("Jungsoo", "initDrawer end");
 
-        showReview = ReviewManager.checkReview(this);
+                showReview = ReviewManager.checkReview(BaseMainActivity.this);
 
-        mFirebaseRemoteConfig = FirebaseRemoteConfig.getInstance();
-        mFirebaseRemoteConfig.fetch(0).addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                if (task.isSuccessful()) {
-                    mFirebaseRemoteConfig.activateFetched();
-                    long version = mFirebaseRemoteConfig.getLong("latest_version");
-                    if (BuildConfig.VERSION_CODE < version) {
-                        ToastHelper.info(BaseMainActivity.this, R.string.toast_new_version);
+                mFirebaseRemoteConfig = FirebaseRemoteConfig.getInstance();
+                mFirebaseRemoteConfig.fetch(0).addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            mFirebaseRemoteConfig.activateFetched();
+                            long version = mFirebaseRemoteConfig.getLong("latest_version");
+                            if (BuildConfig.VERSION_CODE < version) {
+                                ToastHelper.info(BaseMainActivity.this, R.string.toast_new_version);
+                            }
+                        }
                     }
-                }
-            }
-        });
+                });
+//            }
+//        }).start();
     }
 
     @Override
@@ -162,10 +174,11 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
         if (adView != null) {
             adView.resume();
         }
-        Log.e("Jungsoo", "onResume");
 
+        Log.e("Jungsoo", "onResume begin");
         onResumeDropbox();
         onResumeGoogleDrive();
+        Log.e("Jungsoo", "onResume end");
     }
 
     void onResumeGoogleDrive() {
@@ -470,6 +483,12 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
                 getExplorerFragment().deleteFileWithDialog();
             }
         });
+
+        loadingProgressBar = findViewById(R.id.progress_loading);
+    }
+
+    public ProgressBar getProgressBarLoading() {
+        return loadingProgressBar;
     }
 
     class MyActionBarDrawerToggle extends ActionBarDrawerToggle {

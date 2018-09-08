@@ -16,13 +16,6 @@ import com.google.android.gms.ads.AdView;
 public class AdBannerManager {
     private final static String TAG = "AdBannerManager";
 
-    //NEXTDOOR
-//    private static final String BANNER_ID = "ca-app-pub-5576037828251153/2291112622";
-//    private static final String POPUP_ID = "ca-app-pub-5576037828251153/3639793825";
-
-    //COMICZ
-//    private static final String BANNER_ID = "ca-app-pub-5576037828251153/8260818625";
-//    private static final String POPUP_ID = "ca-app-pub-5576037828251153/2214285028";
     private static final String BANNER_ID = BuildConfig.BANNER_ID;
     private static final String POPUP_ID = BuildConfig.POPUP_ID;
 

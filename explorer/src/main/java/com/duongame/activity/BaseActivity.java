@@ -2,6 +2,7 @@ package com.duongame.activity;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 
 import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.core.CrashlyticsCore;
@@ -25,9 +26,13 @@ public class BaseActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        Log.e("Jungsoo", "setupFabric begin");
         setupFabric();
+        Log.e("Jungsoo", "setupFabric end");
         setupFirebase();
+        Log.e("Jungsoo", "setupFirebase end");
         setupGA();
+        Log.e("Jungsoo", "setupGA end");
     }
 
     private void setupFabric() {
@@ -55,7 +60,9 @@ public class BaseActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
-        mTracker.setScreenName(this.getClass().getSimpleName());
-        mTracker.send(new HitBuilders.ScreenViewBuilder().build());
+        if(mTracker != null) {
+            mTracker.setScreenName(this.getClass().getSimpleName());
+            mTracker.send(new HitBuilders.ScreenViewBuilder().build());
+        }
     }
 }

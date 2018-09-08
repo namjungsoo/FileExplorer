@@ -24,6 +24,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageButton;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.ViewSwitcher;
@@ -174,6 +175,14 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
 
     public void setCanClick(boolean canClick) {
         this.canClick = canClick;
+
+        BaseMainActivity activity = (BaseMainActivity) getActivity();
+        if(activity != null) {
+            ProgressBar progressBar = activity.getProgressBarLoading();
+            if(progressBar != null) {
+                progressBar.setVisibility(canClick ? View.GONE : View.VISIBLE);
+            }
+        }
     }
 
     public int getSortType() {
