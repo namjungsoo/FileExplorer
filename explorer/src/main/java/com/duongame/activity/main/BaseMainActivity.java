@@ -750,7 +750,7 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
     void logoutDropbox(final MenuItem item) {
         // 로그인이 되어 있으면 팝업후에 로그아웃을 하고, account를 null로 만든다.
         AlertHelper.showAlertWithAd(this, AppHelper.getAppName(this),
-                String.format(getString(R.string.message_cloud_logout), getString(R.string.dropbox)),
+                String.format(getString(R.string.msg_cloud_logout), getString(R.string.dropbox)),
                 new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -788,7 +788,7 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
 
         // 로그인이 되어 있으면 팝업후에 로그아웃을 하고, account를 null로 만든다.
         AlertHelper.showAlertWithAd(this, AppHelper.getAppName(this),
-                String.format(getString(R.string.message_cloud_logout), getString(R.string.google_drive)),
+                String.format(getString(R.string.msg_cloud_logout), getString(R.string.google_drive)),
                 new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {

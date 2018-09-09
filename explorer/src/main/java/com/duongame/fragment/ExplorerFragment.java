@@ -550,7 +550,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
             @Override
             public void onDownloadComplete(File result) {
                 item.path = result.getAbsolutePath();
-                ToastHelper.info(activity, R.string.message_cloud_complete);
+                ToastHelper.info(activity, R.string.toast_cloud_complete);
                 BookLoader.load(activity, item, false);
             }
 
@@ -560,7 +560,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
             }
         });
         task.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, (FileMetadata)item.metadata);
-        ToastHelper.showToast(activity, String.format(getResources().getString(R.string.message_cloud_download), item.name));
+        ToastHelper.showToast(activity, String.format(getResources().getString(R.string.toast_cloud_download), item.name));
     }
 
     void onClickBookGoogleDrive(final Activity activity, final ExplorerItem item) {
@@ -569,7 +569,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
             @Override
             public void onDownloadComplete(File result) {
                 item.path = result.getAbsolutePath();
-                ToastHelper.info(activity, R.string.message_cloud_complete);
+                ToastHelper.info(activity, R.string.toast_cloud_complete);
                 BookLoader.load(activity, item, false);
             }
 
@@ -579,7 +579,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
             }
         });
         task.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, item.name, (String)item.metadata);// metadata = fileId
-        ToastHelper.showToast(activity, String.format(getResources().getString(R.string.message_cloud_download), item.name));
+        ToastHelper.showToast(activity, String.format(getResources().getString(R.string.toast_cloud_download), item.name));
     }
 
     void onClickBook(final ExplorerItem item) {
