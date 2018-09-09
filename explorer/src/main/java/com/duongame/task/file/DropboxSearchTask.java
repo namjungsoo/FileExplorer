@@ -47,6 +47,8 @@ public class DropboxSearchTask extends AsyncTask<String, Void, FileExplorer.Resu
 
     ExplorerItem createFile(FileMetadata metadata) {
         int type = ExplorerItem.FILETYPE_FILE;
+
+        // 압축파일일 경우 책(ZIP)으로 셋팅함
         if (FileHelper.getCompressType(metadata.getName()) != ExplorerItem.COMPRESSTYPE_OTHER) {
             type = ExplorerItem.FILETYPE_ZIP;
         }

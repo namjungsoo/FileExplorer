@@ -132,9 +132,12 @@ public class GoogleDriveSearchTask extends AsyncTask<String, Void, FileExplorer.
                 ExplorerItem item = new ExplorerItem(file.getName(), file.getName(), file.getCreatedTime().toString(), size, type);
                 item.metadata = file.getId();
 
-                if(type == ExplorerItem.FILETYPE_FOLDER) {
+                if (type == ExplorerItem.FILETYPE_FOLDER) {
                     folderList.add(item);
                 } else {
+                    if (FileHelper.getCompressType(item.name) != ExplorerItem.COMPRESSTYPE_OTHER) {
+                        item.type = ExplorerItem.FILETYPE_ZIP;
+                    }
                     normalList.add(item);
                 }
                 //fileList.add(item);

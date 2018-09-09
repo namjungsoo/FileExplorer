@@ -61,19 +61,9 @@ public class DropboxDownloadTask extends AsyncTask<FileMetadata, Void, File> {
                 return null;
             }
 
-            // 쓰레드 안에서는 Toast를 열수 없다.
-//            publishProgress(null);
-//            ToastHelper.showToast(mContextRef.get(), "Downloading from dropbox");
-
             // Download the file.
             OutputStream outputStream = new FileOutputStream(file);
             mDbxClient.files().download(metadata.getPathLower(), metadata.getRev()).download(outputStream);
-
-            // try with resources는 낮은 api level에서는 지원하지 않는다.
-//            try (OutputStream outputStream = new FileOutputStream(file)) {
-//                mDbxClient.files().download(metadata.getPathLower(), metadata.getRev())
-//                        .download(outputStream);
-//            }
 
             // Tell android about the file
             Intent intent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
