@@ -77,7 +77,8 @@
     <string name="toast_new_version">A new version has been released.</string>
 
     <string name="cloud_storage">Cloud Storage</string>
-    <string name="message_cloud_logout">Do you want to logout from %s?</string>
-    <string name="message_cloud_download">Downloading %s&#8230;</string>
-    <string name="message_cloud_complete">File download is complete.</string>
+    <string name="msg_cloud_logout">Do you want to logout from %s?</string>
+    <string name="msg_cloud_download">The selected file is being downloaded.</string>
+    <string name="toast_cloud_download">Downloading %s&#8230;</string>
+    <string name="toast_cloud_complete">File download is complete.</string>
 </resources>
