@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -113,32 +114,32 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
 //            @Override
 //            public void run() {
 
-                AdBannerManager.init(BaseMainActivity.this);
-                AdInterstitialManager.init(BaseMainActivity.this);
+        AdBannerManager.init(BaseMainActivity.this);
+        AdInterstitialManager.init(BaseMainActivity.this);
 
-                JLog.e("Jungsoo", "initContentView begin");
-                initContentView();
-                JLog.e("Jungsoo", "initContentView end");
-                initToolbar();
-                JLog.e("Jungsoo", "initToolbar end");
-                initDrawer();
-                JLog.e("Jungsoo", "initDrawer end");
+        JLog.e("Jungsoo", "initContentView begin");
+        initContentView();
+        JLog.e("Jungsoo", "initContentView end");
+        initToolbar();
+        JLog.e("Jungsoo", "initToolbar end");
+        initDrawer();
+        JLog.e("Jungsoo", "initDrawer end");
 
-                showReview = ReviewManager.checkReview(BaseMainActivity.this);
+        showReview = ReviewManager.checkReview(BaseMainActivity.this);
 
-                mFirebaseRemoteConfig = FirebaseRemoteConfig.getInstance();
-                mFirebaseRemoteConfig.fetch(0).addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if (task.isSuccessful()) {
-                            mFirebaseRemoteConfig.activateFetched();
-                            long version = mFirebaseRemoteConfig.getLong("latest_version");
-                            if (BuildConfig.VERSION_CODE < version) {
-                                ToastHelper.info(BaseMainActivity.this, R.string.toast_new_version);
-                            }
-                        }
+        mFirebaseRemoteConfig = FirebaseRemoteConfig.getInstance();
+        mFirebaseRemoteConfig.fetch(0).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if (task.isSuccessful()) {
+                    mFirebaseRemoteConfig.activateFetched();
+                    long version = mFirebaseRemoteConfig.getLong("latest_version");
+                    if (BuildConfig.VERSION_CODE < version) {
+                        ToastHelper.info(BaseMainActivity.this, R.string.toast_new_version);
                     }
-                });
+                }
+            }
+        });
 //            }
 //        }).start();
     }
@@ -182,29 +183,107 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
         JLog.e("Jungsoo", "onResume end");
     }
 
+    class GoogleDriveLoginTask extends android.os.AsyncTask<Void, Void, Void> {
+        String accountName;
+
+        @Override
+        public void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        public void onPostExecute(Void result) {
+            super.onPostExecute(result);
+            JLog.e("Jungsoo", "GoogleDriveLoginTask.onPostExecute begin");
+            loadGoogleDrive(accountName);
+            JLog.e("Jungsoo", "GoogleDriveLoginTask.onPostExecute end");
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            JLog.e("Jungsoo", "GoogleDriveLoginTask.doInBackground begin");
+            accountName = PreferenceHelper.getAccountGoogleDrive(BaseMainActivity.this);
+            GoogleDriveManager.login(BaseMainActivity.this, accountName);
+            JLog.e("Jungsoo", "GoogleDriveLoginTask.doInBackground end");
+            return null;
+        }
+    }
+
     void onResumeGoogleDrive() {
         JLog.e("Jungsoo", "onResumeGoogleDrive");
-        String accountName = PreferenceHelper.getAccountGoogleDrive(this);
-        //loadGoogleDrive(accountName);
-        GoogleDriveManager.login(this, accountName);
-        loadGoogleDrive(accountName);
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                String accountName = PreferenceHelper.getAccountGoogleDrive(BaseMainActivity.this);
+//                //loadGoogleDrive(accountName);
+//                GoogleDriveManager.login(BaseMainActivity.this, accountName);
+//                loadGoogleDrive(accountName);
+//            }
+//        }).start();
+        GoogleDriveLoginTask task = new GoogleDriveLoginTask();
+        task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, null);
+    }
+
+    class DropboxLoginTask extends AsyncTask<Void, Void, Boolean> {
+        @Override
+        public void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        public void onPostExecute(Boolean result) {
+            super.onPostExecute(result);
+            JLog.e("Jungsoo", "DropboxLoginTask.onPostExecute begin");
+            if (result.booleanValue()) {
+                loadDropbox();
+            } else {
+                getExplorerFragment().updateDropboxUI(false);
+            }
+            JLog.e("Jungsoo", "DropboxLoginTask.onPostExecute end");
+        }
+
+        @Override
+        protected Boolean doInBackground(Void... voids) {
+            JLog.e("Jungsoo", "DropboxLoginTask.doInBackground begin");
+            String accessToken = PreferenceHelper.getAccountDropbox(BaseMainActivity.this);
+            if (accessToken == null) {
+                accessToken = Auth.getOAuth2Token();
+                if (accessToken != null) {
+                    PreferenceHelper.setAccountDropbox(BaseMainActivity.this, accessToken);
+                    DropboxClientFactory.init(accessToken);
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+            DropboxClientFactory.init(accessToken);
+            JLog.e("Jungsoo", "DropboxLoginTask.doInBackground end");
+            return true;
+        }
     }
 
     void onResumeDropbox() {
         JLog.e("Jungsoo", "onResumeDropbox");
-        // Token을 저장한다.
-        String accessToken = PreferenceHelper.getAccountDropbox(this);
-        if (accessToken == null) {
-            accessToken = Auth.getOAuth2Token();
-            if (accessToken != null) {
-                PreferenceHelper.setAccountDropbox(this, accessToken);
-                initDropbox(accessToken);
-            } else {
-                getExplorerFragment().updateDropboxUI(false);
-            }
-        } else {
-            initDropbox(accessToken);
-        }
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                // Token을 저장한다.
+//                String accessToken = PreferenceHelper.getAccountDropbox(BaseMainActivity.this);
+//                if (accessToken == null) {
+//                    accessToken = Auth.getOAuth2Token();
+//                    if (accessToken != null) {
+//                        PreferenceHelper.setAccountDropbox(BaseMainActivity.this, accessToken);
+//                        initDropbox(accessToken);
+//                    } else {
+//                        getExplorerFragment().updateDropboxUI(false);
+//                    }
+//                } else {
+//                    initDropbox(accessToken);
+//                }
+//            }
+//        }).start();
+        DropboxLoginTask task = new DropboxLoginTask();
+        task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, null);
     }
 
     void initDropbox(String accessToken) {

@@ -958,8 +958,10 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
 
         // preference는 쓰레드로 사용하지 않기로 함
         // 현재 패스를 저장
+        JLog.e("Jungsoo", "updateFileList set begin");
         PreferenceHelper.setLastPath(getActivity(), path);
         PreferenceHelper.setLastCloud(getActivity(), cloud);
+        JLog.e("Jungsoo", "updateFileList set end");
 
         // 외장 패스인지 체크하여
         boolean isExtSdCard = false;
@@ -1093,9 +1095,12 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
     public void onRefresh() {
         JLog.e("Jungsoo", "onRefresh begin");
         // 외부 resume시에 들어올수도 있으므로 pref에서 읽는다.
-        cloud = PreferenceHelper.getLastCloud(getContext());
-        updateFileList(PreferenceHelper.getLastPath(getContext()));
+        int lastCloud = PreferenceHelper.getLastCloud(getContext());
+        String lastPath = PreferenceHelper.getLastPath(getContext());
         JLog.e("Jungsoo", "onRefresh end");
+
+        cloud = lastCloud;
+        updateFileList(lastPath);
     }
 
     @Override
