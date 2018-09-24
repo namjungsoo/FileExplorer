@@ -8,7 +8,7 @@
         android:icon="@mipmap/explorer"
         android:label="${APP_NAME}"
         android:largeHeap="true"
-        android:theme="@style/ExplorerTheme">
+        android:theme="@style/SplashTheme">
 
         <activity android:name=".activity.main.FileActivity">
             <intent-filter>

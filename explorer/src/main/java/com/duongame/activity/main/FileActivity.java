@@ -1,11 +1,21 @@
 package com.duongame.activity.main;
 
+import android.os.Bundle;
+
 import com.duongame.R;
 import com.duongame.fragment.BaseFragment;
 import com.duongame.fragment.ExplorerFragment;
 
 public class FileActivity extends BaseMainActivity {
     private final static String TAG = FileActivity.class.getSimpleName();;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        // 무조건 onCreate 이전에 셋팅 되어야 함
+        setTheme(R.style.ExplorerTheme);
+
+        super.onCreate(savedInstanceState);
+    }
 
     @Override
     protected int getLayoutResId() {
