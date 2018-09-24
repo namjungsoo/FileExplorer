@@ -15,7 +15,7 @@ android {
     defaultConfig {
         multiDexEnabled true
         applicationId 'com.duongame'
-        buildConfigField "boolean", "SHOW_AD", "false"
+        buildConfigField "boolean", "SHOW_AD", "true"
         buildConfigField "boolean", "PREVIEW_ZIP", "false"
         minSdkVersion 14
         targetSdkVersion 27
@@ -76,24 +76,24 @@ android {
             buildConfigField "boolean", "PREVIEW_ZIP", "true"
             applicationIdSuffix '.comicz'
             dimension "project"
-            versionCode 40
-            versionName "1.3.8"
+            versionCode 41
+            versionName "1.3.9"
             addManifestPlaceholders([APP_NAME: "@string/comicz_name_free"])
         }
 
         // 2. 파일탐색기
         file {
             //admob
-            buildConfigField "String", "INTERSTITIAL_ID", "\"ca-app-pub-5576037828251153/6911470470\""
-            buildConfigField "String", "POPUP_ID",        "\"ca-app-pub-5576037828251153/3680115556\""
-            buildConfigField "String", "BANNER_ID",       "\"ca-app-pub-5576037828251153/9457742767\""
+            buildConfigField "String", "INTERSTITIAL_ID", "\"ca-app-pub-8174809468024854/9810925855\""
+            buildConfigField "String", "POPUP_ID",        "\"ca-app-pub-8174809468024854/4034665627\""
+            buildConfigField "String", "BANNER_ID",       "\"ca-app-pub-8174809468024854/2530012260\""
             //ga
             buildConfigField "String", "GA_TRACKING_ID", "\"UA-61499807-14\""
             buildConfigField "boolean", "PREVIEW_ZIP", "false"
             applicationIdSuffix '.file'
             dimension "project"
-            versionCode 20
-            versionName "1.1.8"
+            versionCode 21
+            versionName "1.1.9"
             addManifestPlaceholders([APP_NAME: "@string/file_name_free"])
         }
 

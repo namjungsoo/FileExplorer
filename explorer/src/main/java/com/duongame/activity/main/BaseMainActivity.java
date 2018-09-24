@@ -609,15 +609,21 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new MyActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        if(drawer != null) {
+            ActionBarDrawerToggle toggle = new MyActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
 
-        drawer.addDrawerListener(toggle);
-        toggle.syncState();
+            drawer.addDrawerListener(toggle);
+            toggle.syncState();
+        }
 
         navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
-        navigationView.setItemIconTintList(null);
-        grayStateList = navigationView.getItemIconTintList();
+
+        // comicz만 존재한다.
+        if(navigationView != null) {
+            navigationView.setNavigationItemSelectedListener(this);
+            navigationView.setItemIconTintList(null);
+            grayStateList = navigationView.getItemIconTintList();
+        }
     }
 
     public boolean isDrawerOpened() {
@@ -625,7 +631,8 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
     }
 
     public void closeDrawer() {
-        drawer.closeDrawers();
+        if(drawer != null)
+            drawer.closeDrawers();
     }
 
     @Override

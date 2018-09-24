@@ -19,7 +19,8 @@ public class FileActivity extends BaseMainActivity {
 
     @Override
     protected int getLayoutResId() {
-        return R.layout.activity_main_file;
+        //return R.layout.activity_main_file;
+        return R.layout.activity_file;
     }
 
     @Override
