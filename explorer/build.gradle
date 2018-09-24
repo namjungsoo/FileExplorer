@@ -15,7 +15,7 @@ android {
     defaultConfig {
         multiDexEnabled true
         applicationId 'com.duongame'
-        buildConfigField "boolean", "SHOW_AD", "true"
+        buildConfigField "boolean", "SHOW_AD", "false"
         buildConfigField "boolean", "PREVIEW_ZIP", "false"
         minSdkVersion 14
         targetSdkVersion 27

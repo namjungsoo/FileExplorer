@@ -177,10 +177,10 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
             adView.resume();
         }
 
-        JLog.e("Jungsoo", "onResume begin");
-        onResumeDropbox();
-        onResumeGoogleDrive();
-        JLog.e("Jungsoo", "onResume end");
+//        JLog.e("Jungsoo", "onResume begin");
+//        onResumeDropbox();
+//        onResumeGoogleDrive();
+//        JLog.e("Jungsoo", "onResume end");
     }
 
     class GoogleDriveLoginTask extends android.os.AsyncTask<Void, Void, Void> {
@@ -494,7 +494,10 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
             RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
             params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
             adView.setLayoutParams(params);
+
+            JLog.e("Jungsoo", "requestAd begin");
             AdBannerManager.requestAd(0);
+            JLog.e("Jungsoo", "requestAd end");
 
             // mainview layout params
             params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
@@ -506,10 +509,14 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
 
             setContentView(layout);
         } else {
+            JLog.e("Jungsoo", "initContentView setContentView begin");
             setContentView(getLayoutResId());
+            JLog.e("Jungsoo", "initContentView setContentView end");
         }
 
+        JLog.e("Jungsoo", "initContentView initBottomUI begin");
         initBottomUI();
+        JLog.e("Jungsoo", "initContentView initBottomUI end");
     }
 
     void initBottomUI() {

@@ -29,19 +29,19 @@ public class BaseActivity extends AppCompatActivity {
         JLog.e("Jungsoo", "BaseActivity.onCreate begin");
 
         // 0.1초 단축
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                JLog.e("Jungsoo", "setupFabric begin");
-                setupFabric();
-                JLog.e("Jungsoo", "setupFabric end");
-                setupFirebase();
-                JLog.e("Jungsoo", "setupFirebase end");
-                setupGA();
-                JLog.e("Jungsoo", "setupGA end");
-            }
-        }).start();
-        JLog.e("Jungsoo", "BaseActivity.onCreate end");
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                JLog.e("Jungsoo", "setupFabric begin");
+//                setupFabric();
+//                JLog.e("Jungsoo", "setupFabric end");
+//                setupFirebase();
+//                JLog.e("Jungsoo", "setupFirebase end");
+//                setupGA();
+//                JLog.e("Jungsoo", "setupGA end");
+//            }
+//        }).start();
+//        JLog.e("Jungsoo", "BaseActivity.onCreate end");
     }
 
     private void setupFabric() {

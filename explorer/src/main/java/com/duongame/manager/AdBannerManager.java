@@ -122,17 +122,22 @@ public class AdBannerManager {
         return adPopupView;
     }
 
-    public static void requestAd(AdView adView) {
+    public static void requestAd(final AdView adView) {
         if (adView != null) {
-            // 기본 요청을 시작합니다.
-            final AdRequest adRequest = new AdRequest.Builder()
-                    // 이제 테스트를 제거하자.
-                    .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
-                    .addTestDevice("E7D6AF2C21297EECB65D16AD42FDF992")
-                    .build();
+//            new Thread(new Runnable() {
+//                @Override
+//                public void run() {
+                    // 기본 요청을 시작합니다.
+                    final AdRequest adRequest = new AdRequest.Builder()
+                            // 이제 테스트를 제거하자.
+                            .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+                            .addTestDevice("E7D6AF2C21297EECB65D16AD42FDF992")
+                            .build();
 
-            // 광고 요청으로 adView를 로드합니다.
-            adView.loadAd(adRequest);
+                    // 광고 요청으로 adView를 로드합니다.
+                    adView.loadAd(adRequest);
+//                }
+//            }).start();
         }
     }
 
