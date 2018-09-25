@@ -68,9 +68,9 @@ android {
         // 1. 코믹제트
         comicz {
             //admob
-            buildConfigField "String", "INTERSTITIAL_ID", "\"ca-app-pub-5576037828251153/9737551820\""
-            buildConfigField "String", "POPUP_ID",        "\"ca-app-pub-5576037828251153/2214285028\""
-            buildConfigField "String", "BANNER_ID",       "\"ca-app-pub-5576037828251153/8260818625\""
+            buildConfigField "String", "INTERSTITIAL_ID", "\"ca-app-pub-8174809468024854/1821427640\""
+            buildConfigField "String", "POPUP_ID",        "\"ca-app-pub-8174809468024854/2751365931\""
+            buildConfigField "String", "BANNER_ID",       "\"ca-app-pub-8174809468024854/8003692618\""
             //ga
             buildConfigField "String", "GA_TRACKING_ID", "\"UA-61499807-13\""
             buildConfigField "boolean", "PREVIEW_ZIP", "true"
@@ -104,6 +104,7 @@ android {
         }
         // 무료
         free {
+            buildConfigField "boolean", "SHOW_AD", "true"
             applicationIdSuffix '.free'
             dimension "edition"
         }
