@@ -102,7 +102,6 @@ public class PdfActivity extends PagerActivity {
 
             textSize.setText(FileHelper.getMinimizedSize(size));
 
-
             pager.setAdapter(pagerAdapter);
 
             // pdf 파일의 페이지를 체크함

@@ -17,13 +17,14 @@ import com.duongame.activity.viewer.ZipActivity;
 import com.duongame.adapter.ExplorerItem;
 import com.duongame.adapter.HistoryRecyclerAdapter;
 import com.duongame.bitmap.BitmapCacheManager;
+import com.duongame.file.FileHelper;
 import com.duongame.helper.AppHelper;
 import com.duongame.helper.DateHelper;
-import com.duongame.file.FileHelper;
 import com.duongame.task.thumbnail.LoadPdfThumbnailTask;
 import com.duongame.task.thumbnail.LoadZipThumbnailTask;
 
 import java.io.File;
+import java.util.ArrayList;
 
 import static com.duongame.bitmap.BitmapCacheManager.getThumbnail;
 
@@ -32,6 +33,9 @@ import static com.duongame.bitmap.BitmapCacheManager.getThumbnail;
  */
 
 public class BookLoader {
+    private static ArrayList<String> seriesList;
+    private static int seriesPosition;
+
     //TODO: 마지막 책읽기는 comicz만 수행
     // 액티비티 시작할때
     public static boolean openLastBook(Activity context) {
