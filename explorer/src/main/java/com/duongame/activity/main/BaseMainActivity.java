@@ -951,6 +951,7 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
         GoogleDriveManager.onActivityResult(requestCode, resultCode, data);
 
         // 구글이 정확하게 로그인 되었는지는 selected account name을 보면됨
+        // android.permission.GET_ACCOUNTS가 없으면 null이 리턴됨
         String accountName = GoogleDriveManager.getCredential().getSelectedAccountName();
         loadGoogleDrive(accountName);
     }

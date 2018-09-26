@@ -579,7 +579,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
                 ToastHelper.error(activity, R.string.toast_error);
             }
         });
-        task.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, item.name, (String)item.metadata);// metadata = fileId
+        task.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, item);// metadata = fileId
         ToastHelper.showToast(activity, String.format(getResources().getString(R.string.toast_cloud_download), item.name));
     }
 

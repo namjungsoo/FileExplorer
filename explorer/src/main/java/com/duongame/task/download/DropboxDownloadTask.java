@@ -2,8 +2,6 @@ package com.duongame.task.download;
 
 import android.app.Activity;
 import android.content.DialogInterface;
-import android.content.Intent;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Environment;
 import android.view.View;
@@ -39,14 +37,12 @@ public class DropboxDownloadTask extends AsyncTask<FileMetadata, FileHelper.Prog
 
     public interface Callback {
         void onDownloadComplete(File result);
-
         void onError(Exception e);
     }
 
     public DropboxDownloadTask(Activity activity, DbxClientV2 dbxClient, Callback callback) {
         mDbxClient = dbxClient;
         mCallback = callback;
-
         activityWeakReference = new WeakReference<>(activity);
     }
 
@@ -198,9 +194,9 @@ public class DropboxDownloadTask extends AsyncTask<FileMetadata, FileHelper.Prog
             inputStream.close();
 
             // Tell android about the file
-            Intent intent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-            intent.setData(Uri.fromFile(file));
-            activityWeakReference.get().sendBroadcast(intent);
+//            Intent intent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+//            intent.setData(Uri.fromFile(file));
+//            activityWeakReference.get().sendBroadcast(intent);
 
             return file;
         } catch (DbxException | IOException e) {
