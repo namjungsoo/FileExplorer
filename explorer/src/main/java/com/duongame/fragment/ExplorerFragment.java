@@ -547,16 +547,17 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
     void onClickBookDropbox(final Activity activity, final ExplorerItem item) {
         // 다운로드를 받은후에 로딩함
         DropboxDownloadTask task = new DropboxDownloadTask(activity, DropboxClientFactory.getClient(), new DropboxDownloadTask.Callback() {
+            // task 내부에서 toast를 처리해주므로 주석처리함
             @Override
             public void onDownloadComplete(File result) {
                 item.path = result.getAbsolutePath();
-                ToastHelper.info(activity, R.string.toast_cloud_complete);
+//                ToastHelper.info(activity, R.string.toast_cloud_complete);
                 BookLoader.load(activity, item, false);
             }
 
             @Override
             public void onError(Exception e) {
-                ToastHelper.error(activity, R.string.toast_error);
+//                ToastHelper.error(activity, R.string.toast_error);
             }
         });
         task.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, (FileMetadata)item.metadata);

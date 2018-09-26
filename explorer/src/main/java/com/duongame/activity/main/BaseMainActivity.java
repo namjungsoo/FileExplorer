@@ -177,10 +177,12 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
             adView.resume();
         }
 
-//        JLog.e("Jungsoo", "onResume begin");
-//        onResumeDropbox();
-//        onResumeGoogleDrive();
-//        JLog.e("Jungsoo", "onResume end");
+        if(AppHelper.isComicz(this)) {
+            JLog.e("Jungsoo", "onResume begin");
+            onResumeDropbox();
+            onResumeGoogleDrive();
+            JLog.e("Jungsoo", "onResume end");
+        }
     }
 
     class GoogleDriveLoginTask extends android.os.AsyncTask<Void, Void, Void> {

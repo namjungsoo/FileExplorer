@@ -36,9 +36,7 @@ public class GoogleDriveDownloadTask extends AsyncTask<String, Void, File> {
         String name = params[0];
         String fileId = params[1];
 
-        File path = Environment.getExternalStoragePublicDirectory(
-                Environment.DIRECTORY_DOWNLOADS);
-
+        File path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
         File file = new File(path, name);
 
         // Make sure the Downloads directory exists.

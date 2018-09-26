@@ -40,6 +40,7 @@ public abstract class MultiDialog extends DialogFragment {
         onDismissListener = listener;
     }
 
+    // 확인버튼이 cancel이다. 왜냐면 버튼이 1개 밖에 없기 때문에
     public void setOnPositiveClickListener(DialogInterface.OnClickListener listener) {
         onPositiveClickListener = listener;
     }
