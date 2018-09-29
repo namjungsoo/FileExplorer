@@ -133,6 +133,28 @@ public class FileHelper {
         return 0;
     }
 
+    public static int getFileType(String fileName) {
+        int type = ExplorerItem.FILETYPE_FILE;
+
+        // 이미지
+        if (FileHelper.isImage(fileName))
+            type = ExplorerItem.FILETYPE_IMAGE;
+        else if (getCompressType(fileName) != ExplorerItem.COMPRESSTYPE_OTHER)
+            type = ExplorerItem.FILETYPE_ZIP;
+        else if (fileName.endsWith(".pdf") || fileName.endsWith(".PDF"))
+            type = ExplorerItem.FILETYPE_PDF;
+        else if (fileName.endsWith(".mp4") || fileName.endsWith(".avi") || fileName.endsWith(".3gp") || fileName.endsWith(".mkv") || fileName.endsWith(".mov"))
+            type = ExplorerItem.FILETYPE_VIDEO;
+        else if (fileName.endsWith(".mp3") || fileName.endsWith(".MP3"))
+            type = ExplorerItem.FILETYPE_AUDIO;
+        else if (isText(fileName))
+            type = ExplorerItem.FILETYPE_TEXT;
+        else if (fileName.endsWith(".apk") || fileName.endsWith(".APK"))
+            type = ExplorerItem.FILETYPE_APK;
+
+        return type;
+    }
+
     public static int getFileType(File eachFile) {
         int type = eachFile.isDirectory() ? ExplorerItem.FILETYPE_FOLDER : ExplorerItem.FILETYPE_FILE;
 
@@ -140,28 +162,7 @@ public class FileHelper {
         if (type == ExplorerItem.FILETYPE_FOLDER)
             return type;
 
-        // 이미지
-        if (FileHelper.isImage(eachFile.getName()))
-            type = ExplorerItem.FILETYPE_IMAGE;
-
-            // 압축 파일
-        else if (getCompressType(eachFile.getName()) != ExplorerItem.COMPRESSTYPE_OTHER)
-            type = ExplorerItem.FILETYPE_ZIP;
-        else if (eachFile.getName().endsWith(".pdf") ||
-                eachFile.getName().endsWith(".PDF"))
-            type = ExplorerItem.FILETYPE_PDF;
-        else if (eachFile.getName().endsWith(".mp4") || eachFile.getName().endsWith(".avi") || eachFile.getName().endsWith(".3gp") || eachFile.getName().endsWith(".mkv") || eachFile.getName().endsWith(".mov"))
-            type = ExplorerItem.FILETYPE_VIDEO;
-        else if (eachFile.getName().endsWith(".mp3") ||
-                eachFile.getName().endsWith(".MP3"))
-            type = ExplorerItem.FILETYPE_AUDIO;
-        else if (isText(eachFile.getName()))
-            type = ExplorerItem.FILETYPE_TEXT;
-        else if (eachFile.getName().endsWith(".apk") ||
-                eachFile.getName().endsWith(".APK"))
-            type = ExplorerItem.FILETYPE_APK;
-
-        return type;
+        return getFileType(eachFile.getName());
     }
 
     public static boolean isVideo(String filename) {

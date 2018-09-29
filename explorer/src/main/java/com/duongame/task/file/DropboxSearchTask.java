@@ -20,6 +20,10 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.duongame.adapter.ExplorerItem.FILETYPE_PDF;
+import static com.duongame.adapter.ExplorerItem.FILETYPE_TEXT;
+import static com.duongame.adapter.ExplorerItem.FILETYPE_ZIP;
+
 public class DropboxSearchTask extends AsyncTask<String, Void, FileExplorer.Result> {
     private WeakReference<ExplorerFragment> fragmentWeakReference;
     private String path;
@@ -46,11 +50,18 @@ public class DropboxSearchTask extends AsyncTask<String, Void, FileExplorer.Resu
     }
 
     ExplorerItem createFile(FileMetadata metadata) {
-        int type = ExplorerItem.FILETYPE_FILE;
-
         // 압축파일일 경우 책(ZIP)으로 셋팅함
-        if (FileHelper.getCompressType(metadata.getName()) != ExplorerItem.COMPRESSTYPE_OTHER) {
-            type = ExplorerItem.FILETYPE_ZIP;
+        // 추가적으로 TXT, PDF를 지원
+        int type = FileHelper.getFileType(metadata.getName());
+
+        switch(type) {
+            case FILETYPE_ZIP:
+            case FILETYPE_TEXT:
+            case FILETYPE_PDF:
+                break;
+            default:
+                type = ExplorerItem.FILETYPE_FILE;
+                break;
         }
 
         ExplorerItem item = new ExplorerItem(metadata.getPathDisplay(), metadata.getName(), metadata.getServerModified().toString(), metadata.getSize(), type);

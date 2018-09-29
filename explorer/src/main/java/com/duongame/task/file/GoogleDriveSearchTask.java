@@ -17,6 +17,10 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import static com.duongame.adapter.ExplorerItem.FILETYPE_PDF;
+import static com.duongame.adapter.ExplorerItem.FILETYPE_TEXT;
+import static com.duongame.adapter.ExplorerItem.FILETYPE_ZIP;
+
 public class GoogleDriveSearchTask extends AsyncTask<String, Void, FileExplorer.Result> {
     private WeakReference<ExplorerFragment> fragmentWeakReference;
     private String path;
@@ -135,9 +139,18 @@ public class GoogleDriveSearchTask extends AsyncTask<String, Void, FileExplorer.
                 if (type == ExplorerItem.FILETYPE_FOLDER) {
                     folderList.add(item);
                 } else {
-                    if (FileHelper.getCompressType(item.name) != ExplorerItem.COMPRESSTYPE_OTHER) {
-                        item.type = ExplorerItem.FILETYPE_ZIP;
+                    type = FileHelper.getFileType(item.name);
+
+                    switch(type) {
+                        case FILETYPE_ZIP:
+                        case FILETYPE_TEXT:
+                        case FILETYPE_PDF:
+                            break;
+                        default:
+                            type = ExplorerItem.FILETYPE_FILE;
+                            break;
                     }
+
                     normalList.add(item);
                 }
                 //fileList.add(item);
