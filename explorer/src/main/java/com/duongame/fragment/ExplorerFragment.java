@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
@@ -28,7 +29,6 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.ViewSwitcher;
 
-import com.dropbox.core.v2.files.FileMetadata;
 import com.duongame.AnalyticsApplication;
 import com.duongame.R;
 import com.duongame.activity.main.BaseMainActivity;
@@ -39,7 +39,6 @@ import com.duongame.adapter.ExplorerItem;
 import com.duongame.adapter.ExplorerListAdapter;
 import com.duongame.adapter.ExplorerScrollListener;
 import com.duongame.bitmap.BitmapCacheManager;
-import com.duongame.cloud.dropbox.DropboxClientFactory;
 import com.duongame.db.BookLoader;
 import com.duongame.dialog.SortDialog;
 import com.duongame.file.FileHelper;
@@ -51,6 +50,7 @@ import com.duongame.helper.PreferenceHelper;
 import com.duongame.helper.ToastHelper;
 import com.duongame.manager.PermissionManager;
 import com.duongame.manager.PositionManager;
+import com.duongame.task.download.CloudDownloadTask;
 import com.duongame.task.download.DropboxDownloadTask;
 import com.duongame.task.download.GoogleDriveDownloadTask;
 import com.duongame.task.file.DeleteTask;
@@ -544,43 +544,83 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
         }
     }
 
+    boolean checkDownloadOverwrite(final Activity activity, final ExplorerItem item, final CloudDownloadTask task) {
+        File path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+        File file = new File(path, item.name);
+
+        // 파일이 있으면 팝업을 통해서 확인해야 함
+        if(file.exists()) {
+            AlertHelper.showAlertWithAd(activity,
+                    AppHelper.getAppName(activity),
+                    getString(R.string.msg_overwrite),
+
+                    //positive
+                    new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            // 확인을 눌렀으므로 다운로드하여 덮어씌움
+                            task.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, item);// metadata = fileId
+                            ToastHelper.showToast(activity, String.format(getResources().getString(R.string.toast_cloud_download), item.name));
+
+                            dialogInterface.dismiss();
+                        }
+                    },
+                    //negative
+                    new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            dialogInterface.dismiss();
+                        }
+                    },null);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    void downloadAndOpen(final Activity activity, final ExplorerItem item, final CloudDownloadTask task) {
+        task.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, item);
+        ToastHelper.showToast(activity, String.format(getResources().getString(R.string.toast_cloud_download), item.name));
+    }
+
     void onClickBookDropbox(final Activity activity, final ExplorerItem item) {
         // 다운로드를 받은후에 로딩함
-        DropboxDownloadTask task = new DropboxDownloadTask(activity, DropboxClientFactory.getClient(), new DropboxDownloadTask.Callback() {
+        DropboxDownloadTask task = new DropboxDownloadTask(activity, new CloudDownloadTask.Callback() {
             // task 내부에서 toast를 처리해주므로 주석처리함
             @Override
             public void onDownloadComplete(File result) {
                 item.path = result.getAbsolutePath();
-//                ToastHelper.info(activity, R.string.toast_cloud_complete);
                 BookLoader.load(activity, item, false);
             }
 
             @Override
             public void onError(Exception e) {
-//                ToastHelper.error(activity, R.string.toast_error);
             }
         });
-        task.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, (FileMetadata)item.metadata);
-        ToastHelper.showToast(activity, String.format(getResources().getString(R.string.toast_cloud_download), item.name));
+
+        if(!checkDownloadOverwrite(activity, item, task)) {// overwrite하지 않으면 바로 다운로드
+            downloadAndOpen(activity, item, task);
+        }
     }
 
     void onClickBookGoogleDrive(final Activity activity, final ExplorerItem item) {
         // 다운로드를 받은후에 로딩함
-        GoogleDriveDownloadTask task = new GoogleDriveDownloadTask(activity, new GoogleDriveDownloadTask.Callback() {
+        GoogleDriveDownloadTask task = new GoogleDriveDownloadTask(activity, new CloudDownloadTask.Callback() {
+            // task 내부에서 toast를 처리해주므로 주석처리함
             @Override
             public void onDownloadComplete(File result) {
                 item.path = result.getAbsolutePath();
-                ToastHelper.info(activity, R.string.toast_cloud_complete);
                 BookLoader.load(activity, item, false);
             }
 
             @Override
             public void onError(Exception e) {
-                ToastHelper.error(activity, R.string.toast_error);
             }
         });
-        task.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, item);// metadata = fileId
-        ToastHelper.showToast(activity, String.format(getResources().getString(R.string.toast_cloud_download), item.name));
+
+        if(!checkDownloadOverwrite(activity, item, task)) {// overwrite하지 않으면 바로 다운로드
+            downloadAndOpen(activity, item, task);
+        }
     }
 
     void onClickBook(final ExplorerItem item) {
