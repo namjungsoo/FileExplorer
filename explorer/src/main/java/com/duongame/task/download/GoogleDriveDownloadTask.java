@@ -81,10 +81,5 @@ public class GoogleDriveDownloadTask extends CloudDownloadTask {
         }
 
         return null;
-
-        // Tell android about the file
-//        Intent intent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-//        intent.setData(Uri.fromFile(file));
-//        activityWeakReference.get().sendBroadcast(intent);
     }
 }

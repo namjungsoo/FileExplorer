@@ -79,11 +79,6 @@ public class DropboxDownloadTask extends CloudDownloadTask {
             outputStream.close();
             inputStream.close();
 
-            // Tell android about the file
-//            Intent intent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-//            intent.setData(Uri.fromFile(file));
-//            activityWeakReference.get().sendBroadcast(intent);
-
             return file;
         } catch (DbxException | IOException e) {
             mException = e;
