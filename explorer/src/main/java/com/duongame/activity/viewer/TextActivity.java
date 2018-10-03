@@ -285,9 +285,11 @@ public class TextActivity extends BaseViewerActivity {
 
                 // (2)
                 int nRead;
-                while ((nRead = fileInputStream.read(buf)) > 0 && !detector.isDone()) {
+                nRead = fileInputStream.read(buf);
+                //TODO: FIX: 빠른속도를 위해서 8192b만 읽어서 처리 
+                //while ((nRead = fileInputStream.read(buf)) > 0 && !detector.isDone()) {
                     detector.handleData(buf, 0, nRead);
-                }
+                //}
                 // (3)
                 detector.dataEnd();
 
@@ -310,6 +312,8 @@ public class TextActivity extends BaseViewerActivity {
 
             // 인코딩을 얻는다.
             final String encoding = checkEncoding(path);
+            //TODO: 에러일 경우 EUC-KR로 간주. 이것도 국가별로 변경해야함
+            //final String encoding = "euc-kr";
 
             final File file = new File(path);
             try {
@@ -321,7 +325,7 @@ public class TextActivity extends BaseViewerActivity {
                 if (encoding != null) {
                     reader = new InputStreamReader(fis, encoding);
                 } else {
-                    reader = new InputStreamReader(fis);
+                    reader = new InputStreamReader(fis, "euc-kr");
                 }
 
                 final BufferedReader bufferedReader = new BufferedReader(reader);
