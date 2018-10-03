@@ -597,6 +597,12 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
             super.onDrawerOpened(drawerView);
             JLog.e("Jungsoo", "onDrawerOpened ");
             drawerOpened = true;
+
+            // drawer가 열리면 노말모드로 변환한다.
+            ExplorerFragment explorerFragment = getExplorerFragment();
+            if(explorerFragment != null) {
+                explorerFragment.onNormalMode();
+            }
         }
 
         @Override

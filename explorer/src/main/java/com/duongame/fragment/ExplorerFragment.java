@@ -1202,7 +1202,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
         softRefresh();
     }
 
-    void onNormalMode() {
+    public void onNormalMode() {
         selectMode = false;
         pasteMode = false;
 
