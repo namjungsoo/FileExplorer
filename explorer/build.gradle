@@ -58,11 +58,22 @@ android {
         javaMaxHeapSize "4g"
     }
 
-    flavorDimensions("project", "edition")
+    flavorDimensions("project", "edition", "mode")
 
     productFlavors {
         main {
             dimension "edition"
+        }
+
+        development {
+            dimension "mode"
+            minSdkVersion 21
+            resConfigs ("en", "xxhdpi")
+            aaptOptions.cruncherEnabled = false
+        }
+        production {
+            dimension "mode"
+            minSdkVersion 14
         }
 
         // 1. 코믹제트
