@@ -286,7 +286,7 @@ public class TextActivity extends BaseViewerActivity {
                 // (2)
                 int nRead;
                 nRead = fileInputStream.read(buf);
-                //TODO: FIX: 빠른속도를 위해서 8192b만 읽어서 처리 
+                //TODO: FIX: 빠른속도를 위해서 8192b만 읽어서 처리
                 //while ((nRead = fileInputStream.read(buf)) > 0 && !detector.isDone()) {
                     detector.handleData(buf, 0, nRead);
                 //}

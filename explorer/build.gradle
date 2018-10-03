@@ -47,6 +47,13 @@ android {
             signingConfig signingConfigs.release
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            applicationVariants.all { variant ->
+                variant.outputs.all {
+                    def date = new Date()
+                    def formattedDate = date.format('yyyyMMddHHmmss')
+                    outputFileName = "${variant.name}-${variant.versionName}-${formattedDate}.apk"
+                }
+            }
         }
         debug {
             signingConfig signingConfigs.release
@@ -68,7 +75,7 @@ android {
         development {
             dimension "mode"
             minSdkVersion 21
-            resConfigs ("ko", "xxhdpi")
+            resConfigs("ko", "xxhdpi")
             aaptOptions.cruncherEnabled = false
         }
         production {
@@ -80,8 +87,8 @@ android {
         comicz {
             //admob
             buildConfigField "String", "INTERSTITIAL_ID", "\"ca-app-pub-8174809468024854/1821427640\""
-            buildConfigField "String", "POPUP_ID",        "\"ca-app-pub-8174809468024854/2751365931\""
-            buildConfigField "String", "BANNER_ID",       "\"ca-app-pub-8174809468024854/8003692618\""
+            buildConfigField "String", "POPUP_ID", "\"ca-app-pub-8174809468024854/2751365931\""
+            buildConfigField "String", "BANNER_ID", "\"ca-app-pub-8174809468024854/8003692618\""
             //ga
             buildConfigField "String", "GA_TRACKING_ID", "\"UA-61499807-13\""
             buildConfigField "boolean", "PREVIEW_ZIP", "true"
@@ -96,8 +103,8 @@ android {
         file {
             //admob
             buildConfigField "String", "INTERSTITIAL_ID", "\"ca-app-pub-8174809468024854/9810925855\""
-            buildConfigField "String", "POPUP_ID",        "\"ca-app-pub-8174809468024854/4034665627\""
-            buildConfigField "String", "BANNER_ID",       "\"ca-app-pub-8174809468024854/2530012260\""
+            buildConfigField "String", "POPUP_ID", "\"ca-app-pub-8174809468024854/4034665627\""
+            buildConfigField "String", "BANNER_ID", "\"ca-app-pub-8174809468024854/2530012260\""
             //ga
             buildConfigField "String", "GA_TRACKING_ID", "\"UA-61499807-14\""
             buildConfigField "boolean", "PREVIEW_ZIP", "false"
@@ -178,7 +185,6 @@ dependencies {
     implementation 'com.dropbox.core:dropbox-core-sdk:3.0.7'
     implementation 'com.squareup.okhttp3:okhttp:3.11.0'
     implementation 'com.android.support:multidex:1.0.3'
-
 
     // Google Play services Auth split
     implementation 'com.google.android.gms:play-services-auth:16.0.0'
