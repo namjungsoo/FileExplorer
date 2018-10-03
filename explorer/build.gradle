@@ -18,7 +18,7 @@ android {
         buildConfigField "boolean", "SHOW_AD", "true"
         buildConfigField "boolean", "PREVIEW_ZIP", "false"
         minSdkVersion 14
-        targetSdkVersion 27
+        targetSdkVersion 28
         versionCode 1
         versionName "1.0.0"
     }
@@ -68,7 +68,7 @@ android {
         development {
             dimension "mode"
             minSdkVersion 21
-            resConfigs ("en", "xxhdpi")
+            resConfigs ("ko", "xxhdpi")
             aaptOptions.cruncherEnabled = false
         }
         production {

@@ -1,6 +1,7 @@
 package com.duongame.task.file;
 
 import android.os.AsyncTask;
+import android.view.MenuItem;
 
 import com.dropbox.core.DbxException;
 import com.dropbox.core.v2.DbxClientV2;
@@ -9,12 +10,15 @@ import com.dropbox.core.v2.files.FileMetadata;
 import com.dropbox.core.v2.files.FolderMetadata;
 import com.dropbox.core.v2.files.ListFolderResult;
 import com.dropbox.core.v2.files.Metadata;
+import com.duongame.R;
+import com.duongame.activity.main.BaseMainActivity;
 import com.duongame.adapter.ExplorerItem;
 import com.duongame.cloud.dropbox.DropboxClientFactory;
 import com.duongame.file.FileExplorer;
 import com.duongame.file.FileHelper;
 import com.duongame.fragment.ExplorerFragment;
 import com.duongame.helper.JLog;
+import com.duongame.helper.ToastHelper;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -81,8 +85,8 @@ public class DropboxSearchTask extends AsyncTask<String, Void, FileExplorer.Resu
         if (path.equals("/"))
             path = path.replace("/", "");
 
-        DbxClientV2 client = DropboxClientFactory.getClient();
         try {
+            DbxClientV2 client = DropboxClientFactory.getClient();
             DbxUserFilesRequests requests = client.files();
             ListFolderResult listFolderResult = requests.listFolder(path);
             ArrayList<ExplorerItem> fileList = new ArrayList<>();
@@ -115,6 +119,8 @@ public class DropboxSearchTask extends AsyncTask<String, Void, FileExplorer.Resu
             }
         } catch (DbxException e) {
             JLog.e("Jungsoo", e.getLocalizedMessage());
+        } catch (IllegalStateException e) {
+            JLog.e("Jungsoo", e.getLocalizedMessage());
         }
 
         return null;
@@ -124,11 +130,10 @@ public class DropboxSearchTask extends AsyncTask<String, Void, FileExplorer.Resu
     protected void onPostExecute(FileExplorer.Result result) {
         super.onPostExecute(result);// AsyncTask는 아무것도 안함
 
-        if (isCancelled())
+        if (result == null) {
+            onExit();
             return;
-
-        if (result == null)
-            return;
+        }
 
         ExplorerFragment fragment = fragmentWeakReference.get();
         if (fragment == null)
@@ -143,6 +148,7 @@ public class DropboxSearchTask extends AsyncTask<String, Void, FileExplorer.Resu
         fragment.getAdapter().notifyDataSetChanged();
 
         // 성공했을때 현재 패스를 업데이트
+        // 드롭박스에서만 앞에 /를 붙여준다.
         if (path.length() == 0)
             path = "/";
 
@@ -151,5 +157,26 @@ public class DropboxSearchTask extends AsyncTask<String, Void, FileExplorer.Resu
         fragment.getTextPath().requestLayout();
 
         fragment.setCanClick(true);
+    }
+
+    private void onExit() {
+        ExplorerFragment fragment = fragmentWeakReference.get();
+        if (fragment == null)
+            return;
+
+        // UI 업데이트
+        fragment.updateDropboxUI(false);
+        fragment.setCanClick(true);
+
+        // 에러 메세지
+        ToastHelper.showToast(fragment.getContext(), R.string.toast_error);
+
+        BaseMainActivity activity = (BaseMainActivity) fragment.getActivity();
+        if(activity == null)
+            return;
+
+        // 로그아웃 처리
+        MenuItem item = activity.getGoogleDriveMenuItem();
+        activity.logoutGoogleDrive(item);
     }
 }

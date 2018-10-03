@@ -177,7 +177,7 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
             adView.resume();
         }
 
-        if(AppHelper.isComicz(this)) {
+        if (AppHelper.isComicz(this)) {
             JLog.e("Jungsoo", "onResume begin");
             onResumeDropbox();
             onResumeGoogleDrive();
@@ -611,7 +611,7 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if(drawer != null) {
+        if (drawer != null) {
             ActionBarDrawerToggle toggle = new MyActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
 
             drawer.addDrawerListener(toggle);
@@ -621,7 +621,7 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
         navigationView = (NavigationView) findViewById(R.id.nav_view);
 
         // comicz만 존재한다.
-        if(navigationView != null) {
+        if (navigationView != null) {
             navigationView.setNavigationItemSelectedListener(this);
             navigationView.setItemIconTintList(null);
             grayStateList = navigationView.getItemIconTintList();
@@ -633,7 +633,7 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
     }
 
     public void closeDrawer() {
-        if(drawer != null)
+        if (drawer != null)
             drawer.closeDrawers();
     }
 
@@ -879,7 +879,7 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
         }
     }
 
-    void logoutGoogleDrive(final MenuItem item) {
+    public void logoutGoogleDrive(final MenuItem item) {
 
         // 로그인이 되어 있으면 팝업후에 로그아웃을 하고, account를 null로 만든다.
         AlertHelper.showAlertWithAd(this, AppHelper.getAppName(this),
@@ -911,6 +911,21 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
             logoutGoogleDrive(item);
         }
     }
+
+    public MenuItem getGoogleDriveMenuItem() {
+        if (menu == null)
+            return null;
+        MenuItem item = menu.findItem(R.id.nav_google_drive);
+        return item;
+    }
+
+    public MenuItem getDropboxMenuItem() {
+        if (menu == null)
+            return null;
+        MenuItem item = menu.findItem(R.id.nav_dropbox);
+        return item;
+    }
+
 
     //TODO: 나중에 직접 구현할것
     @SuppressWarnings("StatementWithEmptyBody")

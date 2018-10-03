@@ -1,13 +1,17 @@
 package com.duongame.task.file;
 
 import android.os.AsyncTask;
+import android.view.MenuItem;
 
+import com.duongame.R;
+import com.duongame.activity.main.BaseMainActivity;
 import com.duongame.adapter.ExplorerItem;
 import com.duongame.cloud.googledrive.GoogleDriveManager;
 import com.duongame.file.FileExplorer;
 import com.duongame.file.FileHelper;
 import com.duongame.fragment.ExplorerFragment;
 import com.duongame.helper.JLog;
+import com.duongame.helper.ToastHelper;
 import com.google.api.services.drive.Drive;
 import com.google.api.services.drive.model.File;
 import com.google.api.services.drive.model.FileList;
@@ -175,11 +179,10 @@ public class GoogleDriveSearchTask extends AsyncTask<String, Void, FileExplorer.
     protected void onPostExecute(FileExplorer.Result result) {
         super.onPostExecute(result);// AsyncTask는 아무것도 안함
 
-        if (isCancelled())
+        if (result == null) {
+            onExit();
             return;
-
-        if (result == null)
-            return;
+        }
 
         ExplorerFragment fragment = fragmentWeakReference.get();
         if (fragment == null)
@@ -198,6 +201,27 @@ public class GoogleDriveSearchTask extends AsyncTask<String, Void, FileExplorer.
         fragment.getTextPath().requestLayout();
 
         fragment.setCanClick(true);
+    }
+
+    private void onExit() {
+        ExplorerFragment fragment = fragmentWeakReference.get();
+        if (fragment == null)
+            return;
+
+        // UI 업데이트
+        fragment.updateDropboxUI(false);
+        fragment.setCanClick(true);
+
+        // 에러 메세지
+        ToastHelper.showToast(fragment.getContext(), R.string.toast_error);
+
+        BaseMainActivity activity = (BaseMainActivity) fragment.getActivity();
+        if(activity == null)
+            return;
+
+        // 로그아웃 처리
+        MenuItem item = activity.getGoogleDriveMenuItem();
+        activity.logoutGoogleDrive(item);
     }
 
 }
