@@ -10,7 +10,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:651440203075:android:5a9e6aceedc2dbcb",
         "android_client_info": {
-          "package_name": "com.duongame.comicz"
+          "package_name": "com.duongame.comicz.pro"
         }
       },
       "oauth_client": [
@@ -53,6 +53,69 @@
       "api_key": [
         {
           "current_key": "AIzaSyBOv5ZR_hmM3fyJdmdUcH27Xq85JXkcGBA"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:621037039832:android:6503ff265871d54e",
+        "android_client_info": {
+          "package_name": "com.duongame.file.free"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "621037039832-4slp1tpf17ob5o684urg0a49chrt8sj1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAzG8nLrn-3s2Q0gla8NtbF7YZbzODgDaU"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      },
+      "admob_app_id": "ca-app-pub-5576037828251153~6396287540"
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:621037039832:android:3030c802cbdb808a",
+        "android_client_info": {
+          "package_name": "com.duongame.file.pro"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "621037039832-4slp1tpf17ob5o684urg0a49chrt8sj1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAzG8nLrn-3s2Q0gla8NtbF7YZbzODgDaU"
         }
       ],
       "services": {

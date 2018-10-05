@@ -13,6 +13,9 @@ import com.google.firebase.crash.FirebaseCrash;
 
 import java.util.ArrayList;
 
+// 여기서 말하는 Analytics란 Google Analytics(이하 GA)를 말한다.
+// GA 앱의 구분은 GA_TRACKING_ID로 하며, free/pro의 구분은 없다.
+// FA 앱의 구분은 자동으로 이루어 진다. package name에 의존적이다.
 public class AnalyticsApplication extends MultiDexApplication {
     private Tracker mTracker;
 

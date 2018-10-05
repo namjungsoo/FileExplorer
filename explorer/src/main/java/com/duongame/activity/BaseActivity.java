@@ -8,6 +8,8 @@ import com.crashlytics.android.core.CrashlyticsCore;
 import com.duongame.AnalyticsApplication;
 import com.duongame.BuildConfig;
 import com.duongame.helper.JLog;
+import com.duongame.helper.PreferenceHelper;
+import com.duongame.manager.AdInterstitialManager;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.google.firebase.analytics.FirebaseAnalytics;
@@ -74,6 +76,21 @@ public class BaseActivity extends AppCompatActivity {
         if(mTracker != null) {
             mTracker.setScreenName(this.getClass().getSimpleName());
             mTracker.send(new HitBuilders.ScreenViewBuilder().build());
+        }
+    }
+
+    protected void showInterstitialAd() {
+        if(BuildConfig.SHOW_AD) {
+            final int count = PreferenceHelper.getExitAdCount(this);
+
+            // 2번중에 1번을 띄워준다.
+            if (count % 4 == 1) {// 전면 팝업후 종료 팝업
+                if (!AdInterstitialManager.showAd(this, AdInterstitialManager.MODE_EXIT)) {
+                    // 보여지지 않았다면 insterstitial후 카운트 증가하지 않음
+                    return;
+                }
+            }
+            PreferenceHelper.setExitAdCount(this, count + 1);
         }
     }
 }

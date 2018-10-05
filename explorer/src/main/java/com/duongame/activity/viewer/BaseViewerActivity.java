@@ -23,9 +23,7 @@ import android.widget.TextView;
 import com.duongame.R;
 import com.duongame.activity.BaseActivity;
 import com.duongame.bitmap.BitmapCacheManager;
-import com.duongame.helper.PreferenceHelper;
 import com.duongame.manager.AdBannerManager;
-import com.duongame.manager.AdInterstitialManager;
 import com.google.android.gms.ads.AdView;
 
 /**
@@ -133,19 +131,6 @@ public class BaseViewerActivity extends BaseActivity {
         if (adView != null) {
             adView.resume();
         }
-    }
-
-    void showInterstitialAd() {
-        final int count = PreferenceHelper.getExitAdCount(this);
-
-        // 2번중에 1번을 띄워준다.
-        if (count % 4 == 1) {// 전면 팝업후 종료 팝업
-            if (!AdInterstitialManager.showAd(this, AdInterstitialManager.MODE_EXIT)) {
-                // 보여지지 않았다면 insterstitial후 카운트 증가하지 않음
-                return;
-            }
-        }
-        PreferenceHelper.setExitAdCount(this, count + 1);
     }
 
     private void initActionBar() {

@@ -118,6 +118,7 @@ android {
         // 유료(현재 사용하지 않음)
         pro {
             buildConfigField "boolean", "SHOW_AD", "false"
+            applicationIdSuffix '.pro'
             dimension "edition"
         }
         // 무료
@@ -135,9 +136,9 @@ android {
             variant.setIgnore(true)
         }
         // 프로일 경우에 현재 사용하지 않으므로 무시하라
-        if (variant.getFlavors().get(1).name.equals('pro')) {
-            variant.setIgnore(true)
-        }
+//        if (variant.getFlavors().get(1).name.equals('pro')) {
+//            variant.setIgnore(true)
+//        }
     }
 
     // Android studio 3.1.0 이상

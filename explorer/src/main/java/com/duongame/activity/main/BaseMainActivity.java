@@ -223,7 +223,7 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
 //            }
 //        }).start();
         GoogleDriveLoginTask task = new GoogleDriveLoginTask();
-        task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, null);
+        task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     class DropboxLoginTask extends AsyncTask<Void, Void, Boolean> {
@@ -285,7 +285,7 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
 //            }
 //        }).start();
         DropboxLoginTask task = new DropboxLoginTask();
-        task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, null);
+        task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     void initDropbox(String accessToken) {
@@ -728,19 +728,6 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
         final BaseFragment fragment = getCurrentFragment();
         if (fragment != null)
             fragment.onRefresh();
-    }
-
-    void showInterstitialAd() {
-        final int count = PreferenceHelper.getExitAdCount(this);
-
-        // 2번중에 1번을 띄워준다.
-        if (count % 4 == 1) {// 전면 팝업후 종료 팝업
-            if (!AdInterstitialManager.showAd(this, AdInterstitialManager.MODE_EXIT)) {
-                // 보여지지 않았다면 insterstitial후 카운트 증가하지 않음
-                return;
-            }
-        }
-        PreferenceHelper.setExitAdCount(this, count + 1);
     }
 
     public LinearLayout getBottomUI() {

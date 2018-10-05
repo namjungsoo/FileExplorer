@@ -11,3 +11,4 @@
 *.o
 *.o.d
 *.apk
+output.json
