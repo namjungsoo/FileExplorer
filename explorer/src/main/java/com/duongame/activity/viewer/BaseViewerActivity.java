@@ -1,5 +1,6 @@
 package com.duongame.activity.viewer;
 
+import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
@@ -10,6 +11,7 @@ import android.util.DisplayMetrics;
 import android.view.Display;
 import android.view.KeyCharacterMap;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup;
@@ -17,9 +19,11 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import com.duongame.BuildConfig;
 import com.duongame.R;
 import com.duongame.activity.BaseActivity;
 import com.duongame.bitmap.BitmapCacheManager;
@@ -63,37 +67,37 @@ public class BaseViewerActivity extends BaseActivity {
 
     protected void initContentView() {
         // 여기서 광고를 없애고
-//        if (BuildConfig.SHOW_AD) {
-//            final LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-//            if (inflater == null)
-//                return;
-//            View mainView = inflater.inflate(contentViewResId, null, true);
-//
-//            final RelativeLayout layout = new RelativeLayout(this);
-//            layout.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT));
-//
-//            AdBannerManager.initBannerAd(this, 1);
-//            adView = AdBannerManager.getAdBannerView(1);
-//
-//            // adview layout params
-//            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-//            params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
-//            adView.setLayoutParams(params);
-//            AdBannerManager.requestAd(1);
-//
-//            // mainview layout params
-//            params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
-//            params.addRule(RelativeLayout.ABOVE, adView.getId());
-//            mainView.setLayoutParams(params);
-//
-//            layout.addView(adView);
-//            layout.addView(mainView);
-//
-//            setContentView(layout);
-//
-//        } else {
-        setContentView(contentViewResId);
-//        }
+        if (BuildConfig.SHOW_AD) {
+            final LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            if (inflater == null)
+                return;
+            View mainView = inflater.inflate(contentViewResId, null, true);
+
+            final RelativeLayout layout = new RelativeLayout(this);
+            layout.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT));
+
+            AdBannerManager.initBannerAd(this, 1);
+            adView = AdBannerManager.getAdBannerView(1);
+
+            // adview layout params
+            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+            params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+            adView.setLayoutParams(params);
+            AdBannerManager.requestAd(1);
+
+            // mainview layout params
+            params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
+            params.addRule(RelativeLayout.ABOVE, adView.getId());
+            mainView.setLayoutParams(params);
+
+            layout.addView(adView);
+            layout.addView(mainView);
+
+            setContentView(layout);
+
+        } else {
+            setContentView(contentViewResId);
+        }
     }
 
     @Override
@@ -175,12 +179,14 @@ public class BaseViewerActivity extends BaseActivity {
         seekPage = findViewById(R.id.seek_page);
 
         //ADVIEW
-        AdBannerManager.initBannerAd(this, 1);
-        adView = AdBannerManager.getAdBannerView(1);
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        adView.setLayoutParams(params);
-        AdBannerManager.requestAd(1);
-        bottomPanel.addView(adView);
+        if (BuildConfig.SHOW_AD) {
+            AdBannerManager.initBannerAd(this, 1);
+            adView = AdBannerManager.getAdBannerView(1);
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+            adView.setLayoutParams(params);
+            AdBannerManager.requestAd(1);
+            bottomPanel.addView(adView);
+        }
 
         seekPage.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
