@@ -42,7 +42,7 @@ public class ReviewManager {
                                 context.startActivity(marketLaunch);
 
                                 PreferenceHelper.setReviewed(context, true);
-                            } catch(ActivityNotFoundException e) {// FIX: ActivityNotFoundException
+                            } catch (ActivityNotFoundException e) {// FIX: ActivityNotFoundException
                                 final Intent marketLaunch = new Intent(Intent.ACTION_VIEW);
                                 final String packageName = context.getApplicationContext().getPackageName();
 
@@ -65,7 +65,7 @@ public class ReviewManager {
                         }
                     };
 
-                    if(BuildConfig.SHOW_AD) {
+                    if (BuildConfig.SHOW_AD) {
                         AlertHelper.showAlertWithAd(context,
                                 title,
                                 content,
@@ -73,7 +73,6 @@ public class ReviewManager {
                                 negativeListener,
                                 null);
                         AdBannerManager.initPopupAd(context);// 항상 초기화 해주어야 함
-
                     } else {
                         AlertHelper.showAlert(context,
                                 title,

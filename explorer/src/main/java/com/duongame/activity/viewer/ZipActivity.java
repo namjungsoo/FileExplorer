@@ -10,6 +10,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.ViewSwitcher;
 
+import com.duongame.BuildConfig;
 import com.duongame.R;
 import com.duongame.adapter.ExplorerItem;
 import com.duongame.adapter.PhotoPagerAdapter;
@@ -201,13 +202,32 @@ public class ZipActivity extends PagerActivity {
             // zip 파일을 로딩한다.
             final ArrayList<ExplorerItem> imageList = zipLoader.load(this, path, listener, extractFileCount, side, false);
             if (imageList == null || imageList.size() <= 0) {
-                AlertHelper.showAlertWithAd(this, getString(R.string.comicz_name_free), getString(R.string.msg_no_image_in_zip), new DialogInterface.OnClickListener() {
+                final String title = getString(R.string.comicz_name_free);
+                final String content = getString(R.string.msg_no_image_in_zip);
+                final DialogInterface.OnClickListener positiveListener = new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         finish();
                     }
-                }, null, true);
-                AdBannerManager.initPopupAd(this);// 항상 초기화 해주어야 함
+                };
+
+                if (BuildConfig.SHOW_AD) {
+                    AlertHelper.showAlertWithAd(this,
+                            title,
+                            content,
+                            positiveListener,
+                            null,
+                            true);
+                    AdBannerManager.initPopupAd(this);// 항상 초기화 해주어야 함
+                } else {
+                    AlertHelper.showAlert(this,
+                            title,
+                            content,
+                            null,
+                            positiveListener,
+                            null,
+                            true);
+                }
                 return;
             }
 

@@ -30,6 +30,7 @@ import android.widget.TextView;
 import android.widget.ViewSwitcher;
 
 import com.duongame.AnalyticsApplication;
+import com.duongame.BuildConfig;
 import com.duongame.R;
 import com.duongame.activity.main.BaseMainActivity;
 import com.duongame.activity.viewer.PhotoActivity;
@@ -48,6 +49,7 @@ import com.duongame.helper.ExtSdCardHelper;
 import com.duongame.helper.JLog;
 import com.duongame.helper.PreferenceHelper;
 import com.duongame.helper.ToastHelper;
+import com.duongame.manager.AdBannerManager;
 import com.duongame.manager.PermissionManager;
 import com.duongame.manager.PositionManager;
 import com.duongame.task.download.CloudDownloadTask;
@@ -178,9 +180,9 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
         this.canClick = canClick;
 
         BaseMainActivity activity = (BaseMainActivity) getActivity();
-        if(activity != null) {
+        if (activity != null) {
             ProgressBar progressBar = activity.getProgressBarLoading();
-            if(progressBar != null) {
+            if (progressBar != null) {
                 progressBar.setVisibility(canClick ? View.GONE : View.VISIBLE);
             }
         }
@@ -366,7 +368,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
     }
 
     public void updateDropboxUI(boolean show) {
-        JLog.e("Jungsoo", "updateDropboxUI "+show);
+        JLog.e("Jungsoo", "updateDropboxUI " + show);
         if (dropbox == null) {
             backupDropbox = show;
             return;
@@ -386,7 +388,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
     }
 
     public void updateGoogleDriveUI(boolean show) {
-        JLog.e("Jungsoo", "updateGoogleDriveUI "+show);
+        JLog.e("Jungsoo", "updateGoogleDriveUI " + show);
         if (googleDrive == null) {
             backupGoogleDrive = show;
             return;
@@ -549,29 +551,47 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
         File file = new File(path, item.name);
 
         // 파일이 있으면 팝업을 통해서 확인해야 함
-        if(file.exists()) {
-            AlertHelper.showAlertWithAd(activity,
-                    AppHelper.getAppName(activity),
-                    getString(R.string.msg_overwrite),
+        if (file.exists()) {
+            final String title = AppHelper.getAppName(activity);
+            final String content = getString(R.string.msg_overwrite);
+            final DialogInterface.OnClickListener positiveListener = new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    // 확인을 눌렀으므로 다운로드하여 덮어씌움
+                    task.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, item);// metadata = fileId
+                    ToastHelper.showToast(activity, String.format(getResources().getString(R.string.toast_cloud_download), item.name));
 
-                    //positive
-                    new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            // 확인을 눌렀으므로 다운로드하여 덮어씌움
-                            task.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, item);// metadata = fileId
-                            ToastHelper.showToast(activity, String.format(getResources().getString(R.string.toast_cloud_download), item.name));
+                    dialogInterface.dismiss();
+                }
+            };
+            final DialogInterface.OnClickListener negativeListener = new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    dialogInterface.dismiss();
+                }
+            };
 
-                            dialogInterface.dismiss();
-                        }
-                    },
-                    //negative
-                    new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            dialogInterface.dismiss();
-                        }
-                    },null);
+            if (BuildConfig.SHOW_AD) {
+                AlertHelper.showAlertWithAd(activity,
+                        title,
+                        content,
+                        //positive
+                        positiveListener,
+                        //negative
+                        negativeListener,
+                        null);
+                AdBannerManager.initPopupAd(activity);// 항상 초기화 해주어야 함
+            } else {
+                AlertHelper.showAlert(activity,
+                        title,
+                        content,
+                        null,
+                        //positive
+                        positiveListener,
+                        //negative
+                        negativeListener,
+                        null);
+            }
             return true;
         } else {
             return false;
@@ -598,7 +618,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
             }
         });
 
-        if(!checkDownloadOverwrite(activity, item, task)) {// overwrite하지 않으면 바로 다운로드
+        if (!checkDownloadOverwrite(activity, item, task)) {// overwrite하지 않으면 바로 다운로드
             downloadAndOpen(activity, item, task);
         }
     }
@@ -618,7 +638,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
             }
         });
 
-        if(!checkDownloadOverwrite(activity, item, task)) {// overwrite하지 않으면 바로 다운로드
+        if (!checkDownloadOverwrite(activity, item, task)) {// overwrite하지 않으면 바로 다운로드
             downloadAndOpen(activity, item, task);
         }
     }
@@ -628,11 +648,11 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
         if (activity == null)
             return;
 
-        if(cloud == CLOUD_LOCAL) {
+        if (cloud == CLOUD_LOCAL) {
             BookLoader.load(activity, item, false);
-        } else if(cloud == CLOUD_DROPBOX) {
+        } else if (cloud == CLOUD_DROPBOX) {
             onClickBookDropbox(activity, item);
-        } else if(cloud == CLOUD_GOOGLEDRIVE) {
+        } else if (cloud == CLOUD_GOOGLEDRIVE) {
             onClickBookGoogleDrive(activity, item);
         }
     }
@@ -1006,10 +1026,10 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
 
         // 외장 패스인지 체크하여
         boolean isExtSdCard = false;
-        if(extSdCard != null && path.startsWith(extSdCard))
+        if (extSdCard != null && path.startsWith(extSdCard))
             isExtSdCard = true;
 
-        if(isExtSdCard) {
+        if (isExtSdCard) {
             storageIndicator.setTargetView(sdcard);
         } else {
             storageIndicator.setTargetView(home);

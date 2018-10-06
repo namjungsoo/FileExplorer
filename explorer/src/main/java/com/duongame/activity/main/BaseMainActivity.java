@@ -443,15 +443,30 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
         }
 
         if (id == R.id.action_license) {
-            AlertHelper.showAlertWithAd(this,
-                    AppHelper.getAppName(this),
-                    "Icon license: designed by Smashicons from Flaticon",
-                    new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            dialogInterface.dismiss();
-                        }
-                    }, null, true);
+            if (BuildConfig.SHOW_AD) {
+                AlertHelper.showAlertWithAd(this,
+                        AppHelper.getAppName(this),
+                        "Icon license: designed by Smashicons from Flaticon",
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                dialogInterface.dismiss();
+                            }
+                        }, null, true);
+                AdBannerManager.initPopupAd(this);// 항상 초기화 해주어야 함
+            } else {
+                AlertHelper.showAlert(this,
+                        AppHelper.getAppName(this),
+                        "Icon license: designed by Smashicons from Flaticon",
+                        null,
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                dialogInterface.dismiss();
+                            }
+                        }, null, true);
+
+            }
             return true;
         }
 
@@ -600,7 +615,7 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
 
             // drawer가 열리면 노말모드로 변환한다.
             ExplorerFragment explorerFragment = getExplorerFragment();
-            if(explorerFragment != null) {
+            if (explorerFragment != null) {
                 explorerFragment.onNormalMode();
             }
         }
@@ -837,22 +852,37 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
 
     void logoutDropbox(final MenuItem item) {
         // 로그인이 되어 있으면 팝업후에 로그아웃을 하고, account를 null로 만든다.
-        AlertHelper.showAlertWithAd(this, AppHelper.getAppName(this),
-                String.format(getString(R.string.msg_cloud_logout), getString(R.string.dropbox)),
-                new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        item.setTitle(getString(R.string.dropbox));
-                        item.setChecked(false);
-                        PreferenceHelper.setAccountDropbox(BaseMainActivity.this, null);
-                        // 로그아웃후에는 explorer에서 toolbar에서 dropbox image button을 삭제해야 한다.
-                        // 그리고 갈곳이 없으니 home으로 간다.
-                        getExplorerFragment().updateDropboxUI(false);
-                    }
-                },
-                null,
-                false);
+        final String title = AppHelper.getAppName(this);
+        final String content = String.format(getString(R.string.msg_cloud_logout), getString(R.string.dropbox));
+        final DialogInterface.OnClickListener positiveListener = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                item.setTitle(getString(R.string.dropbox));
+                item.setChecked(false);
+                PreferenceHelper.setAccountDropbox(BaseMainActivity.this, null);
+                // 로그아웃후에는 explorer에서 toolbar에서 dropbox image button을 삭제해야 한다.
+                // 그리고 갈곳이 없으니 home으로 간다.
+                getExplorerFragment().updateDropboxUI(false);
+            }
+        };
 
+        if (BuildConfig.SHOW_AD) {
+            AlertHelper.showAlertWithAd(this,
+                    title,
+                    content,
+                    positiveListener,
+                    null,
+                    false);
+            AdBannerManager.initPopupAd(this);// 항상 초기화 해주어야 함
+        } else {
+            AlertHelper.showAlert(this,
+                    title,
+                    content,
+                    null,
+                    positiveListener,
+                    null,
+                    false);
+        }
     }
 
     // 드롭박스 클릭시
@@ -873,26 +903,40 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
     }
 
     public void logoutGoogleDrive(final MenuItem item) {
-
         // 로그인이 되어 있으면 팝업후에 로그아웃을 하고, account를 null로 만든다.
-        AlertHelper.showAlertWithAd(this, AppHelper.getAppName(this),
-                String.format(getString(R.string.msg_cloud_logout), getString(R.string.google_drive)),
-                new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        item.setTitle(getString(R.string.google_drive));
-                        item.setChecked(false);
-                        // 로그인이 되어 있으면 팝업후에 로그아웃을 하고, account를 null로 만든다.
-                        PreferenceHelper.setAccountGoogleDrive(BaseMainActivity.this, null);
+        final String title = AppHelper.getAppName(this);
+        final String content = String.format(getString(R.string.msg_cloud_logout), getString(R.string.google_drive));
+        final DialogInterface.OnClickListener positiveListener = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                item.setTitle(getString(R.string.google_drive));
+                item.setChecked(false);
+                // 로그인이 되어 있으면 팝업후에 로그아웃을 하고, account를 null로 만든다.
+                PreferenceHelper.setAccountGoogleDrive(BaseMainActivity.this, null);
 
-                        // 로그아웃후에는 explorer에서 toolbar에서 dropbox image button을 삭제해야 한다.
-                        // 그리고 갈곳이 없으니 home으로 간다.
-                        getExplorerFragment().updateGoogleDriveUI(false);
-                    }
-                },
-                null,
-                false);
+                // 로그아웃후에는 explorer에서 toolbar에서 dropbox image button을 삭제해야 한다.
+                // 그리고 갈곳이 없으니 home으로 간다.
+                getExplorerFragment().updateGoogleDriveUI(false);
+            }
+        };
 
+        if (BuildConfig.SHOW_AD) {
+            AlertHelper.showAlertWithAd(this,
+                    title,
+                    content,
+                    positiveListener,
+                    null,
+                    false);
+            AdBannerManager.initPopupAd(this);// 항상 초기화 해주어야 함
+        } else {
+            AlertHelper.showAlert(this,
+                    title,
+                    content,
+                    null,
+                    positiveListener,
+                    null,
+                    false);
+        }
     }
 
     // 구글 드라이브 클릭시
