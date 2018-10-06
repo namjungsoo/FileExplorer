@@ -112,7 +112,7 @@ android {
             dimension "project"
             versionCode 22
             versionName "1.2.0"
-            addManifestPlaceholders([APP_NAME: "@string/file_name_free"])
+            addManifestPlaceholders([APP_NAME: "@string/file_name_pro"])
         }
 
         // 유료(현재 사용하지 않음)
