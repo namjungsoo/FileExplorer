@@ -68,10 +68,6 @@ android {
     flavorDimensions("project", "edition", "mode")
 
     productFlavors {
-        main {
-            dimension "edition"
-        }
-
         development {
             dimension "mode"
             minSdkVersion 21
@@ -96,7 +92,7 @@ android {
             dimension "project"
             versionCode 42
             versionName "1.4.0"
-            addManifestPlaceholders([APP_NAME: "@string/comicz_name_free"])
+            addManifestPlaceholders([APP_NAME: "@string/comicz_name_pro"])
         }
 
         // 2. 파일탐색기
@@ -127,18 +123,6 @@ android {
             applicationIdSuffix '.free'
             dimension "edition"
         }
-    }
-
-    // Android Studio 3.1에서 주석처리함
-    variantFilter { variant ->
-        // 메인일 경우에 현재 사용하지 않으므로 무시하라
-        if (variant.getFlavors().get(1).name.equals('main')) {
-            variant.setIgnore(true)
-        }
-        // 프로일 경우에 현재 사용하지 않으므로 무시하라
-//        if (variant.getFlavors().get(1).name.equals('pro')) {
-//            variant.setIgnore(true)
-//        }
     }
 
     // Android studio 3.1.0 이상

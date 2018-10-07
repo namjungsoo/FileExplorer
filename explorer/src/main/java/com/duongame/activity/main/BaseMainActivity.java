@@ -300,7 +300,14 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
                 String email = result.getEmail();
                 String name = result.getName().getDisplayName();
 
-                MenuItem dropboxItem = navigationView.getMenu().findItem(R.id.nav_dropbox);
+                if (navigationView == null)
+                    return;
+
+                Menu menu = navigationView.getMenu();
+                if(menu == null)
+                    return;
+
+                MenuItem dropboxItem = menu.findItem(R.id.nav_dropbox);
                 if (dropboxItem != null) {
                     // 로그인이 되었으므로 타이틀을 바꿔준다.
                     dropboxItem.setTitle(email);
@@ -1000,18 +1007,26 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        GoogleDriveManager.onActivityResult(requestCode, resultCode, data);
-
-        // 구글이 정확하게 로그인 되었는지는 selected account name을 보면됨
-        // android.permission.GET_ACCOUNTS가 없으면 null이 리턴됨
-        String accountName = GoogleDriveManager.getCredential().getSelectedAccountName();
-        loadGoogleDrive(accountName);
+        if (GoogleDriveManager.onActivityResult(requestCode, resultCode, data)) {
+            // 구글이 정확하게 로그인 되었는지는 selected account name을 보면됨
+            // android.permission.GET_ACCOUNTS가 없으면 null이 리턴됨
+            String accountName = GoogleDriveManager.getCredential().getSelectedAccountName();
+            loadGoogleDrive(accountName);
+        }
     }
 
     void loadGoogleDrive(String accountName) {
         JLog.e("Jungsoo", "loadGoogleDrive");
+
         // 로그인이 성공했다고 봄
-        MenuItem googleDriveItem = navigationView.getMenu().findItem(R.id.nav_google_drive);
+        if (navigationView == null)
+            return;
+
+        Menu menu = navigationView.getMenu();
+        if (menu == null)
+            return;
+
+        MenuItem googleDriveItem = menu.findItem(R.id.nav_google_drive);
         if (accountName != null && accountName.length() > 0) {
             if (googleDriveItem != null) {
                 googleDriveItem.setChecked(true);
@@ -1025,5 +1040,4 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
             getExplorerFragment().updateGoogleDriveUI(false);
         }
     }
-
 }

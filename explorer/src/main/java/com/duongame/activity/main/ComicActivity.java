@@ -31,8 +31,8 @@ public class ComicActivity extends BaseMainActivity {
 
     @Override
     protected int getLayoutResId() {
-        return R.layout.activity_main_comic;
-        //return R.layout.activity_comic;
+        //return R.layout.activity_main_comic;
+        return R.layout.activity_comic;// navigation drawer 없는 버전 = cloud 지원 안하는 버전
     }
 
     @Override

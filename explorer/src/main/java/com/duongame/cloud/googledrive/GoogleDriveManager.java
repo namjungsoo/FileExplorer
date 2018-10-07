@@ -42,17 +42,19 @@ public class GoogleDriveManager {
         context.startActivityForResult(m_credential.newChooseAccountIntent(), REQUEST_ACCOUNT_PICKER);
     }
 
-    public static void onActivityResult(int requestCode, int resultCode, Intent data) {
+    public static boolean onActivityResult(int requestCode, int resultCode, Intent data) {
         if ((requestCode == REQUEST_ACCOUNT_PICKER || requestCode == REQUEST_CODE_RESOLUTION)) {
             if (resultCode == Activity.RESULT_OK) {
                 if (data != null && data.getExtras() != null) {
                     String accountName = data.getExtras().getString(AccountManager.KEY_ACCOUNT_NAME);
                     if (accountName != null) {
                         m_credential.setSelectedAccountName(accountName);
+                        return true;
                     }
                 }
             }
         }
+        return false;
     }
 
     public static GoogleAccountCredential getCredential() {
