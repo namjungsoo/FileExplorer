@@ -1,65 +1,27 @@
-apply plugin: 'com.android.library'
+// Top-level build file where you can add configuration options common to all sub-projects/modules.
 
-android {
-    compileSdkVersion 27
-
-    //NDK
-//    publishNonDefault true
-
-
-    defaultConfig {
-        minSdkVersion 14
-        targetSdkVersion 27
-        versionCode 1
-        versionName "1.0"
-
-        //NDK
-//        ndk {
-//            abiFilters 'armeabi', 'armeabi-v7a', 'arm64-v8a', 'x86'
-//        }
-//        externalNativeBuild {
-//            cmake {
-//                arguments '-DANDROID_PLATFORM=android-18'
-//            }
-//        }
+buildscript {
+    
+    repositories {
+        google()
+        jcenter()
     }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:3.2.0'
+        
 
-    sourceSets {
-        main {
-            // eclipse의 폴더명과 동일하게 사용함
-            jniLibs.srcDirs = ["src/main/libs"]
-
-            // android studio가 직접 컴파일하지 않게 함
-            jni.srcDirs = []
-        }
+        // NOTE: Do not place your application dependencies here; they belong
+        // in the individual module build.gradle files
     }
-
-
-    buildTypes {
-        //NDK
-//        debug {
-//            externalNativeBuild {
-//                cmake {
-//                    cFlags.add('-DNATIVE_LOG')
-//                }
-//            }
-//        }
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-        }
-    }
-    //NDK
-//    externalNativeBuild {
-//        cmake {
-//            path 'src/main/cpp/CMakeLists.txt'
-//        }
-//    }
-
 }
 
-dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
+allprojects {
+    repositories {
+        google()
+        jcenter()
+    }
+}
 
-    implementation 'com.android.support:appcompat-v7:27.1.1'
+task clean(type: Delete) {
+    delete rootProject.buildDir
 }
