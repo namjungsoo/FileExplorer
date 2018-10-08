@@ -9,7 +9,9 @@ android {
         versionCode 1
         versionName "1.0"
 
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        //AAR
+        archivesBaseName = "libunrar"
+        version = android.defaultConfig.versionName
     }
 
     sourceSets {
@@ -26,6 +28,15 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    libraryVariants.all { variant ->
+        variant.outputs.all { output ->
+            if (outputFile != null && outputFileName.endsWith('.aar')) {
+                //AAR
+                outputFileName = "${archivesBaseName}-${version}-${variant.buildType.name}.aar"
+            }
         }
     }
 }
