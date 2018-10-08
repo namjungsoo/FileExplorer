@@ -90,8 +90,8 @@ android {
             buildConfigField "boolean", "PREVIEW_ZIP", "true"
             applicationIdSuffix '.comicz'
             dimension "project"
-            versionCode 42
-            versionName "1.4.0"
+            versionCode 43
+            versionName "1.4.1"
             addManifestPlaceholders([APP_NAME: "@string/comicz_name_pro"])
         }
 
@@ -136,10 +136,10 @@ android {
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-//    implementation project(path: ':lib7z')
-//    implementation project(path: ':unrar-android')
-    implementation files('libs/lib7z-debug.aar')
-    implementation files('libs/unrar-android-debug.aar')
+    implementation project(path: ':lib7z')
+    implementation project(path: ':unrar-android')
+//    implementation files('libs/lib7z-debug.aar')
+//    implementation files('libs/unrar-android-debug.aar')
 
     //android
     implementation 'com.android.support:appcompat-v7:27.1.1'
