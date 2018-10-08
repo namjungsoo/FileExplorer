@@ -9,6 +9,7 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        addManifestPlaceholders([APP_NAME: "@string/comicz_name_pro"])
     }
     buildTypes {
         release {
@@ -16,17 +17,19 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-
     sourceSets {
         main {
             java.srcDirs += "../../Explorer/src/main/java"
             java.srcDirs += "../../Explorer/src/comicz/java"
             res.srcDirs += "../../Explorer/src/main/res"
             res.srcDirs += "../../Explorer/src/comicz/res"
-            manifest.srcFile "../../Explorer/src/comicz/AndroidManifest.xml"
+
+            // 상위폴더로 들어가는 상대 path의 manifest는 지원하지 않는 듯
+            // 무조건 src 이하에 있어야 하는 듯
+            //manifest.srcFile "../../Explorer/src/comicz/AndroidManifest.xml"
+            manifest.srcFile "src/main/AndroidManifest.xml"
         }
     }
-
 }
 
 dependencies {
