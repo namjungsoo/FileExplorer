@@ -40,19 +40,23 @@ public class ShortcutHelper {
         intent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, shortcutIntent);
 
         int resId = 0;
-        if (BuildConfig.FLAVOR_project.equals("comicz")) {
-            if (BuildConfig.SHOW_AD) {
-                resId = R.string.comicz_name_free;
-            } else {
-                resId = R.string.comicz_name_pro;
-            }
-        } else if (BuildConfig.FLAVOR_project.equals("file")) {
-            if (BuildConfig.SHOW_AD) {
-                resId = R.string.file_name_free;
-            } else {
-                resId = R.string.file_name_pro;
-            }
-        }
+
+        // 현재 사용안함
+        // 추후 package name을 사용한 것으로 교체하여야 함
+        // context.getApplicationContext().getPackageName();
+//        if (BuildConfig.FLAVOR_project.equals("comicz")) {
+//            if (BuildConfig.SHOW_AD) {
+//                resId = R.string.comicz_name_free;
+//            } else {
+//                resId = R.string.comicz_name_pro;
+//            }
+//        } else if (BuildConfig.FLAVOR_project.equals("file")) {
+//            if (BuildConfig.SHOW_AD) {
+//                resId = R.string.file_name_free;
+//            } else {
+//                resId = R.string.file_name_pro;
+//            }
+//        }
 
         intent.putExtra(Intent.EXTRA_SHORTCUT_NAME, context.getResources().getString(resId));
         intent.putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE, iconResource);

@@ -3,17 +3,68 @@ apply plugin: 'com.android.application'
 android {
     compileSdkVersion 28
     defaultConfig {
+        multiDexEnabled true
         applicationId "com.duongame.file"
+        
         minSdkVersion 15
         targetSdkVersion 28
-        versionCode 1
-        versionName "1.0"
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+        //admob
+        buildConfigField "String", "INTERSTITIAL_ID", "\"ca-app-pub-8174809468024854/9810925855\""
+        buildConfigField "String", "POPUP_ID", "\"ca-app-pub-8174809468024854/4034665627\""
+        buildConfigField "String", "BANNER_ID", "\"ca-app-pub-8174809468024854/2530012260\""
+        //ga
+        buildConfigField "String", "GA_TRACKING_ID", "\"UA-61499807-14\""
+        buildConfigField "boolean", "PREVIEW_ZIP", "false"
+
+        versionCode 22
+        versionName "1.2.0"
+    }
+    signingConfigs {
+        release {
+            storeFile file("../../fileexplorer.jks")
+            storePassword "love77"
+            keyAlias "comicz"
+            keyPassword "love77"
+        }
     }
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
+        }
+        debug {
+            signingConfig signingConfigs.release
+        }
+    }
+    dexOptions {
+        jumboMode true
+        javaMaxHeapSize "4g"
+    }
+    flavorDimensions("edition", "mode")
+    productFlavors {
+        development {
+            dimension "mode"
+            minSdkVersion 21
+            resConfigs("ko", "xxhdpi")
+            aaptOptions.cruncherEnabled = false
+        }
+        production {
+            dimension "mode"
+            minSdkVersion 15
+        }
+        pro {
+            buildConfigField "boolean", "SHOW_AD", "false"
+            dimension "edition"
+            applicationIdSuffix '.pro'
+            addManifestPlaceholders([APP_NAME: "@string/file_name_pro"])
+        }
+        free {
+            buildConfigField "boolean", "SHOW_AD", "true"
+            applicationIdSuffix '.free'
+            dimension "edition"
+            addManifestPlaceholders([APP_NAME: "@string/file_name_free"])
         }
     }
     sourceSets {
@@ -21,19 +72,20 @@ android {
         main.java.srcDirs += "../../Explorer/src/file/java"
         main.res.srcDirs += "../../Explorer/src/main/res"
         main.res.srcDirs += "../../Explorer/src/file/res"
+
+        // 상위폴더로 들어가는 상대 path의 manifest는 지원하지 않는 듯
+        // 무조건 src 이하에 있어야 하는 듯
+        //manifest.srcFile "../../Explorer/src/comicz/AndroidManifest.xml"
+        //manifest.srcFile "src/main/AndroidManifest.xml"
     }
 }
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     //implementation 'com.android.support:appcompat-v7:28.0.0'
-    implementation 'com.android.support.constraint:constraint-layout:1.1.3'
-    testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'com.android.support.test:runner:1.0.2'
-    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+    implementation files('../../libs/lib7z-1.0-release.aar')
+    implementation files('../../libs/libunrar-1.0-release.aar')
 
-
-    
     
     //android
     implementation 'com.android.support:appcompat-v7:27.1.1'
