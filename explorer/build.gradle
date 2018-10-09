@@ -136,10 +136,10 @@ android {
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    implementation project(path: ':lib7z')
-    implementation project(path: ':unrar-android')
-//    implementation files('libs/lib7z-debug.aar')
-//    implementation files('libs/unrar-android-debug.aar')
+//    implementation project(path: ':lib7z')
+//    implementation project(path: ':unrar-android')
+    implementation files('../libs/lib7z-1.0-release.aar')
+    implementation files('../libs/libunrar-1.0-release.aar')
 
     //android
     implementation 'com.android.support:appcompat-v7:27.1.1'
