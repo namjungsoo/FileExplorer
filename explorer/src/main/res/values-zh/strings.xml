@@ -76,8 +76,9 @@
     <string name="toast_file_zip">这些文件已被压缩。</string>
     <string name="toast_new_version">新版本已经发布。</string>
 
-    <string name="cloud_storage">Cloud Storage</string>
-    <string name="msg_cloud_logout">Do you want to logout from %s?</string>
-    <string name="toast_cloud_download">Downloading %s&#8230;</string>
-    <string name="toast_cloud_complete">File download is complete.</string>
+    <string name="cloud_storage">云储存</string>
+    <string name="msg_cloud_logout">你想从%s退出吗？</string>
+    <string name="msg_cloud_download">正在下载所选文件。</string>
+    <string name="toast_cloud_download">正在下载 %s&#8230;</string>
+    <string name="toast_cloud_complete">文件下载完成。</string>
 </resources>

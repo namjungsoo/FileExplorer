@@ -76,8 +76,9 @@
     <string name="toast_file_zip">تم ضغط الملفات.</string>
     <string name="toast_new_version">تم إصدار إصدار جديد.</string>
 
-    <string name="cloud_storage">Cloud Storage</string>
-    <string name="msg_cloud_logout">Do you want to logout from %s?</string>
-    <string name="toast_cloud_download">Downloading %s&#8230;</string>
-    <string name="toast_cloud_complete">File download is complete.</string>
+    <string name="cloud_storage">التخزين السحابي</string>
+    <string name="msg_cloud_logout">هل تريد تسجيل الخروج من ٪s؟</string>
+    <string name="msg_cloud_download">يتم تنزيل الملف المحدد.</string>
+    <string name="toast_cloud_download">جارٍ تنزيل ٪s&#8230;</string>
+    <string name="toast_cloud_complete">اكتمل تنزيل الملف.</string>
 </resources>

@@ -76,8 +76,9 @@
     <string name="toast_file_zip">Файлы были заархивированы.</string>
     <string name="toast_new_version">Вышла новая версия.</string>
 
-    <string name="cloud_storage">Cloud Storage</string>
-    <string name="msg_cloud_logout">Do you want to logout from %s?</string>
-    <string name="toast_cloud_download">Downloading %s&#8230;</string>
-    <string name="toast_cloud_complete">File download is complete.</string>
+    <string name="cloud_storage">Облачное хранилище</string>
+    <string name="msg_cloud_logout">Вы хотите выйти из %s?</string>
+    <string name="msg_cloud_download">Выбранный файл загружается.</string>
+    <string name="toast_cloud_download">Загрузка %s&#8230;</string>
+    <string name="toast_cloud_complete">Загрузка файла завершена.</string>
 </resources>

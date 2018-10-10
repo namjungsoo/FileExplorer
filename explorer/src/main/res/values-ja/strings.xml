@@ -76,8 +76,9 @@
     <string name="toast_file_zip">ファイルは圧縮されています。</string>
     <string name="toast_new_version">新しいバージョンがリリースされました。</string>
 
-    <string name="cloud_storage">Cloud Storage</string>
-    <string name="msg_cloud_logout">Do you want to logout from %s?</string>
-    <string name="toast_cloud_download">Downloading %s&#8230;</string>
-    <string name="toast_cloud_complete">File download is complete.</string>
+    <string name="cloud_storage">クラウドストレージ</string>
+    <string name="msg_cloud_logout">%sからログアウトしますか？</string>
+    <string name="msg_cloud_download">選択したファイルがダウンロードされています。</string>
+    <string name="toast_cloud_download">%sをダウンロード中&#8230;</string>
+    <string name="toast_cloud_complete">ファイルのダウンロードが完了しました。</string>
 </resources>

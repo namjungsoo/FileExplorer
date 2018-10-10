@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="navigation_drawer_open">Open navigation drawer</string>
-    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="navigation_drawer_open" translatable="false">Open navigation drawer</string>
+    <string name="navigation_drawer_close" translatable="false">Close navigation drawer</string>
 
-    <string name="app_key_dropbox">k78nqdn19p4864o</string>
-    <string name="dropbox">Dropbox</string>
-    <string name="google_drive">Google Drive</string>
+    <string name="app_key_dropbox" translatable="false">k78nqdn19p4864o</string>
+    <string name="dropbox" translatable="false">Dropbox</string>
+    <string name="google_drive" translatable="false">Google Drive</string>
 </resources>

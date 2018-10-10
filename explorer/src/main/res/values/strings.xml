@@ -80,5 +80,5 @@
     <string name="msg_cloud_logout">Do you want to logout from %s?</string>
     <string name="msg_cloud_download">The selected file is being downloaded.</string>
     <string name="toast_cloud_download">Downloading %s&#8230;</string>
-    <string name="toast_cloud_complete">File download is complete.</string>
+    <string name="toast_cloud_complete">The file download is complete.</string>
 </resources>
