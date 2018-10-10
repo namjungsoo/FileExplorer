@@ -6,7 +6,7 @@ android {
         multiDexEnabled true
         applicationId "com.duongame.comicz"
 
-        minSdkVersion 15
+        minSdkVersion 14
         targetSdkVersion 28
 
         //admob
@@ -53,7 +53,7 @@ android {
         }
         production {
             dimension "mode"
-            minSdkVersion 15
+            minSdkVersion 14
         }
         pro {
             buildConfigField "boolean", "SHOW_AD", "false"
