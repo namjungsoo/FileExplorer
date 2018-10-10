@@ -79,9 +79,10 @@
     <!-- shortcut -->
     <uses-permission android:name="com.android.launcher.permission.INSTALL_SHORTCUT" />
 
-    <!--<meta-data-->
-    <!--android:name="io.fabric.ApiKey"-->
-    <!--android:value="479ae7d868a353eb8da82e059fd1a04418af3cf3" />-->
+    <!--<meta-data
+    필요없음. firebase에서 직접 관리하기 때문-->
+        <!--android:name="io.fabric.ApiKey"-->
+        <!--android:value="479ae7d868a353eb8da82e059fd1a04418af3cf3" />-->
     <meta-data
         android:name="firebase_crashlytics_collection_enabled"
         android:value="false" />

@@ -66,38 +66,7 @@ public class BaseViewerActivity extends BaseActivity {
     }
 
     protected void initContentView() {
-        // 여기서 광고를 없애고
-        if (BuildConfig.SHOW_AD) {
-            final LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            if (inflater == null)
-                return;
-            View mainView = inflater.inflate(contentViewResId, null, true);
-
-            final RelativeLayout layout = new RelativeLayout(this);
-            layout.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT));
-
-            AdBannerManager.initBannerAd(this, 1);
-            adView = AdBannerManager.getAdBannerView(1);
-
-            // adview layout params
-            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-            params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
-            adView.setLayoutParams(params);
-            AdBannerManager.requestAd(1);
-
-            // mainview layout params
-            params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
-            params.addRule(RelativeLayout.ABOVE, adView.getId());
-            mainView.setLayoutParams(params);
-
-            layout.addView(adView);
-            layout.addView(mainView);
-
-            setContentView(layout);
-
-        } else {
-            setContentView(contentViewResId);
-        }
+        setContentView(contentViewResId);
     }
 
     @Override

@@ -56,6 +56,7 @@ import com.duongame.manager.AdInterstitialManager;
 import com.duongame.manager.PermissionManager;
 import com.duongame.manager.ReviewManager;
 import com.google.android.gms.ads.AdView;
+import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
@@ -316,6 +317,7 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
                     // 이제 목록을 업데이트 하자.
                     //updateDropbox();
                     getExplorerFragment().updateDropboxUI(true);
+                    mTracker.send(new HitBuilders.EventBuilder().setCategory("Cloud").setAction("Login").setLabel("Dropbox").build());
                 }
             }
 
@@ -870,6 +872,7 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
                 // 로그아웃후에는 explorer에서 toolbar에서 dropbox image button을 삭제해야 한다.
                 // 그리고 갈곳이 없으니 home으로 간다.
                 getExplorerFragment().updateDropboxUI(false);
+                mTracker.send(new HitBuilders.EventBuilder().setCategory("Cloud").setAction("Logout").setLabel("Dropbox").build());
             }
         };
 
@@ -924,6 +927,7 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
                 // 로그아웃후에는 explorer에서 toolbar에서 dropbox image button을 삭제해야 한다.
                 // 그리고 갈곳이 없으니 home으로 간다.
                 getExplorerFragment().updateGoogleDriveUI(false);
+                mTracker.send(new HitBuilders.EventBuilder().setCategory("Cloud").setAction("Logout").setLabel("GoogleDrive").build());
             }
         };
 
@@ -1033,6 +1037,7 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
                 googleDriveItem.setTitle(accountName);
                 getExplorerFragment().updateGoogleDriveUI(true);
                 PreferenceHelper.setAccountGoogleDrive(BaseMainActivity.this, accountName);
+                mTracker.send(new HitBuilders.EventBuilder().setCategory("Cloud").setAction("Login").setLabel("GoogleDrive").build());
             }
         } else {
             googleDriveItem.setChecked(false);
