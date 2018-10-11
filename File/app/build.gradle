@@ -6,7 +6,7 @@ android {
         multiDexEnabled true
         applicationId "com.duongame.file"
         
-        minSdkVersion 15
+        minSdkVersion 14
         targetSdkVersion 28
 
         //admob
@@ -52,7 +52,7 @@ android {
         }
         production {
             dimension "mode"
-            minSdkVersion 15
+            minSdkVersion 14
         }
         pro {
             buildConfigField "boolean", "SHOW_AD", "false"
@@ -138,3 +138,13 @@ dependencies {
     // https://mvnrepository.com/artifact/org.apache.commons/commons-lang3
     implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.4'
 }
+
+apply plugin: 'io.fabric'
+
+repositories {
+    maven { url 'https://maven.fabric.io/public' }
+    mavenCentral()
+}
+
+// ADD THIS AT THE BOTTOM
+apply plugin: 'com.google.gms.google-services'
