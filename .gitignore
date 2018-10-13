@@ -12,3 +12,7 @@
 *.o.d
 *.apk
 output.json
+*.properties
+Explorer/gradlew.bat
+Explorer/gradlew
+Explorer/gradle/wrapper/gradle-wrapper.jar
