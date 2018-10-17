@@ -12,6 +12,7 @@ import com.duongame.file.FileHelper;
 import com.duongame.fragment.ExplorerFragment;
 import com.duongame.helper.JLog;
 import com.duongame.helper.ToastHelper;
+import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException;
 import com.google.api.services.drive.Drive;
 import com.google.api.services.drive.model.File;
 import com.google.api.services.drive.model.FileList;
@@ -24,6 +25,7 @@ import java.util.Collections;
 import static com.duongame.adapter.ExplorerItem.FILETYPE_PDF;
 import static com.duongame.adapter.ExplorerItem.FILETYPE_TEXT;
 import static com.duongame.adapter.ExplorerItem.FILETYPE_ZIP;
+import static com.duongame.cloud.googledrive.GoogleDriveManager.REQUEST_AUTHORIZATION;
 
 public class GoogleDriveSearchTask extends AsyncTask<String, Void, FileExplorer.Result> {
     private WeakReference<ExplorerFragment> fragmentWeakReference;
@@ -59,6 +61,14 @@ public class GoogleDriveSearchTask extends AsyncTask<String, Void, FileExplorer.
                         .setFields("nextPageToken, files(id)")
                         .setPageToken(pageToken)
                         .execute();
+            } catch (UserRecoverableAuthIOException e) {
+                e.printStackTrace();
+
+                ExplorerFragment fragment = fragmentWeakReference.get();
+                if (fragment == null)
+                    return null;
+                fragment.startActivityForResult(e.getIntent(), REQUEST_AUTHORIZATION);
+                return null;
             } catch (IOException e) {
                 e.printStackTrace();
                 return null;
@@ -126,6 +136,10 @@ public class GoogleDriveSearchTask extends AsyncTask<String, Void, FileExplorer.
                         .setFields("nextPageToken, files(*)")
                         .setPageToken(pageToken)
                         .execute();
+            } catch (UserRecoverableAuthIOException e) {
+                e.printStackTrace();
+                fragment.startActivityForResult(e.getIntent(), REQUEST_AUTHORIZATION);
+                return null;
             } catch (IOException e) {
                 e.printStackTrace();
                 return null;

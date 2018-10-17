@@ -5,7 +5,9 @@ import android.os.Environment;
 
 import com.duongame.adapter.ExplorerItem;
 import com.duongame.cloud.googledrive.GoogleDriveManager;
+import com.duongame.fragment.ExplorerFragment;
 import com.duongame.helper.JLog;
+import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException;
 import com.google.api.services.drive.Drive;
 
 import java.io.File;
@@ -14,6 +16,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+import static com.duongame.cloud.googledrive.GoogleDriveManager.REQUEST_AUTHORIZATION;
 import static com.duongame.file.FileHelper.BLOCK_SIZE;
 
 public class GoogleDriveDownloadTask extends CloudDownloadTask {
@@ -76,6 +79,14 @@ public class GoogleDriveDownloadTask extends CloudDownloadTask {
             inputStream.close();
 
             return file;
+        } catch (UserRecoverableAuthIOException e) {
+            e.printStackTrace();
+
+            Activity activity = activityWeakReference.get();
+            if (activity == null)
+                return null;
+            activity.startActivityForResult(e.getIntent(), REQUEST_AUTHORIZATION);
+            return null;
         } catch (IOException e) {
             mException = e;
         }

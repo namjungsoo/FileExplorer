@@ -14,7 +14,7 @@ import com.google.api.services.drive.DriveScopes;
 import java.util.Collections;
 
 public class GoogleDriveManager {
-    public static final int REQUEST_CODE_RESOLUTION = 1;
+    //public static final int REQUEST_CODE_RESOLUTION = 1;
     public static final int REQUEST_AUTHORIZATION = 1;
     public static final int REQUEST_ACCOUNT_PICKER = 2;
 
@@ -43,7 +43,7 @@ public class GoogleDriveManager {
     }
 
     public static boolean onActivityResult(int requestCode, int resultCode, Intent data) {
-        if ((requestCode == REQUEST_ACCOUNT_PICKER || requestCode == REQUEST_CODE_RESOLUTION)) {
+        if ((requestCode == REQUEST_ACCOUNT_PICKER || requestCode == REQUEST_AUTHORIZATION)) {
             if (resultCode == Activity.RESULT_OK) {
                 if (data != null && data.getExtras() != null) {
                     String accountName = data.getExtras().getString(AccountManager.KEY_ACCOUNT_NAME);

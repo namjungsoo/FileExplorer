@@ -27,7 +27,7 @@ public abstract class CloudDownloadTask extends AsyncTask<ExplorerItem, FileHelp
 
     // 생성자에서 사용
     private WeakReference<DownloadDialog> dialogWeakReference;
-    private WeakReference<Activity> activityWeakReference;
+    protected WeakReference<Activity> activityWeakReference;
 
     CloudDownloadTask(Activity activity, Callback callback) {
         mCallback = callback;
