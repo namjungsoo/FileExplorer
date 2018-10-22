@@ -17,8 +17,8 @@ android {
         buildConfigField "String", "GA_TRACKING_ID", "\"UA-61499807-13\""
         buildConfigField "boolean", "PREVIEW_ZIP", "true"
 
-        versionCode 45
-        versionName "1.4.3"
+        versionCode 46
+        versionName "1.4.4"
 
     }
     signingConfigs {
@@ -81,6 +81,15 @@ android {
             //manifest.srcFile "src/main/AndroidManifest.xml"
         }
     }
+    // Android Oreo 이상에서는 64bit OS에서는 64bit so를 기본적으로 찾게되는데 이를 32bit so를 사용하라고 강제하는 명령임
+    splits {
+        abi {
+            enable true
+            reset()
+            include 'armeabi-v7a'
+        }
+    }
+
 }
 
 dependencies {
