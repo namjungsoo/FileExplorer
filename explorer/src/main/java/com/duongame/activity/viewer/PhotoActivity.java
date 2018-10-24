@@ -37,6 +37,9 @@ public class PhotoActivity extends PagerActivity {
     }
 
     protected ArrayList<ExplorerItem> getImageList() {
+        if (application == null)
+            return null;
+
         return application.getImageList();
     }
 
@@ -49,7 +52,7 @@ public class PhotoActivity extends PagerActivity {
 
     private void initPagerAdapter() {
         final ArrayList<ExplorerItem> imageList = getImageList();
-        if(imageList == null)
+        if (imageList == null)
             return;
 
         pagerAdapter.setImageList(imageList);
@@ -60,7 +63,7 @@ public class PhotoActivity extends PagerActivity {
 
     protected void processIntent() {
         final ArrayList<ExplorerItem> imageList = getImageList();
-        if(imageList == null)
+        if (imageList == null)
             return;
 
         final Intent intent = getIntent();
@@ -74,7 +77,7 @@ public class PhotoActivity extends PagerActivity {
 
             //FIX:
             // 이미지 리스트가 없거나 사이즈가 0이라면 리턴한다.
-            if(imageList == null || imageList.size() == 0) {
+            if (imageList == null || imageList.size() == 0) {
                 finish();
             }
 
