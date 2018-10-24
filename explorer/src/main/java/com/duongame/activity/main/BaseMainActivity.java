@@ -305,7 +305,7 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
                     return;
 
                 Menu menu = navigationView.getMenu();
-                if(menu == null)
+                if (menu == null)
                     return;
 
                 MenuItem dropboxItem = menu.findItem(R.id.nav_dropbox);
@@ -866,8 +866,10 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
         final DialogInterface.OnClickListener positiveListener = new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                item.setTitle(getString(R.string.dropbox));
-                item.setChecked(false);
+                if (item != null) {
+                    item.setTitle(getString(R.string.dropbox));
+                    item.setChecked(false);
+                }
                 PreferenceHelper.setAccountDropbox(BaseMainActivity.this, null);
                 // 로그아웃후에는 explorer에서 toolbar에서 dropbox image button을 삭제해야 한다.
                 // 그리고 갈곳이 없으니 home으로 간다.
@@ -919,8 +921,10 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
         final DialogInterface.OnClickListener positiveListener = new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                item.setTitle(getString(R.string.google_drive));
-                item.setChecked(false);
+                if (item != null) {
+                    item.setTitle(getString(R.string.google_drive));
+                    item.setChecked(false);
+                }
                 // 로그인이 되어 있으면 팝업후에 로그아웃을 하고, account를 null로 만든다.
                 PreferenceHelper.setAccountGoogleDrive(BaseMainActivity.this, null);
 
@@ -963,15 +967,13 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
     public MenuItem getGoogleDriveMenuItem() {
         if (menu == null)
             return null;
-        MenuItem item = menu.findItem(R.id.nav_google_drive);
-        return item;
+        return menu.findItem(R.id.nav_google_drive);
     }
 
     public MenuItem getDropboxMenuItem() {
         if (menu == null)
             return null;
-        MenuItem item = menu.findItem(R.id.nav_dropbox);
-        return item;
+        return menu.findItem(R.id.nav_dropbox);
     }
 
 
@@ -1040,8 +1042,10 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
                 mTracker.send(new HitBuilders.EventBuilder().setCategory("Cloud").setAction("Login").setLabel("GoogleDrive").build());
             }
         } else {
-            googleDriveItem.setChecked(false);
-            googleDriveItem.setTitle(getString(R.string.google_drive));
+            if (googleDriveItem != null) {
+                googleDriveItem.setChecked(false);
+                googleDriveItem.setTitle(getString(R.string.google_drive));
+            }
             getExplorerFragment().updateGoogleDriveUI(false);
         }
     }
