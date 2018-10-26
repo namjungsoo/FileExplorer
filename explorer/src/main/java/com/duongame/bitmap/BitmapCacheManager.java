@@ -5,9 +5,11 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
+import android.widget.ImageView;
 
 import com.duongame.adapter.ExplorerItem;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -19,19 +21,18 @@ public class BitmapCacheManager {
     private final static String TAG = BitmapCacheManager.class.getSimpleName();
     private final static boolean DEBUG = false;
 
-    // 썸네일 관련
-    static ConcurrentHashMap<String, Bitmap> thumbnailCache = new ConcurrentHashMap<String, Bitmap>();
-//    static ConcurrentHashMap<String, ImageView> thumbnailImageCache = new ConcurrentHashMap<>();
+    private static class BitmapCache {
+        Bitmap bitmap;
+        WeakReference<ImageView> imageViewRef;
+    }
 
-    // 일반 이미지 관련
-    static ConcurrentHashMap<String, Bitmap> bitmapCache = new ConcurrentHashMap<>();
+    private static ConcurrentHashMap<String, BitmapCache> thumbnailCache = new ConcurrentHashMap<>();// 썸네일
+    private static ConcurrentHashMap<String, BitmapCache> bitmapCache = new ConcurrentHashMap<>();// 일반 이미지
+    private static ConcurrentHashMap<String, BitmapCache> pageCache = new ConcurrentHashMap<>();// zip파일 잘린 이미지
 
-    // 리소스나 아이콘 관련
-    static ConcurrentHashMap<Integer, Bitmap> resourceCache = new ConcurrentHashMap<>();
-    static ConcurrentHashMap<String, Drawable> drawableCache = new ConcurrentHashMap<>();
-
-    // zip파일 잘린 이미지 관련
-    static ConcurrentHashMap<String, Bitmap> pageCache = new ConcurrentHashMap<>();
+    // 리소스나 아이콘 관련(항상 사용하기 위해서 한번 로딩하면 recycle 하지 않는다.)
+    private static ConcurrentHashMap<Integer, Bitmap> resourceCache = new ConcurrentHashMap<>();
+    private static ConcurrentHashMap<String, Drawable> drawableCache = new ConcurrentHashMap<>();
 
     public static String changePathToPage(ExplorerItem item) {
         String path;
@@ -46,34 +47,69 @@ public class BitmapCacheManager {
     }
 
     // current_page
-    public static void setPage(String key, Bitmap bitmap) {
-        pageCache.putIfAbsent(key, bitmap);
+    public static void setPage(String key, Bitmap bitmap, ImageView imageView) {
+        BitmapCache cache = pageCache.get(key);
+        if (cache == null) {
+            cache = new BitmapCache();
+            cache.bitmap = bitmap;
+            cache.imageViewRef = new WeakReference<>(imageView);
+            pageCache.put(key, cache);
+        } else {
+            if(cache.bitmap != null && cache.bitmap != bitmap) {
+                removeBitmapOrPageInternal(cache);
+            }
+            // bitmap은 정리가 끝났으므로 바로 대입
+            cache.bitmap = bitmap;
+
+            // imageview는 무조건 대입
+            if(imageView != null) {
+                cache.imageViewRef = new WeakReference<>(imageView);
+            } else {
+                cache.imageViewRef = null;
+            }
+        }
     }
 
     public static Bitmap getPage(String key) {
-        return pageCache.get(key);
+        BitmapCache cache = pageCache.get(key);
+        if (cache == null) {
+            return null;
+        }
+        return cache.bitmap;
+    }
+
+    private static void removeBitmapOrPageInternal(BitmapCache cache) {
+        if (cache.bitmap != null) {
+            if (!cache.bitmap.isRecycled()) {
+                if(cache.imageViewRef != null) {
+                    ImageView imageView = cache.imageViewRef.get();
+                    if (imageView != null) {
+                        imageView.setImageBitmap(null);
+                    }
+                }
+                cache.bitmap.recycle();
+            }
+            cache.bitmap = null;
+        }
     }
 
     public static void removePage(String key) {
-        Bitmap bitmap = pageCache.get(key);
-        if (bitmap != null) {
-            if (!bitmap.isRecycled()) {
-                bitmap.recycle();
-            }
-            bitmap = null;
-            pageCache.remove(key);
+        BitmapCache cache = pageCache.get(key);
+        if (cache == null) {
+            return;
         }
+        removeBitmapOrPageInternal(cache);
+        pageCache.remove(key);
     }
 
     public static void removeAllPages() {
         Log.e(TAG, "removeAllPages");
         for (String key : pageCache.keySet()) {
-            Bitmap bitmap = pageCache.get(key);
-            if (bitmap != null) {
-                if (!bitmap.isRecycled())
-                    bitmap.recycle();
-                bitmap = null;
+            BitmapCache cache = pageCache.get(key);
+            if (cache == null) {
+                continue;
             }
+            removeBitmapOrPageInternal(cache);
         }
         pageCache.clear();
     }
@@ -103,54 +139,94 @@ public class BitmapCacheManager {
         return drawableCache.get(path);
     }
 
-
-    // image bitmap
-    public static void setBitmap(String path, Bitmap bitmap) {
-        bitmapCache.putIfAbsent(path, bitmap);
-    }
-
-    public static Bitmap getBitmap(String path) {
-        return bitmapCache.get(path);
-    }
-
-    public static void removeBitmap(String path) {
-        Bitmap bitmap = bitmapCache.get(path);
-        if (bitmap != null) {
-            if (!bitmap.isRecycled())
-                bitmap.recycle();
-            bitmap = null;
-            bitmapCache.remove(path);
-        }
-    }
-
     public static void removeAllDrawables() {
         drawableCache.clear();
     }
 
+    // image bitmap
+    public static void setBitmap(String path, Bitmap bitmap, ImageView imageView) {
+        BitmapCache cache = bitmapCache.get(path);
+        if (cache == null) {
+            cache = new BitmapCache();
+            cache.bitmap = bitmap;
+            cache.imageViewRef = new WeakReference<>(imageView);
+            bitmapCache.put(path, cache);
+        } else {
+            if(cache.bitmap != null && cache.bitmap != bitmap) {
+                removeBitmapOrPageInternal(cache);
+            }
+            // bitmap은 정리가 끝났으므로 바로 대입
+            cache.bitmap = bitmap;
+
+            // imageview는 무조건 대입
+            if(imageView != null) {
+                cache.imageViewRef = new WeakReference<>(imageView);
+            } else {
+                cache.imageViewRef = null;
+            }
+        }
+    }
+
+    public static Bitmap getBitmap(String path) {
+        BitmapCache cache = bitmapCache.get(path);
+        if (cache == null) {
+            return null;
+        }
+        return cache.bitmap;
+    }
+
+    public static void removeBitmap(String path) {
+        BitmapCache cache = bitmapCache.get(path);
+        if (cache == null) {
+            return;
+        }
+        removeBitmapOrPageInternal(cache);
+        bitmapCache.remove(path);
+    }
+
     public static void removeAllBitmaps() {
         Log.e(TAG, "removeAllBitmaps");
+
         for (String key : bitmapCache.keySet()) {
-            Bitmap bitmap = bitmapCache.get(key);
-            if (bitmap != null) {
-                if (!bitmap.isRecycled())
-                    bitmap.recycle();
-                bitmap = null;
+            BitmapCache cache = bitmapCache.get(key);
+            if (cache == null) {
+                continue;
             }
+            removeBitmapOrPageInternal(cache);
         }
         bitmapCache.clear();
     }
 
     // thumbnail
-    public static void setThumbnail(String path, Bitmap bitmap) {
-        thumbnailCache.putIfAbsent(path, bitmap);
+    public static void setThumbnail(String path, Bitmap bitmap, ImageView imageView) {
+        BitmapCache cache = thumbnailCache.get(path);
+        if (cache == null) {
+            cache = new BitmapCache();
+            cache.bitmap = bitmap;
+            cache.imageViewRef = new WeakReference<>(imageView);
+            thumbnailCache.put(path, cache);
+        } else {
+            if(cache.bitmap != null && cache.bitmap != bitmap) {
+                removeBitmapOrPageInternal(cache);
+            }
+            // bitmap은 정리가 끝났으므로 바로 대입
+            cache.bitmap = bitmap;
 
-        // 사용안함
-//        if(imageView != null)
-//            thumbnailImageCache.putIfAbsent(path, imageView);
+            // imageview는 무조건 대입
+            if(imageView != null) {
+                cache.imageViewRef = new WeakReference<>(imageView);
+            } else {
+                cache.imageViewRef = null;
+            }
+        }
     }
 
     public static Bitmap getThumbnail(String path) {
-        return thumbnailCache.get(path);
+        BitmapCache cache = thumbnailCache.get(path);
+        if (cache == null) {
+            return null;
+        }
+        return cache.bitmap;
     }
 
     public static int getThumbnailCount() {
@@ -158,34 +234,23 @@ public class BitmapCacheManager {
     }
 
     public static void removeAllThumbnails() {
-        // 이미지를 먼저 null로 하고 => try/catch로 처리함
-        // adapter 자체적으로 file, directory 이미지로 처리하게 변경됨
-        // 사용안함
-//        for (String key : thumbnailImageCache.keySet()) {
-//            final ImageView imageView = thumbnailImageCache.get(key);
-//            if (imageView != null) {
-//                imageView.setImageResource(android.R.color.transparent);
-//            }
-//        }
-//        thumbnailImageCache.clear();
-
         final ArrayList<String> recycleList = new ArrayList<>();
+
         for (String key : thumbnailCache.keySet()) {
-            Bitmap bitmap = thumbnailCache.get(key);
-            //if (bitmap != null && !bitmap.isRecycled()) {
-            if (bitmap != null) {
-                // 리소스(아이콘)용 썸네일이 아니면 삭제
-                if (!resourceCache.containsValue(bitmap)) {
-                    bitmap.recycle();
-                    recycleList.add(key);
-                }
-                bitmap = null;
+            BitmapCache cache = bitmapCache.get(key);
+            if (cache == null) {
+                continue;
+            }
+
+            // 리소스(아이콘)용 썸네일이 아니면 삭제
+            if (!resourceCache.containsValue(cache.bitmap)) {
+                removeBitmapOrPageInternal(cache);
+                recycleList.add(key);
             }
         }
 
         for (String key : recycleList) {
             thumbnailCache.remove(key);
         }
-        thumbnailCache.clear();
     }
 }
