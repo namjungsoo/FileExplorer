@@ -76,10 +76,10 @@ public class BitmapTask extends AsyncTask<ExplorerItem, Void, Bitmap> {
                     if (bitmap == null) {
                         // 다른 비트맵이 기다려지길 기다렸다가 다시 시도하자.
                         // 왜냐면 압축을 푸는 중인 파일도 있기 때문이다.
-                        if (!waitImageExtracting())
+                        if (isFinishedWaitingImageExtracting())
                             break;
                     } else {
-                        BitmapCacheManager.setBitmap(item.path, bitmap);
+                        BitmapCacheManager.setBitmap(item.path, bitmap, null);
                         break;
                     }
                 } else {
@@ -89,7 +89,7 @@ public class BitmapTask extends AsyncTask<ExplorerItem, Void, Bitmap> {
                         if (bitmap == null) {
                             // 다른 비트맵이 기다려지길 기다렸다가 다시 시도하자.
                             // 왜냐면 압축을 푸는 중인 파일도 있기 때문이다.
-                            if (!waitImageExtracting())
+                            if (isFinishedWaitingImageExtracting())
                                 break;
                         } else {
                             break;
@@ -100,7 +100,7 @@ public class BitmapTask extends AsyncTask<ExplorerItem, Void, Bitmap> {
                         if (bitmap == null) {
                             // 다른 비트맵이 기다려지길 기다렸다가 다시 시도하자.
                             // 왜냐면 압축을 푸는 중인 파일도 있기 때문이다.
-                            if (!waitImageExtracting())
+                            if (isFinishedWaitingImageExtracting())
                                 break;
                         } else {
                             bitmap = BitmapLoader.splitBitmapSide(bitmap, item);
@@ -108,69 +108,22 @@ public class BitmapTask extends AsyncTask<ExplorerItem, Void, Bitmap> {
                         }
                     }
                 }
-
-                //NEW-1
-//                if (item.side == ExplorerItem.Side.SIDE_ALL) {
-//                    bitmap = BitmapLoader.decodeSampleBitmapFromFile(item.path, screenWidth, screenHeight, exif);
-//                    if (bitmap == null) {
-//                        // 다른 비트맵이 기다려지길 기다렸다가 다시 시도하자.
-//                        // 왜냐면 압축을 푸는 중인 파일도 있기 때문이다.
-//                        if (!waitImageExtracting())
-//                            break;
-//                    }
-//                    else {
-//                        BitmapCacheManager.setBitmap(item.path, bitmap);
-//                        break;
-//                    }
-//                } else {
-//                    bitmap = BitmapLoader.decodeSampleBitmapFromFile(item.path, screenWidth, screenHeight, exif);
-//                    if (bitmap == null) {
-//                        // 다른 비트맵이 기다려지길 기다렸다가 다시 시도하자.
-//                        // 왜냐면 압축을 푸는 중인 파일도 있기 때문이다.
-//                        if (!waitImageExtracting())
-//                            break;
-//                    }
-//                    else {
-//                        bitmap = BitmapLoader.splitBitmapSide(bitmap, item);
-//                        break;
-//                    }
-//                }
-
-                //OLD
-//                bitmap = BitmapLoader.decodeSampleBitmapFromFile(item.path, screenWidth, screenHeight, exif);
-//                if (bitmap == null) {
-//                    // 다른 비트맵이 기다려지길 기다렸다가 다시 시도하자.
-//                    // 왜냐면 압축을 푸는 중인 파일도 있기 때문이다.
-//                    if (!waitImageExtracting())
-//                        break;
-//                } else {
-//                    if (item.side == ExplorerItem.Side.SIDE_ALL) {
-//                        BitmapCacheManager.setBitmap(item.path, bitmap);
-//                    } else {
-//                        // 비트맵을 로딩했으면 이제 자르자
-//                        // 자르고 현재 page의 bitmap을 리턴한다.
-//                        bitmap = BitmapLoader.splitBitmapSide(bitmap, item);
-////                        bitmap = BitmapLoader.splitBitmapSide(item, screenWidth, screenHeight, exif);
-//                    }
-//                    break;
-//                }
             }
         }
 
         return bitmap;
     }
 
-    private boolean waitImageExtracting() {
+    private boolean isFinishedWaitingImageExtracting() {
         try {
             // 최대 시간을 기다렸다면 멈추고 종료 한다.
             count += RETRY_INTERVAL_MS;
             if (count == RETRY_INTERVAL_MS * RETRY_COUNT)
-                return false;
-//            JLog.e(TAG, "waitImageExtracting");
+                return true;
             Thread.sleep(RETRY_INTERVAL_MS);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        return true;
+        return false;
     }
 }

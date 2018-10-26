@@ -23,9 +23,9 @@ public class LoadApkThumbnailTask extends AsyncTask<String, Void, Drawable> {
     private String path;
 
     public LoadApkThumbnailTask(Context context, ImageView icon, ImageView iconSmall) {
-        this.contextRef = new WeakReference<Context>(context);
-        this.iconRef = new WeakReference<ImageView>(icon);
-        this.iconSmallRef = new WeakReference<ImageView>(iconSmall);
+        this.contextRef = new WeakReference<>(context);
+        this.iconRef = new WeakReference<>(icon);
+        this.iconSmallRef = new WeakReference<>(iconSmall);
     }
 
     @Override

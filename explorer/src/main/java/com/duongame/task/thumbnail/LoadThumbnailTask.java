@@ -21,9 +21,9 @@ public class LoadThumbnailTask extends AsyncTask<String, Void, Bitmap> {
     private String path;
 
     public LoadThumbnailTask(Context context, ImageView icon, ImageView iconSmall) {
-        this.contextRef = new WeakReference<Context>(context);
-        this.iconRef = new WeakReference<ImageView>(icon);
-        this.iconSmallRef = new WeakReference<ImageView>(iconSmall);
+        this.contextRef = new WeakReference<>(context);
+        this.iconRef = new WeakReference<>(icon);
+        this.iconSmallRef = new WeakReference<>(iconSmall);
     }
 
     @Override
@@ -56,7 +56,7 @@ public class LoadThumbnailTask extends AsyncTask<String, Void, Bitmap> {
                 bitmap = BitmapLoader.decodeSquareThumbnailFromFile(path, 96, true);
             }
             if (bitmap != null) {
-                BitmapCacheManager.setThumbnail(path, bitmap);
+                BitmapCacheManager.setThumbnail(path, bitmap, null);
             }
         }
         return bitmap;
@@ -69,13 +69,18 @@ public class LoadThumbnailTask extends AsyncTask<String, Void, Bitmap> {
             return;
         if (path == null)
             return;
-        if (iconRef.get() == null)
+        ImageView icon = iconRef.get();
+        if (icon == null)
             return;
-        if (iconSmallRef.get() == null)
+        ImageView iconSmall = iconSmallRef.get();
+        if (iconSmall == null)
             return;
-        if (iconSmallRef.get().getTag() == null)
+        String tag = (String) iconSmall.getTag();
+        if (tag == null)
             return;
-        if (path.equals(iconSmallRef.get().getTag()))
-            iconRef.get().setImageBitmap(bitmap);
+        if (path.equals(tag)) {
+            icon.setImageBitmap(bitmap);
+            BitmapCacheManager.setThumbnail(path, bitmap, icon);
+        }
     }
 }

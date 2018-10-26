@@ -5,9 +5,12 @@ import android.widget.ImageView;
 
 import com.duongame.activity.viewer.PagerActivity;
 import com.duongame.adapter.ExplorerItem;
+import com.duongame.bitmap.BitmapCacheManager;
 import com.duongame.file.FileHelper;
 
 import java.lang.ref.WeakReference;
+
+import static com.duongame.adapter.ExplorerItem.SIDE_ALL;
 
 /**
  * Created by namjungsoo on 2016-12-16.
@@ -24,8 +27,8 @@ public class LoadBitmapTask extends BitmapTask {
     public LoadBitmapTask(PagerActivity context, ImageView imageView, int width, int height, boolean exif, boolean useGifAni, int position) {
         super(width, height, exif);
 
-        this.contextRef = new WeakReference<PagerActivity>(context);
-        this.imageViewRef = new WeakReference<ImageView>(imageView);
+        this.contextRef = new WeakReference<>(context);
+        this.imageViewRef = new WeakReference<>(imageView);
 
         this.position = position;
         this.useGifAni = useGifAni;
@@ -33,8 +36,6 @@ public class LoadBitmapTask extends BitmapTask {
 
     @Override
     protected Bitmap doInBackground(ExplorerItem... params) {
-//        Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
-
         if (isCancelled())
             return null;
 
@@ -49,9 +50,7 @@ public class LoadBitmapTask extends BitmapTask {
             return null;
         }
 
-        Bitmap bitmap = null;
-        bitmap = loadBitmap(item);
-        return bitmap;
+        return loadBitmap(item);
     }
 
     @Override
@@ -71,6 +70,10 @@ public class LoadBitmapTask extends BitmapTask {
 
         imageView.setImageBitmap(bitmap);
         imageView.setTag(item.path);
+        if(item.side == SIDE_ALL)
+            BitmapCacheManager.setBitmap(item.path, bitmap, imageView);
+        else
+            BitmapCacheManager.setPage(item.path, bitmap, imageView);
 
         PagerActivity context = contextRef.get();
         if(context == null)
@@ -79,39 +82,5 @@ public class LoadBitmapTask extends BitmapTask {
         if (!context.isFinishing()) {
             context.updateInfo(position);
         }
-
-        // 종횡비 체크
-//                final int bmWidth = bitmap.getWidth();
-//                final int bmHeight = bitmap.getHeight();
-//                final float bmRatio = (float) bmHeight / (float) bmWidth;
-//
-//                // 화면비 체크
-//                final int width = imageView.getWidth();
-//                final int height = imageView.getHeight();
-//                final float imageRatio = (float) height / (float) width;
-//
-//                int newWidth;
-//                int newHeight;
-//                if (bmRatio > imageRatio) {
-//                    newWidth = (int) (height / bmRatio);
-//                    newHeight = height;
-//                } else {
-//                    newWidth = width;
-//                    newHeight = (int) (width * bmRatio);
-//                }
-
-        //PhotoView 때문인가
-//                final FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) imageView.getLayoutParams();
-//                params.width = newWidth;
-//                params.height = newHeight;
-//                params.gravity = Gravity.CENTER;
-//
-//                imageView.setLayoutParams(params);
-//                imageView.requestLayout();
-//            } else {
-        // 사용안함
-//                Glide.with(context).load(new File(item.path)).into(imageView);
-//            }
-//        }
     }
 }

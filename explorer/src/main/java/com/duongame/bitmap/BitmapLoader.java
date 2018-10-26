@@ -102,14 +102,14 @@ public class BitmapLoader {
         // 시스템에서 찾은거
         bitmap = BitmapLoader.getThumbnail(context, path, true);
         if (bitmap != null) {
-            BitmapCacheManager.setThumbnail(path, bitmap);
+            BitmapCacheManager.setThumbnail(path, bitmap, null);
             return bitmap;
         }
 
         // 직접 생성
         bitmap = BitmapLoader.decodeSquareThumbnailFromFile(path, MICRO_KIND_SIZE, true);
         if (bitmap != null) {
-            BitmapCacheManager.setThumbnail(path, bitmap);
+            BitmapCacheManager.setThumbnail(path, bitmap, null);
             return bitmap;
         }
 
@@ -124,7 +124,7 @@ public class BitmapLoader {
         // 시스템에서 찾은거
         bitmap = ThumbnailUtils.createVideoThumbnail(path, MediaStore.Images.Thumbnails.MICRO_KIND);
         if (bitmap != null) {
-            BitmapCacheManager.setThumbnail(path, bitmap);
+            BitmapCacheManager.setThumbnail(path, bitmap, null);
             return bitmap;
         }
 
@@ -140,7 +140,7 @@ public class BitmapLoader {
         // 직접 생성
         bitmap = BitmapLoader.decodeSquareThumbnailFromPdfFile(path, MICRO_KIND_SIZE);
         if (bitmap != null) {
-            BitmapCacheManager.setThumbnail(path, bitmap);
+            BitmapCacheManager.setThumbnail(path, bitmap, null);
             return bitmap;
         }
 
@@ -174,12 +174,12 @@ public class BitmapLoader {
         if (image == null) {
             bitmap = BitmapCacheManager.getResourceBitmap(context.getResources(), R.drawable.zip);
             if (bitmap != null) {
-                BitmapCacheManager.setThumbnail(path, bitmap);
+                BitmapCacheManager.setThumbnail(path, bitmap, null);
             }
         } else {
             bitmap = BitmapLoader.decodeSquareThumbnailFromFile(image, MICRO_KIND_SIZE, false);
             if (bitmap != null) {
-                BitmapCacheManager.setThumbnail(path, bitmap);
+                BitmapCacheManager.setThumbnail(path, bitmap, null);
             }
         }
 
@@ -555,8 +555,8 @@ public class BitmapLoader {
         }
 
         if (page != null && pageOther != null) {
-            BitmapCacheManager.setPage(key, page);
-            BitmapCacheManager.setPage(keyOther, pageOther);
+            BitmapCacheManager.setPage(key, page, null);
+            BitmapCacheManager.setPage(keyOther, pageOther, null);
         }
 
         return page;
@@ -591,8 +591,8 @@ public class BitmapLoader {
         }
 
         if (page != null && pageOther != null) {
-            BitmapCacheManager.setPage(key, page);
-            BitmapCacheManager.setPage(keyOther, pageOther);
+            BitmapCacheManager.setPage(key, page, null);
+            BitmapCacheManager.setPage(keyOther, pageOther, null);
         } else {
         }
 
