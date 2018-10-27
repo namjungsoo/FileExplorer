@@ -70,16 +70,7 @@ public class PdfPagerAdapter extends ViewerPagerAdapter {
             if (item == null)
                 return;
 
-            // 비트맵 캐쉬 사용 안함
-//            Bitmap bitmap = BitmapCacheManager.getBitmap(item.path);
-//            if (bitmap != null) {
-//                imageView.setImageBitmap(bitmap);
-//                imageView.setBackgroundColor(Color.WHITE);
-//                Log.w(TAG, "loadPage getBitmap ok");
-//                return;
-//            }
-
-            final Bitmap bitmap;
+            Bitmap bitmap;
             if (renderer != null) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                     final PdfRenderer.Page page = renderer.openPage(position);
@@ -97,35 +88,27 @@ public class PdfPagerAdapter extends ViewerPagerAdapter {
                         newHeight = (int) (width * pdfRatio);
                     }
 
-                    bitmap = Bitmap.createBitmap(newWidth, newHeight, Bitmap.Config.ARGB_8888);
-
+                    //FIX: PDF OOM
+                    while (true) {
+                        try {
+                            bitmap = Bitmap.createBitmap(newWidth, newHeight, Bitmap.Config.ARGB_8888);
+                            break;
+                        } catch (OutOfMemoryError e) {
+                            newWidth /= 2;
+                            newHeight /= 2;
+                        }
+                    }
                     page.render(bitmap, null, null, PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY);
                     page.close();
-
                     imageView.setImageBitmap(bitmap);
 
-                    // 무조건 해주지 않으면 안된다. 알파로 처리되어 있기 때문이다. (RENDER_MODE_FOR_DISPLAY)
+                    //TODO: 무조건 해주지 않으면 안된다. 알파로 처리되어 있기 때문이다. (RENDER_MODE_FOR_DISPLAY)
                     imageView.setBackgroundColor(Color.WHITE);
 
                     // 이미지 확대 축소
                     // 및 matrix을 사용하여 화면 가운데 정렬
                     item.attacher = new ImageViewAttacher(imageView);
                     item.attacher.setActivity(context);
-
-//                    imageView.setOnTouchListener(mPagerOnTouchListener);
-
-                    //imageView.setBackgroundColor(context.getResources().getColor(R.color.colorGreyBackground));
-
-//                    final FrameLayout.LayoutParams params = (FrameLayout.LayoutParams )imageView.getLayoutParams();
-//                    params.width = newWidth;
-//                    params.height = newHeight;
-//                    params.gravity = Gravity.CENTER;
-//
-//                    imageView.setLayoutParams(params);
-//                    imageView.requestLayout();
-
-                    // 비트맵 캐쉬 사용 안함
-//                    BitmapCacheManager.setBitmap(item.path, bitmap);
                 }
             }
         } else {
@@ -143,19 +126,7 @@ public class PdfPagerAdapter extends ViewerPagerAdapter {
         final ViewGroup rootView = (ViewGroup) object;
         final ImageView imageView = rootView.findViewById(R.id.image_viewer);
 
-        //TODO: 이부분 살펴봐야함
-        //FIX: recycle을 직접 하지 않기로 함
-//        final Drawable d = imageView.getDrawable();
-//        if (d != null) {
-//            if (d instanceof BitmapDrawable) {
-//                Bitmap b = ((BitmapDrawable) d).getBitmap();
-//                if (b != null && !b.isRecycled()) {
-//                    b.recycle();
-//                }
-//            }
-//        }
         imageView.setImageBitmap(null);
-        BitmapCacheManager.removeBitmap(item.path);
     }
 
     @Override

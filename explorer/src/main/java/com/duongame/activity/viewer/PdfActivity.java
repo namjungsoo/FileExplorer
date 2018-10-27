@@ -35,6 +35,8 @@ public class PdfActivity extends PagerActivity {
 
         this.adapter = (PdfPagerAdapter) pagerAdapter;
         processIntent();
+
+        pager.setOffscreenPageLimit(1);
     }
 
     @Override
