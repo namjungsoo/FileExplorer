@@ -17,8 +17,8 @@ android {
         buildConfigField "String", "GA_TRACKING_ID", "\"UA-61499807-14\""
         buildConfigField "boolean", "PREVIEW_ZIP", "false"
 
-        versionCode 23
-        versionName "1.2.1"
+        versionCode 24
+        versionName "1.2.2"
     }
     signingConfigs {
         release {
@@ -72,6 +72,7 @@ android {
         main.java.srcDirs += "../../Explorer/src/file/java"
         main.res.srcDirs += "../../Explorer/src/main/res"
         main.res.srcDirs += "../../Explorer/src/file/res"
+        main.assets.srcDirs += "../../Explorer/src/main/assets"
 
         // 상위폴더로 들어가는 상대 path의 manifest는 지원하지 않는 듯
         // 무조건 src 이하에 있어야 하는 듯
