@@ -3,7 +3,8 @@
     <string name="navigation_drawer_open" translatable="false">Open navigation drawer</string>
     <string name="navigation_drawer_close" translatable="false">Close navigation drawer</string>
 
-    <string name="app_key_dropbox" translatable="false">k78nqdn19p4864o</string>
+    <string name="app_key_dropbox_free" translatable="false">k78nqdn19p4864o</string>
+    <string name="app_key_dropbox_pro" translatable="false">b5926in1a98yhzq</string>
     <string name="dropbox" translatable="false">Dropbox</string>
     <string name="google_drive" translatable="false">Google Drive</string>
 </resources>

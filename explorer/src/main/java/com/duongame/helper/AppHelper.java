@@ -9,12 +9,20 @@ import com.duongame.R;
  */
 
 public class AppHelper {
+    public static boolean isPro(Context context) {
+        if (context == null)
+            return false;
+        if (context.getApplicationContext().getPackageName().contains(".pro"))
+            return true;
+        return false;
+    }
+
     public static boolean isComicz(Context context) {
         if (context == null)
             return false;
-        if (context.getApplicationContext().getPackageName().indexOf(".comicz") == -1)
-            return false;
-        return true;
+        if (context.getApplicationContext().getPackageName().contains(".comicz"))
+            return true;
+        return false;
     }
 
     public static String getAppName(Context context) {

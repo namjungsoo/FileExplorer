@@ -160,7 +160,7 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
                     // 앱 마이그레이션 관련
                     String from = mFirebaseRemoteConfig.getString("migration_from");
                     String to = mFirebaseRemoteConfig.getString("migration_to");
-                    if(from.equals(getApplicationContext().getPackageName())) {
+                    if (from.equals(getApplicationContext().getPackageName())) {
                         gotoAppStorePage(to);
                     }
                 }
@@ -205,7 +205,7 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
         if (AppHelper.isComicz(this)) {
             JLog.e("Jungsoo", "onResume begin");
 
-            if(isDropboxLoginClicked) {
+            if (isDropboxLoginClicked) {
                 onResumeDropbox();
                 isDropboxLoginClicked = false;
             }
@@ -543,6 +543,7 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
         } else {
             JLog.e("Jungsoo", "initContentView setContentView begin");
             setContentView(getLayoutResId());
+            mainView = this.findViewById(android.R.id.content);
             JLog.e("Jungsoo", "initContentView setContentView end");
         }
 
@@ -861,7 +862,14 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
 
     void loginDropbox(final MenuItem item) {
         // 로그인이 안되어 있으면 로그인을 한다.
-        Auth.startOAuth2Authentication(this, getString(R.string.app_key_dropbox));
+
+        int app_key;
+        if (AppHelper.isPro(this)) {
+            app_key = R.string.app_key_dropbox_pro;
+        } else {
+            app_key = R.string.app_key_dropbox_free;
+        }
+        Auth.startOAuth2Authentication(this, getString(app_key));
 
         // 최종적으로 로그인을 하고 나서는 explorer에서 dropbox로 가야한다. -> 이건 선택으로 남겨놓자.
         isDropboxLoginClicked = true;

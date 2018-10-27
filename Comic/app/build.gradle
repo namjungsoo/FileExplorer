@@ -17,8 +17,8 @@ android {
         buildConfigField "String", "GA_TRACKING_ID", "\"UA-61499807-13\""
         buildConfigField "boolean", "PREVIEW_ZIP", "true"
 
-        versionCode 46
-        versionName "1.4.4"
+        versionCode 47
+        versionName "1.4.5"
 
     }
     signingConfigs {
@@ -60,12 +60,15 @@ android {
             dimension "edition"
             applicationIdSuffix '.pro'
             addManifestPlaceholders([APP_NAME: "@string/comicz_name_pro"])
+            addManifestPlaceholders([DB_APP_KEY: "db-b5926in1a98yhzq"])
         }
         free {
             buildConfigField "boolean", "SHOW_AD", "true"
             applicationIdSuffix '.free'
             dimension "edition"
             addManifestPlaceholders([APP_NAME: "@string/comicz_name_free"])
+            addManifestPlaceholders([DB_APP_KEY: "db-k78nqdn19p4864o"])
+
         }
     }
     sourceSets {
@@ -74,6 +77,7 @@ android {
             java.srcDirs += "../../Explorer/src/comicz/java"
             res.srcDirs += "../../Explorer/src/main/res"
             res.srcDirs += "../../Explorer/src/comicz/res"
+            assets.srcDirs += "../../Explorer/src/main/assets"
 
             // 상위폴더로 들어가는 상대 path의 manifest는 지원하지 않는 듯
             // 무조건 src 이하에 있어야 하는 듯
