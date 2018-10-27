@@ -3,12 +3,14 @@ package com.duongame.activity.main;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.app.Activity;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -110,6 +112,18 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
 
     protected abstract BaseFragment getCurrentFragment();
 
+    void gotoAppStorePage(String packageName) {
+        try {
+            final Intent marketLaunch = new Intent(Intent.ACTION_VIEW);
+            marketLaunch.setData(Uri.parse("market://details?id=" + packageName));
+            this.startActivity(marketLaunch);
+        } catch (ActivityNotFoundException e) {// FIX: ActivityNotFoundException
+            final Intent marketLaunch = new Intent(Intent.ACTION_VIEW);
+            marketLaunch.setData(Uri.parse("https://play.google.com/store/apps/details?id=" + packageName));
+            this.startActivity(marketLaunch);
+        }
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -134,8 +148,20 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
                 if (task.isSuccessful()) {
                     mFirebaseRemoteConfig.activateFetched();
                     long version = mFirebaseRemoteConfig.getLong("latest_version");
+                    boolean force = mFirebaseRemoteConfig.getBoolean("force_update");
                     if (BuildConfig.VERSION_CODE < version) {
                         ToastHelper.info(BaseMainActivity.this, R.string.toast_new_version);
+                        if (force) {
+                            // 강제로 플레이 스토어로 이동함
+                            gotoAppStorePage(getApplicationContext().getPackageName());
+                        }
+                    }
+
+                    // 앱 마이그레이션 관련
+                    String from = mFirebaseRemoteConfig.getString("migration_from");
+                    String to = mFirebaseRemoteConfig.getString("migration_to");
+                    if(from.equals(getApplicationContext().getPackageName())) {
+                        gotoAppStorePage(to);
                     }
                 }
             }
