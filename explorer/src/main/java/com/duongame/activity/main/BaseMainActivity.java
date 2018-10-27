@@ -94,6 +94,9 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
     NavigationView navigationView;
 
     ProgressBar loadingProgressBar;
+    boolean isDropboxLoginClicked;
+    boolean isGoogleDriveLoginClicked;
+
 
     public boolean getShowReview() {
         return showReview;
@@ -110,10 +113,6 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-//        new Thread(new Runnable() {
-//            @Override
-//            public void run() {
 
         AdBannerManager.init(BaseMainActivity.this);
         AdInterstitialManager.init(BaseMainActivity.this);
@@ -141,8 +140,6 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
                 }
             }
         });
-//            }
-//        }).start();
     }
 
     @Override
@@ -178,10 +175,20 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
             adView.resume();
         }
 
+        //TODO: 코믹z만 클라우드 지원. 추후 다른 앱에서 지원하려면 해제해야함
         if (AppHelper.isComicz(this)) {
             JLog.e("Jungsoo", "onResume begin");
-            onResumeDropbox();
-            onResumeGoogleDrive();
+
+            if(isDropboxLoginClicked) {
+                onResumeDropbox();
+                isDropboxLoginClicked = false;
+            }
+
+            if (isGoogleDriveLoginClicked) {
+                onResumeGoogleDrive();
+                isGoogleDriveLoginClicked = false;
+            }
+
             JLog.e("Jungsoo", "onResume end");
         }
     }
@@ -214,15 +221,6 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
 
     void onResumeGoogleDrive() {
         JLog.e("Jungsoo", "onResumeGoogleDrive");
-//        new Thread(new Runnable() {
-//            @Override
-//            public void run() {
-//                String accountName = PreferenceHelper.getAccountGoogleDrive(BaseMainActivity.this);
-//                //loadGoogleDrive(accountName);
-//                GoogleDriveManager.login(BaseMainActivity.this, accountName);
-//                loadGoogleDrive(accountName);
-//            }
-//        }).start();
         GoogleDriveLoginTask task = new GoogleDriveLoginTask();
         task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
@@ -267,24 +265,6 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
 
     void onResumeDropbox() {
         JLog.e("Jungsoo", "onResumeDropbox");
-//        new Thread(new Runnable() {
-//            @Override
-//            public void run() {
-//                // Token을 저장한다.
-//                String accessToken = PreferenceHelper.getAccountDropbox(BaseMainActivity.this);
-//                if (accessToken == null) {
-//                    accessToken = Auth.getOAuth2Token();
-//                    if (accessToken != null) {
-//                        PreferenceHelper.setAccountDropbox(BaseMainActivity.this, accessToken);
-//                        initDropbox(accessToken);
-//                    } else {
-//                        getExplorerFragment().updateDropboxUI(false);
-//                    }
-//                } else {
-//                    initDropbox(accessToken);
-//                }
-//            }
-//        }).start();
         DropboxLoginTask task = new DropboxLoginTask();
         task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
@@ -676,6 +656,7 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
         if (requestCode == PermissionManager.PERMISSION_CONTACTS) {
             // 구글 로그인 중이다.
             GoogleDriveManager.login(this);
+            isGoogleDriveLoginClicked = true;
         }
     }
 
@@ -857,6 +838,7 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
         Auth.startOAuth2Authentication(this, getString(R.string.app_key_dropbox));
 
         // 최종적으로 로그인을 하고 나서는 explorer에서 dropbox로 가야한다. -> 이건 선택으로 남겨놓자.
+        isDropboxLoginClicked = true;
     }
 
     void logoutDropbox(final MenuItem item) {
@@ -911,6 +893,7 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
         if (PermissionManager.checkContactsPermission(this)) {
             // 퍼미션이 있을경우 여기서 로그인을 함
             GoogleDriveManager.login(this);
+            isGoogleDriveLoginClicked = true;
         }
     }
 

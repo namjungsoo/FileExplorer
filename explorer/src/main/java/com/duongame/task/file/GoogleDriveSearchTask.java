@@ -223,7 +223,7 @@ public class GoogleDriveSearchTask extends AsyncTask<String, Void, FileExplorer.
             return;
 
         // UI 업데이트
-        fragment.updateDropboxUI(false);
+        fragment.updateGoogleDriveUI(false);
         fragment.setCanClick(true);
 
         // 에러 메세지

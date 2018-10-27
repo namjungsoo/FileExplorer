@@ -377,11 +377,13 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
         if (show) {
             dropbox.setVisibility(View.VISIBLE);
         } else {
-            dropbox.setVisibility(View.GONE);
-
             // 로그아웃인 상황이니 최초로 간다.
             cloud = CLOUD_LOCAL;
-            updateFileList(application.getInitialPath());
+
+            if (dropbox.getVisibility() == View.VISIBLE) {
+                updateFileList(application.getInitialPath());
+                dropbox.setVisibility(View.GONE);
+            }
         }
 
         storageIndicator.refresh();
@@ -397,11 +399,13 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
         if (show) {
             googleDrive.setVisibility(View.VISIBLE);
         } else {
-            googleDrive.setVisibility(View.GONE);
-
             // 로그아웃인 상황이니 최초로 간다.
             cloud = CLOUD_LOCAL;
-            updateFileList(application.getInitialPath());
+
+            if(googleDrive.getVisibility() == View.VISIBLE) {
+                updateFileList(application.getInitialPath());
+                googleDrive.setVisibility(View.GONE);
+            }
         }
 
         storageIndicator.refresh();
@@ -1019,7 +1023,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
 
         // preference는 쓰레드로 사용하지 않기로 함
         // 현재 패스를 저장
-        JLog.e("Jungsoo", "updateFileList set begin");
+        JLog.e("Jungsoo", "updateFileList set begin path=" + path + " cloud=" + cloud);
         PreferenceHelper.setLastPath(getActivity(), path);
         PreferenceHelper.setLastCloud(getActivity(), cloud);
         JLog.e("Jungsoo", "updateFileList set end");
