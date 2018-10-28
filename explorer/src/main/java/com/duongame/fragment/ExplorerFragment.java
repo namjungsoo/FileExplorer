@@ -402,7 +402,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
             // 로그아웃인 상황이니 최초로 간다.
             cloud = CLOUD_LOCAL;
 
-            if(googleDrive.getVisibility() == View.VISIBLE) {
+            if (googleDrive.getVisibility() == View.VISIBLE) {
                 updateFileList(application.getInitialPath());
                 googleDrive.setVisibility(View.GONE);
             }

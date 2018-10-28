@@ -1,9 +1,13 @@
 package com.duongame.helper;
 
+import android.os.Environment;
+
+import java.io.File;
 import java.io.InputStream;
 import java.util.HashSet;
 import java.util.Locale;
 
+import static android.os.Environment.getExternalStorageDirectory;
 import static com.duongame.file.FileHelper.BLOCK_SIZE;
 
 /**
@@ -11,49 +15,28 @@ import static com.duongame.file.FileHelper.BLOCK_SIZE;
  */
 
 public class ExtSdCardHelper {
-    public static HashSet<String> getExternalMounts() {
-        final HashSet<String> out = new HashSet<String>();
-        String reg = "(?i).*vold.*(vfat|ntfs|exfat|fat32|ext3|ext4).*rw.*";
-        String s = "";
-        try {
-            final Process process = new ProcessBuilder().command("mount")
-                    .redirectErrorStream(true).start();
-            process.waitFor();
-            final InputStream is = process.getInputStream();
-            final byte[] buffer = new byte[BLOCK_SIZE];
-            while (is.read(buffer) != -1) {
-                s = s + new String(buffer);
-            }
-            is.close();
-        } catch (final Exception e) {
-            e.printStackTrace();
-        }
-
-        // parse output
-        final String[] lines = s.split("\n");
-        for (String line : lines) {
-            if (!line.toLowerCase(Locale.US).contains("asec")) {
-                if (line.matches(reg)) {
-                    String[] parts = line.split(" ");
-                    for (String part : parts) {
-                        if (part.startsWith("/"))
-                            if (!part.toLowerCase(Locale.US).contains("vold"))
-                                out.add(part);
-                    }
-                }
-            }
-        }
-        return out;
-    }
-
     public static String getExternalSdCardPath() {
-        // 외장 SD카드 주소
-        HashSet<String> mountSet = getExternalMounts();
-        if (mountSet.size() == 0)
+        File root = Environment.getExternalStorageDirectory();
+        if (root == null)
             return null;
 
-        String extSdCard = mountSet.iterator().next();
-        extSdCard = "/storage/" + extSdCard.substring(extSdCard.lastIndexOf("/") + 1);
-        return extSdCard;
+        File parent = root.getParentFile();
+        if (parent == null)
+            return null;
+
+        File storage = parent.getParentFile();
+        if (storage == null)
+            return null;
+
+        File[] files = storage.listFiles();
+        for (File file : files) {
+            String path = file.getAbsolutePath();
+            if (path.contains("emulated"))
+                continue;
+            if (path.equals("self"))
+                continue;
+            return file.getAbsolutePath();
+        }
+        return null;
     }
 }
