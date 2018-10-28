@@ -19,6 +19,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class BitmapCacheManager {
     private final static String TAG = BitmapCacheManager.class.getSimpleName();
+    @SuppressWarnings("unused")
     private final static boolean DEBUG = false;
 
     private static class BitmapCache {
@@ -237,7 +238,7 @@ public class BitmapCacheManager {
         final ArrayList<String> recycleList = new ArrayList<>();
 
         for (String key : thumbnailCache.keySet()) {
-            BitmapCache cache = bitmapCache.get(key);
+            BitmapCache cache = thumbnailCache.get(key);
             if (cache == null) {
                 continue;
             }

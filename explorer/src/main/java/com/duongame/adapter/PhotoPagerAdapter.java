@@ -102,7 +102,13 @@ public class PhotoPagerAdapter extends ViewerPagerAdapter {
 
         // 이미지뷰에서 bitmap을 끊어주자.
         final ViewGroup rootView = (ViewGroup) object;
+        if (rootView == null)
+            return;
+
         final ImageView imageView = rootView.findViewById(R.id.image_viewer);
+        if (imageView == null)
+            return;
+
         imageView.setImageBitmap(null);
 
         //FIX: OOM
@@ -113,8 +119,11 @@ public class PhotoPagerAdapter extends ViewerPagerAdapter {
     private void deleteItemBitmapCache(int position) {
         try {
             ExplorerItem item = getImageList().get(position);
+            if (item == null)
+                return;
+
             // bitmap부터 체크
-            if(item.side == ExplorerItem.SIDE_ALL) {
+            if (item.side == ExplorerItem.SIDE_ALL) {
                 BitmapCacheManager.removeBitmap(item.path);
             } else {
                 BitmapCacheManager.removePage(item.path);

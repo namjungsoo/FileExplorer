@@ -201,7 +201,6 @@ public class ExplorerAdapter extends RecyclerView.Adapter<ExplorerAdapter.Explor
     void setIconImage(final ExplorerViewHolder viewHolder, final ExplorerItem item) {
         final Bitmap bitmap = getThumbnail(item.path);
         if (bitmap == null) {
-
             if (item.path.endsWith(".gif")) {
                 viewHolder.icon.setImageResource(R.drawable.jpg);
                 LoadThumbnailTask task = new LoadThumbnailTask(context, viewHolder.icon, viewHolder.iconSmall);
@@ -236,6 +235,7 @@ public class ExplorerAdapter extends RecyclerView.Adapter<ExplorerAdapter.Explor
             }
         } else {
             viewHolder.icon.setImageBitmap(bitmap);
+            BitmapCacheManager.setThumbnail(item.path, bitmap, viewHolder.icon);
         }
     }
 
@@ -248,6 +248,7 @@ public class ExplorerAdapter extends RecyclerView.Adapter<ExplorerAdapter.Explor
             task.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, item.path);
         } else {// 로딩된 비트맵을 셋팅
             viewHolder.icon.setImageBitmap(bitmap);
+            BitmapCacheManager.setThumbnail(item.path, bitmap, viewHolder.icon);
         }
     }
 
@@ -256,7 +257,6 @@ public class ExplorerAdapter extends RecyclerView.Adapter<ExplorerAdapter.Explor
         final Drawable drawable = getDrawable(item.path);
         if (drawable == null) {
             viewHolder.icon.setImageResource(R.drawable.zip);
-
             if (BuildConfig.PREVIEW_ZIP) {
                 LoadZipThumbnailTask task = new LoadZipThumbnailTask(context, viewHolder.icon, viewHolder.iconSmall);
                 task.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, item.path);
@@ -291,6 +291,7 @@ public class ExplorerAdapter extends RecyclerView.Adapter<ExplorerAdapter.Explor
             task.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, item.path);
         } else {// 로딩된 비트맵을 셋팅
             viewHolder.icon.setImageBitmap(bitmap);
+            BitmapCacheManager.setThumbnail(item.path, bitmap, viewHolder.icon);
         }
     }
 

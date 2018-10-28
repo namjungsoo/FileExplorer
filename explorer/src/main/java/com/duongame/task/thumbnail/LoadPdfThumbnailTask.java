@@ -7,6 +7,7 @@ import android.os.AsyncTask;
 import android.widget.ImageView;
 
 import com.duongame.adapter.ExplorerItem;
+import com.duongame.bitmap.BitmapCacheManager;
 import com.duongame.bitmap.BitmapLoader;
 
 import java.lang.ref.WeakReference;
@@ -23,16 +24,16 @@ public class LoadPdfThumbnailTask extends AsyncTask<String, Void, Bitmap> {
     private String path;
 
     public LoadPdfThumbnailTask(Context context, ImageView icon, ImageView iconSmall) {
-        this.contextRef = new WeakReference<Context>(context);
-        this.iconRef = new WeakReference<ImageView>(icon);
-        this.iconSmallRef = new WeakReference<ImageView>(iconSmall);
+        this.contextRef = new WeakReference<>(context);
+        this.iconRef = new WeakReference<>(icon);
+        this.iconSmallRef = new WeakReference<>(iconSmall);
     }
 
     @Override
     protected Bitmap doInBackground(String... params) {
         path = params[0];
 
-        if(contextRef.get() == null)
+        if (contextRef.get() == null)
             return null;
 
         if (contextRef.get() instanceof Activity) {
@@ -40,7 +41,7 @@ public class LoadPdfThumbnailTask extends AsyncTask<String, Void, Bitmap> {
                 return null;
         }
 
-        BitmapLoader.BitmapOrDrawable bod = loadThumbnail(contextRef.get(), ExplorerItem.FILETYPE_PDF, params[0]);
+        BitmapLoader.BitmapOrDrawable bod = loadThumbnail(contextRef.get(), ExplorerItem.FILETYPE_PDF, path);
         return bod.bitmap;
     }
 
@@ -49,15 +50,25 @@ public class LoadPdfThumbnailTask extends AsyncTask<String, Void, Bitmap> {
         super.onPostExecute(bitmap);
         if (bitmap == null)
             return;
+
         if (path == null)
             return;
-        if (iconRef.get() == null)
+
+        ImageView icon = iconRef.get();
+        if (icon == null)
             return;
-        if (iconSmallRef.get() == null)
+
+        ImageView iconSmall = iconSmallRef.get();
+        if (iconSmall == null)
             return;
-        if (iconSmallRef.get().getTag() == null)
+
+        String tag = (String) iconSmall.getTag();
+        if (tag == null)
             return;
-        if (path.equals(iconSmallRef.get().getTag()))
-            iconRef.get().setImageBitmap(bitmap);
+
+        if (path.equals(tag)) {
+            icon.setImageBitmap(bitmap);
+            BitmapCacheManager.setThumbnail(path, bitmap, icon);
+        }
     }
 }

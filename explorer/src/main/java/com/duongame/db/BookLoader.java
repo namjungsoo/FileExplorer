@@ -275,6 +275,7 @@ public class BookLoader {
             }
         } else {
             holder.thumb.setImageBitmap(bitmap);
+            BitmapCacheManager.setThumbnail(path, bitmap, holder.thumb);
         }
     }
 

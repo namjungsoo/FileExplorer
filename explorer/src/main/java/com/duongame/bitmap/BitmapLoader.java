@@ -52,9 +52,12 @@ public class BitmapLoader {
         BitmapOrDrawable bod = new BitmapOrDrawable();
 
         switch (type) {
+            // Drawable
             case ExplorerItem.FILETYPE_APK:
                 bod.drawable = BitmapLoader.loadApkThumbnailDrawable(context, path);
                 break;
+            // 나머지는 전부 Bitmap
+            // Bitmap은 캐시에서 관리된다.
             case ExplorerItem.FILETYPE_PDF:
                 bod.bitmap = BitmapLoader.loadPdfThumbnailBitmap(context, path);
                 break;
@@ -599,7 +602,9 @@ public class BitmapLoader {
         // 잘리는 비트맵은 더이상 사용하지 않으므로 삭제한다.
         // 이거 때문에 recycled 에러가 발생한다.
         // remove를 하지 않으면 oom이 발생한다.
-        BitmapCacheManager.removeBitmap(item.path);
+
+        // 캐쉬에 포함되지 않는 이미지이다.
+//        BitmapCacheManager.removeBitmap(item.path);
         return page;
     }
 }

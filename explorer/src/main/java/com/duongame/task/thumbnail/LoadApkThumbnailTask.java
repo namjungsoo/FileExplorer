@@ -40,7 +40,7 @@ public class LoadApkThumbnailTask extends AsyncTask<String, Void, Drawable> {
                 return null;
         }
 
-        BitmapLoader.BitmapOrDrawable bod = loadThumbnail(contextRef.get(), ExplorerItem.FILETYPE_APK, params[0]);
+        BitmapLoader.BitmapOrDrawable bod = loadThumbnail(contextRef.get(), ExplorerItem.FILETYPE_APK, path);
         return bod.drawable;
     }
 

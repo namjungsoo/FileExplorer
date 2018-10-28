@@ -15,6 +15,7 @@ import java.lang.ref.WeakReference;
  * Created by namjungsoo on 2016-12-16.
  */
 
+// 원래는 일반 이미지 썸네일이었으나 현재는 GIF만 사용함
 public class LoadThumbnailTask extends AsyncTask<String, Void, Bitmap> {
     private final WeakReference<Context> contextRef;
     private final WeakReference<ImageView> iconRef, iconSmallRef;
@@ -67,17 +68,22 @@ public class LoadThumbnailTask extends AsyncTask<String, Void, Bitmap> {
         super.onPostExecute(bitmap);
         if (bitmap == null)
             return;
+
         if (path == null)
             return;
+
         ImageView icon = iconRef.get();
         if (icon == null)
             return;
+
         ImageView iconSmall = iconSmallRef.get();
         if (iconSmall == null)
             return;
+
         String tag = (String) iconSmall.getTag();
         if (tag == null)
             return;
+
         if (path.equals(tag)) {
             icon.setImageBitmap(bitmap);
             BitmapCacheManager.setThumbnail(path, bitmap, icon);

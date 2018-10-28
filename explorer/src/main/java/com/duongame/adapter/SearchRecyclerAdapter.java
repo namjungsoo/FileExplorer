@@ -117,6 +117,7 @@ public class SearchRecyclerAdapter extends RecyclerView.Adapter<SearchRecyclerAd
             task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, item.path);
         } else {// 로딩된 비트맵을 셋팅
             holder.icon.setImageBitmap(bitmap);
+            BitmapCacheManager.setThumbnail(item.path, bitmap, holder.icon);
         }
     }
 
