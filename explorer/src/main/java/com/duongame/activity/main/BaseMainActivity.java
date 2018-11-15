@@ -487,7 +487,7 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
         }
 
         //action_setting
-        if (id == R.id.action_setting) {
+        if (id == R.id.action_settings) {
             Intent intent = SettingActivity.getLocalIntent(this);
             startActivity(intent);
             return true;

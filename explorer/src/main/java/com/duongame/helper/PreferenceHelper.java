@@ -37,6 +37,10 @@ public class PreferenceHelper {
 
     private static final String LAST_CLOUD = "last_cloud";
 
+    private static final String NIGHT_MODE = "night_mode";
+    private static final String JAPANESE_DIRECTION = "japanese_direction";
+    private static final String THUMBNAIL = "thumbnail";
+
     private static SharedPreferences pref = null;
 
     private static void checkPrefManager(Context context) {
@@ -228,6 +232,43 @@ public class PreferenceHelper {
         editor.putInt(LAST_CLOUD, cloud);
         editor.apply();
     }
-
     //END: Cloud Drive
+
+
+    public static boolean getNightMode(Context context) {
+        checkPrefManager(context);
+        return pref.getBoolean(NIGHT_MODE, false);
+    }
+
+    public static void setNightMode(Context context, boolean b) {
+        checkPrefManager(context);
+        final SharedPreferences.Editor editor = pref.edit();
+        editor.putBoolean(NIGHT_MODE, b);
+        editor.apply();
+    }
+
+    public static boolean getJapaneseDirection(Context context) {
+        checkPrefManager(context);
+        return pref.getBoolean(JAPANESE_DIRECTION, false);
+    }
+
+    public static void setJapaneseDirection(Context context, boolean b) {
+        checkPrefManager(context);
+        final SharedPreferences.Editor editor = pref.edit();
+        editor.putBoolean(JAPANESE_DIRECTION, b);
+        editor.apply();
+    }
+
+    public static boolean getThumbnail(Context context) {
+        checkPrefManager(context);
+        return pref.getBoolean(THUMBNAIL, false);
+    }
+
+    public static void setThumbnail(Context context, boolean b) {
+        checkPrefManager(context);
+        final SharedPreferences.Editor editor = pref.edit();
+        editor.putBoolean(THUMBNAIL, b);
+        editor.apply();
+    }
+
 }

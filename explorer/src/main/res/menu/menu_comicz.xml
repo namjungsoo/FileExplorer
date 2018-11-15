@@ -50,14 +50,13 @@
     <item
         android:id="@+id/action_license"
         android:orderInCategory="100"
-        android:title="License"
+        android:title="@string/action_license"
         app:showAsAction="never" />
 
     <!-- 나중에 action_setting activity가 완성되면 다시 부활 -->
     <item
-        android:id="@+id/action_setting"
+        android:id="@+id/action_settings"
         android:orderInCategory="100"
-        android:title="Setting"
+        android:title="@string/action_settings"
         app:showAsAction="never" />
-
 </menu>

@@ -60,7 +60,7 @@
             android:layout_height="wrap_content" />
     </RelativeLayout>
 
-    <!-- 썸네일 비활성화, 기본값: false -->
+    <!-- 나이트 모드, 기본값: false -->
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="36dp"

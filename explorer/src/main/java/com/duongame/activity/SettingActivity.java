@@ -3,7 +3,10 @@ package com.duongame.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.CompoundButton;
+import android.widget.Switch;
 
+import com.duongame.AnalyticsApplication;
 import com.duongame.R;
 
 
@@ -23,12 +26,55 @@ import com.duongame.R;
 // 6. ZIP 파일 인코딩
 // 7. 이미지 프로세싱
 public class SettingActivity extends BaseActivity {
+    Switch nightMode;
+    Switch thumbnail;
+    Switch japaneseDirection;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         initContentView();
         initToolbar();
+
+        initUI();
+    }
+
+    void initUI() {
+        nightMode = findViewById(R.id.night_mode);
+        thumbnail = findViewById(R.id.thumbnail);
+        japaneseDirection = findViewById(R.id.japanese_direction);
+
+        nightMode.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                AnalyticsApplication application = (AnalyticsApplication)getApplication();
+                if(application != null) {
+                    application.setNightMode(isChecked);
+                }
+            }
+        });
+
+        thumbnail.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                AnalyticsApplication application = (AnalyticsApplication)getApplication();
+                if(application != null) {
+                    application.setThumbnail(isChecked);
+                }
+            }
+        });
+
+        japaneseDirection.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                AnalyticsApplication application = (AnalyticsApplication)getApplication();
+                if(application != null) {
+                    application.setJapaneseDirection(isChecked);
+                }
+            }
+        });
+
     }
 
     public static Intent getLocalIntent(Context context) {

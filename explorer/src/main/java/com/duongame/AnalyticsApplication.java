@@ -6,6 +6,7 @@ import android.support.multidex.MultiDexApplication;
 
 import com.duongame.adapter.ExplorerItem;
 import com.duongame.helper.JLog;
+import com.duongame.helper.PreferenceHelper;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.Tracker;
 import com.google.firebase.analytics.FirebaseAnalytics;
@@ -19,10 +20,12 @@ import java.util.ArrayList;
 public class AnalyticsApplication extends MultiDexApplication {
     private Tracker mTracker;
 
+    // path
     private ArrayList<ExplorerItem> imageList;
     private final String initialPath = Environment.getExternalStorageDirectory().getAbsolutePath();
     private String lastPath;
 
+    // setting
     private boolean thumbnail;
     private boolean nightMode;
     private boolean japaneseDirection;
@@ -30,6 +33,11 @@ public class AnalyticsApplication extends MultiDexApplication {
     @Override
     public void onCreate() {
         super.onCreate();
+
+        nightMode = PreferenceHelper.getNightMode(this);
+        thumbnail = PreferenceHelper.getThumbnail(this);
+        japaneseDirection = PreferenceHelper.getJapaneseDirection(this);
+
         JLog.e("Jungsoo", "onCreate end");
     }
 
@@ -86,6 +94,35 @@ public class AnalyticsApplication extends MultiDexApplication {
 
     public boolean isInitialPath(String path) {
         return path.equals(initialPath);
+    }
+    //endregion
+
+    //region setting
+    public boolean isJapaneseDirection() {
+        return japaneseDirection;
+    }
+
+    public boolean isNightMode() {
+        return nightMode;
+    }
+
+    public boolean isThumbnail() {
+        return thumbnail;
+    }
+
+    public void setJapaneseDirection(boolean b) {
+        japaneseDirection = b;
+        PreferenceHelper.setJapaneseDirection(this, b);
+    }
+
+    public void setThumbnail(boolean b) {
+        thumbnail = b;
+        PreferenceHelper.setThumbnail(this, b);
+    }
+
+    public void setNightMode(boolean b) {
+        nightMode = b;
+        PreferenceHelper.setNightMode(this, b);
     }
     //endregion
 }
