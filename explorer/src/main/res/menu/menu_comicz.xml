@@ -54,10 +54,10 @@
         app:showAsAction="never" />
 
     <!-- 나중에 action_setting activity가 완성되면 다시 부활 -->
-    <!--<item-->
-        <!--android:id="@+id/action_setting"-->
-        <!--android:orderInCategory="100"-->
-        <!--android:title="Setting"-->
-        <!--app:showAsAction="never" />-->
+    <item
+        android:id="@+id/action_setting"
+        android:orderInCategory="100"
+        android:title="Setting"
+        app:showAsAction="never" />
 
 </menu>

@@ -23,6 +23,10 @@ public class AnalyticsApplication extends MultiDexApplication {
     private final String initialPath = Environment.getExternalStorageDirectory().getAbsolutePath();
     private String lastPath;
 
+    private boolean thumbnail;
+    private boolean nightMode;
+    private boolean japaneseDirection;
+
     @Override
     public void onCreate() {
         super.onCreate();

@@ -4,24 +4,83 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <!-- 만화책 읽기 방향 기본값 -->
-    <LinearLayout
+    <TextView
         android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_height="36dp"
+        android:gravity="center_vertical"
+        android:textSize="16sp"
+        android:text="이미지"
+        android:layout_marginLeft="5dp"
+        android:textStyle="bold"/>
+
+    <!-- 만화책 읽기 방향 일본식, 기본값: false -->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="36dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
         android:orientation="horizontal">
 
         <TextView
             android:layout_width="wrap_content"
-            android:layout_height="60dp"
+            android:layout_height="match_parent"
             android:gravity="center"
-            android:text="읽기 방향 " />
+            android:layout_alignParentStart="true"
+            android:text="읽기 방향 오른쪽 우선 (일본식)" />
 
         <Switch
+            android:id="@+id/japanese_direction"
+            android:layout_alignParentEnd="true"
+            android:layout_centerInParent="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
-    </LinearLayout>
+    </RelativeLayout>
 
 
-    <!-- 폰트 변경 -->
+    <!-- 썸네일 비활성화, 기본값: false -->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="36dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:layout_alignParentStart="true"
+            android:text="썸네일 비활성화" />
+
+        <Switch
+            android:id="@+id/thumbnail"
+            android:layout_alignParentEnd="true"
+            android:layout_centerInParent="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </RelativeLayout>
+
+    <!-- 썸네일 비활성화, 기본값: false -->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="36dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:layout_alignParentStart="true"
+            android:text="나이트 모드 색상 반전" />
+
+        <Switch
+            android:id="@+id/night_mode"
+            android:layout_alignParentEnd="true"
+            android:layout_centerInParent="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </RelativeLayout>
 
 </LinearLayout>
