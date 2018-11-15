@@ -25,7 +25,7 @@ import com.duongame.R;
 // 5. 패스 워드
 // 6. ZIP 파일 인코딩
 // 7. 이미지 프로세싱
-public class SettingActivity extends BaseActivity {
+public class SettingsActivity extends BaseActivity {
     Switch nightMode;
     Switch thumbnail;
     Switch japaneseDirection;
@@ -78,7 +78,7 @@ public class SettingActivity extends BaseActivity {
     }
 
     public static Intent getLocalIntent(Context context) {
-        final Intent intent = new Intent(context, SettingActivity.class);
+        final Intent intent = new Intent(context, SettingsActivity.class);
         return intent;
     }
 
@@ -89,6 +89,6 @@ public class SettingActivity extends BaseActivity {
     }
 
     private void initContentView() {
-        setContentView(R.layout.activity_setting);
+        setContentView(R.layout.activity_settings);
     }
 }

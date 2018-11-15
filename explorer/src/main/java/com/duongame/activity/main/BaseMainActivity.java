@@ -39,7 +39,7 @@ import com.dropbox.core.v2.users.FullAccount;
 import com.duongame.BuildConfig;
 import com.duongame.R;
 import com.duongame.activity.BaseActivity;
-import com.duongame.activity.SettingActivity;
+import com.duongame.activity.SettingsActivity;
 import com.duongame.bitmap.BitmapCacheManager;
 import com.duongame.cloud.dropbox.DropboxClientFactory;
 import com.duongame.cloud.dropbox.GetCurrentAccountTask;
@@ -488,7 +488,7 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
 
         //action_setting
         if (id == R.id.action_settings) {
-            Intent intent = SettingActivity.getLocalIntent(this);
+            Intent intent = SettingsActivity.getLocalIntent(this);
             startActivity(intent);
             return true;
         }
