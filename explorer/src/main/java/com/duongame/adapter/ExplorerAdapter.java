@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.target.ImageViewTarget;
+import com.duongame.AnalyticsApplication;
 import com.duongame.BuildConfig;
 import com.duongame.GlideApp;
 import com.duongame.R;
@@ -202,36 +203,43 @@ public class ExplorerAdapter extends RecyclerView.Adapter<ExplorerAdapter.Explor
         final Bitmap bitmap = getThumbnail(item.path);
         if (bitmap == null) {
             if (item.path.endsWith(".gif")) {
+                // gif가 없어서 jpg로 처리함
                 viewHolder.icon.setImageResource(R.drawable.jpg);
-                LoadThumbnailTask task = new LoadThumbnailTask(context, viewHolder.icon, viewHolder.iconSmall);
-                task.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, item.path);
+
+                if(isThumbnailEnabled()) {
+                    LoadThumbnailTask task = new LoadThumbnailTask(context, viewHolder.icon, viewHolder.iconSmall);
+                    task.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, item.path);
+                }
             } else {
                 if (item.path.endsWith(".png"))
                     viewHolder.icon.setImageResource(R.drawable.png);
                 else
                     viewHolder.icon.setImageResource(R.drawable.jpg);
-                // Glide로 읽자
-                GlideApp.with(context)
-                        .load(new File(item.path))
-                        .diskCacheStrategy(DiskCacheStrategy.ALL)
-                        .placeholder(R.drawable.file)
-                        .centerCrop()
-                        .into(new ImageViewTarget<Drawable>(viewHolder.icon) {
-                            @Override
-                            protected void setResource(@Nullable Drawable resource) {
-                                //FIX: destroyed activity error
-                                if (context.isFinishing())
-                                    return;
 
-                                Object tag = viewHolder.iconSmall.getTag();
-                                if (tag == null)
-                                    return;
+                if(isThumbnailEnabled()) {
+                    // Glide로 읽자
+                    GlideApp.with(context)
+                            .load(new File(item.path))
+                            .diskCacheStrategy(DiskCacheStrategy.ALL)
+                            .placeholder(R.drawable.file)
+                            .centerCrop()
+                            .into(new ImageViewTarget<Drawable>(viewHolder.icon) {
+                                @Override
+                                protected void setResource(@Nullable Drawable resource) {
+                                    //FIX: destroyed activity error
+                                    if (context.isFinishing())
+                                        return;
 
-                                if (tag.equals(item.path)) {
-                                    getView().setImageDrawable(resource);
+                                    Object tag = viewHolder.iconSmall.getTag();
+                                    if (tag == null)
+                                        return;
+
+                                    if (tag.equals(item.path)) {
+                                        getView().setImageDrawable(resource);
+                                    }
                                 }
-                            }
-                        });
+                            });
+                }
             }
         } else {
             viewHolder.icon.setImageBitmap(bitmap);
@@ -252,12 +260,24 @@ public class ExplorerAdapter extends RecyclerView.Adapter<ExplorerAdapter.Explor
         }
     }
 
+    boolean isThumbnailEnabled() {
+        AnalyticsApplication application = (AnalyticsApplication) context.getApplication();
+        boolean thumbnail = true;
+
+        // isThumbnail은 disable일때 true이다.
+        if (application != null) {
+            thumbnail = !application.isThumbnail();
+        }
+        return thumbnail;
+    }
+
     void setIconZip(final ExplorerViewHolder viewHolder, ExplorerItem item) {
         JLog.e(TAG, "setIconZip " + item.path);
         final Drawable drawable = getDrawable(item.path);
         if (drawable == null) {
             viewHolder.icon.setImageResource(R.drawable.zip);
-            if (BuildConfig.PREVIEW_ZIP) {
+
+            if (BuildConfig.PREVIEW_ZIP && isThumbnailEnabled()) {
                 LoadZipThumbnailTask task = new LoadZipThumbnailTask(context, viewHolder.icon, viewHolder.iconSmall);
                 task.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, item.path);
             }
