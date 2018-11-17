@@ -82,7 +82,8 @@
     <string name="toast_cloud_download">%s를 다운로드 중&#8230;</string>
     <string name="toast_cloud_complete">파일 다운로드가 완료되었습니다.</string>
 
+    <string name="viewer">뷰어</string>
     <string name="night_mode">나이트 모드 색상 반전</string>
     <string name="thumbnail">썸네일 비활성화</string>
-    <string name="japanese_direction">읽기 방향 오른쪽 우선 (일본식)</string>
+    <string name="japanese_direction">읽기 방향 오른쪽 우선</string>
 </resources>

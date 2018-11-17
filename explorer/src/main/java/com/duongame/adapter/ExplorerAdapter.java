@@ -206,7 +206,7 @@ public class ExplorerAdapter extends RecyclerView.Adapter<ExplorerAdapter.Explor
                 // gif가 없어서 jpg로 처리함
                 viewHolder.icon.setImageResource(R.drawable.ic_file_jpg);
 
-                if(isThumbnailEnabled()) {
+                if (isThumbnailEnabled()) {
                     LoadThumbnailTask task = new LoadThumbnailTask(context, viewHolder.icon, viewHolder.iconSmall);
                     task.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, item.path);
                 }
@@ -216,7 +216,7 @@ public class ExplorerAdapter extends RecyclerView.Adapter<ExplorerAdapter.Explor
                 else
                     viewHolder.icon.setImageResource(R.drawable.ic_file_jpg);
 
-                if(isThumbnailEnabled()) {
+                if (isThumbnailEnabled()) {
                     // Glide로 읽자
                     GlideApp.with(context)
                             .load(new File(item.path))
@@ -252,8 +252,10 @@ public class ExplorerAdapter extends RecyclerView.Adapter<ExplorerAdapter.Explor
         if (bitmap == null) {
             viewHolder.icon.setImageResource(R.drawable.ic_file_pdf);
 
-            LoadPdfThumbnailTask task = new LoadPdfThumbnailTask(context, viewHolder.icon, viewHolder.iconSmall);
-            task.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, item.path);
+            if (isThumbnailEnabled()) {
+                LoadPdfThumbnailTask task = new LoadPdfThumbnailTask(context, viewHolder.icon, viewHolder.iconSmall);
+                task.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, item.path);
+            }
         } else {// 로딩된 비트맵을 셋팅
             viewHolder.icon.setImageBitmap(bitmap);
             BitmapCacheManager.setThumbnail(item.path, bitmap, viewHolder.icon);
@@ -289,10 +291,12 @@ public class ExplorerAdapter extends RecyclerView.Adapter<ExplorerAdapter.Explor
     void setIconApk(final ExplorerViewHolder viewHolder, ExplorerItem item) {
         final Drawable drawable = getDrawable(item.path);
         if (drawable == null) {
-            viewHolder.icon.setImageResource(R.drawable.ic_file_normal);
+            viewHolder.icon.setImageResource(R.drawable.ic_file_apk);
 
-            LoadApkThumbnailTask task = new LoadApkThumbnailTask(context, viewHolder.icon, viewHolder.iconSmall);
-            task.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, item.path);
+            if (isThumbnailEnabled()) {
+                LoadApkThumbnailTask task = new LoadApkThumbnailTask(context, viewHolder.icon, viewHolder.iconSmall);
+                task.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, item.path);
+            }
         } else {
             viewHolder.icon.setImageDrawable(drawable);
         }
@@ -307,8 +311,11 @@ public class ExplorerAdapter extends RecyclerView.Adapter<ExplorerAdapter.Explor
                 viewHolder.icon.setImageResource(R.drawable.ic_file_fla);
             else
                 viewHolder.icon.setImageResource(R.drawable.ic_file_avi);
-            LoadVideoThumbnailTask task = new LoadVideoThumbnailTask(context, viewHolder.icon, viewHolder.iconSmall);
-            task.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, item.path);
+
+            if (isThumbnailEnabled()) {
+                LoadVideoThumbnailTask task = new LoadVideoThumbnailTask(context, viewHolder.icon, viewHolder.iconSmall);
+                task.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, item.path);
+            }
         } else {// 로딩된 비트맵을 셋팅
             viewHolder.icon.setImageBitmap(bitmap);
             BitmapCacheManager.setThumbnail(item.path, bitmap, viewHolder.icon);

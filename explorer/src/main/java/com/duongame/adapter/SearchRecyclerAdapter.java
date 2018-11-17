@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.duongame.AnalyticsApplication;
 import com.duongame.R;
 import com.duongame.bitmap.BitmapCacheManager;
 import com.duongame.file.FileHelper;
@@ -96,13 +97,26 @@ public class SearchRecyclerAdapter extends RecyclerView.Adapter<SearchRecyclerAd
         return fileList.size();
     }
 
+    boolean isThumbnailEnabled() {
+        AnalyticsApplication application = (AnalyticsApplication) context.getApplication();
+        boolean thumbnail = true;
+
+        // isThumbnail은 disable일때 true이다.
+        if (application != null) {
+            thumbnail = !application.isThumbnail();
+        }
+        return thumbnail;
+    }
+
     void setIconZip(SearchViewHolder holder, ExplorerItem item) {
         final Drawable drawable = getDrawable(item.path);
         if (drawable == null) {
             holder.icon.setImageResource(R.drawable.ic_file_zip);
 
-            LoadZipThumbnailTask task = new LoadZipThumbnailTask(context, holder.icon, holder.iconSmall);
-            task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, item.path);
+            if (isThumbnailEnabled()) {
+                LoadZipThumbnailTask task = new LoadZipThumbnailTask(context, holder.icon, holder.iconSmall);
+                task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, item.path);
+            }
         } else {
             holder.icon.setImageDrawable(drawable);
         }
@@ -113,8 +127,10 @@ public class SearchRecyclerAdapter extends RecyclerView.Adapter<SearchRecyclerAd
         if (bitmap == null) {
             holder.icon.setImageResource(R.drawable.ic_file_normal);
 
-            LoadPdfThumbnailTask task = new LoadPdfThumbnailTask(context, holder.icon, holder.iconSmall);
-            task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, item.path);
+            if (isThumbnailEnabled()) {
+                LoadPdfThumbnailTask task = new LoadPdfThumbnailTask(context, holder.icon, holder.iconSmall);
+                task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, item.path);
+            }
         } else {// 로딩된 비트맵을 셋팅
             holder.icon.setImageBitmap(bitmap);
             BitmapCacheManager.setThumbnail(item.path, bitmap, holder.icon);
