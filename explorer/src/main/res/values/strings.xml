@@ -81,4 +81,8 @@
     <string name="msg_cloud_download">The selected file is being downloaded.</string>
     <string name="toast_cloud_download">Downloading %s&#8230;</string>
     <string name="toast_cloud_complete">The file download is complete.</string>
+
+    <string name="night_mode">Night mode color inversion</string>
+    <string name="thumbnail">Disable Thumbnail</string>
+    <string name="japanese_direction">Reading direction right page first (Japanese style)</string>
 </resources>

@@ -49,7 +49,7 @@ android {
         development {
             dimension "mode"
             minSdkVersion 21
-            resConfigs("ko", "xxhdpi")
+            resConfigs("en", "xxhdpi")
             aaptOptions.cruncherEnabled = false
         }
         production {

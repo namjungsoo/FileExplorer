@@ -10,7 +10,7 @@
         android:gravity="center_vertical"
         android:textSize="16sp"
         android:text="이미지"
-        android:layout_marginLeft="5dp"
+        android:layout_marginStart="5dp"
         android:textStyle="bold"/>
 
     <!-- 만화책 읽기 방향 일본식, 기본값: false -->
