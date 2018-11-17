@@ -67,7 +67,7 @@ public class LoadZipThumbnailTask extends AsyncTask<String, Void, String> {
             GlideApp.with(context.getApplicationContext())
                     .load(new File(param))
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .placeholder(R.drawable.zip)
+                    .placeholder(R.drawable.ic_file_zip)
                     .centerCrop()
                     .into(new ImageViewTarget<Drawable>(iconRef.get()) {
                         @Override

@@ -252,7 +252,7 @@ public class BookLoader {
     public static void loadBookBitmap(Activity context, HistoryRecyclerAdapter.HistoryViewHolder holder, String path) {
         // zip 파일의 썸네일을 읽자
         if (FileHelper.isText(path)) {
-            holder.thumb.setImageBitmap(BitmapCacheManager.getResourceBitmap(context.getResources(), R.drawable.txt));
+            holder.thumb.setImageBitmap(BitmapCacheManager.getResourceBitmap(context.getResources(), R.drawable.ic_file_txt));
             return;
         }
 

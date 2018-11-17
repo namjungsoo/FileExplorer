@@ -99,7 +99,7 @@ public class SearchRecyclerAdapter extends RecyclerView.Adapter<SearchRecyclerAd
     void setIconZip(SearchViewHolder holder, ExplorerItem item) {
         final Drawable drawable = getDrawable(item.path);
         if (drawable == null) {
-            holder.icon.setImageResource(R.drawable.zip);
+            holder.icon.setImageResource(R.drawable.ic_file_zip);
 
             LoadZipThumbnailTask task = new LoadZipThumbnailTask(context, holder.icon, holder.iconSmall);
             task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, item.path);
@@ -111,7 +111,7 @@ public class SearchRecyclerAdapter extends RecyclerView.Adapter<SearchRecyclerAd
     void setIconPdf(SearchViewHolder holder, ExplorerItem item) {
         final Bitmap bitmap = getThumbnail(item.path);
         if (bitmap == null) {
-            holder.icon.setImageResource(R.drawable.file);
+            holder.icon.setImageResource(R.drawable.ic_file_normal);
 
             LoadPdfThumbnailTask task = new LoadPdfThumbnailTask(context, holder.icon, holder.iconSmall);
             task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, item.path);
@@ -122,7 +122,7 @@ public class SearchRecyclerAdapter extends RecyclerView.Adapter<SearchRecyclerAd
     }
 
     void setIconText(SearchViewHolder searchViewHolder, ExplorerItem item) {
-        searchViewHolder.icon.setImageBitmap(BitmapCacheManager.getResourceBitmap(context.getResources(), R.drawable.txt));
+        searchViewHolder.icon.setImageBitmap(BitmapCacheManager.getResourceBitmap(context.getResources(), R.drawable.ic_file_txt));
     }
 
     protected static class SearchViewHolder extends RecyclerView.ViewHolder {

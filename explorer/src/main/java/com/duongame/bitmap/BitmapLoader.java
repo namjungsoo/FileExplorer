@@ -175,7 +175,7 @@ public class BitmapLoader {
 
         // 못찾았을 경우에는 기본 ZIP 아이콘이 뜨게 한다.
         if (image == null) {
-            bitmap = BitmapCacheManager.getResourceBitmap(context.getResources(), R.drawable.zip);
+            bitmap = BitmapCacheManager.getResourceBitmap(context.getResources(), R.drawable.ic_file_zip);
             if (bitmap != null) {
                 BitmapCacheManager.setThumbnail(path, bitmap, null);
             }

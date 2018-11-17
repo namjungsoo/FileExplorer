@@ -693,10 +693,10 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
         int resId = 0;
         switch (viewType) {
             case SWITCH_LIST:
-                resId = R.drawable.grid;
+                resId = R.drawable.ic_menu_grid;
                 break;
             case SWITCH_GRID:
-                resId = R.drawable.list;
+                resId = R.drawable.ic_menu_list;
                 break;
         }
 

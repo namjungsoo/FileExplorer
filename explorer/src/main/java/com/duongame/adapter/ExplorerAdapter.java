@@ -204,7 +204,7 @@ public class ExplorerAdapter extends RecyclerView.Adapter<ExplorerAdapter.Explor
         if (bitmap == null) {
             if (item.path.endsWith(".gif")) {
                 // gif가 없어서 jpg로 처리함
-                viewHolder.icon.setImageResource(R.drawable.jpg);
+                viewHolder.icon.setImageResource(R.drawable.ic_file_jpg);
 
                 if(isThumbnailEnabled()) {
                     LoadThumbnailTask task = new LoadThumbnailTask(context, viewHolder.icon, viewHolder.iconSmall);
@@ -212,16 +212,16 @@ public class ExplorerAdapter extends RecyclerView.Adapter<ExplorerAdapter.Explor
                 }
             } else {
                 if (item.path.endsWith(".png"))
-                    viewHolder.icon.setImageResource(R.drawable.png);
+                    viewHolder.icon.setImageResource(R.drawable.ic_file_png);
                 else
-                    viewHolder.icon.setImageResource(R.drawable.jpg);
+                    viewHolder.icon.setImageResource(R.drawable.ic_file_jpg);
 
                 if(isThumbnailEnabled()) {
                     // Glide로 읽자
                     GlideApp.with(context)
                             .load(new File(item.path))
                             .diskCacheStrategy(DiskCacheStrategy.ALL)
-                            .placeholder(R.drawable.file)
+                            .placeholder(R.drawable.ic_file_normal)
                             .centerCrop()
                             .into(new ImageViewTarget<Drawable>(viewHolder.icon) {
                                 @Override
@@ -250,7 +250,7 @@ public class ExplorerAdapter extends RecyclerView.Adapter<ExplorerAdapter.Explor
     void setIconPdf(final ExplorerViewHolder viewHolder, ExplorerItem item) {
         final Bitmap bitmap = getThumbnail(item.path);
         if (bitmap == null) {
-            viewHolder.icon.setImageResource(R.drawable.pdf);
+            viewHolder.icon.setImageResource(R.drawable.ic_file_pdf);
 
             LoadPdfThumbnailTask task = new LoadPdfThumbnailTask(context, viewHolder.icon, viewHolder.iconSmall);
             task.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, item.path);
@@ -275,7 +275,7 @@ public class ExplorerAdapter extends RecyclerView.Adapter<ExplorerAdapter.Explor
         JLog.e(TAG, "setIconZip " + item.path);
         final Drawable drawable = getDrawable(item.path);
         if (drawable == null) {
-            viewHolder.icon.setImageResource(R.drawable.zip);
+            viewHolder.icon.setImageResource(R.drawable.ic_file_zip);
 
             if (BuildConfig.PREVIEW_ZIP && isThumbnailEnabled()) {
                 LoadZipThumbnailTask task = new LoadZipThumbnailTask(context, viewHolder.icon, viewHolder.iconSmall);
@@ -289,7 +289,7 @@ public class ExplorerAdapter extends RecyclerView.Adapter<ExplorerAdapter.Explor
     void setIconApk(final ExplorerViewHolder viewHolder, ExplorerItem item) {
         final Drawable drawable = getDrawable(item.path);
         if (drawable == null) {
-            viewHolder.icon.setImageResource(R.drawable.file);
+            viewHolder.icon.setImageResource(R.drawable.ic_file_normal);
 
             LoadApkThumbnailTask task = new LoadApkThumbnailTask(context, viewHolder.icon, viewHolder.iconSmall);
             task.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, item.path);
@@ -302,11 +302,11 @@ public class ExplorerAdapter extends RecyclerView.Adapter<ExplorerAdapter.Explor
         final Bitmap bitmap = getThumbnail(item.path);
         if (bitmap == null) {
             if (item.path.endsWith(".mp4"))
-                viewHolder.icon.setImageResource(R.drawable.mp4);
+                viewHolder.icon.setImageResource(R.drawable.ic_file_mp4);
             else if (item.path.endsWith(".fla"))
-                viewHolder.icon.setImageResource(R.drawable.fla);
+                viewHolder.icon.setImageResource(R.drawable.ic_file_fla);
             else
-                viewHolder.icon.setImageResource(R.drawable.avi);
+                viewHolder.icon.setImageResource(R.drawable.ic_file_avi);
             LoadVideoThumbnailTask task = new LoadVideoThumbnailTask(context, viewHolder.icon, viewHolder.iconSmall);
             task.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, item.path);
         } else {// 로딩된 비트맵을 셋팅
@@ -340,10 +340,10 @@ public class ExplorerAdapter extends RecyclerView.Adapter<ExplorerAdapter.Explor
     void setIconDefault(final ExplorerViewHolder viewHolder, ExplorerItem item) {
         switch (item.type) {
             case ExplorerItem.FILETYPE_FOLDER:
-                viewHolder.icon.setImageBitmap(BitmapCacheManager.getResourceBitmap(context.getResources(), R.drawable.folder));
+                viewHolder.icon.setImageBitmap(BitmapCacheManager.getResourceBitmap(context.getResources(), R.drawable.ic_file_folder));
                 break;
             default:
-                viewHolder.icon.setImageBitmap(BitmapCacheManager.getResourceBitmap(context.getResources(), R.drawable.file));
+                viewHolder.icon.setImageBitmap(BitmapCacheManager.getResourceBitmap(context.getResources(), R.drawable.ic_file_normal));
                 break;
         }
     }
@@ -351,16 +351,16 @@ public class ExplorerAdapter extends RecyclerView.Adapter<ExplorerAdapter.Explor
     void setIconTypeDefault(final ExplorerViewHolder viewHolder, ExplorerItem item) {
         switch (item.type) {
             case ExplorerItem.FILETYPE_AUDIO:
-                viewHolder.icon.setImageBitmap(BitmapCacheManager.getResourceBitmap(context.getResources(), R.drawable.mp3));
+                viewHolder.icon.setImageBitmap(BitmapCacheManager.getResourceBitmap(context.getResources(), R.drawable.ic_file_mp3));
                 break;
             case ExplorerItem.FILETYPE_FILE:
-                viewHolder.icon.setImageBitmap(BitmapCacheManager.getResourceBitmap(context.getResources(), R.drawable.file));
+                viewHolder.icon.setImageBitmap(BitmapCacheManager.getResourceBitmap(context.getResources(), R.drawable.ic_file_normal));
                 break;
             case ExplorerItem.FILETYPE_FOLDER:
-                viewHolder.icon.setImageBitmap(BitmapCacheManager.getResourceBitmap(context.getResources(), R.drawable.folder));
+                viewHolder.icon.setImageBitmap(BitmapCacheManager.getResourceBitmap(context.getResources(), R.drawable.ic_file_folder));
                 break;
             case ExplorerItem.FILETYPE_TEXT:
-                viewHolder.icon.setImageBitmap(BitmapCacheManager.getResourceBitmap(context.getResources(), R.drawable.txt));
+                viewHolder.icon.setImageBitmap(BitmapCacheManager.getResourceBitmap(context.getResources(), R.drawable.ic_file_txt));
                 break;
             default:
                 return;

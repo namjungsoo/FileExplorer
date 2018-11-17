@@ -66,7 +66,7 @@
                     android:id="@+id/img_left"
                     android:layout_width="45dp"
                     android:layout_height="25dp"
-                    android:src="@drawable/flip"
+                    android:src="@drawable/ic_menu_flip"
                     android:tint="@android:color/white" />
 
                 <TextView
@@ -90,7 +90,7 @@
                     android:layout_width="45dp"
                     android:layout_height="25dp"
                     android:scaleX="-1"
-                    android:src="@drawable/flip"
+                    android:src="@drawable/ic_menu_flip"
                     android:tint="@android:color/white" />
 
                 <TextView
@@ -113,7 +113,7 @@
                     android:id="@+id/img_both"
                     android:layout_width="45dp"
                     android:layout_height="25dp"
-                    android:src="@drawable/both"
+                    android:src="@drawable/ic_menu_both"
                     android:tint="@android:color/white" />
 
                 <TextView

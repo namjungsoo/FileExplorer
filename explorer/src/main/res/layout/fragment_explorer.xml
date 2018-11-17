@@ -34,7 +34,7 @@
                 android:paddingTop="8dp"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:scaleType="fitXY"
-                android:src="@drawable/back"
+                android:src="@drawable/ic_menu_back"
                 android:tint="@color/colorPrimary" />
 
             <ImageButton
@@ -49,7 +49,7 @@
                 android:paddingTop="8dp"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:scaleType="fitXY"
-                android:src="@drawable/home"
+                android:src="@drawable/ic_menu_home"
                 android:tint="@color/colorPrimary" />
 
             <ImageButton
@@ -64,7 +64,7 @@
                 android:paddingTop="8dp"
                 android:scaleType="fitXY"
                 android:background="?attr/selectableItemBackgroundBorderless"
-                android:src="@drawable/sdcard"
+                android:src="@drawable/ic_menu_sdcard"
                 android:tint="@color/colorPrimary"
                 android:visibility="gone" />
 
@@ -80,7 +80,7 @@
                 android:paddingTop="8dp"
                 android:scaleType="fitXY"
                 android:background="?attr/selectableItemBackgroundBorderless"
-                android:src="@drawable/dropbox"
+                android:src="@drawable/ic_dropbox"
                 android:visibility="gone" />
 
             <ImageButton
@@ -95,7 +95,7 @@
                 android:paddingTop="8dp"
                 android:scaleType="fitXY"
                 android:background="?attr/selectableItemBackgroundBorderless"
-                android:src="@drawable/gdrive"
+                android:src="@drawable/ic_google_drive"
                 android:visibility="gone" />
 
             <HorizontalScrollView

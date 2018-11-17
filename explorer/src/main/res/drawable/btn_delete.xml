@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:state_enabled="false">
-        <bitmap android:src="@drawable/delete" android:tint="@color/colorPrimaryDark" />
+        <bitmap android:src="@drawable/ic_menu_delete" android:tint="@color/colorPrimaryDark" />
     </item>
     <item>
-        <bitmap android:src="@drawable/delete" android:tint="@android:color/white" />
+        <bitmap android:src="@drawable/ic_menu_delete" android:tint="@android:color/white" />
     </item>
 </selector>

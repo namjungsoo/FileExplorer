@@ -7,11 +7,11 @@
         <menu>
             <item
                 android:id="@+id/nav_dropbox"
-                android:icon="@drawable/dropbox"
+                android:icon="@drawable/ic_dropbox"
                 android:title="Dropbox" />
             <item
                 android:id="@+id/nav_google_drive"
-                android:icon="@drawable/gdrive"
+                android:icon="@drawable/ic_google_drive"
                 android:title="Google Drive" />
         </menu>
     </item>
