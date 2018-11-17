@@ -15,4 +15,13 @@
                 android:title="Google Drive" />
         </menu>
     </item>
+    <item
+        android:id="@+id/action_open_lastbook"
+        android:title="@string/action_open_lastbook"/>
+    <item
+        android:id="@+id/action_settings"
+        android:title="@string/action_settings"/>
+    <item
+        android:id="@+id/action_exit"
+        android:title="@string/action_exit"/>
 </menu>

@@ -36,6 +36,7 @@ import android.widget.RelativeLayout;
 
 import com.dropbox.core.android.Auth;
 import com.dropbox.core.v2.users.FullAccount;
+import com.duongame.AnalyticsApplication;
 import com.duongame.BuildConfig;
 import com.duongame.R;
 import com.duongame.activity.BaseActivity;
@@ -430,15 +431,11 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
 
         if (id == R.id.action_clear_cache) {
             clearCache();
-
-            ToastHelper.showToast(this, getResources().getString(R.string.msg_clear_cache));
             return true;
         }
 
         if (id == R.id.action_clear_history) {
             clearHistory();
-
-            ToastHelper.showToast(this, getResources().getString(R.string.msg_clear_history));
             return true;
         }
 
@@ -490,6 +487,13 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
         if (id == R.id.action_settings) {
             Intent intent = SettingsActivity.getLocalIntent(this);
             startActivity(intent);
+            return true;
+        }
+
+        if (id == R.id.action_exit) {
+            AnalyticsApplication application = (AnalyticsApplication) getApplication();
+            if (application != null)
+                application.exit(this);
             return true;
         }
 
@@ -742,17 +746,8 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
 
         if (explorerFragment != null)
             explorerFragment.onRefresh();
-    }
 
-    protected void deleteRecursive(File fileOrDirectory) {
-        if (fileOrDirectory.getAbsolutePath().endsWith("instant-run"))
-            return;
-
-        if (fileOrDirectory.isDirectory())
-            for (File child : fileOrDirectory.listFiles())
-                deleteRecursive(child);
-
-        boolean ret = fileOrDirectory.delete();
+        ToastHelper.showToast(this, getResources().getString(R.string.msg_clear_cache));
     }
 
     protected void clearHistory() {
@@ -761,6 +756,8 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
         final BaseFragment fragment = getCurrentFragment();
         if (fragment != null)
             fragment.onRefresh();
+
+        ToastHelper.showToast(this, getResources().getString(R.string.msg_clear_history));
     }
 
     public LinearLayout getBottomUI() {
@@ -1006,6 +1003,15 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
             onDropbox(item);
         } else if (id == R.id.nav_google_drive) {
             onGoogleDrive(item);
+        } else if (id == R.id.action_open_lastbook) {
+            BookLoader.openLastBookDirect(this);
+        } else if (id == R.id.action_settings) {
+            Intent intent = SettingsActivity.getLocalIntent(this);
+            startActivity(intent);
+        } else if (id == R.id.action_exit) {
+            AnalyticsApplication application = (AnalyticsApplication) getApplication();
+            if (application != null)
+                application.exit(this);
         }
 
 //        if (id == R.id.nav_camera) {

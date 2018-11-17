@@ -1,5 +1,6 @@
 package com.duongame;
 
+import android.app.Activity;
 import android.app.Application;
 import android.os.Environment;
 import android.support.multidex.MultiDexApplication;
@@ -125,4 +126,17 @@ public class AnalyticsApplication extends MultiDexApplication {
         PreferenceHelper.setNightMode(this, b);
     }
     //endregion
+
+    public void exit(Activity activity) {
+        if (activity == null)
+            return;
+
+        activity.moveTaskToBack(true);
+        if (android.os.Build.VERSION.SDK_INT >= 21) {
+            activity.finishAndRemoveTask();
+        } else {
+            activity.finish();
+        }
+        android.os.Process.killProcess(android.os.Process.myPid());
+    }
 }

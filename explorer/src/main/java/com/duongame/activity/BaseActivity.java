@@ -15,6 +15,8 @@ import com.google.android.gms.analytics.Tracker;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.crash.FirebaseCrash;
 
+import java.io.File;
+
 import io.fabric.sdk.android.Fabric;
 
 // main, viewer의 통합 base activity
@@ -27,6 +29,7 @@ public class BaseActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        application = (AnalyticsApplication) getApplication();
 
         JLog.e("Jungsoo", "BaseActivity.onCreate begin");
 
@@ -64,7 +67,6 @@ public class BaseActivity extends AppCompatActivity {
 
     private void setupGA() {
         JLog.e("Jungsoo", "setupGA inner begin");
-        application = (AnalyticsApplication) getApplication();
         mTracker = application.getDefaultTracker();
         JLog.e("Jungsoo", "setupGA inner end");
     }
@@ -93,4 +95,16 @@ public class BaseActivity extends AppCompatActivity {
             PreferenceHelper.setExitAdCount(this, count + 1);
         }
     }
+
+    protected void deleteRecursive(File fileOrDirectory) {
+        if (fileOrDirectory.getAbsolutePath().endsWith("instant-run"))
+            return;
+
+        if (fileOrDirectory.isDirectory())
+            for (File child : fileOrDirectory.listFiles())
+                deleteRecursive(child);
+
+        boolean ret = fileOrDirectory.delete();
+    }
+
 }

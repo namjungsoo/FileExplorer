@@ -25,12 +25,12 @@
     <string name="dialog_review_title">Please support %s</string>
     <string name="dialog_review_content">Are you enjoying %s? Please leave a review for us!</string>
     <string name="msg_last_page">There is last page you read. (Page: %d)\nWould you like to continue?</string>
-    <string name="action_clear_cache">Remove Cache</string>
-    <string name="action_clear_history">Remove History</string>
+    <string name="action_clear_cache">Clear Cache</string>
+    <string name="action_clear_history">Clear History</string>
     <string name="action_open_lastbook">Open Last Book</string>
     <string name="msg_last_book">Would you like to open the last book you read?</string>
-    <string name="msg_clear_cache">Cache files were deleted.</string>
-    <string name="msg_clear_history">Recent files list was deleted.</string>
+    <string name="msg_clear_cache">Cache files were cleared.</string>
+    <string name="msg_clear_history">Recent files list was cleared.</string>
     <string name="hide_completed_file">Hide completed files</string>
 
     <!-- 새로운 부분 -->
@@ -84,6 +84,12 @@
 
     <string name="viewer">Viewer</string>
     <string name="night_mode">Night mode color inversion</string>
-    <string name="thumbnail">Disable Thumbnail</string>
+    <string name="thumbnail">Disable thumbnails</string>
     <string name="japanese_direction">Read right page first</string>
+
+    <string name="system">System</string>
+    <string name="action_exit">Exit</string>
+    <string name="run">Run</string>
+    <string name="check">Check</string>
+    <string name="version">Version</string>
 </resources>

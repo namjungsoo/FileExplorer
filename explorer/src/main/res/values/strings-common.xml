@@ -12,5 +12,5 @@
         <item>.tar</item>
         <item>.tar.gz</item>
     </string-array>
-    <string name="action_license" translatable="false">License</string>
+    <string name="action_license" translatable="false">Open Source License</string>
 </resources>
