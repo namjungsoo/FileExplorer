@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
@@ -176,12 +178,30 @@ public class SettingsActivity extends BaseActivity {
     }
 
     private void initToolbar() {
-//        Toolbar toolbar = findViewById(R.id.toolbar);
-//        setSupportActionBar(toolbar);
-//        toolbar.setTitleTextColor(Color.WHITE);
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar == null)
+            return;
+
+        // 로고 버튼
+        actionBar.setDisplayShowHomeEnabled(true);
+
+        // Up 버튼
+        actionBar.setDisplayHomeAsUpEnabled(true);
     }
 
     private void initContentView() {
         setContentView(R.layout.activity_settings);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == android.R.id.home) {
+            onBackPressed();
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }
