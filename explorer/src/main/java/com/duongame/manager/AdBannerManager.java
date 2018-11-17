@@ -19,7 +19,7 @@ public class AdBannerManager {
     private static final String BANNER_ID = BuildConfig.BANNER_ID;
     private static final String POPUP_ID = BuildConfig.POPUP_ID;
 
-    private static AdView[] adBannerView = new AdView[2];
+    private static AdView[] adBannerView = new AdView[3];
     private static AdView adPopupView;
 
     public static AdView createAd(Activity context, String adid, AdSize adtype) {

@@ -5,10 +5,12 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.RelativeLayout;
 import android.widget.Switch;
 import android.widget.TextView;
 
@@ -21,6 +23,7 @@ import com.duongame.helper.AlertHelper;
 import com.duongame.helper.AppHelper;
 import com.duongame.helper.ToastHelper;
 import com.duongame.manager.AdBannerManager;
+import com.google.android.gms.ads.AdView;
 
 import java.io.File;
 
@@ -190,7 +193,36 @@ public class SettingsActivity extends BaseActivity {
     }
 
     private void initContentView() {
-        setContentView(R.layout.activity_settings);
+        if (BuildConfig.SHOW_AD) {
+            AdBannerManager.initBannerAd(this, 2);
+
+            final LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            View activityView = inflater.inflate(R.layout.activity_settings, null, true);
+
+            final RelativeLayout layout = new RelativeLayout(this);
+            layout.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT));
+
+            AdView adView = AdBannerManager.getAdBannerView(2);
+
+            // adview layout params
+            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+            params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+            adView.setLayoutParams(params);
+
+            AdBannerManager.requestAd(2);
+
+            // mainview layout params
+            params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
+            params.addRule(RelativeLayout.ABOVE, adView.getId());
+            activityView.setLayoutParams(params);
+
+            layout.addView(adView);
+            layout.addView(activityView);
+
+            setContentView(layout);
+        } else {
+            setContentView(R.layout.activity_settings);
+        }
     }
 
     @Override

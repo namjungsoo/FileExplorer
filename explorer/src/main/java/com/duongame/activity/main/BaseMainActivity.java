@@ -548,6 +548,8 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
         } else {
             JLog.e("Jungsoo", "initContentView setContentView begin");
             setContentView(getLayoutResId());
+
+            // getContentView
             mainView = this.findViewById(android.R.id.content);
             JLog.e("Jungsoo", "initContentView setContentView end");
         }
