@@ -20,6 +20,7 @@ import com.duongame.bitmap.BitmapCacheManager;
 import com.duongame.file.FileHelper;
 import com.duongame.helper.AppHelper;
 import com.duongame.helper.DateHelper;
+import com.duongame.helper.ToastHelper;
 import com.duongame.task.thumbnail.LoadPdfThumbnailTask;
 import com.duongame.task.thumbnail.LoadZipThumbnailTask;
 
@@ -44,15 +45,14 @@ public class BookLoader {
             // DB에서는 책을 읽어야 하지만, 파일이 삭제된 경우에는 제외한다.
             try {
                 File file = new File(book.path);
-                if(file.exists()) {
+                if (file.exists()) {
                     BookLoader.loadWithAlert(context, book, true);
                     return true;
                 } else {
                     // DB에서 삭제한다.
                     BookDB.clearBook(context, book.path);
                 }
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 // 아무것도 하지 않고 false 리턴한다.
             }
         }
@@ -66,18 +66,18 @@ public class BookLoader {
             // DB에서는 책을 읽어야 하지만, 파일이 삭제된 경우에는 제외한다.
             try {
                 File file = new File(book.path);
-                if(file.exists()) {
+                if (file.exists()) {
                     BookLoader.loadContinue(context, book);
                     return true;
                 } else {
                     // DB에서 삭제한다.
                     BookDB.clearBook(context, book.path);
                 }
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 // 아무것도 하지 않고 false 리턴한다.
             }
         }
+        ToastHelper.error(context, R.string.msg_no_lastbook);
         return false;
     }
 
