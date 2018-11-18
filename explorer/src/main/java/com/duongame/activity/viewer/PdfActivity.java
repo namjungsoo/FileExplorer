@@ -1,10 +1,12 @@
 package com.duongame.activity.viewer;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.pdf.PdfRenderer;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.ParcelFileDescriptor;
+import android.view.View;
 
 import com.duongame.adapter.ExplorerItem;
 import com.duongame.db.Book;
@@ -35,7 +37,7 @@ public class PdfActivity extends PagerActivity {
 
         this.adapter = (PdfPagerAdapter) pagerAdapter;
         processIntent();
-
+        
         pager.setOffscreenPageLimit(1);
     }
 
@@ -46,7 +48,7 @@ public class PdfActivity extends PagerActivity {
 
     @Override
     protected void onPause() {
-        if(AppHelper.isComicz(this)) {
+        if (AppHelper.isComicz(this)) {
             final Book book = new Book();
 
             // 고정적인 내용 5개
