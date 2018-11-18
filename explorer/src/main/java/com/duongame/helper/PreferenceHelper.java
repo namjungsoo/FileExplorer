@@ -2,7 +2,10 @@ package com.duongame.helper;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Environment;
+
+import java.util.Locale;
 
 import static com.duongame.fragment.BaseFragment.CLOUD_LOCAL;
 
@@ -247,9 +250,26 @@ public class PreferenceHelper {
         editor.apply();
     }
 
+
+    static Locale getCurrentLocale(Context context) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            return context.getResources().getConfiguration().getLocales().get(0);
+        } else {
+            //noinspection deprecation
+            return context.getResources().getConfiguration().locale;
+        }
+    }
+
     public static boolean getJapaneseDirection(Context context) {
         checkPrefManager(context);
-        return pref.getBoolean(JAPANESE_DIRECTION, false);
+
+        // 일본어일 경우 기본값 true
+        boolean defaultValue = false;
+        if (getCurrentLocale(context).getLanguage().equals("ja")) {
+            defaultValue = true;
+        }
+
+        return pref.getBoolean(JAPANESE_DIRECTION, defaultValue);
     }
 
     public static void setJapaneseDirection(Context context, boolean b) {
