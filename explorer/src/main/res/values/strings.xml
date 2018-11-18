@@ -96,4 +96,5 @@
     <string name="purchase">Purchase</string>
 
     <string name="msg_no_lastbook">There is no last reading book.</string>
+    <string name="required_permission">필수 사용 권한 요청\n\n권한: 사진, 미디어, 파일 사용\n사유: 사진, 미디어 뷰어 및 파일 관리 및 압축 풀기</string>
 </resources>

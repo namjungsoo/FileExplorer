@@ -1,14 +1,21 @@
 package com.duongame.activity.main;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
+import android.view.KeyEvent;
+import android.view.View;
 
 import com.duongame.R;
 import com.duongame.adapter.ComicPagerAdapter;
 import com.duongame.fragment.BaseFragment;
 import com.duongame.fragment.ExplorerFragment;
+import com.duongame.helper.AlertHelper;
+import com.duongame.helper.AppHelper;
 import com.duongame.helper.JLog;
+import com.duongame.helper.PreferenceHelper;
+import com.duongame.manager.PermissionManager;
 
 public class ComicActivity extends BaseMainActivity {
     private final static String TAG = ComicActivity.class.getSimpleName();
@@ -27,6 +34,32 @@ public class ComicActivity extends BaseMainActivity {
         JLog.e("Jungsoo", "initTabs begin");
         initTabs();
         JLog.e("Jungsoo", "initTabs end");
+
+        if(!PreferenceHelper.getPermissionAgreed(this)) {
+            AlertHelper.showAlert(this,
+                    AppHelper.getAppName(this),
+                    getString(R.string.required_permission),
+                    null,
+                    new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            PreferenceHelper.setPermissionAgreed(ComicActivity.this, true);
+                            PermissionManager.checkStoragePermissions(ComicActivity.this);
+                        }
+                    },
+                    new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            application.exit(ComicActivity.this);
+                        }
+                    },
+                    new DialogInterface.OnKeyListener() {
+                        @Override
+                        public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
+                            return false;
+                        }
+                    });
+        }
     }
 
     @Override

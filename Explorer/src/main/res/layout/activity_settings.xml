@@ -53,7 +53,7 @@
             android:text="@string/thumbnail" />
 
         <Switch
-            android:id="@+id/thumbnail"
+            android:id="@+id/thumbnail_disabled"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"

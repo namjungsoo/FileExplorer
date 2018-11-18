@@ -26,7 +26,6 @@ import com.duongame.manager.AdBannerManager;
 import com.google.android.gms.ads.AdView;
 
 import java.io.File;
-import java.util.Set;
 
 
 // 셋팅을 전부 관장하는 액티비티이다.
@@ -103,11 +102,11 @@ public class SettingsActivity extends BaseActivity {
 
     void initUI() {
         Switch nightMode = findViewById(R.id.night_mode);
-        Switch thumbnail = findViewById(R.id.thumbnail);
+        Switch thumbnailDisabled = findViewById(R.id.thumbnail_disabled);
         Switch japaneseDirection = findViewById(R.id.japanese_direction);
 
         nightMode.setChecked(application.isNightMode());
-        thumbnail.setChecked(application.isThumbnail());
+        thumbnailDisabled.setChecked(application.isThumbnailDisabled());
         japaneseDirection.setChecked(application.isJapaneseDirection());
         
         // viewer
@@ -121,7 +120,7 @@ public class SettingsActivity extends BaseActivity {
             }
         });
 
-        thumbnail.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        thumbnailDisabled.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 AnalyticsApplication application = (AnalyticsApplication) getApplication();
@@ -129,7 +128,7 @@ public class SettingsActivity extends BaseActivity {
                     if (isChecked) {
                         clearCache();
                     }
-                    application.setThumbnail(isChecked);
+                    application.setThumbnailDisabled(isChecked);
                 }
             }
         });

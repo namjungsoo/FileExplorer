@@ -264,13 +264,13 @@ public class ExplorerAdapter extends RecyclerView.Adapter<ExplorerAdapter.Explor
 
     boolean isThumbnailEnabled() {
         AnalyticsApplication application = (AnalyticsApplication) context.getApplication();
-        boolean thumbnail = true;
+        boolean thumbnailEnabled = true;
 
         // isThumbnail은 disable일때 true이다.
         if (application != null) {
-            thumbnail = !application.isThumbnail();
+            thumbnailEnabled = !application.isThumbnailDisabled();
         }
-        return thumbnail;
+        return thumbnailEnabled;
     }
 
     void setIconZip(final ExplorerViewHolder viewHolder, ExplorerItem item) {

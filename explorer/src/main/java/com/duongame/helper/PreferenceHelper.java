@@ -42,8 +42,9 @@ public class PreferenceHelper {
 
     private static final String NIGHT_MODE = "night_mode";
     private static final String JAPANESE_DIRECTION = "japanese_direction";
-    private static final String THUMBNAIL = "thumbnail";
+    private static final String THUMBNAIL_DISABLED = "thumbnail_disabled";
 
+    private static final String PERMISSION_AGREED = "permission_agreed";
     private static SharedPreferences pref = null;
 
     private static void checkPrefManager(Context context) {
@@ -279,15 +280,27 @@ public class PreferenceHelper {
         editor.apply();
     }
 
-    public static boolean getThumbnail(Context context) {
+    public static boolean getThumbnailDisabled(Context context) {
         checkPrefManager(context);
-        return pref.getBoolean(THUMBNAIL, false);
+        return pref.getBoolean(THUMBNAIL_DISABLED, false);
     }
 
-    public static void setThumbnail(Context context, boolean b) {
+    public static void setThumbnailDisabled(Context context, boolean b) {
         checkPrefManager(context);
         final SharedPreferences.Editor editor = pref.edit();
-        editor.putBoolean(THUMBNAIL, b);
+        editor.putBoolean(THUMBNAIL_DISABLED, b);
+        editor.apply();
+    }
+
+    public static boolean getPermissionAgreed(Context context) {
+        checkPrefManager(context);
+        return pref.getBoolean(PERMISSION_AGREED, false);
+    }
+
+    public static void setPermissionAgreed(Context context, boolean b) {
+        checkPrefManager(context);
+        final SharedPreferences.Editor editor = pref.edit();
+        editor.putBoolean(PERMISSION_AGREED, b);
         editor.apply();
     }
 

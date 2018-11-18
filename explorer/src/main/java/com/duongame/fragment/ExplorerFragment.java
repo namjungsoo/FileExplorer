@@ -230,7 +230,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
 
         FragmentActivity activity = getActivity();
         if (activity != null) {
-            PermissionManager.checkStoragePermissions(activity);
+//            PermissionManager.checkStoragePermissions(activity);
             sortType = PreferenceHelper.getSortType(activity);
             sortDirection = PreferenceHelper.getSortDirection(activity);
         }

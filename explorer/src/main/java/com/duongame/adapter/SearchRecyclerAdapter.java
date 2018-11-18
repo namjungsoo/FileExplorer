@@ -103,7 +103,7 @@ public class SearchRecyclerAdapter extends RecyclerView.Adapter<SearchRecyclerAd
 
         // isThumbnail은 disable일때 true이다.
         if (application != null) {
-            thumbnail = !application.isThumbnail();
+            thumbnail = !application.isThumbnailDisabled();
         }
         return thumbnail;
     }

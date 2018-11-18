@@ -27,7 +27,7 @@ public class AnalyticsApplication extends MultiDexApplication {
     private String lastPath;
 
     // setting
-    private boolean thumbnail;
+    private boolean thumbnailDisabled;
     private boolean nightMode;
     private boolean japaneseDirection;
 
@@ -36,7 +36,7 @@ public class AnalyticsApplication extends MultiDexApplication {
         super.onCreate();
 
         nightMode = PreferenceHelper.getNightMode(this);
-        thumbnail = PreferenceHelper.getThumbnail(this);
+        thumbnailDisabled = PreferenceHelper.getThumbnailDisabled(this);
         japaneseDirection = PreferenceHelper.getJapaneseDirection(this);
 
         JLog.e("Jungsoo", "onCreate end");
@@ -107,8 +107,8 @@ public class AnalyticsApplication extends MultiDexApplication {
         return nightMode;
     }
 
-    public boolean isThumbnail() {
-        return thumbnail;
+    public boolean isThumbnailDisabled() {
+        return thumbnailDisabled;
     }
 
     public void setJapaneseDirection(boolean b) {
@@ -116,9 +116,9 @@ public class AnalyticsApplication extends MultiDexApplication {
         PreferenceHelper.setJapaneseDirection(this, b);
     }
 
-    public void setThumbnail(boolean b) {
-        thumbnail = b;
-        PreferenceHelper.setThumbnail(this, b);
+    public void setThumbnailDisabled(boolean b) {
+        thumbnailDisabled = b;
+        PreferenceHelper.setThumbnailDisabled(this, b);
     }
 
     public void setNightMode(boolean b) {

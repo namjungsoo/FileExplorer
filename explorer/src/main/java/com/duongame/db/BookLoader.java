@@ -1,7 +1,6 @@
 package com.duongame.db;
 
 import android.app.Activity;
-import android.app.Application;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -22,7 +21,6 @@ import com.duongame.bitmap.BitmapCacheManager;
 import com.duongame.file.FileHelper;
 import com.duongame.helper.AppHelper;
 import com.duongame.helper.DateHelper;
-import com.duongame.helper.PreferenceHelper;
 import com.duongame.helper.ToastHelper;
 import com.duongame.task.thumbnail.LoadPdfThumbnailTask;
 import com.duongame.task.thumbnail.LoadZipThumbnailTask;
@@ -279,7 +277,7 @@ public class BookLoader {
         loadDefaultThumbnail(context, holder, path);
 
         AnalyticsApplication application = (AnalyticsApplication)context.getApplication();
-        if (application != null && application.isThumbnail()) {// 썸네일 비활성화라면
+        if (application != null && application.isThumbnailDisabled()) {// 썸네일 비활성화라면
             return;
         } else {
             final Bitmap bitmap = getThumbnail(path);
