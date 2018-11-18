@@ -8,7 +8,6 @@ import com.duongame.adapter.ExplorerItem;
 import com.duongame.bitmap.BitmapLoader;
 import com.duongame.file.FileHelper;
 import com.duongame.task.zip.LoadBookTask;
-import com.duongame.task.zip.UnzipBookTask;
 
 import net.lingala.zip4j.exception.ZipException;
 
@@ -139,7 +138,7 @@ public class ArchiveLoader {
             try {
                 final ExplorerItem item = (ExplorerItem) imageList.get(i);
                 if (isFileExtracted(item.path, zipHeaders)) {
-                    UnzipBookTask.processItem(i, item, side, firstList);
+                    LoadBookTask.processItem(i, item, side, firstList);
                 } else {
                     // 에러이므로 여기서 중단한다.
                     extract = i;

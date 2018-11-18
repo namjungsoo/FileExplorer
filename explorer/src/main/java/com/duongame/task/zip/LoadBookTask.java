@@ -14,6 +14,8 @@ import java.util.ArrayList;
  * Created by namjungsoo on 2018-01-23.
  */
 
+// 모든 Zip 타입 책의 통합된 Loader
+// 이전의 UnzipBookTask를 대체한다.
 public class LoadBookTask extends AsyncTask<String, Integer, Void> {
     private ArrayList<ExplorerItem> imageList;// zip안의 이미지 파일의 갯수
     private ArrayList<ExplorerItem> zipImageList;// 잘려진 zip 파일의 이미지 갯수. 파일갯수와 다름
