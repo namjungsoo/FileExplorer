@@ -1,5 +1,7 @@
 package com.duongame.adapter;
 
+import android.graphics.ColorMatrix;
+import android.graphics.ColorMatrixColorFilter;
 import android.os.AsyncTask;
 import android.view.View;
 import android.view.ViewGroup;
@@ -7,6 +9,7 @@ import android.view.ViewTreeObserver;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 
+import com.duongame.AnalyticsApplication;
 import com.duongame.R;
 import com.duongame.activity.viewer.PagerActivity;
 import com.duongame.attacher.ImageViewAttacher;
@@ -83,6 +86,9 @@ public class PhotoPagerAdapter extends ViewerPagerAdapter {
         item.attacher = new ImageViewAttacher(imageView);
         item.attacher.setActivity(context);
         taskList.add(task);
+
+
+        imageView.setColorFilter(new ColorMatrixColorFilter(getColorMatrix()));
     }
 
     // 사용안함
