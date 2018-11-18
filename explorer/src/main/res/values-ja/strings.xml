@@ -81,4 +81,21 @@
     <string name="msg_cloud_download">選択したファイルがダウンロードされています。</string>
     <string name="toast_cloud_download">%sをダウンロード中&#8230;</string>
     <string name="toast_cloud_complete">ファイルのダウンロードが完了しました。</string>
+
+    <!-- 설정 등 추가 -->
+    <string name="viewer">ビューア</string>
+    <string name="night_mode">ナイトモードの色反転</string>
+    <string name="thumbnail_disabled">サムネイルを無効に</string>
+    <string name="japanese_direction">読む方向右側優先</string>
+
+    <string name="system">システム</string>
+    <string name="action_exit">終了</string>
+    <string name="execute">実行</string>
+    <string name="check">確認</string>
+    <string name="version">バージョン</string>
+    <string name="pro_version">Proバージョン</string>
+    <string name="purchase">購入する</string>
+
+    <string name="msg_no_lastbook">最後に読んだ本がありません。</string>
+    <string name="required_permission">必要なアクセス許可を要求\n\n権：写真、メディア、ファイルの使用\n理由：写真、メディアビューアとファイルの管理と解凍</string>
 </resources>

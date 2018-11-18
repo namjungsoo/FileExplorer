@@ -81,4 +81,21 @@
     <string name="msg_cloud_download">正在下載所選文件。</string>
     <string name="toast_cloud_download">正在下載 %s&#8230;</string>
     <string name="toast_cloud_complete">文件下載完成。</string>
+
+    <!-- 설정 등 추가 -->
+    <string name="viewer">瀏覽器</string>
+    <string name="night_mode">夜間模式顏色反轉</string>
+    <string name="thumbnail_disabled">禁用縮略圖</string>
+    <string name="japanese_direction">讀取方向右側優先級</string>
+
+    <string name="system">系統</string>
+    <string name="action_exit">結束</string>
+    <string name="execute">執行</string>
+    <string name="check">確認</string>
+    <string name="version">版本</string>
+    <string name="pro_version">Pro 版本</string>
+    <string name="purchase">購買</string>
+
+    <string name="msg_no_lastbook">我還沒讀過最後一本書。</string>
+    <string name="required_permission">請求所需權限\n\n權限：使用照片，媒體，文件\n原因：管理和解壓縮照片，媒體查看器和文件</string>
 </resources>

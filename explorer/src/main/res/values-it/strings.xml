@@ -81,4 +81,18 @@
     <string name="msg_cloud_download">Il file selezionato è in fase di download.</string>
     <string name="toast_cloud_download">Download %s&#8230;</string>
     <string name="toast_cloud_complete">Il download del file è completo.</string>
+
+    <string name="viewer">Visualizzatore</string>
+    <string name="night_mode">Inversione del colore in modalità notturna</string>
+    <string name="thumbnail_disabled">Disabilita miniature</string>
+    <string name="japanese_direction">Leggi prima la pagina giusta</string>
+    <string name="system">Sistema</string>
+    <string name="action_exit">Uscita</string>
+    <string name="execute">Eseguire</string>
+    <string name="check">Dai un\'occhiata</string>
+    <string name="version">Versione</string>
+    <string name="pro_version">Versione Pro</string>
+    <string name="purchase">Acquista</string>
+    <string name="msg_no_lastbook">Non esiste un ultimo libro di lettura.</string>
+    <string name="required_permission">Richiedi i permessi richiesti\n\nAutorizzazioni: utilizzare foto, file multimediali e file\nMotivo: gestione e decompressione di foto, visualizzatori multimediali e file</string>
 </resources>

@@ -50,7 +50,7 @@
             android:layout_height="match_parent"
             android:layout_alignParentStart="true"
             android:gravity="center"
-            android:text="@string/thumbnail" />
+            android:text="@string/thumbnail_disabled" />
 
         <Switch
             android:id="@+id/thumbnail_disabled"
@@ -107,7 +107,7 @@
             android:text="@string/action_clear_cache" />
 
         <Button
-            android:text="@string/run"
+            android:text="@string/execute"
             android:id="@+id/action_clear_cache"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -130,7 +130,7 @@
             android:text="@string/action_clear_history" />
 
         <Button
-            android:text="@string/run"
+            android:text="@string/execute"
             android:id="@+id/action_clear_history"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

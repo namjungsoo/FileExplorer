@@ -81,4 +81,18 @@
     <string name="msg_cloud_download">يتم تنزيل الملف المحدد.</string>
     <string name="toast_cloud_download">جارٍ تنزيل ٪s&#8230;</string>
     <string name="toast_cloud_complete">اكتمل تنزيل الملف.</string>
+
+    <string name="viewer">عارض</string>
+    <string name="night_mode">عكس الوضع الليلي</string>
+    <string name="thumbnail_disabled">تعطيل الصور المصغرة</string>
+    <string name="japanese_direction">قراءة الاتجاه أولوية الصفحة اليمنى</string>
+    <string name="system">النظام</string>
+    <string name="action_exit">ىخرج</string>
+    <string name="execute">تقدم</string>
+    <string name="check">التحقق من</string>
+    <string name="version">الإصدار</string>
+    <string name="pro_version">الإصدارPro</string>
+    <string name="purchase">شراء</string>
+    <string name="msg_no_lastbook">لا يوجد آخر كتاب قراءة.</string>
+    <string name="required_permission">طلب الأذونات المطلوبة\n\nضوابط: استخدام الصور والوسائط والملفات\nالسبب: إدارة الصور الفوتوغرافية وملفات الوسائط والملفات وفك ضغطها</string>
 </resources>

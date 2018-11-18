@@ -82,19 +82,20 @@
     <string name="toast_cloud_download">Downloading %s&#8230;</string>
     <string name="toast_cloud_complete">The file download is complete.</string>
 
+    <!-- 설정 등 추가 -->
     <string name="viewer">Viewer</string>
     <string name="night_mode">Night mode color inversion</string>
-    <string name="thumbnail">Disable thumbnails</string>
+    <string name="thumbnail_disabled">Disable thumbnails</string>
     <string name="japanese_direction">Read right page first</string>
 
     <string name="system">System</string>
     <string name="action_exit">Exit</string>
-    <string name="run">Run</string>
+    <string name="execute">Execute</string>
     <string name="check">Check</string>
     <string name="version">Version</string>
     <string name="pro_version">Pro version</string>
     <string name="purchase">Purchase</string>
 
     <string name="msg_no_lastbook">There is no last reading book.</string>
-    <string name="required_permission">필수 사용 권한 요청\n\n권한: 사진, 미디어, 파일 사용\n사유: 사진, 미디어 뷰어 및 파일 관리 및 압축 풀기</string>
+    <string name="required_permission">Request required permissions\n\nPermissions: Use photos, media, files\nReason: Manage and decompress photos, media viewers, and files</string>
 </resources>

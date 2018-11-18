@@ -81,4 +81,18 @@
     <string name="msg_cloud_download">चयनित फाइल डाउनलोड की जा रही है।</string>
     <string name="toast_cloud_download">%s डाउनलोड कर रहा है&#8230;</string>
     <string name="toast_cloud_complete">फ़ाइल डाउनलोड पूर्ण हो गया है।</string>
+
+    <string name="viewer">दर्शक</string>
+    <string name="night_mode">नाइट मोड रंग उलटा</string>
+    <string name="thumbnail_disabled">थंबनेल अक्षम करें</string>
+    <string name="japanese_direction">पहले सही पृष्ठ पढ़ें</string>
+    <string name="system">प्रणाली</string>
+    <string name="action_exit">बाहर जाएं</string>
+    <string name="execute">निष्पादित</string>
+    <string name="check">चेक</string>
+    <string name="version">संस्करण</string>
+    <string name="pro_version">प्रो संस्करण</string>
+    <string name="purchase">खरीद फरोख्त</string>
+    <string name="msg_no_lastbook">कोई आखिरी पठन पुस्तक नहीं है।</string>
+    <string name="required_permission">आवश्यक अनुमतियों का अनुरोध करें\n\nअनुमतियां: फोटो, मीडिया, फ़ाइलों का उपयोग करें\nकारण: फ़ोटो, मीडिया दर्शक और फ़ाइलों को प्रबंधित और डिक्रॉप करें</string>
 </resources>

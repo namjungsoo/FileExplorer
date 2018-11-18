@@ -81,4 +81,18 @@
     <string name="msg_cloud_download">Выбранный файл загружается.</string>
     <string name="toast_cloud_download">Загрузка %s&#8230;</string>
     <string name="toast_cloud_complete">Загрузка файла завершена.</string>
+
+    <string name="viewer">зритель</string>
+    <string name="night_mode">Инверсия цвета в ночном режиме</string>
+    <string name="thumbnail_disabled">Отключить миниатюры</string>
+    <string name="japanese_direction">Сначала прочитайте правую страницу</string>
+    <string name="system">система</string>
+    <string name="action_exit">Выход</string>
+    <string name="execute">казнить</string>
+    <string name="check">Проверьте</string>
+    <string name="version">Версия</string>
+    <string name="pro_version">Pro версия</string>
+    <string name="purchase">покупка</string>
+    <string name="msg_no_lastbook">Нет последней книги для чтения.</string>
+    <string name="required_permission">Запросить необходимые разрешения\n\nРазрешения: использование фотографий, мультимедиа, файлов\nПричина: управлять и распаковывать фотографии, средства просмотра мультимедиа и файлы</string>
 </resources>
