@@ -92,4 +92,6 @@
     <string name="run">Run</string>
     <string name="check">Check</string>
     <string name="version">Version</string>
+
+    <string name="msg_no_lastbook">There is no last reading book.</string>
 </resources>

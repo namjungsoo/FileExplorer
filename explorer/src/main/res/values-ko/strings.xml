@@ -86,4 +86,12 @@
     <string name="night_mode">나이트 모드 색상 반전</string>
     <string name="thumbnail">썸네일 비활성화</string>
     <string name="japanese_direction">읽기 방향 오른쪽 우선</string>
+
+    <string name="system">시스템</string>
+    <string name="action_exit">종료</string>
+    <string name="run">실행</string>
+    <string name="check">확인</string>
+    <string name="version">버전</string>
+
+    <string name="msg_no_lastbook">마지막으로 읽던 책이 없습니다.</string>
 </resources>
