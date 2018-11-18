@@ -82,13 +82,21 @@ public class TextActivity extends BaseViewerActivity {
 
         initToolBox();
 
-        scrollText = (ScrollView) findViewById(R.id.scroll_text);
+        scrollText = findViewById(R.id.scroll_text);
 
-        textContent = (TextView) findViewById(R.id.text_content);
+        textContent = findViewById(R.id.text_content);
         textContent.setTypeface(FontManager.getTypeFaceNanumMeyongjo(this));
         textContent.setTextSize(fontSize);
         textContent.setLineSpacing(0, 1.5f);
-        textContent.setTextColor(Color.BLACK);
+
+        if(application.isNightMode()) {
+            scrollText.setBackgroundColor(Color.BLACK);
+            textContent.setTextColor(Color.rgb(192,192,192));
+        } else {
+            scrollText.setBackgroundColor(Color.WHITE);
+            textContent.setTextColor(Color.BLACK);
+        }
+
 
         scrollText.setOnTouchListener(new TextOnTouchListener(this));
         scrollText.getViewTreeObserver().addOnScrollChangedListener(new ViewTreeObserver.OnScrollChangedListener() {
