@@ -34,23 +34,10 @@ public class ReviewManager {
                     final DialogInterface.OnClickListener positiveListener = new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            try {
-                                final Intent marketLaunch = new Intent(Intent.ACTION_VIEW);
-                                final String packageName = context.getApplicationContext().getPackageName();
+                            final String packageName = context.getApplicationContext().getPackageName();
 
-                                marketLaunch.setData(Uri.parse("market://details?id=" + packageName));
-                                context.startActivity(marketLaunch);
-
-                                PreferenceHelper.setReviewed(context, true);
-                            } catch (ActivityNotFoundException e) {// FIX: ActivityNotFoundException
-                                final Intent marketLaunch = new Intent(Intent.ACTION_VIEW);
-                                final String packageName = context.getApplicationContext().getPackageName();
-
-                                marketLaunch.setData(Uri.parse("https://play.google.com/store/apps/details?id=" + packageName));
-                                context.startActivity(marketLaunch);
-
-                                PreferenceHelper.setReviewed(context, true);
-                            }
+                            AppHelper.launchMarket(context, packageName);
+                            PreferenceHelper.setReviewed(context, true);
                         }
                     };
 

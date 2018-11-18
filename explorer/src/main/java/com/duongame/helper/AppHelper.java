@@ -1,6 +1,9 @@
 package com.duongame.helper;
 
+import android.content.ActivityNotFoundException;
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 
 import com.duongame.R;
 
@@ -40,6 +43,20 @@ public class AppHelper {
             return R.mipmap.comicz;
         } else {
             return R.mipmap.explorer;
+        }
+    }
+
+    public static void launchMarket(Context context, String packageName) {
+        try {
+            final Intent marketLaunch = new Intent(Intent.ACTION_VIEW);
+
+            marketLaunch.setData(Uri.parse("market://details?id=" + packageName));
+            context.startActivity(marketLaunch);
+        } catch (ActivityNotFoundException e) {// FIX: ActivityNotFoundException
+            final Intent marketLaunch = new Intent(Intent.ACTION_VIEW);
+
+            marketLaunch.setData(Uri.parse("https://play.google.com/store/apps/details?id=" + packageName));
+            context.startActivity(marketLaunch);
         }
     }
 }

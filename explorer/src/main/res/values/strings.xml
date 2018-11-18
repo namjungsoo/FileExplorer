@@ -92,6 +92,8 @@
     <string name="run">Run</string>
     <string name="check">Check</string>
     <string name="version">Version</string>
+    <string name="pro_version">Pro version</string>
+    <string name="purchase">Purchase</string>
 
     <string name="msg_no_lastbook">There is no last reading book.</string>
 </resources>

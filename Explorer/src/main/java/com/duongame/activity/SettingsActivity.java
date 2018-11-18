@@ -26,6 +26,7 @@ import com.duongame.manager.AdBannerManager;
 import com.google.android.gms.ads.AdView;
 
 import java.io.File;
+import java.util.Set;
 
 
 // 셋팅을 전부 관장하는 액티비티이다.
@@ -172,6 +173,24 @@ public class SettingsActivity extends BaseActivity {
 
         TextView version = findViewById(R.id.version);
         version.setText("v" + BuildConfig.VERSION_NAME + "/" + BuildConfig.VERSION_CODE);
+
+        View view = findViewById(R.id.pro_purchase);
+        if(!AppHelper.isPro(this)) {
+            view.setVisibility(View.VISIBLE);
+
+            String packageName = getApplicationContext().getPackageName();
+            final String proPackageName = packageName.replace(".free", ".pro");
+
+            // pro 구매하기
+            // pro version일때는 숨겨야 함
+            Button purchase = findViewById(R.id.purchase);
+            purchase.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    AppHelper.launchMarket(SettingsActivity.this, proPackageName);
+                }
+            });
+        }
     }
 
     public static Intent getLocalIntent(Context context) {
