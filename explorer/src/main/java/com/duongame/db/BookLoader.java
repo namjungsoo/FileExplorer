@@ -260,6 +260,15 @@ public class BookLoader {
         return BookDB.getBook(context, item.path);
     }
 
+    private static void loadDefaultThumbnail(Activity context, HistoryRecyclerAdapter.HistoryViewHolder holder, String path) {
+        if(FileHelper.getCompressType(path) != ExplorerItem.COMPRESSTYPE_OTHER) {
+            // 압축파일
+            holder.thumb.setImageBitmap(BitmapCacheManager.getResourceBitmap(context.getResources(), R.drawable.ic_file_zip));
+        } else {
+            // PDF
+            holder.thumb.setImageBitmap(BitmapCacheManager.getResourceBitmap(context.getResources(), R.drawable.ic_file_pdf));
+        }
+    }
     public static void loadBookBitmap(Activity context, HistoryRecyclerAdapter.HistoryViewHolder holder, String path) {
         // zip 파일의 썸네일을 읽자
         if (FileHelper.isText(path)) {
@@ -267,26 +276,33 @@ public class BookLoader {
             return;
         }
 
-        final Bitmap bitmap = getThumbnail(path);
-        if (bitmap == null) {
-            switch (FileHelper.getCompressType(path)) {
-                case ExplorerItem.COMPRESSTYPE_ZIP:
-                case ExplorerItem.COMPRESSTYPE_SEVENZIP:
-                case ExplorerItem.COMPRESSTYPE_RAR: {
-                    final LoadZipThumbnailTask task = new LoadZipThumbnailTask(context, holder.thumb, holder.more);
-                    task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, path);
-                }
-                break;
-                default:
-                    if (path.endsWith(".pdf")) {
-                        final LoadPdfThumbnailTask task = new LoadPdfThumbnailTask(context, holder.thumb, holder.more);
+        loadDefaultThumbnail(context, holder, path);
+
+        AnalyticsApplication application = (AnalyticsApplication)context.getApplication();
+        if (application != null && application.isThumbnail()) {// 썸네일 비활성화라면
+            return;
+        } else {
+            final Bitmap bitmap = getThumbnail(path);
+            if (bitmap == null) {
+                switch (FileHelper.getCompressType(path)) {
+                    case ExplorerItem.COMPRESSTYPE_ZIP:
+                    case ExplorerItem.COMPRESSTYPE_SEVENZIP:
+                    case ExplorerItem.COMPRESSTYPE_RAR: {
+                        final LoadZipThumbnailTask task = new LoadZipThumbnailTask(context, holder.thumb, holder.more);
                         task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, path);
                     }
                     break;
+                    default:
+                        if (path.endsWith(".pdf")) {
+                            final LoadPdfThumbnailTask task = new LoadPdfThumbnailTask(context, holder.thumb, holder.more);
+                            task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, path);
+                        }
+                        break;
+                }
+            } else {
+                holder.thumb.setImageBitmap(bitmap);
+                BitmapCacheManager.setThumbnail(path, bitmap, holder.thumb);
             }
-        } else {
-            holder.thumb.setImageBitmap(bitmap);
-            BitmapCacheManager.setThumbnail(path, bitmap, holder.thumb);
         }
     }
 
