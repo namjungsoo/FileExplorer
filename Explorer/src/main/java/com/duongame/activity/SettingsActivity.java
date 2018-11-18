@@ -67,8 +67,6 @@ public class SettingsActivity extends BaseActivity {
         BitmapCacheManager.removeAllBitmaps();
         BitmapCacheManager.removeAllDrawables();
 
-        clearHistory();
-
         final File file = getFilesDir();
         deleteRecursive(file);
 
