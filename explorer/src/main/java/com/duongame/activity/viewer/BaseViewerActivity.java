@@ -27,6 +27,7 @@ import com.duongame.BuildConfig;
 import com.duongame.R;
 import com.duongame.activity.BaseActivity;
 import com.duongame.bitmap.BitmapCacheManager;
+import com.duongame.helper.JLog;
 import com.duongame.manager.AdBannerManager;
 import com.google.android.gms.ads.AdView;
 
@@ -81,7 +82,9 @@ public class BaseViewerActivity extends BaseActivity {
         }
 
         BitmapCacheManager.removeAllBitmaps();
+        JLog.e(TAG, "onDestroy removeAllBitmaps");
         BitmapCacheManager.removeAllPages();
+        JLog.e(TAG, "onDestroy removeAllPages");
 
         // 전면 광고 노출
         showInterstitialAd();

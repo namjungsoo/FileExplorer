@@ -48,6 +48,18 @@ public class BitmapLoader {
         public Drawable drawable;
     }
 
+    public static class SplittedBitmap {
+        public String key;
+        public String keyOther;
+        public Bitmap page;
+        public Bitmap pageOther;// if cached, null
+
+        // non split
+        // nullable
+        public String path;
+        public Bitmap bitmap;
+    }
+
     public static BitmapOrDrawable loadThumbnail(Context context, int type, String path) {
         BitmapOrDrawable bod = new BitmapOrDrawable();
 
@@ -308,6 +320,7 @@ public class BitmapLoader {
                 Bitmap rotated = createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), m, false);
                 if (rotated != null) {
                     bitmap.recycle();
+                    JLog.e(TAG, "rotateBitmapOnExif recycle");
                     bitmap = rotated;
                 }
             }
@@ -345,19 +358,18 @@ public class BitmapLoader {
 
         int tryCount = 0;
         Bitmap bitmap = null;
-        while(true) {
+        while (true) {
             try {
                 bitmap = BitmapFactory.decodeFile(path, options);
                 if (exifRotation) {
                     bitmap = rotateBitmapOnExif(bitmap, options, path);
                 }
                 return bitmap;
-            }
-            catch (OutOfMemoryError e) {
+            } catch (OutOfMemoryError e) {
                 options.inSampleSize++;
                 tryCount++;
 
-                if(tryCount == 3)
+                if (tryCount == 3)
                     return null;
             }
         }
@@ -369,10 +381,12 @@ public class BitmapLoader {
             int top = (decoder.getHeight() - decoder.getWidth()) >> 1;
             bitmap = Bitmap.createBitmap(decoder, 0, top, decoder.getWidth(), decoder.getWidth());
             decoder.recycle();
+            JLog.e(TAG, "cropSquareBitmap recycle");
         } else {
             int left = (decoder.getWidth() - decoder.getHeight()) >> 1;
             bitmap = Bitmap.createBitmap(decoder, left, 0, decoder.getHeight(), decoder.getHeight());
             decoder.recycle();
+            JLog.e(TAG, "cropSquareBitmap recycle");
         }
         return bitmap;
     }
@@ -390,10 +404,12 @@ public class BitmapLoader {
             int top = (decoder.getHeight() - decoder.getWidth()) >> 1;
             bitmap = decoder.decodeRegion(new Rect(0, top, decoder.getWidth(), top + decoder.getWidth()), options);
             decoder.recycle();
+            JLog.e(TAG, "cropBitmapUsingDecoder recycle");
         } else {
             int left = (decoder.getWidth() - decoder.getHeight()) >> 1;
             bitmap = decoder.decodeRegion(new Rect(left, 0, left + decoder.getHeight(), decoder.getHeight()), options);
             decoder.recycle();
+            JLog.e(TAG, "cropBitmapUsingDecoder recycle");
         }
         return bitmap;
     }
@@ -471,7 +487,7 @@ public class BitmapLoader {
     }
 
 
-    public static Bitmap splitBitmapSide(ExplorerItem item, int screenWidth, int screenHeight, boolean exif) {
+    public static SplittedBitmap splitBitmapSide(ExplorerItem item, int screenWidth, int screenHeight, boolean exif) {
         // 이미 캐시된 페이지가 있으면
         final String key;
         final String keyOther;
@@ -483,7 +499,13 @@ public class BitmapLoader {
 
         Bitmap page = BitmapCacheManager.getPage(key);
         if (page != null) {
-            return page;
+            SplittedBitmap sb = new SplittedBitmap();
+            sb.page = page;
+            sb.key = key;
+            sb.keyOther = keyOther;
+            sb.pageOther = null;
+            return sb;
+//            return page;
         }
 
         Bitmap pageOther = null;
@@ -505,16 +527,20 @@ public class BitmapLoader {
                                 pageOther = decoder.decodeRegion(rectOther, options);
 
                                 decoder.recycle();
+                                JLog.e(TAG, "splitBitmapSide decoder.recycle");
+
                                 break;
                             }
                         } catch (OutOfMemoryError e) {
-                            if (decoder != null)
+                            if (decoder != null) {
                                 decoder.recycle();
+                                JLog.e(TAG, "splitBitmapSide OutOfMemoryError recycle");
+                            }
 
                             options.inSampleSize++;
                             tryCount++;
 
-                            if(tryCount == 3)
+                            if (tryCount == 3)
                                 return null;
                         }
                     }
@@ -532,16 +558,19 @@ public class BitmapLoader {
                                 pageOther = decoder.decodeRegion(rectOther, options);
 
                                 decoder.recycle();
+                                JLog.e(TAG, "splitBitmapSide decoder.recycle");
                                 break;
                             }
                         } catch (OutOfMemoryError e) {
-                            if (decoder != null)
+                            if (decoder != null) {
                                 decoder.recycle();
+                                JLog.e(TAG, "splitBitmapSide OutOfMemoryError recycle");
+                            }
 
                             options.inSampleSize++;
                             tryCount++;
 
-                            if(tryCount == 3)
+                            if (tryCount == 3)
                                 return null;
                         }
                     }
@@ -553,21 +582,28 @@ public class BitmapLoader {
         } catch (Exception e) {
             if (decoder != null) {
                 decoder.recycle();
+                JLog.e(TAG, "splitBitmapSide Exception recycle");
             }
             return null;
         }
 
         if (page != null && pageOther != null) {
-            BitmapCacheManager.setPage(key, page, null);
-            BitmapCacheManager.setPage(keyOther, pageOther, null);
+//            BitmapCacheManager.setPage(key, page, null);
+//            BitmapCacheManager.setPage(keyOther, pageOther, null);
+            SplittedBitmap sb = new SplittedBitmap();
+            sb.key = key;
+            sb.keyOther = keyOther;
+            sb.page = page;
+            sb.pageOther = pageOther;
+            return sb;
         }
-
-        return page;
+        return null;
+//        return page;
     }
 
     //HACK: 이것을 사용하지 말것 -> GIF 일때는 이것을 사용하여야 한다.
     // 왼쪽 오른쪽을 자른 비트맵을 리턴한다
-    public static Bitmap splitBitmapSide(Bitmap bitmap, ExplorerItem item) {
+    public static SplittedBitmap splitBitmapSide(Bitmap bitmap, ExplorerItem item) {
         // 이미 캐시된 페이지가 있으면
         final String key;
         final String keyOther;
@@ -578,7 +614,13 @@ public class BitmapLoader {
 
         Bitmap page = BitmapCacheManager.getPage(key);
         if (page != null) {
-            return page;
+            SplittedBitmap sb = new SplittedBitmap();
+            sb.page = page;
+            sb.key = key;
+            sb.keyOther = keyOther;
+            sb.pageOther = null;
+            return sb;
+//            return page;
         }
 
         Bitmap pageOther = null;
@@ -594,10 +636,16 @@ public class BitmapLoader {
         }
 
         if (page != null && pageOther != null) {
-            BitmapCacheManager.setPage(key, page, null);
-            BitmapCacheManager.setPage(keyOther, pageOther, null);
-        } else {
+//            BitmapCacheManager.setPage(key, page, null);
+//            BitmapCacheManager.setPage(keyOther, pageOther, null);
+            SplittedBitmap sb = new SplittedBitmap();
+            sb.key = key;
+            sb.keyOther = keyOther;
+            sb.page = page;
+            sb.pageOther = pageOther;
+            return sb;
         }
+        return null;
 
         // 잘리는 비트맵은 더이상 사용하지 않으므로 삭제한다.
         // 이거 때문에 recycled 에러가 발생한다.
@@ -605,6 +653,6 @@ public class BitmapLoader {
 
         // 캐쉬에 포함되지 않는 이미지이다.
 //        BitmapCacheManager.removeBitmap(item.path);
-        return page;
+//        return page;
     }
 }

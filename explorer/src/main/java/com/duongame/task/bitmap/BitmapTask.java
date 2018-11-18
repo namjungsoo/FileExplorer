@@ -13,7 +13,7 @@ import com.duongame.file.FileHelper;
  * Created by namjungsoo on 2016-12-17.
  */
 
-public class BitmapTask extends AsyncTask<ExplorerItem, Void, Bitmap> {
+abstract class BitmapTask extends AsyncTask<ExplorerItem, Void, BitmapLoader.SplittedBitmap> {
     private static final String TAG = BitmapTask.class.getSimpleName();
     private static final int RETRY_INTERVAL_MS = 500;
     private static final int RETRY_COUNT = 5;
@@ -23,27 +23,26 @@ public class BitmapTask extends AsyncTask<ExplorerItem, Void, Bitmap> {
     private int count;
 
     // screenWidth, height는 화면(컨테이너)의 크기이다.
-    public BitmapTask(int width, int screenHeight, boolean exif) {
+    BitmapTask(int width, int screenHeight, boolean exif) {
         this.screenWidth = width;
         this.screenHeight = screenHeight;
         this.exif = exif;
     }
 
-    @Override
-    protected Bitmap doInBackground(ExplorerItem... params) {
-        return null;
-    }
-
-    protected Bitmap loadBitmap(ExplorerItem item) {
+    BitmapLoader.SplittedBitmap loadBitmap(ExplorerItem item) {
         // 캐시에 있는지 확인해 보고
         // split일 경우에는 무조건 없다
         Bitmap bitmap = null;
-        if (item.side != ExplorerItem.SIDE_ALL) {
+        BitmapLoader.SplittedBitmap sb = new BitmapLoader.SplittedBitmap();
+        if (item.side != ExplorerItem.SIDE_ALL) {// split인 이미지 이면서 캐쉬가 되어 있으면 바로 리턴한다.
             final String page = BitmapCacheManager.changePathToPage(item);
             bitmap = BitmapCacheManager.getPage(page);
 
             if (bitmap != null) {
-                return bitmap;
+                sb.key = page;
+                sb.page = bitmap;
+                return sb;
+//                return bitmap;
             }
         }
 
@@ -79,14 +78,16 @@ public class BitmapTask extends AsyncTask<ExplorerItem, Void, Bitmap> {
                         if (isFinishedWaitingImageExtracting())
                             break;
                     } else {
-                        BitmapCacheManager.setBitmap(item.path, bitmap, null);
+//                        BitmapCacheManager.setBitmap(item.path, bitmap, null);
+                        sb.path = item.path;
+                        sb.bitmap = bitmap;
                         break;
                     }
                 } else {
                     // RegionDecoder가 지원되는 경우는 PNG, JPG
                     if (FileHelper.isJpegImage(item.path) || FileHelper.isPngImage(item.path)) {
-                        bitmap = BitmapLoader.splitBitmapSide(item, screenWidth, screenHeight, exif);
-                        if (bitmap == null) {
+                        sb = BitmapLoader.splitBitmapSide(item, screenWidth, screenHeight, exif);
+                        if (sb == null) {
                             // 다른 비트맵이 기다려지길 기다렸다가 다시 시도하자.
                             // 왜냐면 압축을 푸는 중인 파일도 있기 때문이다.
                             if (isFinishedWaitingImageExtracting())
@@ -103,15 +104,19 @@ public class BitmapTask extends AsyncTask<ExplorerItem, Void, Bitmap> {
                             if (isFinishedWaitingImageExtracting())
                                 break;
                         } else {
-                            bitmap = BitmapLoader.splitBitmapSide(bitmap, item);
+                            sb = BitmapLoader.splitBitmapSide(bitmap, item);
                             break;
                         }
                     }
                 }
             }
+        } else {
+            sb.bitmap = bitmap;
+            sb.path = item.path;
         }
 
-        return bitmap;
+        return sb;
+//        return bitmap;
     }
 
     private boolean isFinishedWaitingImageExtracting() {

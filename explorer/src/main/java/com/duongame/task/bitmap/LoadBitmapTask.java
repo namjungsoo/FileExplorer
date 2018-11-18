@@ -6,6 +6,7 @@ import android.widget.ImageView;
 import com.duongame.activity.viewer.PagerActivity;
 import com.duongame.adapter.ExplorerItem;
 import com.duongame.bitmap.BitmapCacheManager;
+import com.duongame.bitmap.BitmapLoader;
 import com.duongame.file.FileHelper;
 
 import java.lang.ref.WeakReference;
@@ -35,7 +36,7 @@ public class LoadBitmapTask extends BitmapTask {
     }
 
     @Override
-    protected Bitmap doInBackground(ExplorerItem... params) {
+    protected BitmapLoader.SplittedBitmap doInBackground(ExplorerItem... params) {
         if (isCancelled())
             return null;
 
@@ -54,11 +55,11 @@ public class LoadBitmapTask extends BitmapTask {
     }
 
     @Override
-    protected void onPostExecute(Bitmap bitmap) {
-        super.onPostExecute(bitmap);
+    protected void onPostExecute(BitmapLoader.SplittedBitmap sb) {
+        super.onPostExecute(sb);
 
         // imageView 셋팅은 UI 쓰레드에서 해야 한다.
-        if (bitmap == null)
+        if (sb == null)
             return;
 
         ImageView imageView = imageViewRef.get();
@@ -68,15 +69,28 @@ public class LoadBitmapTask extends BitmapTask {
         if (isCancelled())
             return;
 
-        imageView.setImageBitmap(bitmap);
-        imageView.setTag(item.path);
-        if(item.side == SIDE_ALL)
-            BitmapCacheManager.setBitmap(item.path, bitmap, imageView);
-        else
-            BitmapCacheManager.setPage(item.path, bitmap, imageView);
+//        imageView.setImageBitmap(bitmap);
+//        imageView.setTag(item.path);
+        if (item.side == SIDE_ALL) {
+//            BitmapCacheManager.setBitmap(item.path, bitmap, imageView);
+            imageView.setImageBitmap(sb.bitmap);
+            imageView.setTag(sb.path);
+
+            BitmapCacheManager.setBitmap(sb.path, sb.bitmap, imageView);
+        } else {
+            imageView.setImageBitmap(sb.page);
+            imageView.setTag(sb.key);
+
+            BitmapCacheManager.setPage(sb.key, sb.page, imageView);
+            if (sb.pageOther != null) {
+                BitmapCacheManager.setPage(sb.keyOther, sb.pageOther, null);
+            }
+//            String key = BitmapCacheManager.changePathToPage(item);
+//            BitmapCacheManager.setPage(key, bitmap, imageView);
+        }
 
         PagerActivity context = contextRef.get();
-        if(context == null)
+        if (context == null)
             return;
 
         if (!context.isFinishing()) {

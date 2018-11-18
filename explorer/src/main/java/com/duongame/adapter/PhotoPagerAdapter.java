@@ -97,6 +97,7 @@ public class PhotoPagerAdapter extends ViewerPagerAdapter {
 
     @Override
     public void destroyItem(ViewGroup container, int position, Object object) {
+        JLog.e(TAG, "destroyItem position=" + position);
         // 공통 사항
         container.removeView((View) object);
 
