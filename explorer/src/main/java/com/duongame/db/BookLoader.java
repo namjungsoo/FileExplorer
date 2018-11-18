@@ -1,6 +1,7 @@
 package com.duongame.db;
 
 import android.app.Activity;
+import android.app.Application;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -10,6 +11,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
 
+import com.duongame.AnalyticsApplication;
 import com.duongame.R;
 import com.duongame.activity.viewer.PdfActivity;
 import com.duongame.activity.viewer.TextActivity;
@@ -20,6 +22,7 @@ import com.duongame.bitmap.BitmapCacheManager;
 import com.duongame.file.FileHelper;
 import com.duongame.helper.AppHelper;
 import com.duongame.helper.DateHelper;
+import com.duongame.helper.PreferenceHelper;
 import com.duongame.helper.ToastHelper;
 import com.duongame.task.thumbnail.LoadPdfThumbnailTask;
 import com.duongame.task.thumbnail.LoadZipThumbnailTask;
@@ -141,7 +144,15 @@ public class BookLoader {
             intent.putExtra("size", item.size);
             intent.putExtra("current_file", 0);
             intent.putExtra("extract_file", 0);
-            intent.putExtra("side", ExplorerItem.SIDE_LEFT);
+
+            AnalyticsApplication application = (AnalyticsApplication) context.getApplication();
+            int side = ExplorerItem.SIDE_LEFT;
+            if (application != null) {
+                if (application.isJapaneseDirection()) {
+                    side = ExplorerItem.SIDE_RIGHT;
+                }
+            }
+            intent.putExtra("side", side);
             return intent;
         }
         return null;
