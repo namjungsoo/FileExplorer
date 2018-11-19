@@ -86,7 +86,11 @@ public class BaseFragment extends Fragment {
             FragmentActivity activity = getActivity();
             if (activity != null) {
                 if (!activity.isFinishing()) {
-                    activity.finish();
+                    // 완벽 종료
+                    AnalyticsApplication application = (AnalyticsApplication )activity.getApplication();
+                    if(application != null) {
+                        application.exit(activity);
+                    }
                 }
             }
         } else {// 그게 아니면 한번더 입력을 받는다
