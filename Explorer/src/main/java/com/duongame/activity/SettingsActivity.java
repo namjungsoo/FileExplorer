@@ -125,9 +125,6 @@ public class SettingsActivity extends BaseActivity {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 AnalyticsApplication application = (AnalyticsApplication) getApplication();
                 if (application != null) {
-                    if (isChecked) {
-                        clearCache();
-                    }
                     application.setThumbnailDisabled(isChecked);
                 }
             }
