@@ -10,7 +10,7 @@
     <string name="list">리스트</string>
     <string name="sort">정렬</string>
     <string name="explorer">디렉토리</string>
-    <string name="history">최근파일</string>
+    <string name="history">최근 파일</string>
     <string name="search">검색</string>
     <string name="left">왼쪽</string>
     <string name="right">오른쪽</string>
@@ -26,11 +26,11 @@
     <string name="dialog_review_content">%s를 즐기고 계신가요? 더 나은 개발을 위해서 리뷰를 남겨주세요!</string>
     <string name="msg_last_page">마지막에 읽던 페이지가 있습니다. (페이지: %d)\n계속 읽으시겠습니까?</string>
     <string name="action_clear_cache">캐쉬 삭제</string>
-    <string name="action_clear_history">최근파일 삭제</string>
+    <string name="action_clear_history">최근 파일 삭제</string>
     <string name="action_open_lastbook">마지막 읽던 책 열기</string>
     <string name="msg_last_book">마지막으로 읽던 책을 여시겠습니까?</string>
     <string name="msg_clear_cache">캐쉬 파일을 삭제하였습니다.</string>
-    <string name="msg_clear_history">최근파일 목록을 삭제하였습니다.</string>
+    <string name="msg_clear_history">최근 파일 목록을 삭제하였습니다.</string>
     <string name="hide_completed_file">완료된 파일 숨김</string>
 
     <!-- 새로운 부분 -->
