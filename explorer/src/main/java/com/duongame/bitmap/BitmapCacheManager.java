@@ -50,6 +50,8 @@ public class BitmapCacheManager {
 
     // current_page
     public static void setPage(String key, Bitmap bitmap, ImageView imageView) {
+        if (key == null)
+            return;
         BitmapCache cache = pageCache.get(key);
         if (cache == null) {
             cache = new BitmapCache();
@@ -152,6 +154,8 @@ public class BitmapCacheManager {
 
     // image bitmap
     public static void setBitmap(String path, Bitmap bitmap, ImageView imageView) {
+        if (path == null)
+            return;
         BitmapCache cache = bitmapCache.get(path);
         if (cache == null) {
             cache = new BitmapCache();
@@ -209,6 +213,8 @@ public class BitmapCacheManager {
 
     // thumbnail
     public static void setThumbnail(String path, Bitmap bitmap, ImageView imageView) {
+        if(path == null)
+            return;
         BitmapCache cache = thumbnailCache.get(path);
         if (cache == null) {
             cache = new BitmapCache();
