@@ -29,6 +29,9 @@ public class ExtSdCardHelper {
             return null;
 
         File[] files = storage.listFiles();
+        if(files == null)
+            return null;
+
         for (File file : files) {
             String path = file.getAbsolutePath();
             if (path.contains("emulated"))
