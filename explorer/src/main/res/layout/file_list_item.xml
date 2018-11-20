@@ -1,90 +1,77 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="70dp"
-    android:background="?android:attr/selectableItemBackground">
+    android:layout_height="30dp"
+    android:layout_marginStart="9dp"
+    android:layout_marginTop="3dp"
+    android:layout_marginEnd="9dp"
+    android:layout_marginBottom="3dp"
+    android:background="?android:attr/selectableItemBackground"
+    android:orientation="horizontal"
+    android:baselineAligned="false">
+
+    <FrameLayout
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginEnd="5dp">
+
+        <ImageView
+            android:id="@+id/file_icon"
+            android:layout_width="30dp"
+            android:layout_height="30dp" />
+
+        <ImageView
+            android:id="@+id/file_small_icon"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_gravity="bottom|end"
+            android:visibility="invisible" />
+    </FrameLayout>
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginBottom="5dp"
-        android:layout_marginLeft="9dp"
-        android:layout_marginRight="9dp"
-        android:layout_marginTop="5dp">
+        android:layout_width="300dp"
+        android:layout_height="30dp"
+        android:orientation="horizontal">
 
-        <FrameLayout
-            android:layout_width="65dp"
-            android:layout_height="60dp"
-            android:layout_marginRight="5dp">
+        <TextView
+            android:id="@+id/text_name"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
 
-            <ImageView
-                android:id="@+id/file_icon"
-                android:layout_width="60dp"
-                android:layout_height="60dp" />
+            android:ellipsize="end"
+            android:gravity="bottom|start"
+            android:maxLines="2"
 
-            <ImageView
-                android:id="@+id/file_small_icon"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_gravity="bottom|right"
-                android:visibility="invisible" />
-        </FrameLayout>
+            android:singleLine="false"
+            android:textColor="#000000"
+            android:textSize="14sp" />
 
-        <!-- 전체 높이 60dp -->
         <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="60dp"
-            android:layout_weight="1"
-            android:orientation="vertical">
+            android:layout_width="match_parent"
+            android:orientation="vertical"
+            android:layout_height="20dp">
 
             <TextView
-                android:id="@+id/text_name"
-                android:layout_width="match_parent"
-                android:layout_height="40dp"
-
-                android:ellipsize="end"
-                android:maxLines="2"
-                android:singleLine="false"
-
-                android:gravity="bottom|left"
-                android:textColor="#000000"
-                android:textSize="14dp" />
+                android:id="@+id/text_size"
+                android:layout_width="0dp"
+                android:layout_height="20dp"
+                android:layout_weight="1"
+                android:gravity="end"
+                android:textSize="13sp" />
 
             <TextView
-                android:id="@+id/text_path"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:maxLines="1"
-                android:singleLine="true"
-                android:textSize="13dp"
-                android:visibility="gone" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="20dp">
-
-                <TextView
-                    android:id="@+id/text_size"
-                    android:layout_width="0dp"
-                    android:layout_height="20dp"
-                    android:layout_weight="1"
-                    android:gravity="right"
-                    android:textSize="13dp" />
-
-                <TextView
-                    android:id="@+id/text_date"
-                    android:layout_width="0dp"
-                    android:layout_height="20dp"
-                    android:layout_weight="2"
-                    android:gravity="right"
-                    android:textSize="13dp" />
-            </LinearLayout>
+                android:id="@+id/text_date"
+                android:layout_width="0dp"
+                android:layout_height="20dp"
+                android:layout_weight="2"
+                android:gravity="end"
+                android:textSize="13sp" />
         </LinearLayout>
     </LinearLayout>
 
-    <CheckBox
-        android:id="@+id/check_file"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:visibility="invisible" />
+    <!--<CheckBox-->
+    <!--android:id="@+id/check_file"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:visibility="invisible" />-->
 
-</FrameLayout>
+</LinearLayout>
