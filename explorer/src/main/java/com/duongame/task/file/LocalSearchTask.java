@@ -16,10 +16,10 @@ import java.util.Comparator;
 import static android.view.View.GONE;
 
 public class LocalSearchTask extends AsyncTask<String, Void, FileExplorer.Result> {
-    WeakReference<ExplorerFragment> fragmentWeakReference;
-    boolean pathChanged;
-    String path;
-    Comparator<ExplorerItem> comparator;
+    private WeakReference<ExplorerFragment> fragmentWeakReference;
+    private boolean pathChanged;
+    private String path;
+    private Comparator<ExplorerItem> comparator;
 
     public LocalSearchTask(ExplorerFragment fragment, boolean pathChanged) {
         this.pathChanged = pathChanged;
@@ -144,7 +144,7 @@ public class LocalSearchTask extends AsyncTask<String, Void, FileExplorer.Result
                 fragment.getSwitcherContents().setDisplayedChild(1);
 
                 // 퍼미션이 있으면 퍼미션 버튼을 보이지 않게 함
-                if (PermissionManager.checkStoragePermissions()) {
+                if (PermissionManager.checkStoragePermissions(fragment.getActivity())) {
                     fragment.getPermissionButton().setVisibility(GONE);
                     fragment.getTextNoFiles().setVisibility(View.VISIBLE);
                 } else {

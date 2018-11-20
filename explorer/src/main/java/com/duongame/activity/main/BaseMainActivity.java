@@ -684,7 +684,13 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
         PermissionManager.onRequestStoragePermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == PermissionManager.PERMISSION_CONTACTS) {
+            final BaseFragment fragment = getCurrentFragment();
+            if (fragment != null)
+                fragment.onRefresh();
+        }
 
         PermissionManager.onRequestContactsPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == PermissionManager.PERMISSION_CONTACTS) {
