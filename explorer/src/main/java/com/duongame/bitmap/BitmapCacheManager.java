@@ -49,7 +49,7 @@ public class BitmapCacheManager {
     }
 
     // current_page
-    public static void setPage(String key, Bitmap bitmap, ImageView imageView) {
+    public static void setPage(String key, Bitmap bitmap, ImageView imageView, boolean update) {
         if (key == null)
             return;
         BitmapCache cache = pageCache.get(key);
@@ -70,7 +70,8 @@ public class BitmapCacheManager {
             if (imageView != null) {
                 cache.imageViewRef = new WeakReference<>(imageView);
             } else {
-                cache.imageViewRef = null;
+                if(update)
+                    cache.imageViewRef = null;
             }
         }
     }
@@ -152,6 +153,7 @@ public class BitmapCacheManager {
         drawableCache.clear();
     }
 
+    // 비트맵은 SIDE_ALL인 경우 1:1 맵핑이 됨
     // image bitmap
     public static void setBitmap(String path, Bitmap bitmap, ImageView imageView) {
         if (path == null)
@@ -211,9 +213,10 @@ public class BitmapCacheManager {
         bitmapCache.clear();
     }
 
+    //TODO: 하나의 썸네일이 여러곳에서 사용될수 있으니 해당 부분에 대해서 조치를 해야함
     // thumbnail
     public static void setThumbnail(String path, Bitmap bitmap, ImageView imageView) {
-        if(path == null)
+        if (path == null)
             return;
         BitmapCache cache = thumbnailCache.get(path);
         if (cache == null) {

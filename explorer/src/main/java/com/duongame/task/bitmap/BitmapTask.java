@@ -75,8 +75,11 @@ abstract class BitmapTask extends AsyncTask<ExplorerItem, Void, BitmapLoader.Spl
                     if (bitmap == null) {
                         // 다른 비트맵이 기다려지길 기다렸다가 다시 시도하자.
                         // 왜냐면 압축을 푸는 중인 파일도 있기 때문이다.
-                        if (isFinishedWaitingImageExtracting())
+                        if (isTimedOutForImageExtracting()) {
+                            sb.path = item.path;
+                            sb.bitmap = null;
                             break;
+                        }
                     } else {
 //                        BitmapCacheManager.setBitmap(item.path, bitmap, null);
                         sb.path = item.path;
@@ -90,7 +93,7 @@ abstract class BitmapTask extends AsyncTask<ExplorerItem, Void, BitmapLoader.Spl
                         if (sb == null) {
                             // 다른 비트맵이 기다려지길 기다렸다가 다시 시도하자.
                             // 왜냐면 압축을 푸는 중인 파일도 있기 때문이다.
-                            if (isFinishedWaitingImageExtracting())
+                            if (isTimedOutForImageExtracting())
                                 break;
                         } else {
                             break;
@@ -101,7 +104,7 @@ abstract class BitmapTask extends AsyncTask<ExplorerItem, Void, BitmapLoader.Spl
                         if (bitmap == null) {
                             // 다른 비트맵이 기다려지길 기다렸다가 다시 시도하자.
                             // 왜냐면 압축을 푸는 중인 파일도 있기 때문이다.
-                            if (isFinishedWaitingImageExtracting())
+                            if (isTimedOutForImageExtracting())
                                 break;
                         } else {
                             sb = BitmapLoader.splitBitmapSide(bitmap, item);
@@ -115,11 +118,20 @@ abstract class BitmapTask extends AsyncTask<ExplorerItem, Void, BitmapLoader.Spl
             sb.path = item.path;
         }
 
+        // SIDE_ALL일때 파일이 없으면
+        // sb.path = item.path
+        // sb.bitmap = null
+
+        // SIDE_LEFT or SIDE_RIGHT는
+        // sb = null
         return sb;
 //        return bitmap;
     }
 
-    private boolean isFinishedWaitingImageExtracting() {
+    // 다른 쓰레드에 의해서 이미지가 압축 풀리길 기다렸다가
+    // 타임아웃이 되면 true를 리턴한다.
+    // false를 리턴하는 것은 sleep에 예외가 발생했을 때이다.
+    private boolean isTimedOutForImageExtracting() {
         try {
             // 최대 시간을 기다렸다면 멈추고 종료 한다.
             count += RETRY_INTERVAL_MS;

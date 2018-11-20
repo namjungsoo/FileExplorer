@@ -69,10 +69,10 @@ public class LoadBitmapTask extends BitmapTask {
         if (isCancelled())
             return;
 
-//        imageView.setImageBitmap(bitmap);
-//        imageView.setTag(item.path);
         if (item.side == SIDE_ALL) {
-//            BitmapCacheManager.setBitmap(item.path, bitmap, imageView);
+            if (sb.bitmap == null)
+                return;
+
             imageView.setImageBitmap(sb.bitmap);
             imageView.setTag(sb.path);
 
@@ -81,12 +81,10 @@ public class LoadBitmapTask extends BitmapTask {
             imageView.setImageBitmap(sb.page);
             imageView.setTag(sb.key);
 
-            BitmapCacheManager.setPage(sb.key, sb.page, imageView);
+            BitmapCacheManager.setPage(sb.key, sb.page, imageView, true);
             if (sb.pageOther != null) {
-                BitmapCacheManager.setPage(sb.keyOther, sb.pageOther, null);
+                BitmapCacheManager.setPage(sb.keyOther, sb.pageOther, null, false);
             }
-//            String key = BitmapCacheManager.changePathToPage(item);
-//            BitmapCacheManager.setPage(key, bitmap, imageView);
         }
 
         PagerActivity context = contextRef.get();
