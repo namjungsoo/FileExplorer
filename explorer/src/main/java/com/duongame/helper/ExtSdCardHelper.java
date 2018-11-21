@@ -33,8 +33,8 @@ public class ExtSdCardHelper {
             return null;
 
         for (File file : files) {
-            String path = file.getAbsolutePath();
-            if (path.contains("emulated"))
+            String path = file.getName();
+            if (path.equals("emulated"))
                 continue;
             if (path.equals("self"))
                 continue;
