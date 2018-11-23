@@ -22,7 +22,7 @@ import com.duongame.file.FileHelper;
 import com.duongame.helper.AppHelper;
 import com.duongame.helper.DateHelper;
 import com.duongame.helper.ToastHelper;
-import com.duongame.task.thumbnail.LoadPdfThumbnailTask;
+import com.duongame.task.thumbnail.LoadThumbnailTask;
 import com.duongame.task.thumbnail.LoadZipThumbnailTask;
 
 import java.io.File;
@@ -292,7 +292,7 @@ public class BookLoader {
                     break;
                     default:
                         if (path.endsWith(".pdf")) {
-                            final LoadPdfThumbnailTask task = new LoadPdfThumbnailTask(context, holder.thumb, holder.more);
+                            final LoadThumbnailTask task = new LoadThumbnailTask(context, holder.thumb, holder.more, ExplorerItem.FILETYPE_PDF);
                             task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, path);
                         }
                         break;

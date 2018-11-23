@@ -16,7 +16,7 @@ import com.duongame.R;
 import com.duongame.bitmap.BitmapCacheManager;
 import com.duongame.file.FileHelper;
 import com.duongame.helper.UnitHelper;
-import com.duongame.task.thumbnail.LoadPdfThumbnailTask;
+import com.duongame.task.thumbnail.LoadThumbnailTask;
 import com.duongame.task.thumbnail.LoadZipThumbnailTask;
 
 import java.io.File;
@@ -128,7 +128,7 @@ public class SearchRecyclerAdapter extends RecyclerView.Adapter<SearchRecyclerAd
             holder.icon.setImageResource(R.drawable.ic_file_normal);
 
             if (isThumbnailEnabled()) {
-                LoadPdfThumbnailTask task = new LoadPdfThumbnailTask(context, holder.icon, holder.iconSmall);
+                LoadThumbnailTask task = new LoadThumbnailTask(context, holder.icon, holder.iconSmall, ExplorerItem.FILETYPE_PDF);
                 task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, item.path);
             }
         } else {// 로딩된 비트맵을 셋팅

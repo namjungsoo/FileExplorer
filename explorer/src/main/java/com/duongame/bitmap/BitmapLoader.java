@@ -7,8 +7,10 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.BitmapRegionDecoder;
+import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.Rect;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.pdf.PdfRenderer;
 import android.media.ExifInterface;
@@ -43,11 +45,6 @@ public class BitmapLoader {
     public static final String TAG = "BitmapLoader";
     public static final int MICRO_KIND_SIZE = 96;
 
-    public static class BitmapOrDrawable {
-        public Bitmap bitmap;
-        public Drawable drawable;
-    }
-
     public static class SplittedBitmap {
         public String key;
         public String keyOther;
@@ -60,37 +57,58 @@ public class BitmapLoader {
         public Bitmap bitmap;
     }
 
-    public static BitmapOrDrawable loadThumbnail(Context context, int type, String path) {
-        BitmapOrDrawable bod = new BitmapOrDrawable();
-
+    public static Bitmap loadThumbnail(Context context, int type, String path) {
+        Bitmap bitmap = null;
         switch (type) {
             // Drawable
             case ExplorerItem.FILETYPE_APK:
-                bod.drawable = BitmapLoader.loadApkThumbnailDrawable(context, path);
+                bitmap = BitmapLoader.loadApkThumbnailDrawable(context, path);
                 break;
             // 나머지는 전부 Bitmap
             // Bitmap은 캐시에서 관리된다.
             case ExplorerItem.FILETYPE_PDF:
-                bod.bitmap = BitmapLoader.loadPdfThumbnailBitmap(context, path);
+                bitmap = BitmapLoader.loadPdfThumbnailBitmap(context, path);
                 break;
             case ExplorerItem.FILETYPE_IMAGE:
-                bod.bitmap = BitmapLoader.loadImageThumbnailBitmap(context, path);
+                bitmap = BitmapLoader.loadImageThumbnailBitmap(context, path);
                 break;
             case ExplorerItem.FILETYPE_VIDEO:
-                bod.bitmap = BitmapLoader.loadVideoThumbnailBitmap(context, path);
+                bitmap = BitmapLoader.loadVideoThumbnailBitmap(context, path);
                 break;
             case ExplorerItem.FILETYPE_ZIP:
-                bod.bitmap = BitmapLoader.loadZipThumbnailBitmap(context, path);
+                bitmap = BitmapLoader.loadZipThumbnailBitmap(context, path);
                 break;
         }
 
-        return bod;
+        return bitmap;
     }
 
-    public static Drawable loadApkThumbnailDrawable(Context context, String path) {
-        Drawable drawable = BitmapCacheManager.getDrawable(path);
-        if (drawable != null)
-            return drawable;
+    public static Bitmap drawableToBitmap(Drawable drawable) {
+        Bitmap bitmap = null;
+
+        if (drawable instanceof BitmapDrawable) {
+            BitmapDrawable bitmapDrawable = (BitmapDrawable) drawable;
+            if (bitmapDrawable.getBitmap() != null) {
+                return bitmapDrawable.getBitmap();
+            }
+        }
+
+        if (drawable.getIntrinsicWidth() <= 0 || drawable.getIntrinsicHeight() <= 0) {
+            bitmap = Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888); // Single color bitmap will be created of 1x1 pixel
+        } else {
+            bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+        }
+
+        Canvas canvas = new Canvas(bitmap);
+        drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+        drawable.draw(canvas);
+        return bitmap;
+    }
+
+    public static Bitmap loadApkThumbnailDrawable(Context context, String path) {
+        Bitmap bitmap = BitmapCacheManager.getThumbnail(path);
+        if (bitmap != null)
+            return bitmap;
 
         final PackageManager pm = context.getPackageManager();
         final PackageInfo pi = pm.getPackageArchiveInfo(path, 0);
@@ -98,18 +116,18 @@ public class BitmapLoader {
         if (pi != null) {
             pi.applicationInfo.sourceDir = path;
             pi.applicationInfo.publicSourceDir = path;
-            drawable = pi.applicationInfo.loadIcon(pm);
+            Drawable drawable = pi.applicationInfo.loadIcon(pm);
 
             if (drawable != null) {
-                BitmapCacheManager.setDrawable(path, drawable);
-                return drawable;
+                bitmap = drawableToBitmap(drawable);
+                return bitmap;
             }
         }
 
-        return drawable;
+        return null;
     }
 
-    public static Bitmap loadImageThumbnailBitmap(Context context, String path) {
+    static Bitmap loadImageThumbnailBitmap(Context context, String path) {
         Bitmap bitmap = BitmapCacheManager.getThumbnail(path);
         if (bitmap != null)
             return bitmap;
@@ -128,10 +146,10 @@ public class BitmapLoader {
             return bitmap;
         }
 
-        return bitmap;
+        return null;
     }
 
-    public static Bitmap loadVideoThumbnailBitmap(Context context, String path) {
+    static Bitmap loadVideoThumbnailBitmap(Context context, String path) {
         Bitmap bitmap = BitmapCacheManager.getThumbnail(path);
         if (bitmap != null)
             return bitmap;
@@ -144,10 +162,10 @@ public class BitmapLoader {
         }
 
         //TODO: 직접 만드는 것도 넣어야 한다.
-        return bitmap;
+        return null;
     }
 
-    public static Bitmap loadPdfThumbnailBitmap(Context context, String path) {
+    static Bitmap loadPdfThumbnailBitmap(Context context, String path) {
         Bitmap bitmap = BitmapCacheManager.getThumbnail(path);
         if (bitmap != null)
             return bitmap;
@@ -159,7 +177,7 @@ public class BitmapLoader {
             return bitmap;
         }
 
-        return bitmap;
+        return null;
     }
 
     public static String getZipThumbnailFileName(Context context, String path) {
@@ -178,7 +196,7 @@ public class BitmapLoader {
         return image;
     }
 
-    public static Bitmap loadZipThumbnailBitmap(Context context, String path) {
+    static Bitmap loadZipThumbnailBitmap(Context context, String path) {
         Bitmap bitmap = BitmapCacheManager.getThumbnail(path);
         if (bitmap != null)
             return bitmap;
@@ -338,7 +356,7 @@ public class BitmapLoader {
         return options;
     }
 
-    public static BitmapFactory.Options sampleDecodeBounds(String path, int reqWidth, int reqHeight) {
+    static BitmapFactory.Options sampleDecodeBounds(String path, int reqWidth, int reqHeight) {
         final BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
         BitmapFactory.decodeFile(path, options);
@@ -414,7 +432,7 @@ public class BitmapLoader {
         return bitmap;
     }
 
-    public static Bitmap decodeSquareThumbnailFromPdfFile(String path, int size) {
+    static Bitmap decodeSquareThumbnailFromPdfFile(String path, int size) {
         Bitmap bitmap = null;
         try {
             final ParcelFileDescriptor parcel = ParcelFileDescriptor.open(new File(path), ParcelFileDescriptor.MODE_READ_ONLY);

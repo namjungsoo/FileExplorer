@@ -20,10 +20,8 @@ import com.duongame.GlideApp;
 import com.duongame.R;
 import com.duongame.bitmap.BitmapCacheManager;
 import com.duongame.helper.JLog;
-import com.duongame.task.thumbnail.LoadApkThumbnailTask;
-import com.duongame.task.thumbnail.LoadPdfThumbnailTask;
+import com.duongame.task.thumbnail.LoadGifThumbnailTask;
 import com.duongame.task.thumbnail.LoadThumbnailTask;
-import com.duongame.task.thumbnail.LoadVideoThumbnailTask;
 import com.duongame.task.thumbnail.LoadZipThumbnailTask;
 
 import java.io.File;
@@ -207,7 +205,7 @@ public class ExplorerAdapter extends RecyclerView.Adapter<ExplorerAdapter.Explor
                 viewHolder.icon.setImageResource(R.drawable.ic_file_jpg);
 
                 if (isThumbnailEnabled()) {
-                    LoadThumbnailTask task = new LoadThumbnailTask(context, viewHolder.icon, viewHolder.iconSmall);
+                    LoadGifThumbnailTask task = new LoadGifThumbnailTask(context, viewHolder.icon, viewHolder.iconSmall);
                     task.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, item.path);
                 }
             } else {
@@ -253,7 +251,7 @@ public class ExplorerAdapter extends RecyclerView.Adapter<ExplorerAdapter.Explor
             viewHolder.icon.setImageResource(R.drawable.ic_file_pdf);
 
             if (isThumbnailEnabled()) {
-                LoadPdfThumbnailTask task = new LoadPdfThumbnailTask(context, viewHolder.icon, viewHolder.iconSmall);
+                LoadThumbnailTask task = new LoadThumbnailTask(context, viewHolder.icon, viewHolder.iconSmall, ExplorerItem.FILETYPE_PDF);
                 task.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, item.path);
             }
         } else {// 로딩된 비트맵을 셋팅
@@ -289,16 +287,17 @@ public class ExplorerAdapter extends RecyclerView.Adapter<ExplorerAdapter.Explor
     }
 
     void setIconApk(final ExplorerViewHolder viewHolder, ExplorerItem item) {
-        final Drawable drawable = getDrawable(item.path);
-        if (drawable == null) {
+        final Bitmap bitmap = getThumbnail(item.path);
+        if (bitmap == null) {
             viewHolder.icon.setImageResource(R.drawable.ic_file_apk);
 
             if (isThumbnailEnabled()) {
-                LoadApkThumbnailTask task = new LoadApkThumbnailTask(context, viewHolder.icon, viewHolder.iconSmall);
+                LoadThumbnailTask task = new LoadThumbnailTask(context, viewHolder.icon, viewHolder.iconSmall, ExplorerItem.FILETYPE_APK);
                 task.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, item.path);
             }
         } else {
-            viewHolder.icon.setImageDrawable(drawable);
+            viewHolder.icon.setImageBitmap(bitmap);
+            BitmapCacheManager.setThumbnail(item.path, bitmap, viewHolder.icon);
         }
     }
 
@@ -313,7 +312,7 @@ public class ExplorerAdapter extends RecyclerView.Adapter<ExplorerAdapter.Explor
                 viewHolder.icon.setImageResource(R.drawable.ic_file_avi);
 
             if (isThumbnailEnabled()) {
-                LoadVideoThumbnailTask task = new LoadVideoThumbnailTask(context, viewHolder.icon, viewHolder.iconSmall);
+                LoadThumbnailTask task = new LoadThumbnailTask(context, viewHolder.icon, viewHolder.iconSmall, ExplorerItem.FILETYPE_VIDEO);
                 task.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, item.path);
             }
         } else {// 로딩된 비트맵을 셋팅
