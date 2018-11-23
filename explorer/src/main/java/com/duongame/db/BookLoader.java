@@ -261,16 +261,16 @@ public class BookLoader {
     private static void loadDefaultThumbnail(Activity context, HistoryRecyclerAdapter.HistoryViewHolder holder, String path) {
         if(FileHelper.getCompressType(path) != ExplorerItem.COMPRESSTYPE_OTHER) {
             // 압축파일
-            holder.thumb.setImageBitmap(BitmapCacheManager.getResourceBitmap(context.getResources(), R.drawable.ic_file_zip));
+            holder.thumb.setImageResource(R.drawable.ic_file_zip);
         } else {
             // PDF
-            holder.thumb.setImageBitmap(BitmapCacheManager.getResourceBitmap(context.getResources(), R.drawable.ic_file_pdf));
+            holder.thumb.setImageResource(R.drawable.ic_file_pdf);
         }
     }
     public static void loadBookBitmap(Activity context, HistoryRecyclerAdapter.HistoryViewHolder holder, String path) {
         // zip 파일의 썸네일을 읽자
         if (FileHelper.isText(path)) {
-            holder.thumb.setImageBitmap(BitmapCacheManager.getResourceBitmap(context.getResources(), R.drawable.ic_file_txt));
+            holder.thumb.setImageResource(R.drawable.ic_file_txt);
             return;
         }
 

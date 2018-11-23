@@ -19,6 +19,7 @@ import com.duongame.BuildConfig;
 import com.duongame.GlideApp;
 import com.duongame.R;
 import com.duongame.bitmap.BitmapCacheManager;
+import com.duongame.bitmap.BitmapLoader;
 import com.duongame.helper.JLog;
 import com.duongame.task.thumbnail.LoadGifThumbnailTask;
 import com.duongame.task.thumbnail.LoadThumbnailTask;
@@ -28,7 +29,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import static com.duongame.bitmap.BitmapCacheManager.getDrawable;
 import static com.duongame.bitmap.BitmapCacheManager.getThumbnail;
 
 /**
@@ -84,23 +84,6 @@ public class ExplorerAdapter extends RecyclerView.Adapter<ExplorerAdapter.Explor
             default:
                 return false;
         }
-    }
-
-    private boolean checkBodInCache(ExplorerItem item) {
-        if (item.type == ExplorerItem.FILETYPE_APK) {
-            Drawable drawable = BitmapCacheManager.getDrawable(item.path);
-            if (drawable != null)
-                return true;
-        } else {
-            if (hasThumbnail(item)) {
-                Bitmap bitmap = BitmapCacheManager.getThumbnail(item.path);
-                if (bitmap != null)
-                    return true;
-            } else {
-                return true;
-            }
-        }
-        return false;
     }
 
     public ExplorerAdapter(Activity context, ArrayList<ExplorerItem> fileList) {
@@ -233,7 +216,9 @@ public class ExplorerAdapter extends RecyclerView.Adapter<ExplorerAdapter.Explor
                                         return;
 
                                     if (tag.equals(item.path)) {
-                                        getView().setImageDrawable(resource);
+                                        Bitmap bitmap = BitmapLoader.drawableToBitmap(resource);
+                                        getView().setImageBitmap(bitmap);
+                                        BitmapCacheManager.setThumbnail(item.path, bitmap, viewHolder.icon);
                                     }
                                 }
                             });
@@ -273,8 +258,8 @@ public class ExplorerAdapter extends RecyclerView.Adapter<ExplorerAdapter.Explor
 
     void setIconZip(final ExplorerViewHolder viewHolder, ExplorerItem item) {
         JLog.e(TAG, "setIconZip " + item.path);
-        final Drawable drawable = getDrawable(item.path);
-        if (drawable == null) {
+        final Bitmap bitmap = getThumbnail(item.path);
+        if (bitmap  == null) {
             viewHolder.icon.setImageResource(R.drawable.ic_file_zip);
 
             if (BuildConfig.PREVIEW_ZIP && isThumbnailEnabled()) {
@@ -282,7 +267,8 @@ public class ExplorerAdapter extends RecyclerView.Adapter<ExplorerAdapter.Explor
                 task.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, item.path);
             }
         } else {
-            viewHolder.icon.setImageDrawable(drawable);
+            viewHolder.icon.setImageBitmap(bitmap);
+            BitmapCacheManager.setThumbnail(item.path, bitmap, viewHolder.icon);
         }
     }
 
@@ -346,10 +332,10 @@ public class ExplorerAdapter extends RecyclerView.Adapter<ExplorerAdapter.Explor
     void setIconDefault(final ExplorerViewHolder viewHolder, ExplorerItem item) {
         switch (item.type) {
             case ExplorerItem.FILETYPE_FOLDER:
-                viewHolder.icon.setImageBitmap(BitmapCacheManager.getResourceBitmap(context.getResources(), R.drawable.ic_file_folder));
+                viewHolder.icon.setImageResource(R.drawable.ic_file_folder);
                 break;
             default:
-                viewHolder.icon.setImageBitmap(BitmapCacheManager.getResourceBitmap(context.getResources(), R.drawable.ic_file_normal));
+                viewHolder.icon.setImageResource(R.drawable.ic_file_normal);
                 break;
         }
     }
@@ -357,19 +343,17 @@ public class ExplorerAdapter extends RecyclerView.Adapter<ExplorerAdapter.Explor
     void setIconTypeDefault(final ExplorerViewHolder viewHolder, ExplorerItem item) {
         switch (item.type) {
             case ExplorerItem.FILETYPE_AUDIO:
-                viewHolder.icon.setImageBitmap(BitmapCacheManager.getResourceBitmap(context.getResources(), R.drawable.ic_file_mp3));
+                viewHolder.icon.setImageResource(R.drawable.ic_file_mp3);
                 break;
             case ExplorerItem.FILETYPE_FILE:
-                viewHolder.icon.setImageBitmap(BitmapCacheManager.getResourceBitmap(context.getResources(), R.drawable.ic_file_normal));
+                viewHolder.icon.setImageResource(R.drawable.ic_file_normal);
                 break;
             case ExplorerItem.FILETYPE_FOLDER:
-                viewHolder.icon.setImageBitmap(BitmapCacheManager.getResourceBitmap(context.getResources(), R.drawable.ic_file_folder));
+                viewHolder.icon.setImageResource(R.drawable.ic_file_folder);
                 break;
             case ExplorerItem.FILETYPE_TEXT:
-                viewHolder.icon.setImageBitmap(BitmapCacheManager.getResourceBitmap(context.getResources(), R.drawable.ic_file_txt));
+                viewHolder.icon.setImageResource(R.drawable.ic_file_txt);
                 break;
-            default:
-                return;
         }
     }
 

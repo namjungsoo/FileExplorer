@@ -22,7 +22,6 @@ import com.duongame.task.thumbnail.LoadZipThumbnailTask;
 import java.io.File;
 import java.util.ArrayList;
 
-import static com.duongame.bitmap.BitmapCacheManager.getDrawable;
 import static com.duongame.bitmap.BitmapCacheManager.getThumbnail;
 
 /**
@@ -109,8 +108,8 @@ public class SearchRecyclerAdapter extends RecyclerView.Adapter<SearchRecyclerAd
     }
 
     void setIconZip(SearchViewHolder holder, ExplorerItem item) {
-        final Drawable drawable = getDrawable(item.path);
-        if (drawable == null) {
+        final Bitmap bitmap = getThumbnail(item.path);
+        if (bitmap == null) {
             holder.icon.setImageResource(R.drawable.ic_file_zip);
 
             if (isThumbnailEnabled()) {
@@ -118,14 +117,15 @@ public class SearchRecyclerAdapter extends RecyclerView.Adapter<SearchRecyclerAd
                 task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, item.path);
             }
         } else {
-            holder.icon.setImageDrawable(drawable);
+            holder.icon.setImageBitmap(bitmap);
+            BitmapCacheManager.setThumbnail(item.path, bitmap, holder.icon);
         }
     }
 
     void setIconPdf(SearchViewHolder holder, ExplorerItem item) {
         final Bitmap bitmap = getThumbnail(item.path);
         if (bitmap == null) {
-            holder.icon.setImageResource(R.drawable.ic_file_normal);
+            holder.icon.setImageResource(R.drawable.ic_file_pdf);
 
             if (isThumbnailEnabled()) {
                 LoadThumbnailTask task = new LoadThumbnailTask(context, holder.icon, holder.iconSmall, ExplorerItem.FILETYPE_PDF);
@@ -138,7 +138,7 @@ public class SearchRecyclerAdapter extends RecyclerView.Adapter<SearchRecyclerAd
     }
 
     void setIconText(SearchViewHolder searchViewHolder, ExplorerItem item) {
-        searchViewHolder.icon.setImageBitmap(BitmapCacheManager.getResourceBitmap(context.getResources(), R.drawable.ic_file_txt));
+        searchViewHolder.icon.setImageResource(R.drawable.ic_file_txt);
     }
 
     protected static class SearchViewHolder extends RecyclerView.ViewHolder {

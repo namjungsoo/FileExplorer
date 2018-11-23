@@ -65,7 +65,6 @@ public class SettingsActivity extends BaseActivity {
         BitmapCacheManager.removeAllThumbnails();
         BitmapCacheManager.removeAllPages();
         BitmapCacheManager.removeAllBitmaps();
-        BitmapCacheManager.removeAllDrawables();
 
         final File file = getFilesDir();
         deleteRecursive(file);

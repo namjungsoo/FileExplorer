@@ -1,6 +1,7 @@
 package com.duongame.task.thumbnail;
 
 import android.app.Activity;
+import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.support.annotation.Nullable;
@@ -40,8 +41,7 @@ public class LoadZipThumbnailTask extends AsyncTask<String, Void, String> {
         if (contextRef.get() == null)
             return null;
 
-        final String image = BitmapLoader.getZipThumbnailFileName(contextRef.get(), path);
-        return image;
+        return BitmapLoader.getZipThumbnailFileName(contextRef.get(), path);
     }
 
     @Override
@@ -75,8 +75,10 @@ public class LoadZipThumbnailTask extends AsyncTask<String, Void, String> {
                             //FIX: destroyed activity error
                             if (path.equals(iconSmallRef.get().getTag())) {
                                 if (resource != null) {
-                                    getView().setImageDrawable(resource);
-                                    BitmapCacheManager.setDrawable(path, resource);
+                                    Bitmap bitmap = BitmapLoader.drawableToBitmap(resource);
+
+                                    getView().setImageBitmap(bitmap);
+                                    BitmapCacheManager.setThumbnail(path, bitmap, iconRef.get());
                                 }
                             }
                         }

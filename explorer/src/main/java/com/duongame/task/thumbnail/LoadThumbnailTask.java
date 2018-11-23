@@ -6,9 +6,7 @@ import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.widget.ImageView;
 
-import com.duongame.adapter.ExplorerItem;
 import com.duongame.bitmap.BitmapCacheManager;
-import com.duongame.bitmap.BitmapLoader;
 
 import java.lang.ref.WeakReference;
 

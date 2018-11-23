@@ -32,10 +32,6 @@ public class BitmapCacheManager {
     private static ConcurrentHashMap<String, BitmapCache> bitmapCache = new ConcurrentHashMap<>();// 일반 이미지
     private static ConcurrentHashMap<String, BitmapCache> pageCache = new ConcurrentHashMap<>();// zip파일 잘린 이미지
 
-    // 리소스나 아이콘 관련(항상 사용하기 위해서 한번 로딩하면 recycle 하지 않는다.)
-    private static ConcurrentHashMap<Integer, Bitmap> resourceCache = new ConcurrentHashMap<>();
-    private static ConcurrentHashMap<String, Drawable> drawableCache = new ConcurrentHashMap<>();
-
     public static String changePathToPage(ExplorerItem item) {
         String path;
         if (item.side == ExplorerItem.SIDE_LEFT) {
@@ -122,35 +118,6 @@ public class BitmapCacheManager {
             removeBitmapOrPageInternal(cache);
         }
         pageCache.clear();
-    }
-
-    // resource bitmap
-    public static Bitmap getResourceBitmap(Resources res, int resId) {
-        Bitmap bitmap = resourceCache.get(resId);
-        if (bitmap == null) {
-            final BitmapFactory.Options options = new BitmapFactory.Options();
-            bitmap = BitmapFactory.decodeResource(res, resId, options);
-            if (bitmap != null) {
-                resourceCache.putIfAbsent(resId, bitmap);
-            }
-        }
-        return bitmap;
-    }
-
-    // drawable
-    public static void setDrawable(String path, Drawable drawable) {
-        if (path == null || drawable == null)
-            return;
-
-        drawableCache.putIfAbsent(path, drawable);
-    }
-
-    public static Drawable getDrawable(String path) {
-        return drawableCache.get(path);
-    }
-
-    public static void removeAllDrawables() {
-        drawableCache.clear();
     }
 
     // 비트맵은 SIDE_ALL인 경우 1:1 맵핑이 됨
@@ -262,16 +229,9 @@ public class BitmapCacheManager {
                 continue;
             }
 
-            // 리소스(아이콘)용 썸네일이 아니면 삭제
-            if (!resourceCache.containsValue(cache.bitmap)) {
-                JLog.e(TAG, "removeAllThumbnails removeBitmapOrPageInternal");
-                removeBitmapOrPageInternal(cache);
-                recycleList.add(key);
-            }
+            JLog.e(TAG, "removeAllThumbnails removeBitmapOrPageInternal");
+            removeBitmapOrPageInternal(cache);
         }
-
-        for (String key : recycleList) {
-            thumbnailCache.remove(key);
-        }
+        thumbnailCache.clear();
     }
 }

@@ -203,12 +203,9 @@ public class BitmapLoader {
 
         final String image = getZipThumbnailFileName(context, path);
 
-        // 못찾았을 경우에는 기본 ZIP 아이콘이 뜨게 한다.
+        // 못찾았을 경우에는 기본 ZIP 아이콘이 뜨게 한다. 이거는 외부에서 설정되어 있다.
         if (image == null) {
-            bitmap = BitmapCacheManager.getResourceBitmap(context.getResources(), R.drawable.ic_file_zip);
-            if (bitmap != null) {
-                BitmapCacheManager.setThumbnail(path, bitmap, null);
-            }
+            return null;
         } else {
             bitmap = BitmapLoader.decodeSquareThumbnailFromFile(image, MICRO_KIND_SIZE, false);
             if (bitmap != null) {
