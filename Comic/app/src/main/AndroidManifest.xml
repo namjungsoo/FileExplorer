@@ -62,6 +62,9 @@
             </intent-filter>
         </activity>
 
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="ca-app-pub-8174809468024854~5760672659"/>
     </application>
 
     <protected-broadcast android:name="android.intent.action.MEDIA_MOUNTED" />

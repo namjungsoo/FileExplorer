@@ -10,8 +10,7 @@ import com.duongame.BuildConfig;
 import com.duongame.helper.JLog;
 import com.duongame.helper.PreferenceHelper;
 import com.duongame.manager.AdInterstitialManager;
-import com.google.android.gms.analytics.HitBuilders;
-import com.google.android.gms.analytics.Tracker;
+import com.google.android.gms.ads.MobileAds;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.crash.FirebaseCrash;
 
@@ -23,7 +22,6 @@ import io.fabric.sdk.android.Fabric;
 //
 public class BaseActivity extends AppCompatActivity {
     protected FirebaseAnalytics mFirebaseAnalytics;
-    protected Tracker mTracker;
     protected AnalyticsApplication application;
 
     @Override
@@ -42,8 +40,6 @@ public class BaseActivity extends AppCompatActivity {
                 JLog.e("Jungsoo", "setupFabric end");
                 setupFirebase();
                 JLog.e("Jungsoo", "setupFirebase end");
-                setupGA();
-                JLog.e("Jungsoo", "setupGA end");
 //            }
 //        }).start();
 //        JLog.e("Jungsoo", "BaseActivity.onCreate end");
@@ -65,20 +61,9 @@ public class BaseActivity extends AppCompatActivity {
             FirebaseCrash.setCrashCollectionEnabled(true);
     }
 
-    private void setupGA() {
-        JLog.e("Jungsoo", "setupGA inner begin");
-        mTracker = application.getDefaultTracker();
-        JLog.e("Jungsoo", "setupGA inner end");
-    }
-
     @Override
     protected void onResume() {
         super.onResume();
-
-        if(mTracker != null) {
-            mTracker.setScreenName(this.getClass().getSimpleName());
-            mTracker.send(new HitBuilders.ScreenViewBuilder().build());
-        }
     }
 
     protected void showInterstitialAd() {
@@ -106,5 +91,4 @@ public class BaseActivity extends AppCompatActivity {
 
         boolean ret = fileOrDirectory.delete();
     }
-
 }

@@ -16,6 +16,7 @@ import com.duongame.helper.AppHelper;
 import com.duongame.helper.JLog;
 import com.duongame.helper.PreferenceHelper;
 import com.duongame.manager.PermissionManager;
+import com.google.android.gms.ads.MobileAds;
 
 public class ComicActivity extends BaseMainActivity {
     private final static String TAG = ComicActivity.class.getSimpleName();

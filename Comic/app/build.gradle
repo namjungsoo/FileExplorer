@@ -18,8 +18,8 @@ android {
         buildConfigField "String", "GA_TRACKING_ID", "\"UA-61499807-13\""
         buildConfigField "boolean", "PREVIEW_ZIP", "true"
 
-        versionCode 51
-        versionName "1.4.9"
+        versionCode 52
+        versionName "1.5.0"
     }
     signingConfigs {
         release {
@@ -116,11 +116,10 @@ dependencies {
     implementation 'com.github.bumptech.glide:glide:4.7.1'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.7.1'
     //firebase
-    implementation 'com.google.firebase:firebase-crash:16.2.0'
-    implementation 'com.google.firebase:firebase-core:16.0.3'
-    implementation 'com.google.android.gms:play-services-analytics:16.0.3'
-    implementation 'com.google.android.gms:play-services-ads:15.0.1'
-    implementation 'com.google.firebase:firebase-config:16.0.0'
+    implementation 'com.google.firebase:firebase-crash:16.2.1'
+    implementation 'com.google.firebase:firebase-core:16.0.5'
+    implementation 'com.google.android.gms:play-services-ads:17.1.1'
+    implementation 'com.google.firebase:firebase-config:16.1.0'
     //FileUtils
     implementation 'commons-io:commons-io:2.6'
     implementation 'org.apache.commons:commons-compress:1.15'
@@ -135,14 +134,14 @@ dependencies {
     implementation 'com.android.support:multidex:1.0.3'
 
     // Google Play services Auth split
-    implementation 'com.google.android.gms:play-services-auth:16.0.0'
+    implementation 'com.google.android.gms:play-services-auth:16.0.1'
     // Google Api Client library and Android extension
     implementation 'com.google.api-client:google-api-client:1.23.0'
     implementation 'com.google.api-client:google-api-client-android:1.22.0'
     // Change to the API you want to access:
     // Below is just an example for People REST API access
     implementation 'com.google.apis:google-api-services-people:v1-rev4-1.22.0'
-    implementation 'com.google.android.gms:play-services-drive:15.0.1'
+    implementation 'com.google.android.gms:play-services-drive:16.0.0'
     //implementation 'com.google.android.gms:play-services-auth:11.6.0'
     implementation 'com.google.api-client:google-api-client:1.23.0'
     implementation 'com.google.oauth-client:google-oauth-client-jetty:1.23.0'
