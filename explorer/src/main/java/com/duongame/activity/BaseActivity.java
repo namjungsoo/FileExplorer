@@ -10,7 +10,6 @@ import com.duongame.BuildConfig;
 import com.duongame.helper.JLog;
 import com.duongame.helper.PreferenceHelper;
 import com.duongame.manager.AdInterstitialManager;
-import com.google.android.gms.ads.MobileAds;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.crash.FirebaseCrash;
 
@@ -66,18 +65,23 @@ public class BaseActivity extends AppCompatActivity {
         super.onResume();
     }
 
-    protected void showInterstitialAd() {
+    public void showInterstitialAd(Runnable runnable) {
         if(BuildConfig.SHOW_AD) {
             final int count = PreferenceHelper.getExitAdCount(this);
 
             // 2번중에 1번을 띄워준다.
-            if (count % 4 == 1) {// 전면 팝업후 종료 팝업
-                if (!AdInterstitialManager.showAd(this, AdInterstitialManager.MODE_EXIT)) {
+            if (count % AdInterstitialManager.getMaxCount() == 1) {// 전면 팝업후 종료 팝업
+                if (!AdInterstitialManager.showAd(runnable)) {
                     // 보여지지 않았다면 insterstitial후 카운트 증가하지 않음
-                    return;
+                    runnable.run();
+                } else {
+                    // 보여졌다면, 여기서 카운트 증가하고 광고가 끝난후 내부에서 run을 함
+                    PreferenceHelper.setExitAdCount(this, count + 1);
                 }
+            } else {
+                PreferenceHelper.setExitAdCount(this, count + 1);
+                runnable.run();
             }
-            PreferenceHelper.setExitAdCount(this, count + 1);
         }
     }
 

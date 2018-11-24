@@ -6,6 +6,7 @@ import android.support.v4.app.FragmentActivity;
 
 import com.duongame.AnalyticsApplication;
 import com.duongame.R;
+import com.duongame.activity.BaseActivity;
 import com.duongame.file.FileExplorer;
 import com.duongame.file.LocalExplorer;
 import com.duongame.helper.ToastHelper;
@@ -53,7 +54,7 @@ public class BaseFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         FragmentActivity activity = getActivity();
-        if(activity != null) {
+        if (activity != null) {
             application = (AnalyticsApplication) activity.getApplication();
         }
         fileExplorer = new LocalExplorer();
@@ -63,14 +64,14 @@ public class BaseFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        if(application == null) {
+        if (application == null) {
             FragmentActivity activity = getActivity();
-            if(activity != null) {
+            if (activity != null) {
                 application = (AnalyticsApplication) activity.getApplication();
             }
         }
 
-        if(fileExplorer == null) {
+        if (fileExplorer == null) {
             fileExplorer = new LocalExplorer();
         }
     }
@@ -83,12 +84,12 @@ public class BaseFragment extends Fragment {
         if (lastBackPressed != 0 && current - lastBackPressed < TIME_MS) {// 마지막 누른후 2초 안이면 종료 한다.
 
             // activity가 null일수 있음
-            FragmentActivity activity = getActivity();
+            BaseActivity activity = (BaseActivity) getActivity();
             if (activity != null) {
                 if (!activity.isFinishing()) {
                     // 완벽 종료
-                    AnalyticsApplication application = (AnalyticsApplication )activity.getApplication();
-                    if(application != null) {
+                    AnalyticsApplication application = (AnalyticsApplication) activity.getApplication();
+                    if (application != null) {
                         application.exit(activity);
                     }
                 }

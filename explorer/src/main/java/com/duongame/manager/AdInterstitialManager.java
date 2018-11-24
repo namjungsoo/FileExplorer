@@ -17,13 +17,18 @@ public class AdInterstitialManager {
     // 코믹뷰어 전면광고
 //    private static final String INTERSTITIAL_ID = "ca-app-pub-5576037828251153/9737551820";
     private static final String INTERSTITIAL_ID = BuildConfig.INTERSTITIAL_ID;
+    private static InterstitialAd interstitialAD;
+    private static Runnable runnable;
 
-    private static InterstitialAd interstitialAD = null;
+    private static int maxCount = 2;// 기본값은 2이고 remote config에 의해서 조정된다.
 
-    public static final int MODE_EXIT = 1;
-    public static final int MODE_REFRESH = 2;
+    public static int getMaxCount() {
+        return maxCount;
+    }
 
-    private static int mode = MODE_EXIT;
+    public static  void setMaxCount(int count) {
+        maxCount = count;
+    }
 
     private static void requestNewInterstitial() {
         final AdRequest adRequest = new AdRequest.Builder()
@@ -46,13 +51,9 @@ public class AdInterstitialManager {
                 super.onAdClosed();
                 JLog.d(TAG, "onAdClosed");
                 requestNewInterstitial();
-
-                //TODO: 나중에 구현
-//                if (mode == MODE_EXIT) {
-//                    AlertHelper.showAlertExit(context);
-//                } else if (mode == MODE_REFRESH) {
-//                    AlertHelper.showAlertRefresh(context);
-//                }
+                if(runnable != null) {
+                    runnable.run();
+                }
             }
 
             @Override
@@ -82,8 +83,8 @@ public class AdInterstitialManager {
 
     }
 
-    public static boolean showAd(Activity context, int mode) {
-        AdInterstitialManager.mode = mode;
+    public static boolean showAd(Runnable runnable) {
+        AdInterstitialManager.runnable = runnable;
         if (interstitialAD == null)
             return false;
 

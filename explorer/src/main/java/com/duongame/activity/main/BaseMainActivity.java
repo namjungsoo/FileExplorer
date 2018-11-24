@@ -152,6 +152,12 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
             public void onComplete(@NonNull Task<Void> task) {
                 if (task.isSuccessful()) {
                     mFirebaseRemoteConfig.activateFetched();
+
+                    long adMaxCount = mFirebaseRemoteConfig.getLong("ad_max_count");
+                    if(adMaxCount > 0) {
+                        AdInterstitialManager.setMaxCount((int)adMaxCount);
+                    }
+
                     long version = mFirebaseRemoteConfig.getLong("latest_version");
                     boolean force = mFirebaseRemoteConfig.getBoolean("force_update");
                     if (BuildConfig.VERSION_CODE < version) {
@@ -185,7 +191,7 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
         }
 
         // 전면 광고 노출
-        showInterstitialAd();
+        showInterstitialAd(null);
 
         super.onDestroy();
     }

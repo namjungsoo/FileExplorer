@@ -87,7 +87,7 @@ public class BaseViewerActivity extends BaseActivity {
         JLog.e(TAG, "onDestroy removeAllPages");
 
         // 전면 광고 노출
-        showInterstitialAd();
+        showInterstitialAd(null);
 
         super.onDestroy();
     }

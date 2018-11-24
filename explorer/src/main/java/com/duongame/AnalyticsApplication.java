@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.os.Environment;
 import android.support.multidex.MultiDexApplication;
 
+import com.duongame.activity.BaseActivity;
 import com.duongame.adapter.ExplorerItem;
 import com.duongame.helper.JLog;
 import com.duongame.helper.PreferenceHelper;
@@ -90,16 +91,21 @@ public class AnalyticsApplication extends MultiDexApplication {
     }
     //endregion
 
-    public void exit(Activity activity) {
+    public void exit(final BaseActivity activity) {
         if (activity == null)
             return;
 
-        activity.moveTaskToBack(true);
-        if (android.os.Build.VERSION.SDK_INT >= 21) {
-            activity.finishAndRemoveTask();
-        } else {
-            activity.finish();
-        }
-        android.os.Process.killProcess(android.os.Process.myPid());
+        activity.showInterstitialAd(new Runnable() {
+            @Override
+            public void run() {
+                activity.moveTaskToBack(true);
+                if (android.os.Build.VERSION.SDK_INT >= 21) {
+                    activity.finishAndRemoveTask();
+                } else {
+                    activity.finish();
+                }
+                android.os.Process.killProcess(android.os.Process.myPid());
+            }
+        });
     }
 }
