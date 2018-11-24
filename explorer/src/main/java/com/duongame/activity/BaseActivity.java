@@ -73,14 +73,16 @@ public class BaseActivity extends AppCompatActivity {
             if (count % AdInterstitialManager.getMaxCount() == 1) {// 전면 팝업후 종료 팝업
                 if (!AdInterstitialManager.showAd(runnable)) {
                     // 보여지지 않았다면 insterstitial후 카운트 증가하지 않음
-                    runnable.run();
+                    if(runnable != null)
+                        runnable.run();
                 } else {
                     // 보여졌다면, 여기서 카운트 증가하고 광고가 끝난후 내부에서 run을 함
                     PreferenceHelper.setExitAdCount(this, count + 1);
                 }
             } else {
                 PreferenceHelper.setExitAdCount(this, count + 1);
-                runnable.run();
+                if(runnable != null)
+                    runnable.run();
             }
         }
     }

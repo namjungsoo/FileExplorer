@@ -83,20 +83,25 @@ public class BitmapCacheManager {
     }
 
     private static void removeBitmapCache(BitmapCache cache) {
-        if (cache.bitmap != null) {
-            if (!cache.bitmap.isRecycled()) {
-                if (cache.imageViewRef != null) {
-                    ImageView imageView = cache.imageViewRef.get();
-                    if (imageView != null) {
-                        imageView.setImageBitmap(null);
-                        JLog.e(TAG, "removeBitmapCache imageView set null");
-                    }
-                }
-                cache.bitmap.recycle();
-                JLog.e(TAG, "removeBitmapCache recycle");
-            }
-            cache.bitmap = null;
+        if (cache.bitmap == null) {
+            JLog.e(TAG, "removeBitmapCache bitmap is null");
+            return;
         }
+        if (cache.bitmap.isRecycled()) {
+            JLog.e(TAG, "removeBitmapCache is already recycled");
+            return;
+        }
+        if (cache.imageViewRef == null) {
+            JLog.e(TAG, "removeBitmapCache imageViewRef is null");
+            return;
+        }
+        ImageView imageView = cache.imageViewRef.get();
+        if (imageView == null) {
+            JLog.e(TAG, "removeBitmapCache imageView is null");
+            return;
+        }
+        imageView.setImageBitmap(null);
+        JLog.e(TAG, "removeBitmapCache imageView set bitmap null");
     }
 
     public static void removePage(String key) {
@@ -123,7 +128,7 @@ public class BitmapCacheManager {
     }
 
     // 비트맵은 SIDE_ALL인 경우 1:1 맵핑이 됨
-    // image bitmap
+// image bitmap
     public static void setBitmap(String path, Bitmap bitmap, ImageView imageView) {
         if (path == null)
             return;
@@ -183,10 +188,14 @@ public class BitmapCacheManager {
     }
 
     //TODO: 하나의 썸네일이 여러곳에서 사용될수 있으니 해당 부분에 대해서 조치를 해야함
-    // thumbnail
+// thumbnail
     public static void setThumbnail(String path, Bitmap bitmap, ImageView imageView) {
-        if (path == null)
+        if (path == null) {
+            JLog.e(TAG, "setThumbnail path is null");
             return;
+        }
+
+        JLog.e(TAG, "setThumbnail " + path);
         ArrayList<BitmapCache> cacheList = thumbnailCache.get(path);
         if (cacheList == null) {
             cacheList = new ArrayList<>();
@@ -198,24 +207,32 @@ public class BitmapCacheManager {
 
             cacheList.add(cache);
             thumbnailCache.put(path, cacheList);
+            JLog.e(TAG, "setThumbnail " + path + " new");
         } else {
-            for(BitmapCache cache : cacheList) {
+            for (BitmapCache cache : cacheList) {
                 // 이미 있으면 리턴
-                if(cache.bitmap == bitmap && cache.imageViewRef.get() == imageView)
+                if (cache.bitmap == bitmap && cache.imageViewRef.get() == imageView) {
+                    JLog.e(TAG, "setThumbnail " + path + " reject");
                     return;
+                }
 
                 // 캐쉬와 다르면 거절
-                if(cache.bitmap != bitmap)
+                if (cache.bitmap != bitmap) {
+                    JLog.e(TAG, "setThumbnail " + path + " reject");
                     return;
+                }
             }
 
             BitmapCache newCache = new BitmapCache();
             newCache.bitmap = cacheList.get(0).bitmap;
             newCache.imageViewRef = new WeakReference<>(imageView);
+            cacheList.add(newCache);
+            JLog.e(TAG, "setThumbnail " + path + " add");
         }
     }
 
     public static Bitmap getThumbnail(String path) {
+        JLog.e(TAG, "getThumbnail " + path);
         ArrayList<BitmapCache> cacheList = thumbnailCache.get(path);
         if (cacheList == null) {
             return null;
@@ -223,6 +240,7 @@ public class BitmapCacheManager {
         if (cacheList.size() == 0) {
             return null;
         }
+        JLog.e(TAG, "getThumbnail " + path + " OK");
         return cacheList.get(0).bitmap;
     }
 
@@ -237,10 +255,11 @@ public class BitmapCacheManager {
                 continue;
             }
 
-            JLog.e(TAG, "removeAllThumbnails removeBitmapCache");
+            JLog.e(TAG, "removeAllThumbnails key=" + key + " size=" + cacheList.size());
 
             // 모든걸 다 지운다.
             for (BitmapCache cache : cacheList) {
+                JLog.e(TAG, "removeAllThumbnails key=" + key + " remove");
                 removeBitmapCache(cache);
             }
         }
