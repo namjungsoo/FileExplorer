@@ -83,7 +83,7 @@ public class ZipActivity extends PagerActivity {
             pagerAdapter.notifyDataSetChanged();
 
             updateScrollInfo(pager.getCurrentItem());
-            JLog.e(TAG, "onSuccess i=" + i);
+//            JLog.e(TAG, "onSuccess i=" + i);
         }
 
         @Override

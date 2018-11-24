@@ -621,6 +621,7 @@ public class BitmapLoader {
         final String key;
         final String keyOther;
         final ExplorerItem itemOther = (ExplorerItem) item.clone();
+
         itemOther.side = item.side == ExplorerItem.SIDE_LEFT ? ExplorerItem.SIDE_RIGHT : ExplorerItem.SIDE_LEFT;
         key = BitmapCacheManager.changePathToPage(item);
         keyOther = BitmapCacheManager.changePathToPage(itemOther);

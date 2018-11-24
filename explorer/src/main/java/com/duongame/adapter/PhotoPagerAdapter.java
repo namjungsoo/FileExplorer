@@ -85,15 +85,10 @@ public class PhotoPagerAdapter extends ViewerPagerAdapter {
             return;
         }
 
-        if (imageList.size() > position + 1) {
-            ExplorerItem nextItem = imageList.get(position + 1);
-            if(nextItem.path.equals(item.path)) {
-                nextItem.loading = true;
-                JLog.e(TAG, "set loading true position=" + (position + 1) + " " + item.path);
-            }
-        }
-
-        final LoadBitmapTask task = new LoadBitmapTask(context, imageView, width, height, exifRotation, useGifAni, position);
+        boolean loadingByNext = LoadBitmapTask.isCurrentLoadingBitmap(item.path);
+        if(!loadingByNext)
+            LoadBitmapTask.setCurrentLoadingBitmap(item.path);
+        final LoadBitmapTask task = new LoadBitmapTask(context, imageView, width, height, exifRotation, position, loadingByNext);
 
         // THREAD_POOL을 사용하는 이유는 압축을 풀면서 동적으로 로딩을 해야 하기 때문이다.
         // 그런데 양쪽 페이지로 되어 있는 만화 같은 경우 하나의 PNG를 읽으면 양쪽 페이지가 나오는데
@@ -151,7 +146,7 @@ public class PhotoPagerAdapter extends ViewerPagerAdapter {
 
     @Override
     public void setPrimaryItem(final ViewGroup container, final int position, Object object) {
-        JLog.e(TAG, "setPrimaryItem " + position);
+//        JLog.e(TAG, "setPrimaryItem " + position);
 
         final int width = container.getWidth();
         final int height = container.getHeight();
