@@ -73,13 +73,13 @@ public class LoadZipThumbnailTask extends AsyncTask<String, Void, String> {
                         @Override
                         protected void setResource(@Nullable Drawable resource) {
                             //FIX: destroyed activity error
-                            if (path.equals(iconSmallRef.get().getTag())) {
-                                if (resource != null) {
-                                    Bitmap bitmap = BitmapLoader.drawableToBitmap(resource);
+                            if (resource == null)
+                                return;
 
-                                    getView().setImageBitmap(bitmap);
-                                    BitmapCacheManager.setThumbnail(path, bitmap, iconRef.get());
-                                }
+                            if (path.equals(iconSmallRef.get().getTag())) {
+                                Bitmap bitmap = BitmapLoader.drawableToBitmap(resource);
+                                getView().setImageBitmap(bitmap);
+                                BitmapCacheManager.setThumbnail(path, bitmap, iconRef.get());
                             }
                         }
                     });

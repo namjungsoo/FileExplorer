@@ -210,12 +210,10 @@ public class ExplorerAdapter extends RecyclerView.Adapter<ExplorerAdapter.Explor
                                     //FIX: destroyed activity error
                                     if (context.isFinishing())
                                         return;
-
-                                    Object tag = viewHolder.iconSmall.getTag();
-                                    if (tag == null)
+                                    if (resource == null)
                                         return;
 
-                                    if (tag.equals(item.path)) {
+                                    if (item.path.equals(viewHolder.iconSmall.getTag())) {
                                         Bitmap bitmap = BitmapLoader.drawableToBitmap(resource);
                                         getView().setImageBitmap(bitmap);
                                         BitmapCacheManager.setThumbnail(item.path, bitmap, viewHolder.icon);
@@ -259,7 +257,7 @@ public class ExplorerAdapter extends RecyclerView.Adapter<ExplorerAdapter.Explor
     void setIconZip(final ExplorerViewHolder viewHolder, ExplorerItem item) {
         JLog.e(TAG, "setIconZip " + item.path);
         final Bitmap bitmap = getThumbnail(item.path);
-        if (bitmap  == null) {
+        if (bitmap == null) {
             viewHolder.icon.setImageResource(R.drawable.ic_file_zip);
 
             if (BuildConfig.PREVIEW_ZIP && isThumbnailEnabled()) {
