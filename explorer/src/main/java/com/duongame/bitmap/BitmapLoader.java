@@ -275,7 +275,8 @@ public class BitmapLoader {
 //        if(screenWidth > 1080) {
 //            inSampleSize = 2;
 //        }
-        JLog.e(TAG, "calculateInSampleSize BEGIN screen=" + screenWidth + " " + screenHeight);
+
+//        JLog.e(TAG, "calculateInSampleSize BEGIN screen=" + screenWidth + " " + screenHeight);
 
         float screenScaleFHD = 0.0f;
         if (screenWidth > 1080) {
@@ -284,7 +285,8 @@ public class BitmapLoader {
             screenHeight *= screenScaleFHD;
         }
 
-        JLog.e(TAG, "calculateInSampleSize END screen=" + screenWidth + " " + screenHeight);
+//        JLog.e(TAG, "calculateInSampleSize END screen=" + screenWidth + " " + screenHeight);
+
 //        if(screenHeight > 1920) {
 //            inSampleSize = 2;
 //        }
@@ -296,14 +298,14 @@ public class BitmapLoader {
 
             // 둘다 1보다 크기 때문에 작은것으로 해야지 안깨진다.
             int ratioScale = (heightRatio < widthRatio ? heightRatio : widthRatio);
-            JLog.e(TAG, "calculateInSampleSize widthRatio=" + screenWidth + " heightRatio=" + screenHeight + " ratioScale=" + ratioScale);
+//            JLog.e(TAG, "calculateInSampleSize widthRatio=" + screenWidth + " heightRatio=" + screenHeight + " ratioScale=" + ratioScale);
 
             // 답이 소숫점이 있을수 있다.
             // 1보다 큰것이 sampling해야 되는 것이다.
             // 큰값으로 샘플링하면 메모리가 많이 줄어든다.
             inSampleSize *= (int) ratioScale;
         }
-        JLog.e(TAG, String.format("calculateInSampleSize bmpWidth=%d bmpHeight=%d screenWidth=%d screenHeight=%d inSampleSize=%d", bmpWidth, bmpHeight, screenWidth, screenHeight, inSampleSize));
+//        JLog.e(TAG, String.format("calculateInSampleSize bmpWidth=%d bmpHeight=%d screenWidth=%d screenHeight=%d inSampleSize=%d", bmpWidth, bmpHeight, screenWidth, screenHeight, inSampleSize));
 
         return inSampleSize;
     }
@@ -520,7 +522,6 @@ public class BitmapLoader {
             sb.keyOther = keyOther;
             sb.pageOther = null;
             return sb;
-//            return page;
         }
 
         Bitmap pageOther = null;
@@ -603,8 +604,6 @@ public class BitmapLoader {
         }
 
         if (page != null && pageOther != null) {
-//            BitmapCacheManager.setPage(key, page, null);
-//            BitmapCacheManager.setPage(keyOther, pageOther, null);
             SplittedBitmap sb = new SplittedBitmap();
             sb.key = key;
             sb.keyOther = keyOther;
@@ -613,7 +612,6 @@ public class BitmapLoader {
             return sb;
         }
         return null;
-//        return page;
     }
 
     //HACK: 이것을 사용하지 말것 -> GIF 일때는 이것을 사용하여야 한다.
@@ -635,7 +633,6 @@ public class BitmapLoader {
             sb.keyOther = keyOther;
             sb.pageOther = null;
             return sb;
-//            return page;
         }
 
         Bitmap pageOther = null;
@@ -651,8 +648,6 @@ public class BitmapLoader {
         }
 
         if (page != null && pageOther != null) {
-//            BitmapCacheManager.setPage(key, page, null);
-//            BitmapCacheManager.setPage(keyOther, pageOther, null);
             SplittedBitmap sb = new SplittedBitmap();
             sb.key = key;
             sb.keyOther = keyOther;
@@ -667,7 +662,5 @@ public class BitmapLoader {
         // remove를 하지 않으면 oom이 발생한다.
 
         // 캐쉬에 포함되지 않는 이미지이다.
-//        BitmapCacheManager.removeBitmap(item.path);
-//        return page;
     }
 }

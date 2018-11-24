@@ -8,6 +8,7 @@ import com.duongame.adapter.ExplorerItem;
 import com.duongame.bitmap.BitmapCacheManager;
 import com.duongame.bitmap.BitmapLoader;
 import com.duongame.file.FileHelper;
+import com.duongame.helper.JLog;
 
 /**
  * Created by namjungsoo on 2016-12-17.
@@ -15,7 +16,7 @@ import com.duongame.file.FileHelper;
 
 abstract class BitmapTask extends AsyncTask<ExplorerItem, Void, BitmapLoader.SplittedBitmap> {
     private static final String TAG = BitmapTask.class.getSimpleName();
-    private static final int RETRY_INTERVAL_MS = 500;
+    private static final int RETRY_INTERVAL_MS = 100;
     private static final int RETRY_COUNT = 5;
 
     private int screenWidth, screenHeight;
@@ -36,13 +37,28 @@ abstract class BitmapTask extends AsyncTask<ExplorerItem, Void, BitmapLoader.Spl
         BitmapLoader.SplittedBitmap sb = new BitmapLoader.SplittedBitmap();
         if (item.side != ExplorerItem.SIDE_ALL) {// split인 이미지 이면서 캐쉬가 되어 있으면 바로 리턴한다.
             final String page = BitmapCacheManager.changePathToPage(item);
-            bitmap = BitmapCacheManager.getPage(page);
+            JLog.e(TAG, "loadBitmap changePathToPage " + page + " hash=" + this.hashCode());
 
-            if (bitmap != null) {
-                sb.key = page;
-                sb.page = bitmap;
-                return sb;
-//                return bitmap;
+            count = 0;
+            while(true) {
+                bitmap = BitmapCacheManager.getPage(page);
+                if (bitmap != null) {
+                    JLog.e(TAG, "loadBitmap found " + page);
+                    sb.key = page;
+                    sb.page = bitmap;
+                    return sb;
+                } else {
+                    // 옆의 페이지가 내것을 로딩하고 있지 않으면 내가 직접 로딩해야 한다.
+                    if(!item.loading) {
+                        JLog.e(TAG, "not loading. self loading begin " + page);
+                        break;
+                    } else {
+                        if(isTimedOutForImageExtracting()) {
+                            break;
+                        }
+                        JLog.e(TAG, "loading by next page " + page);
+                    }
+                }
             }
         }
 
@@ -81,7 +97,6 @@ abstract class BitmapTask extends AsyncTask<ExplorerItem, Void, BitmapLoader.Spl
                             break;
                         }
                     } else {
-//                        BitmapCacheManager.setBitmap(item.path, bitmap, null);
                         sb.path = item.path;
                         sb.bitmap = bitmap;
                         break;

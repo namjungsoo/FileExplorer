@@ -42,18 +42,24 @@ public class BitmapCacheManager {
     }
 
     // current_page
-    public static void setPage(String key, Bitmap bitmap, ImageView imageView, boolean update) {
+    public static void setPage(String key, Bitmap bitmap, ImageView imageView) {
         if (key == null)
             return;
+
         BitmapCache cache = pageCache.get(key);
+        int imageViewHash = imageView != null ? imageView.hashCode() : 0;
+        int bitmapHash = bitmap != null ? bitmap.hashCode() : 0;
+
         if (cache == null) {
+            JLog.e(TAG, "setPage cache == null " + key + " " + bitmapHash + " " + imageViewHash);
             cache = new BitmapCache();
             cache.bitmap = bitmap;
             cache.imageViewRef = new WeakReference<>(imageView);
             pageCache.put(key, cache);
         } else {
+            JLog.e(TAG, "setPage cache != null " + key + " " + bitmapHash + " " + imageViewHash);
             if (cache.bitmap != null && cache.bitmap != bitmap) {
-                JLog.e(TAG, "setPage removeBitmapCache " + key + " " + bitmap + " " + imageView);
+                JLog.e(TAG, "setPage removeBitmapCache cache.bitmap changed " + key + " " + bitmapHash + " " + imageViewHash);
                 removeBitmapCache(cache);
             }
             // bitmap은 정리가 끝났으므로 바로 대입
@@ -63,10 +69,7 @@ public class BitmapCacheManager {
             if (imageView != null) {
                 cache.imageViewRef = new WeakReference<>(imageView);
             } else {
-                // imageView가 null일때 삭제할 것이냐? 일때 update = true이다.
-                if (update) {
-                    cache.imageViewRef = null;
-                }
+                cache.imageViewRef = null;
             }
         }
     }

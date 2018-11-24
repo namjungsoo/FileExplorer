@@ -66,6 +66,7 @@ public class ExplorerItem implements Cloneable {
     // 로딩큐 우선순위
     public int priority;// 0이면 최우선, 1이면 낮음
     public boolean selected;// 선택되었는가 표시
+    public boolean loading;// 현재 page가 다른 page에 의해서 로딩되고 있는가?
 
     //    public WeakReference<ImageView> imageViewRef;
     public ImageViewAttacher attacher;

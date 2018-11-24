@@ -14,6 +14,7 @@ import com.duongame.R;
 import com.duongame.activity.viewer.PagerActivity;
 import com.duongame.attacher.ImageViewAttacher;
 import com.duongame.bitmap.BitmapCacheManager;
+import com.duongame.file.FileHelper;
 import com.duongame.helper.JLog;
 import com.duongame.listener.PagerOnTouchListener;
 import com.duongame.task.bitmap.LoadBitmapTask;
@@ -77,8 +78,29 @@ public class PhotoPagerAdapter extends ViewerPagerAdapter {
 
     private void loadCurrentBitmap(int position, ImageView imageView, int width, int height) {
         final ExplorerItem item = imageList.get(position);
+
+        // GIF는 여기서 읽지 않는다.
+        // useGifAni: 애니메이션이 있을때는 외부에서 쓰레드를 통해서 렌더링 하므로 여기서는 미리 gif를 로딩해 놓지 않는다.
+        if (useGifAni && FileHelper.isGifImage(item.path)) {
+//            Glide.with(context).load(new File(item.path)).into(imageView);
+            // 일단 애니메이션이 있는지를 체크해보고 없으면 내가 로딩하자
+            return;
+        }
+
+        if (imageList.size() > position + 1) {
+            ExplorerItem nextItem = imageList.get(position + 1);
+            if(nextItem.path.equals(item.path)) {
+                nextItem.loading = true;
+                JLog.e(TAG, "set loading true position=" + (position + 1) + " " + item.path);
+            }
+        }
+
         final LoadBitmapTask task = new LoadBitmapTask(context, imageView, width, height, exifRotation, useGifAni, position);
 
+        // THREAD_POOL을 사용하는 이유는 압축을 풀면서 동적으로 로딩을 해야 하기 때문이다.
+        // 그런데 양쪽 페이지로 되어 있는 만화 같은 경우 하나의 PNG를 읽으면 양쪽 페이지가 나오는데
+        // 두개의 쓰레드가 경쟁할때가 있다.
+        // 이를 위해서 쓰레드풀을 분리해야할 수 있다.
         task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, item);
 
         // viewer_page layout에 장착한다.
@@ -86,7 +108,6 @@ public class PhotoPagerAdapter extends ViewerPagerAdapter {
         item.attacher = new ImageViewAttacher(imageView);
         item.attacher.setActivity(context);
         taskList.add(task);
-
 
         imageView.setColorFilter(new ColorMatrixColorFilter(getColorMatrix()));
     }

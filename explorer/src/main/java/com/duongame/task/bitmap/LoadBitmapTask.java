@@ -8,6 +8,7 @@ import com.duongame.adapter.ExplorerItem;
 import com.duongame.bitmap.BitmapCacheManager;
 import com.duongame.bitmap.BitmapLoader;
 import com.duongame.file.FileHelper;
+import com.duongame.helper.JLog;
 
 import java.lang.ref.WeakReference;
 
@@ -18,6 +19,7 @@ import static com.duongame.adapter.ExplorerItem.SIDE_ALL;
  */
 
 public class LoadBitmapTask extends BitmapTask {
+    private final static String TAG = LoadBitmapTask.class.getSimpleName();
     private final WeakReference<PagerActivity> contextRef;
     private final WeakReference<ImageView> imageViewRef;
 
@@ -41,16 +43,6 @@ public class LoadBitmapTask extends BitmapTask {
             return null;
 
         item = params[0];
-
-        // GIF는 여기서 읽지 않는다.
-        // useGifAni: 애니메이션이 있을때는 외부에서 쓰레드를 통해서 렌더링 하므로 여기서는 미리 gif를 로딩해 놓지 않는다.
-        if (useGifAni && FileHelper.isGifImage(item.path)) {
-//            Glide.with(context).load(new File(item.path)).into(imageView);
-
-            // 일단 애니메이션이 있는지를 체크해보고 없으면 내가 로딩하자
-            return null;
-        }
-
         return loadBitmap(item);
     }
 
@@ -81,11 +73,12 @@ public class LoadBitmapTask extends BitmapTask {
             imageView.setImageBitmap(sb.page);
             imageView.setTag(sb.key);
 
-            BitmapCacheManager.setPage(sb.key, sb.page, imageView, true);
+            BitmapCacheManager.setPage(sb.key, sb.page, imageView);
             if (sb.pageOther != null) {
-                BitmapCacheManager.setPage(sb.keyOther, sb.pageOther, null, false);
+                BitmapCacheManager.setPage(sb.keyOther, sb.pageOther, null);
             }
         }
+        item.loading = false;
 
         PagerActivity context = contextRef.get();
         if (context == null)
