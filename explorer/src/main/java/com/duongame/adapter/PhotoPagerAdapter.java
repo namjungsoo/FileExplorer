@@ -85,10 +85,10 @@ public class PhotoPagerAdapter extends ViewerPagerAdapter {
             return;
         }
 
-        boolean loadingByNext = LoadBitmapTask.isCurrentLoadingBitmap(item.path);
-        if(!loadingByNext)
+        boolean loadingByOther = LoadBitmapTask.isCurrentLoadingBitmap(item.path);
+        if(!loadingByOther)
             LoadBitmapTask.setCurrentLoadingBitmap(item.path);
-        final LoadBitmapTask task = new LoadBitmapTask(context, imageView, width, height, exifRotation, position, loadingByNext);
+        final LoadBitmapTask task = new LoadBitmapTask(context, imageView, width, height, exifRotation, position, loadingByOther);
 
         // THREAD_POOL을 사용하는 이유는 압축을 풀면서 동적으로 로딩을 해야 하기 때문이다.
         // 그런데 양쪽 페이지로 되어 있는 만화 같은 경우 하나의 PNG를 읽으면 양쪽 페이지가 나오는데

@@ -35,7 +35,7 @@ public class LoadBitmapTask extends AsyncTask<ExplorerItem, Void, BitmapLoader.S
     private int screenWidth, screenHeight;
     private boolean exifRotation;
     private int count;
-    private boolean loadingByNext;
+    private boolean loadingByOther;
 
     private static CopyOnWriteArraySet<String> currentLoadingBitmapList = new CopyOnWriteArraySet<>();
 
@@ -51,7 +51,7 @@ public class LoadBitmapTask extends AsyncTask<ExplorerItem, Void, BitmapLoader.S
         currentLoadingBitmapList.remove(path);
     }
 
-    public LoadBitmapTask(PagerActivity context, ImageView imageView, int width, int height, boolean exifRotation, int position, boolean loadingByNext) {
+    public LoadBitmapTask(PagerActivity context, ImageView imageView, int width, int height, boolean exifRotation, int position, boolean loadingByOther) {
         this.screenWidth = width;
         this.screenHeight = height;
         this.exifRotation = exifRotation;
@@ -60,7 +60,7 @@ public class LoadBitmapTask extends AsyncTask<ExplorerItem, Void, BitmapLoader.S
         this.imageViewRef = new WeakReference<>(imageView);
 
         this.position = position;
-        this.loadingByNext = loadingByNext;
+        this.loadingByOther = loadingByOther;
     }
 
     @Override
@@ -103,12 +103,15 @@ public class LoadBitmapTask extends AsyncTask<ExplorerItem, Void, BitmapLoader.S
 
             BitmapCacheManager.setPage(sb.key, sb.page, imageView);
             if (sb.pageOther != null) {
-                BitmapCacheManager.setPage(sb.keyOther, sb.pageOther, null);
+                // other 페이지는 없을때만 등록하자
+                if(BitmapCacheManager.getPage(sb.keyOther) == null) {
+                    BitmapCacheManager.setPage(sb.keyOther, sb.pageOther, null);
+                }
             }
         }
 
         // 셀프 로딩인 경우에만 제거해준다.
-        if (!loadingByNext)
+        if (!loadingByOther)
             removeCurrentLoadingBitmap(item.path);
 
         PagerActivity context = contextRef.get();
@@ -130,8 +133,8 @@ public class LoadBitmapTask extends AsyncTask<ExplorerItem, Void, BitmapLoader.S
             JLog.e(TAG, "loadBitmap changePathToPage " + page + " hash=" + this.hashCode());
 
             count = 0;
-//            boolean loadingByNext = isCurrentLoadingBitmap(item.path);
-            JLog.e(TAG, "isCurrentLoadingBitmap " + item.path + " " + loadingByNext);
+//            boolean loadingByOther = isCurrentLoadingBitmap(item.path);
+            JLog.e(TAG, "isCurrentLoadingBitmap " + item.path + " " + loadingByOther);
 
             while (true) {
                 bitmap = BitmapCacheManager.getPage(page);
@@ -142,7 +145,7 @@ public class LoadBitmapTask extends AsyncTask<ExplorerItem, Void, BitmapLoader.S
                     return sb;
                 } else {
                     // 옆의 페이지가 내것을 로딩하고 있지 않으면 내가 직접 로딩해야 한다.
-                    if (!loadingByNext) {
+                    if (!loadingByOther) {
                         JLog.e(TAG, "Not loading. Self load begin " + page);
                         break;
                     } else {
