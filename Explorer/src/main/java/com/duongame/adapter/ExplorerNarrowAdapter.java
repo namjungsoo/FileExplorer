@@ -28,7 +28,7 @@ public class ExplorerNarrowAdapter extends ExplorerAdapter {
             return;
 
         viewHolder.name.setText(item.name);
-        viewHolder.date.setText(item.date);
+        viewHolder.date.setText(item.simpleDate);
         viewHolder.size.setText(FileHelper.getMinimizedSize(item.size));
         //viewHolder.icon.setRadiusDp(5);
         viewHolder.iconSmall.setVisibility(View.INVISIBLE);
@@ -43,7 +43,7 @@ public class ExplorerNarrowAdapter extends ExplorerAdapter {
 
     @Override
     public View inflateLayout(ViewGroup parent) {
-        return context.getLayoutInflater().inflate(R.layout.file_list_item, parent, false);
+        return context.getLayoutInflater().inflate(R.layout.file_narrow_item, parent, false);
     }
 
     @Override

@@ -1,6 +1,7 @@
 package com.duongame.adapter;
 
 import com.duongame.attacher.ImageViewAttacher;
+import com.duongame.helper.DateHelper;
 
 /**
  * Created by namjungsoo on 2016-11-06.
@@ -70,6 +71,7 @@ public class ExplorerItem implements Cloneable {
     //    public WeakReference<ImageView> imageViewRef;
     public ImageViewAttacher attacher;
     public Object metadata;
+    public String simpleDate;
 
     public ExplorerItem(String path, String name, String date, long size, int type) {
         this.path = path;
@@ -77,6 +79,10 @@ public class ExplorerItem implements Cloneable {
         this.date = date;
         this.size = size;
         this.type = type;
+
+        if(date != null) {
+            simpleDate = DateHelper.getSimpleDateStringFromExplorerDateString(date);
+        }
     }
 
     public String toString() {

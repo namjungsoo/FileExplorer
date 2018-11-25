@@ -16,6 +16,7 @@ public class DateHelper {
     // FastDateFormat으로 변경
     private static final String dbPattern = "yyyy-MM-dd HH:mm:ss";
     private static final String explorerPattern = "yy-MM-dd(E) hh:mm:ss a";
+    private static final String simplePattern = "yy-MM-dd(E)";
 
     public static String getExplorerDateString(long dateLong) {
         return FastDateFormat.getInstance(explorerPattern).format(dateLong);
@@ -25,24 +26,37 @@ public class DateHelper {
         return FastDateFormat.getInstance(explorerPattern).format(date);
     }
 
-    public static String getExplorerDateStringFromDbDateString(String dbDate) {
+    public static String getSimpleDateString(long dateLong) {
+        return FastDateFormat.getInstance(simplePattern).format(dateLong);
+    }
+
+    public static long getLongFromDbDateString(String dbDate) {
         try {
-            final long dateLong = FastDateFormat.getInstance(dbPattern).parse(dbDate).getTime();
-            return getExplorerDateString(dateLong);
+            return FastDateFormat.getInstance(dbPattern).parse(dbDate).getTime();
         } catch (ParseException e) {
             e.printStackTrace();
-            return "";
+            return 0L;
         }
     }
 
-    public static Date getDateFromExplorerDateString(String explorerDate) {
+    public static long getLongFromExplorerDateString(String explorerDate) {
         try {
-            final long dateLong = FastDateFormat.getInstance(explorerPattern).parse(explorerDate).getTime();
-            Date date = new Date(dateLong);
-            return date;
+            return FastDateFormat.getInstance(explorerPattern).parse(explorerDate).getTime();
         } catch (ParseException e) {
             e.printStackTrace();
-            return new Date();
+            return 0L;
         }
+    }
+
+    public static String getExplorerDateStringFromDbDateString(String dbDate) {
+        return getExplorerDateString(getLongFromDbDateString(dbDate));
+    }
+
+    public static Date getDateFromExplorerDateString(String explorerDate) {
+        return new Date(getLongFromExplorerDateString(explorerDate));
+    }
+
+    public static String getSimpleDateStringFromExplorerDateString(String explorerDate) {
+        return getSimpleDateString(getLongFromExplorerDateString(explorerDate));
     }
 }

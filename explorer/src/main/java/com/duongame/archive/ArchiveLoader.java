@@ -78,7 +78,7 @@ public class ArchiveLoader {
         for (ArchiveHeader header : zipHeaders) {
             final String name = header.getName();
             if (FileHelper.isImage(name)) {
-                imageList.add(new ExplorerItem(FileHelper.getFullPath(extractPath, name), name, "", header.getSize(), ExplorerItem.FILETYPE_IMAGE));
+                imageList.add(new ExplorerItem(FileHelper.getFullPath(extractPath, name), name, null, header.getSize(), ExplorerItem.FILETYPE_IMAGE));
             }
         }
         Collections.sort(imageList, new FileHelper.NameAscComparator());

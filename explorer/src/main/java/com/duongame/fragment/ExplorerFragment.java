@@ -38,6 +38,7 @@ import com.duongame.adapter.ExplorerAdapter;
 import com.duongame.adapter.ExplorerGridAdapter;
 import com.duongame.adapter.ExplorerItem;
 import com.duongame.adapter.ExplorerListAdapter;
+import com.duongame.adapter.ExplorerNarrowAdapter;
 import com.duongame.adapter.ExplorerScrollListener;
 import com.duongame.bitmap.BitmapCacheManager;
 import com.duongame.db.BookLoader;
@@ -408,7 +409,8 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
         switch (viewType) {
             case SWITCH_LIST:
                 synchronized (this) {
-                    adapter = new ExplorerListAdapter(activity, fileList);
+                    //adapter = new ExplorerListAdapter(activity, fileList);
+                    adapter = new ExplorerNarrowAdapter(activity, fileList);
                 }
                 currentView = rootView.findViewById(R.id.list_explorer);
                 if (currentView != null) {
