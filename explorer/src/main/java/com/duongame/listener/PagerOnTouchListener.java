@@ -4,6 +4,7 @@ import android.os.AsyncTask;
 import android.view.MotionEvent;
 import android.view.View;
 
+import com.duongame.AnalyticsApplication;
 import com.duongame.activity.viewer.PagerActivity;
 
 import java.lang.ref.WeakReference;
@@ -15,7 +16,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 public class PagerOnTouchListener extends BaseOnTouchListener {
     private final static String TAG = PagerOnTouchListener.class.getSimpleName();
-    private final static int DOUBLE_TAP_INTERVAL_MS = 150;
+    private final static int DOUBLE_TAP_INTERVAL_MS = 150;// 더블탭 타임 안쪽으로 터치가 다시한번 들어오면 더블탭으로 인정
 
     private WeakReference<PagerActivity> activityWeakReference;
     private long actionUpTime;
@@ -68,7 +69,12 @@ public class PagerOnTouchListener extends BaseOnTouchListener {
             if (listener.getActionDownTime() < listener.getActionUpTime()) {
                 PagerActivity activity = listener.getActivityWeakReference().get();
                 if (activity != null) {
-                    activity.getPager().setCurrentItem(page, true);
+                    AnalyticsApplication application = (AnalyticsApplication) activity.getApplication();
+                    boolean smoothScroll = true;
+                    if (application != null) {
+                        smoothScroll = !application.isPagingAnimationDisabled();
+                    }
+                    activity.getPager().setCurrentItem(page, smoothScroll);
                 }
             }
 

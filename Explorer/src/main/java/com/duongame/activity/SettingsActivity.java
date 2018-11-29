@@ -103,6 +103,7 @@ public class SettingsActivity extends BaseActivity {
         Switch nightMode = findViewById(R.id.night_mode);
         Switch thumbnailDisabled = findViewById(R.id.thumbnail_disabled);
         Switch japaneseDirection = findViewById(R.id.japanese_direction);
+        Switch pagingAnimationDisabled = findViewById(R.id.paging_animation_disabled);
 
         nightMode.setChecked(application.isNightMode());
         thumbnailDisabled.setChecked(application.isThumbnailDisabled());
@@ -135,6 +136,16 @@ public class SettingsActivity extends BaseActivity {
                 AnalyticsApplication application = (AnalyticsApplication) getApplication();
                 if (application != null) {
                     application.setJapaneseDirection(isChecked);
+                }
+            }
+        });
+
+        pagingAnimationDisabled.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                AnalyticsApplication application = (AnalyticsApplication) getApplication();
+                if (application != null) {
+                    application.setPagingAnimationDisabled(isChecked);
                 }
             }
         });

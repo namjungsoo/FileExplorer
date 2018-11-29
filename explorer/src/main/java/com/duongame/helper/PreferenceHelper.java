@@ -45,6 +45,9 @@ public class PreferenceHelper {
     private static final String THUMBNAIL_DISABLED = "thumbnail_disabled";
 
     private static final String PERMISSION_AGREED = "permission_agreed";
+
+    private static final String PAGING_ANIMATION_DISABLED = "paging_animation_disabled";
+
     private static SharedPreferences pref = null;
 
     private static void checkPrefManager(Context context) {
@@ -301,6 +304,18 @@ public class PreferenceHelper {
         checkPrefManager(context);
         final SharedPreferences.Editor editor = pref.edit();
         editor.putBoolean(PERMISSION_AGREED, b);
+        editor.apply();
+    }
+
+    public static boolean getPagingAnimationDisabled(Context context) {
+        checkPrefManager(context);
+        return pref.getBoolean(PAGING_ANIMATION_DISABLED, false);
+    }
+
+    public static void setPagingAnimationDisabled(Context context, boolean b) {
+        checkPrefManager(context);
+        final SharedPreferences.Editor editor = pref.edit();
+        editor.putBoolean(PAGING_ANIMATION_DISABLED, b);
         editor.apply();
     }
 

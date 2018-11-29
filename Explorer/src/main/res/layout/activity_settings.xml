@@ -37,6 +37,29 @@
     </RelativeLayout>
 
 
+    <!-- 나이트 모드, 기본값: false -->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="36dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentStart="true"
+            android:gravity="center"
+            android:text="@string/night_mode" />
+
+        <Switch
+            android:id="@+id/night_mode"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerInParent="true" />
+    </RelativeLayout>
+
     <!-- 썸네일 비활성화, 기본값: false -->
     <RelativeLayout
         android:layout_width="match_parent"
@@ -60,7 +83,7 @@
             android:layout_centerInParent="true" />
     </RelativeLayout>
 
-    <!-- 나이트 모드, 기본값: false -->
+    <!-- 페이징 애니메이션 비활성화, 기본값: false -->
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="36dp"
@@ -73,10 +96,10 @@
             android:layout_height="match_parent"
             android:layout_alignParentStart="true"
             android:gravity="center"
-            android:text="@string/night_mode" />
+            android:text="@string/paging_animation_disabled" />
 
         <Switch
-            android:id="@+id/night_mode"
+            android:id="@+id/paging_animation_disabled"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"

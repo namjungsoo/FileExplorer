@@ -24,6 +24,7 @@ public class AnalyticsApplication extends MultiDexApplication {
     private boolean thumbnailDisabled;
     private boolean nightMode;
     private boolean japaneseDirection;
+    private boolean pagingAnimationDisabled;
 
     @Override
     public void onCreate() {
@@ -32,6 +33,7 @@ public class AnalyticsApplication extends MultiDexApplication {
         nightMode = PreferenceHelper.getNightMode(this);
         thumbnailDisabled = PreferenceHelper.getThumbnailDisabled(this);
         japaneseDirection = PreferenceHelper.getJapaneseDirection(this);
+        pagingAnimationDisabled = PreferenceHelper.getPagingAnimationDisabled(this);
 
         JLog.e("Jungsoo", "onCreate end");
     }
@@ -73,6 +75,15 @@ public class AnalyticsApplication extends MultiDexApplication {
 
     public boolean isThumbnailDisabled() {
         return thumbnailDisabled;
+    }
+
+    public boolean isPagingAnimationDisabled() {
+        return pagingAnimationDisabled;
+    }
+
+    public void setPagingAnimationDisabled(boolean pagingAnimationDisabled) {
+        this.pagingAnimationDisabled = pagingAnimationDisabled;
+        PreferenceHelper.setPagingAnimationDisabled(this, pagingAnimationDisabled);
     }
 
     public void setJapaneseDirection(boolean b) {
