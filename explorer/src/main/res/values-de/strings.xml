@@ -95,4 +95,6 @@
     <string name="purchase">Kauf</string>
     <string name="msg_no_lastbook">Es gibt kein letztes Lesebuch.</string>
     <string name="required_permission">Fordern Sie die erforderlichen Berechtigungen an\n\nBerechtigungen: Verwenden Sie Fotos, Medien, Dateien\nGrund: Verwalten und dekomprimieren Sie Fotos, Media Viewer und Dateien</string>
+
+    <string name="paging_animation_disabled">Paging-Animation deaktivieren</string>
 </resources>

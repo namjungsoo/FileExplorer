@@ -98,4 +98,6 @@
 
     <string name="msg_no_lastbook">我還沒讀過最後一本書。</string>
     <string name="required_permission">請求所需權限\n\n權限：使用照片，媒體，文件\n原因：管理和解壓縮照片，媒體查看器和文件</string>
+
+    <string name="paging_animation_disabled">禁用分頁動畫</string>
 </resources>

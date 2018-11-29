@@ -95,4 +95,6 @@
     <string name="purchase">شراء</string>
     <string name="msg_no_lastbook">لا يوجد آخر كتاب قراءة.</string>
     <string name="required_permission">طلب الأذونات المطلوبة\n\nضوابط: استخدام الصور والوسائط والملفات\nالسبب: إدارة الصور الفوتوغرافية وملفات الوسائط والملفات وفك ضغطها</string>
+
+    <string name="paging_animation_disabled">تعطيل الرسوم المتحركة الترحيل</string>
 </resources>

@@ -95,4 +95,6 @@
     <string name="purchase">покупка</string>
     <string name="msg_no_lastbook">Нет последней книги для чтения.</string>
     <string name="required_permission">Запросить необходимые разрешения\n\nРазрешения: использование фотографий, мультимедиа, файлов\nПричина: управлять и распаковывать фотографии, средства просмотра мультимедиа и файлы</string>
+
+    <string name="paging_animation_disabled">Отключить анимацию подкачки</string>
 </resources>

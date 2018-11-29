@@ -95,4 +95,6 @@
     <string name="purchase">खरीद फरोख्त</string>
     <string name="msg_no_lastbook">कोई आखिरी पठन पुस्तक नहीं है।</string>
     <string name="required_permission">आवश्यक अनुमतियों का अनुरोध करें\n\nअनुमतियां: फोटो, मीडिया, फ़ाइलों का उपयोग करें\nकारण: फ़ोटो, मीडिया दर्शक और फ़ाइलों को प्रबंधित और डिक्रॉप करें</string>
+
+    <string name="paging_animation_disabled">पेजिंग एनीमेशन अक्षम करें</string>
 </resources>

@@ -108,7 +108,8 @@ public class SettingsActivity extends BaseActivity {
         nightMode.setChecked(application.isNightMode());
         thumbnailDisabled.setChecked(application.isThumbnailDisabled());
         japaneseDirection.setChecked(application.isJapaneseDirection());
-        
+        pagingAnimationDisabled.setChecked(application.isPagingAnimationDisabled());
+
         // viewer
         nightMode.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override

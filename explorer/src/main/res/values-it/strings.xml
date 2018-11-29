@@ -95,4 +95,6 @@
     <string name="purchase">Acquista</string>
     <string name="msg_no_lastbook">Non esiste un ultimo libro di lettura.</string>
     <string name="required_permission">Richiedi i permessi richiesti\n\nAutorizzazioni: utilizzare foto, file multimediali e file\nMotivo: gestione e decompressione di foto, visualizzatori multimediali e file</string>
+
+    <string name="paging_animation_disabled">Disabilitare l\'animazione di paging</string>
 </resources>
