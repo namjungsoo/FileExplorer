@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewTreeObserver;
+import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.SeekBar;
@@ -44,6 +45,9 @@ public class TextActivity extends BaseViewerActivity {
     private ScrollView scrollText;
     private TextView textContent;
     private ProgressBar progressBar;
+
+    private Button leftPage;
+    private Button rightPage;
 
     private String path;
     private String name;
@@ -89,14 +93,13 @@ public class TextActivity extends BaseViewerActivity {
         textContent.setTextSize(fontSize);
         textContent.setLineSpacing(0, 1.5f);
 
-        if(application.isNightMode()) {
+        if (application.isNightMode()) {
             scrollText.setBackgroundColor(Color.BLACK);
-            textContent.setTextColor(Color.rgb(192,192,192));
+            textContent.setTextColor(Color.rgb(192, 192, 192));
         } else {
             scrollText.setBackgroundColor(Color.WHITE);
             textContent.setTextColor(Color.BLACK);
         }
-
 
         scrollText.setOnTouchListener(new TextOnTouchListener(this));
         scrollText.getViewTreeObserver().addOnScrollChangedListener(new ViewTreeObserver.OnScrollChangedListener() {
@@ -245,9 +248,36 @@ public class TextActivity extends BaseViewerActivity {
                 dragging = false;
             }
         });
+
+        leftPage = findViewById(R.id.left_page);
+        leftPage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int progress = seekPage.getProgress();
+                if(progress > 0) {
+                    page = progress - 1;
+                    updateTextView();
+                    updateScrollInfo(progress - 1);
+                }
+            }
+        });
+        rightPage = findViewById(R.id.right_page);
+        rightPage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int progress = seekPage.getProgress();
+                int max = seekPage.getMax();
+                if(progress < max) {
+                    page = progress + 1;
+                    updateTextView();
+                    updateScrollInfo(progress + 1);
+                }
+            }
+        });
     }
 
     // 현재 스크롤 정보를 표시하고 seek를 업데이트함
+    // position은 0 베이스이다.
     public void updateScrollInfo(int position) {
         //final int count = lineList.size() / LINES_PER_PAGE;
 
