@@ -69,6 +69,7 @@ import java.io.File;
 
 import static com.duongame.fragment.ExplorerFragment.SWITCH_GRID;
 import static com.duongame.fragment.ExplorerFragment.SWITCH_LIST;
+import static com.duongame.fragment.ExplorerFragment.SWITCH_NARROW;
 
 /**
  * Created by Jungsoo on 2017-10-05.
@@ -130,7 +131,7 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if(BuildConfig.SHOW_AD)
+        if (BuildConfig.SHOW_AD)
             MobileAds.initialize(this);
 
         AdBannerManager.init(BaseMainActivity.this);
@@ -154,8 +155,8 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
                     mFirebaseRemoteConfig.activateFetched();
 
                     long adMaxCount = mFirebaseRemoteConfig.getLong("ad_max_count");
-                    if(adMaxCount > 0) {
-                        AdInterstitialManager.setMaxCount((int)adMaxCount);
+                    if (adMaxCount > 0) {
+                        AdInterstitialManager.setMaxCount((int) adMaxCount);
                     }
 
                     long version = mFirebaseRemoteConfig.getLong("latest_version");
@@ -412,11 +413,7 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
         if (id == R.id.action_view_type) {
             ExplorerFragment fragment = getExplorerFragment();
             if (fragment != null) {
-                if (fragment.getViewType() == ExplorerFragment.SWITCH_GRID) {
-                    fragment.changeViewType(ExplorerFragment.SWITCH_LIST);
-                } else if (fragment.getViewType() == ExplorerFragment.SWITCH_LIST) {
-                    fragment.changeViewType(ExplorerFragment.SWITCH_GRID);
-                }
+                fragment.changeViewType((fragment.getViewType() + 1) % 3);
                 updateViewTypeMenuIcon();
                 return true;
             }
@@ -716,6 +713,9 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
                 resId = R.drawable.ic_menu_grid;
                 break;
             case SWITCH_GRID:
+                resId = R.drawable.ic_menu_narrow;
+                break;
+            case SWITCH_NARROW:
                 resId = R.drawable.ic_menu_list;
                 break;
         }

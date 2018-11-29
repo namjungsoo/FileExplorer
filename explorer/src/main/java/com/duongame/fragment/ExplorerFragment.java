@@ -83,6 +83,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
 
     public final static int SWITCH_LIST = 0;
     public final static int SWITCH_GRID = 1;
+    public final static int SWITCH_NARROW = 2;
 
     // Android UI 관련
     // 패스 관련
@@ -409,8 +410,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
         switch (viewType) {
             case SWITCH_LIST:
                 synchronized (this) {
-                    //adapter = new ExplorerListAdapter(activity, fileList);
-                    adapter = new ExplorerNarrowAdapter(activity, fileList);
+                    adapter = new ExplorerListAdapter(activity, fileList);
                 }
                 currentView = rootView.findViewById(R.id.list_explorer);
                 if (currentView != null) {
@@ -428,6 +428,20 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
                 currentView = rootView.findViewById(R.id.grid_explorer);
                 if (currentView != null) {
                     currentView.setLayoutManager(new GridLayoutManager(activity, 4));
+                }
+                break;
+
+            case SWITCH_NARROW:
+                synchronized (this) {
+                    adapter = new ExplorerNarrowAdapter(activity, fileList);
+                }
+                currentView = rootView.findViewById(R.id.list_explorer);
+                if (currentView != null) {
+                    currentView.setLayoutManager(new LinearLayoutManager(activity));
+                    if (itemDecoration == null) {
+                        itemDecoration = new DividerItemDecoration(activity, DividerItemDecoration.VERTICAL_LIST);
+                        currentView.addItemDecoration(itemDecoration);
+                    }
                 }
                 break;
         }

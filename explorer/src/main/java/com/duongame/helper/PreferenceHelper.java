@@ -8,6 +8,8 @@ import android.os.Environment;
 import java.util.Locale;
 
 import static com.duongame.fragment.BaseFragment.CLOUD_LOCAL;
+import static com.duongame.fragment.ExplorerFragment.SWITCH_GRID;
+import static com.duongame.fragment.ExplorerFragment.SWITCH_NARROW;
 
 /**
  * Created by 정수 on 2015-11-15.
@@ -85,7 +87,7 @@ public class PreferenceHelper {
 
     public static int getViewType(Context context) {
         checkPrefManager(context);
-        return pref.getInt(VIEW_TYPE, 0);
+        return pref.getInt(VIEW_TYPE, SWITCH_NARROW);
     }
 
     public static void setViewType(Context context, int viewType) {
