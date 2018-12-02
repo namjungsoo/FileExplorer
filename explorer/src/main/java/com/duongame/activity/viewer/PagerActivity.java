@@ -33,6 +33,10 @@ import java.util.TimerTask;
 // +좌우 view pager
 // +하단 toolbox
 public class PagerActivity extends BaseViewerActivity {
+    private final static int AUTO_PAGING = 1;
+    public final static int SEC_TO_MS = 1000;
+    public final static int AUTO_SEC_MAX = 10;
+
     // 파일의 정보
     protected String path;
     protected String name;
@@ -50,14 +54,20 @@ public class PagerActivity extends BaseViewerActivity {
     Timer timer = new Timer();
 
     static class PagingInfo {
-        public int page;
-        public boolean smoothScroll;
+        int page;
+        boolean smoothScroll;
+        ViewPager pager;
     }
 
     static class TimerHandler extends Handler {
         public void handleMessage(Message msg) {
+            if(msg.what == AUTO_PAGING) {
+                PagingInfo info = (PagingInfo)msg.obj;
+                info.pager.setCurrentItem(info.page, info.smoothScroll);
+            }
         }
     }
+
     Handler handler = new TimerHandler();
 
     @Override
@@ -92,9 +102,16 @@ public class PagerActivity extends BaseViewerActivity {
                         smoothScroll = !application.isPagingAnimationDisabled();
                     }
 
-                    pager.setCurrentItem(current + 1, smoothScroll);
+                    PagingInfo info = new PagingInfo();
+                    info.page = current + 1;
+                    info.smoothScroll = smoothScroll;
+                    info.pager = pager;
+                    Message msg = new Message();
+                    msg.obj = info;
+                    msg.what = AUTO_PAGING;
+                    handler.sendMessage(msg);
                 }
-            }, 0, autoTime * 1000);
+            }, autoTime * SEC_TO_MS, autoTime * SEC_TO_MS);
         }
     }
 
@@ -142,7 +159,7 @@ public class PagerActivity extends BaseViewerActivity {
         btnPlusTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (autoTime < 5) {
+                if (autoTime < AUTO_SEC_MAX) {
                     autoTime++;
                     updateAutoTime();
                 }
