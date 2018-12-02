@@ -100,4 +100,5 @@
     <string name="required_permission">필수 사용 권한 요청\n\n권한: 사진, 미디어, 파일 사용\n사유: 사진, 미디어 뷰어 및 파일 관리 및 압축 풀기</string>
 
     <string name="paging_animation_disabled">페이징 애니메이션 비활성화</string>
+    <string name="auto_paging_time">자동 페이징 시간</string>
 </resources>

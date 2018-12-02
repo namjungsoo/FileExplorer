@@ -9,6 +9,38 @@
         android:layout_height="36dp"
         android:layout_marginStart="10dp"
         android:gravity="center_vertical"
+        android:text="@string/explorer"
+        android:textSize="16sp"
+        android:textStyle="bold" />
+
+    <!-- 썸네일 비활성화, 기본값: false -->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="36dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentStart="true"
+            android:gravity="center"
+            android:text="@string/thumbnail_disabled" />
+
+        <Switch
+            android:id="@+id/thumbnail_disabled"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerInParent="true" />
+    </RelativeLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="36dp"
+        android:layout_marginStart="10dp"
+        android:gravity="center_vertical"
         android:text="@string/viewer"
         android:textSize="16sp"
         android:textStyle="bold" />
@@ -60,29 +92,6 @@
             android:layout_centerInParent="true" />
     </RelativeLayout>
 
-    <!-- 썸네일 비활성화, 기본값: false -->
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="36dp"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
-        android:orientation="horizontal">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_alignParentStart="true"
-            android:gravity="center"
-            android:text="@string/thumbnail_disabled" />
-
-        <Switch
-            android:id="@+id/thumbnail_disabled"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_centerInParent="true" />
-    </RelativeLayout>
-
     <!-- 페이징 애니메이션 비활성화, 기본값: false -->
     <RelativeLayout
         android:layout_width="match_parent"
@@ -104,6 +113,40 @@
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_centerInParent="true" />
+    </RelativeLayout>
+
+    <!-- 페이징 애니메이션 비활성화, 기본값: false -->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="36dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/auto_paging_time_key"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentStart="true"
+            android:gravity="center"
+            android:text="@string/auto_paging_time" />
+
+        <SeekBar
+            android:id="@+id/seek_time"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_toStartOf="@+id/auto_paging_time_value"
+            android:layout_toEndOf="@+id/auto_paging_time_key" />
+
+        <TextView
+            android:id="@+id/auto_paging_time_value"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="6dp"
+            android:gravity="center"
+            android:text="0" />
+
     </RelativeLayout>
 
     <TextView
@@ -130,12 +173,12 @@
             android:text="@string/action_clear_cache" />
 
         <Button
-            android:text="@string/execute"
             android:id="@+id/action_clear_cache"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
-            android:layout_centerInParent="true" />
+            android:layout_centerInParent="true"
+            android:text="@string/execute" />
     </RelativeLayout>
 
     <RelativeLayout
@@ -153,12 +196,12 @@
             android:text="@string/action_clear_history" />
 
         <Button
-            android:text="@string/execute"
             android:id="@+id/action_clear_history"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
-            android:layout_centerInParent="true" />
+            android:layout_centerInParent="true"
+            android:text="@string/execute" />
     </RelativeLayout>
 
     <TextView
@@ -186,12 +229,12 @@
             android:text="@string/version" />
 
         <TextView
-            android:text="v1.0.0/1"
             android:id="@+id/version"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
-            android:layout_centerInParent="true" />
+            android:layout_centerInParent="true"
+            android:text="v1.0.0/1" />
     </RelativeLayout>
 
     <!-- 프로버전 구매하기 -->
@@ -201,8 +244,8 @@
         android:layout_height="36dp"
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
-        android:visibility="gone"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:visibility="gone">
 
         <TextView
             android:layout_width="wrap_content"
@@ -212,12 +255,12 @@
             android:text="@string/pro_version" />
 
         <Button
-            android:text="@string/purchase"
             android:id="@+id/purchase"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
-            android:layout_centerInParent="true" />
+            android:layout_centerInParent="true"
+            android:text="@string/purchase" />
     </RelativeLayout>
 
     <!-- 오픈소스 라이센스 -->
@@ -236,12 +279,12 @@
             android:text="@string/action_license" />
 
         <Button
-            android:text="@string/check"
             android:id="@+id/action_license"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
-            android:layout_centerInParent="true" />
+            android:layout_centerInParent="true"
+            android:text="@string/check" />
     </RelativeLayout>
 
 </LinearLayout>

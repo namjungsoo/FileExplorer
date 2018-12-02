@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.RelativeLayout;
+import android.widget.SeekBar;
 import android.widget.Switch;
 import android.widget.TextView;
 
@@ -21,6 +22,8 @@ import com.duongame.bitmap.BitmapCacheManager;
 import com.duongame.db.BookDB;
 import com.duongame.helper.AlertHelper;
 import com.duongame.helper.AppHelper;
+import com.duongame.helper.JLog;
+import com.duongame.helper.PreferenceHelper;
 import com.duongame.helper.ToastHelper;
 import com.duongame.manager.AdBannerManager;
 import com.google.android.gms.ads.AdView;
@@ -44,6 +47,7 @@ import java.io.File;
 // 6. ZIP 파일 인코딩
 // 7. 이미지 프로세싱
 public class SettingsActivity extends BaseActivity {
+    private static final String TAG = SettingsActivity.class.getSimpleName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,6 +108,33 @@ public class SettingsActivity extends BaseActivity {
         Switch thumbnailDisabled = findViewById(R.id.thumbnail_disabled);
         Switch japaneseDirection = findViewById(R.id.japanese_direction);
         Switch pagingAnimationDisabled = findViewById(R.id.paging_animation_disabled);
+
+        // 자동 페이징 시간 설정
+        SeekBar autoPagingTime = findViewById(R.id.seek_time);
+        final TextView autoPagingTimeValue = findViewById(R.id.auto_paging_time_value);
+        int time = PreferenceHelper.getAutoPagingTime(this);
+        autoPagingTime.setMax(10);
+
+        autoPagingTime.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                JLog.e(TAG, "change track " + seekBar.getProgress());
+                autoPagingTimeValue.setText(String.valueOf(seekBar.getProgress()));
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+                JLog.e(TAG, "start track " + seekBar.getProgress());
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                JLog.e(TAG, "stop track " + seekBar.getProgress());
+                PreferenceHelper.setAutoPagingTime(SettingsActivity.this, seekBar.getProgress());
+            }
+        });
+        autoPagingTimeValue.setText(String.valueOf(time));
+        autoPagingTime.setProgress(time);
 
         nightMode.setChecked(application.isNightMode());
         thumbnailDisabled.setChecked(application.isThumbnailDisabled());
@@ -182,7 +213,7 @@ public class SettingsActivity extends BaseActivity {
         version.setText("v" + BuildConfig.VERSION_NAME + "/" + BuildConfig.VERSION_CODE);
 
         View view = findViewById(R.id.pro_purchase);
-        if(!AppHelper.isPro(this)) {
+        if (!AppHelper.isPro(this)) {
             view.setVisibility(View.VISIBLE);
 
             String packageName = getApplicationContext().getPackageName();

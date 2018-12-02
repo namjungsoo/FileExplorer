@@ -100,4 +100,5 @@
     <string name="required_permission">Request required permissions\n\nPermissions: Use photos, media, files\nReason: Manage and decompress photos, media viewers, and files</string>
 
     <string name="paging_animation_disabled">Disable paging animation</string>
+    <string name="auto_paging_time">Auto paging time</string>
 </resources>

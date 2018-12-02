@@ -12,9 +12,11 @@ import android.widget.TextView;
 
 import com.duongame.AnalyticsApplication;
 import com.duongame.R;
+import com.duongame.activity.SettingsActivity;
 import com.duongame.adapter.ViewerPagerAdapter;
 import com.duongame.bitmap.BitmapCacheManager;
 import com.duongame.helper.JLog;
+import com.duongame.helper.PreferenceHelper;
 import com.duongame.listener.PagerOnTouchListener;
 import com.felipecsl.gifimageview.library.GifImageView;
 
@@ -33,6 +35,7 @@ import java.util.TimerTask;
 // +좌우 view pager
 // +하단 toolbox
 public class PagerActivity extends BaseViewerActivity {
+    private static final String TAG = PagerActivity.class.getSimpleName();
     private final static int AUTO_PAGING = 1;
     public final static int SEC_TO_MS = 1000;
     public final static int AUTO_SEC_MAX = 10;
@@ -48,10 +51,10 @@ public class PagerActivity extends BaseViewerActivity {
 
     private GifImageView gifImageView;
 
-    int autoTime;
+    int autoTime, lastAutoTime;
     TextView textAutoTime;
     Button btnPlusTime, btnMinusTime;
-    Timer timer = new Timer();
+    Timer timer;
 
     static class PagingInfo {
         int page;
@@ -61,8 +64,8 @@ public class PagerActivity extends BaseViewerActivity {
 
     static class TimerHandler extends Handler {
         public void handleMessage(Message msg) {
-            if(msg.what == AUTO_PAGING) {
-                PagingInfo info = (PagingInfo)msg.obj;
+            if (msg.what == AUTO_PAGING) {
+                PagingInfo info = (PagingInfo) msg.obj;
                 info.pager.setCurrentItem(info.page, info.smoothScroll);
             }
         }
@@ -85,7 +88,10 @@ public class PagerActivity extends BaseViewerActivity {
     }
 
     void resumeTimer() {
-        if (autoTime > 0) {// 이제 타이머를 시작
+        if (getFullscreen() && autoTime > 0 && lastAutoTime != autoTime) {// 이제 타이머를 시작
+            JLog.e(TAG, "resumeTimer autoTime=" + autoTime);
+
+            timer = new Timer();
             timer.schedule(new TimerTask() {
                 @Override
                 public void run() {
@@ -112,18 +118,22 @@ public class PagerActivity extends BaseViewerActivity {
                     handler.sendMessage(msg);
                 }
             }, autoTime * SEC_TO_MS, autoTime * SEC_TO_MS);
+
+            lastAutoTime = autoTime;
         }
     }
 
     void pauseTimer() {
         timer.cancel();
-        timer = new Timer();
+        lastAutoTime = 0;// 초기화 시켜준다.
+//        timer = new Timer();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
 
+        JLog.e(TAG, "onResume");
         resumeTimer();
     }
 
@@ -143,8 +153,12 @@ public class PagerActivity extends BaseViewerActivity {
         }
     }
 
-    void updateAutoTime() {
+    void updateAutoTime(boolean updatePreference) {
         textAutoTime.setText(String.valueOf(autoTime));
+
+        if(updatePreference) {
+            PreferenceHelper.setAutoPagingTime(this, autoTime);
+        }
     }
 
     // 페이징 UI 초기화
@@ -152,7 +166,10 @@ public class PagerActivity extends BaseViewerActivity {
     void initAutoPagingUI() {
         textAutoTime = findViewById(R.id.auto_time);
         textAutoTime.setVisibility(View.VISIBLE);
-        updateAutoTime();
+
+        lastAutoTime = autoTime;
+        autoTime = PreferenceHelper.getAutoPagingTime(this);
+        updateAutoTime(false);
 
         btnPlusTime = findViewById(R.id.plus_time);
         btnPlusTime.setVisibility(View.VISIBLE);
@@ -160,8 +177,9 @@ public class PagerActivity extends BaseViewerActivity {
             @Override
             public void onClick(View v) {
                 if (autoTime < AUTO_SEC_MAX) {
+                    lastAutoTime = autoTime;
                     autoTime++;
-                    updateAutoTime();
+                    updateAutoTime(true);
                 }
             }
         });
@@ -172,8 +190,9 @@ public class PagerActivity extends BaseViewerActivity {
             @Override
             public void onClick(View v) {
                 if (autoTime > 0) {
+                    lastAutoTime = autoTime;
                     autoTime--;
-                    updateAutoTime();
+                    updateAutoTime(true);
                 }
             }
         });

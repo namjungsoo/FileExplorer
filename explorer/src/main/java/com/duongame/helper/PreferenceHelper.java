@@ -49,6 +49,7 @@ public class PreferenceHelper {
     private static final String PERMISSION_AGREED = "permission_agreed";
 
     private static final String PAGING_ANIMATION_DISABLED = "paging_animation_disabled";
+    private static final String AUTO_PAGING_TIME = "auto_paging_time";
 
     private static SharedPreferences pref = null;
 
@@ -318,6 +319,18 @@ public class PreferenceHelper {
         checkPrefManager(context);
         final SharedPreferences.Editor editor = pref.edit();
         editor.putBoolean(PAGING_ANIMATION_DISABLED, b);
+        editor.apply();
+    }
+
+    public static int getAutoPagingTime(Context context) {
+        checkPrefManager(context);
+        return pref.getInt(AUTO_PAGING_TIME, 0);
+    }
+
+    public static void setAutoPagingTime(Context context, int time) {
+        checkPrefManager(context);
+        final SharedPreferences.Editor editor = pref.edit();
+        editor.putInt(AUTO_PAGING_TIME, time);
         editor.apply();
     }
 
