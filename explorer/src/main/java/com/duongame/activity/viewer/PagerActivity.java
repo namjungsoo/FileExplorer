@@ -1,17 +1,27 @@
 package com.duongame.activity.viewer;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.view.ViewPager;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.SeekBar;
+import android.widget.TextView;
 
+import com.duongame.AnalyticsApplication;
 import com.duongame.R;
 import com.duongame.adapter.ViewerPagerAdapter;
 import com.duongame.bitmap.BitmapCacheManager;
 import com.duongame.helper.JLog;
 import com.duongame.listener.PagerOnTouchListener;
 import com.felipecsl.gifimageview.library.GifImageView;
+
+import org.apache.commons.lang3.time.StopWatch;
+
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * Created by namjungsoo on 2016-11-19.
@@ -20,8 +30,8 @@ import com.felipecsl.gifimageview.library.GifImageView;
 // 지원 목록: Photo, Pdf, Zip
 // +전체화면
 //
-// +뷰페이저
-// +하단 툴박스
+// +좌우 view pager
+// +하단 toolbox
 public class PagerActivity extends BaseViewerActivity {
     // 파일의 정보
     protected String path;
@@ -33,6 +43,22 @@ public class PagerActivity extends BaseViewerActivity {
     protected boolean isPagerIdle = true;
 
     private GifImageView gifImageView;
+
+    int autoTime;
+    TextView textAutoTime;
+    Button btnPlusTime, btnMinusTime;
+    Timer timer = new Timer();
+
+    static class PagingInfo {
+        public int page;
+        public boolean smoothScroll;
+    }
+
+    static class TimerHandler extends Handler {
+        public void handleMessage(Message msg) {
+        }
+    }
+    Handler handler = new TimerHandler();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,9 +74,100 @@ public class PagerActivity extends BaseViewerActivity {
         setFullscreen(true);
     }
 
+    void resumeTimer() {
+        if (autoTime > 0) {// 이제 타이머를 시작
+            timer.schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    int current = pager.getCurrentItem();
+
+                    //TODO: 마지막 페이지
+                    if (current == pagerAdapter.getCount() - 1)
+                        return;
+
+                    // smooth 연산
+                    AnalyticsApplication application = (AnalyticsApplication) getApplication();
+                    boolean smoothScroll = true;
+                    if (application != null) {
+                        smoothScroll = !application.isPagingAnimationDisabled();
+                    }
+
+                    pager.setCurrentItem(current + 1, smoothScroll);
+                }
+            }, 0, autoTime * 1000);
+        }
+    }
+
+    void pauseTimer() {
+        timer.cancel();
+        timer = new Timer();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        resumeTimer();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        pauseTimer();
+    }
+
+    @Override
+    protected void updateFullscreen(boolean isFullscreen) {
+        if (isFullscreen) {// 전체화면으로 돌아가면 timer 발동
+            resumeTimer();
+        } else {
+            pauseTimer();
+        }
+    }
+
+    void updateAutoTime() {
+        textAutoTime.setText(String.valueOf(autoTime));
+    }
+
+    // 페이징 UI 초기화
+    // Fullscreen이 false되는 시점에 timer를 on
+    void initAutoPagingUI() {
+        textAutoTime = findViewById(R.id.auto_time);
+        textAutoTime.setVisibility(View.VISIBLE);
+        updateAutoTime();
+
+        btnPlusTime = findViewById(R.id.plus_time);
+        btnPlusTime.setVisibility(View.VISIBLE);
+        btnPlusTime.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (autoTime < 5) {
+                    autoTime++;
+                    updateAutoTime();
+                }
+            }
+        });
+
+        btnMinusTime = findViewById(R.id.minus_time);
+        btnMinusTime.setVisibility(View.VISIBLE);
+        btnMinusTime.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (autoTime > 0) {
+                    autoTime--;
+                    updateAutoTime();
+                }
+            }
+        });
+    }
+
     @Override
     protected void initToolBox() {
         super.initToolBox();
+
+        initAutoPagingUI();
+
         seekPage.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {

@@ -195,29 +195,27 @@ public class BaseViewerActivity extends BaseActivity {
                             | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION // hide nav bar
                             | View.SYSTEM_UI_FLAG_FULLSCREEN // hide status bar
                             | View.SYSTEM_UI_FLAG_IMMERSIVE);
+            bottomPanel.setVisibility(View.INVISIBLE);
+            topPanel.setVisibility(View.INVISIBLE);
         } else {
             getWindow().getDecorView().setSystemUiVisibility(
                     View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                             | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
                             | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
-        }
-
-
-        isFullscreen = fullscreen;
-
-        // 툴박스 보이기
-        //TODO: 알파 애니메이션은 나중에 하자
-        if (!fullscreen) {
-            //TEST
+            // 툴박스 보이기
+            //TODO: 알파 애니메이션은 나중에 하자
             bottomPanel.setVisibility(View.VISIBLE);
             topPanel.setVisibility(View.VISIBLE);
-        } else {
-            bottomPanel.setVisibility(View.INVISIBLE);
-            topPanel.setVisibility(View.INVISIBLE);
         }
+
+        isFullscreen = fullscreen;
+        updateFullscreen(fullscreen);
     }
 
     protected void updateName(int i) {
+    }
+
+    protected void updateFullscreen(boolean isFullscreen) {
     }
 
     public boolean hasSoftKeys() {

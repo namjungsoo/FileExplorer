@@ -39,6 +39,7 @@
                 android:textColor="#ffffffff"
                 android:textStyle="bold"
                 android:text="-"
+                android:visibility="invisible"
                 android:id="@+id/minus_time"/>
             <TextView
                 android:layout_width="wrap_content"
@@ -47,6 +48,7 @@
                 android:textColor="#ffffffff"
                 android:textStyle="bold"
                 android:textSize="12sp"
+                android:visibility="invisible"
                 android:id="@+id/auto_time"/>
             <Button
                 android:layout_width="30dp"
@@ -59,6 +61,7 @@
                 android:textColor="#ffffffff"
                 android:textStyle="bold"
                 android:text="+"
+                android:visibility="invisible"
                 android:id="@+id/plus_time"/>
 
         </LinearLayout>
