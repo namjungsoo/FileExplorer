@@ -97,4 +97,11 @@
     <string name="required_permission">طلب الأذونات المطلوبة\n\nضوابط: استخدام الصور والوسائط والملفات\nالسبب: إدارة الصور الفوتوغرافية وملفات الوسائط والملفات وفك ضغطها</string>
 
     <string name="paging_animation_disabled">تعطيل الرسوم المتحركة الترحيل</string>
+    <string name="auto_paging_time">وقت الترحيل التلقائي</string>
+
+    <string-array name="search_file">
+        <item>أرشيف</item>
+        <item>TXT</item>
+        <item>PDF</item>
+    </string-array>
 </resources>

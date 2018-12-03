@@ -97,4 +97,12 @@
     <string name="required_permission">Запросить необходимые разрешения\n\nРазрешения: использование фотографий, мультимедиа, файлов\nПричина: управлять и распаковывать фотографии, средства просмотра мультимедиа и файлы</string>
 
     <string name="paging_animation_disabled">Отключить анимацию подкачки</string>
+    <string name="auto_paging_time">Время автоматического подкачки</string>
+
+    <string-array name="search_file">
+        <item>Архив</item>
+        <item>TXT</item>
+        <item>PDF</item>
+    </string-array>
+
 </resources>

@@ -97,4 +97,12 @@
     <string name="required_permission">Demander les autorisations requises\n\nAutorisations: Utiliser des photos, des médias, des fichiers\nRaison: gérer et décompresser des photos, des visualiseurs de médias et des fichiers</string>
 
     <string name="paging_animation_disabled">Désactiver l\'animation de pagination</string>
+    <string name="auto_paging_time">Temps de pagination automatique</string>
+
+    <string-array name="search_file">
+        <item>Archiver</item>
+        <item>TXT</item>
+        <item>PDF</item>
+    </string-array>
+
 </resources>

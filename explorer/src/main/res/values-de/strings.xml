@@ -97,4 +97,11 @@
     <string name="required_permission">Fordern Sie die erforderlichen Berechtigungen an\n\nBerechtigungen: Verwenden Sie Fotos, Medien, Dateien\nGrund: Verwalten und dekomprimieren Sie Fotos, Media Viewer und Dateien</string>
 
     <string name="paging_animation_disabled">Paging-Animation deaktivieren</string>
+    <string name="auto_paging_time">Auto Paging-Zeit</string>
+
+    <string-array name="search_file">
+        <item>Archiv</item>
+        <item>TXT</item>
+        <item>PDF</item>
+    </string-array>
 </resources>

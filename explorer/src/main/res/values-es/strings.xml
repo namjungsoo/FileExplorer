@@ -97,4 +97,12 @@
     <string name="required_permission">Solicitar permisos requeridos\n\nPermisos: usar fotos, medios, archivos.\nMotivo: administre y descomprima fotos, visualizadores de medios y archivos</string>
 
     <string name="paging_animation_disabled">Deshabilitar la animación de paginación</string>
+    <string name="auto_paging_time">Tiempo de paginación automática</string>
+
+    <string-array name="search_file">
+        <item>Archivo</item>
+        <item>TXT</item>
+        <item>PDF</item>
+    </string-array>
+
 </resources>

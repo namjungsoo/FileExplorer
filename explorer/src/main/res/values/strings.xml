@@ -101,4 +101,10 @@
 
     <string name="paging_animation_disabled">Disable paging animation</string>
     <string name="auto_paging_time">Auto paging time</string>
+
+    <string-array name="search_file">
+        <item>Archive</item>
+        <item>TXT</item>
+        <item>PDF</item>
+    </string-array>
 </resources>

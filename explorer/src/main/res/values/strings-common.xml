@@ -2,11 +2,6 @@
 <resources>
     <string name="each_text" translatable="false">%d%%</string>
     <string name="total_text" translatable="false">%1$d/%2$d (%3$d%%)</string>
-    <string-array name="search_file">
-        <item>ZIP,RAR,7z</item>
-        <item>TXT</item>
-        <item>PDF</item>
-    </string-array>
     <string-array name="compress_type">
         <item>.zip</item>
         <item>.tar</item>

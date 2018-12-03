@@ -101,4 +101,11 @@
 
     <string name="paging_animation_disabled">페이징 애니메이션 비활성화</string>
     <string name="auto_paging_time">자동 페이징 시간</string>
+
+    <string-array name="search_file">
+        <item>압축파일</item>
+        <item>TXT</item>
+        <item>PDF</item>
+    </string-array>
+
 </resources>

@@ -100,4 +100,12 @@
     <string name="required_permission">必要なアクセス許可を要求\n\n権：写真、メディア、ファイルの使用\n理由：写真、メディアビューアとファイルの管理と解凍</string>
 
     <string name="paging_animation_disabled">ページングアニメーションを無効にする</string>
+    <string name="auto_paging_time">自動ページング時間</string>
+
+    <string-array name="search_file">
+        <item>アーカイブ</item>
+        <item>TXT</item>
+        <item>PDF</item>
+    </string-array>
+
 </resources>
