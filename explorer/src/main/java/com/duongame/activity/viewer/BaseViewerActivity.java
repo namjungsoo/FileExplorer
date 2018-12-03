@@ -55,6 +55,9 @@ public class BaseViewerActivity extends BaseActivity {
     //private View mainView;
     private AdView adView;
 
+    LinearLayout nightMode;
+    LinearLayout pagingAnim;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -147,6 +150,23 @@ public class BaseViewerActivity extends BaseActivity {
         textPage = findViewById(R.id.text_page);
         seekPage = findViewById(R.id.seek_page);
 
+        nightMode = findViewById(R.id.layout_night);
+        pagingAnim = findViewById(R.id.layout_anim);
+
+        nightMode.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+        pagingAnim.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                
+            }
+        });
+
         //ADVIEW
         if (BuildConfig.SHOW_AD) {
             AdBannerManager.initBannerAd(this, 1);
@@ -173,6 +193,8 @@ public class BaseViewerActivity extends BaseActivity {
 
             }
         });
+
+
     }
 
     public boolean getFullscreen() {

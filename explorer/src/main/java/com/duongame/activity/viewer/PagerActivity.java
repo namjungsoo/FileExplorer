@@ -124,7 +124,9 @@ public class PagerActivity extends BaseViewerActivity {
     }
 
     void pauseTimer() {
-        timer.cancel();
+        if(timer != null)
+            timer.cancel();
+
         lastAutoTime = 0;// 초기화 시켜준다.
 //        timer = new Timer();
     }

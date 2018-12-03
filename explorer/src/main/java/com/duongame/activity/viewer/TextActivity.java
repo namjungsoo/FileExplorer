@@ -225,6 +225,7 @@ public class TextActivity extends BaseViewerActivity {
     @Override
     protected void initToolBox() {
         super.initToolBox();
+
         seekPage.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             boolean dragging;
 

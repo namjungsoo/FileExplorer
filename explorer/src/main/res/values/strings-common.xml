@@ -15,4 +15,6 @@
     <string name="action_license" translatable="false">Open Source License</string>
     <string name="left_arrow" translatable="false">&lt;</string>
     <string name="right_arrow" translatable="false">&gt;</string>
+    <string name="menu_night" translatable="false">Night</string>
+    <string name="menu_anim" translatable="false">Anim</string>
 </resources>
