@@ -33,7 +33,8 @@
                 android:id="@+id/layout_night"
                 android:layout_width="45dp"
                 android:layout_height="35dp"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:background="?android:attr/selectableItemBackground">
 
                 <ImageView
                     android:id="@+id/img_night"
@@ -56,7 +57,8 @@
                 android:id="@+id/layout_anim"
                 android:layout_width="45dp"
                 android:layout_height="35dp"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:background="?android:attr/selectableItemBackground">
 
                 <ImageView
                     android:id="@+id/img_anim"
@@ -160,7 +162,8 @@
                     android:id="@+id/layout_left"
                     android:layout_width="45dp"
                     android:layout_height="35dp"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:background="?android:attr/selectableItemBackground">
 
                     <ImageView
                         android:id="@+id/img_left"
@@ -183,7 +186,8 @@
                     android:id="@+id/layout_right"
                     android:layout_width="45dp"
                     android:layout_height="35dp"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:background="?android:attr/selectableItemBackground">
 
                     <ImageView
                         android:id="@+id/img_right"
@@ -207,7 +211,8 @@
                     android:id="@+id/layout_both"
                     android:layout_width="45dp"
                     android:layout_height="35dp"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:background="?android:attr/selectableItemBackground">
 
                     <ImageView
                         android:id="@+id/img_both"

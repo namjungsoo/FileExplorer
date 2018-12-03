@@ -1,290 +1,295 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:layout_height="match_parent">
 
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="36dp"
-        android:layout_marginStart="10dp"
-        android:gravity="center_vertical"
-        android:text="@string/explorer"
-        android:textSize="16sp"
-        android:textStyle="bold" />
-
-    <!-- 썸네일 비활성화, 기본값: false -->
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="36dp"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
-        android:orientation="horizontal">
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_alignParentStart="true"
-            android:gravity="center"
-            android:text="@string/thumbnail_disabled" />
-
-        <Switch
-            android:id="@+id/thumbnail_disabled"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_centerInParent="true" />
-    </RelativeLayout>
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="36dp"
-        android:layout_marginStart="10dp"
-        android:gravity="center_vertical"
-        android:text="@string/viewer"
-        android:textSize="16sp"
-        android:textStyle="bold" />
-
-    <!-- 만화책 읽기 방향 일본식, 기본값: false -->
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="36dp"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
-        android:orientation="horizontal">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_alignParentStart="true"
-            android:gravity="center"
-            android:text="@string/japanese_direction" />
-
-        <Switch
-            android:id="@+id/japanese_direction"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_centerInParent="true" />
-    </RelativeLayout>
-
-
-    <!-- 나이트 모드, 기본값: false -->
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="36dp"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
-        android:orientation="horizontal">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_alignParentStart="true"
-            android:gravity="center"
-            android:text="@string/night_mode" />
-
-        <Switch
-            android:id="@+id/night_mode"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_centerInParent="true" />
-    </RelativeLayout>
-
-    <!-- 페이징 애니메이션 비활성화, 기본값: false -->
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="36dp"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
-        android:orientation="horizontal">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_alignParentStart="true"
-            android:gravity="center"
-            android:text="@string/paging_animation_disabled" />
-
-        <Switch
-            android:id="@+id/paging_animation_disabled"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_centerInParent="true" />
-    </RelativeLayout>
-
-    <!-- 페이징 애니메이션 비활성화, 기본값: false -->
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="36dp"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
-        android:orientation="horizontal">
-
-        <TextView
-            android:id="@+id/auto_paging_time_key"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_alignParentStart="true"
-            android:gravity="center"
-            android:text="@string/auto_paging_time" />
-
-        <SeekBar
-            android:id="@+id/seek_time"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_toStartOf="@+id/auto_paging_time_value"
-            android:layout_toEndOf="@+id/auto_paging_time_key" />
+            android:layout_height="36dp"
+            android:layout_marginStart="10dp"
+            android:gravity="center_vertical"
+            android:text="@string/explorer"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <!-- 썸네일 비활성화, 기본값: false -->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="36dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignParentStart="true"
+                android:gravity="center"
+                android:text="@string/thumbnail_disabled" />
+
+            <Switch
+                android:id="@+id/thumbnail_disabled"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerInParent="true" />
+        </RelativeLayout>
 
         <TextView
-            android:id="@+id/auto_paging_time_value"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_alignParentEnd="true"
-            android:layout_marginEnd="6dp"
-            android:gravity="center"
-            android:text="0" />
+            android:layout_width="match_parent"
+            android:layout_height="36dp"
+            android:layout_marginStart="10dp"
+            android:gravity="center_vertical"
+            android:text="@string/viewer"
+            android:textSize="16sp"
+            android:textStyle="bold" />
 
-    </RelativeLayout>
+        <!-- 만화책 읽기 방향 일본식, 기본값: false -->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="36dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:orientation="horizontal">
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="36dp"
-        android:layout_marginStart="10dp"
-        android:gravity="center_vertical"
-        android:text="@string/history"
-        android:textSize="16sp"
-        android:textStyle="bold" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignParentStart="true"
+                android:gravity="center"
+                android:text="@string/japanese_direction" />
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="36dp"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
-        android:orientation="horizontal">
+            <Switch
+                android:id="@+id/japanese_direction"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerInParent="true" />
+        </RelativeLayout>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_alignParentStart="true"
-            android:gravity="center"
-            android:text="@string/action_clear_cache" />
 
-        <Button
-            android:id="@+id/action_clear_cache"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_centerInParent="true"
-            android:text="@string/execute" />
-    </RelativeLayout>
+        <!-- 나이트 모드, 기본값: false -->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="36dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:orientation="horizontal">
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="36dp"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
-        android:orientation="horizontal">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignParentStart="true"
+                android:gravity="center"
+                android:text="@string/night_mode" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_alignParentStart="true"
-            android:gravity="center"
-            android:text="@string/action_clear_history" />
+            <Switch
+                android:id="@+id/night_mode"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerInParent="true" />
+        </RelativeLayout>
 
-        <Button
-            android:id="@+id/action_clear_history"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_centerInParent="true"
-            android:text="@string/execute" />
-    </RelativeLayout>
+        <!-- 페이징 애니메이션 비활성화, 기본값: false -->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="36dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:orientation="horizontal">
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="36dp"
-        android:layout_marginStart="10dp"
-        android:gravity="center_vertical"
-        android:text="@string/system"
-        android:textSize="16sp"
-        android:textStyle="bold" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignParentStart="true"
+                android:gravity="center"
+                android:text="@string/paging_animation_disabled" />
 
-    <!-- 버전 확인 -->
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="36dp"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
-        android:orientation="horizontal">
+            <Switch
+                android:id="@+id/paging_animation_disabled"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerInParent="true" />
+        </RelativeLayout>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_alignParentStart="true"
-            android:gravity="center"
-            android:text="@string/version" />
+        <!-- 페이징 애니메이션 비활성화, 기본값: false -->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="36dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:orientation="horizontal">
 
-        <TextView
-            android:id="@+id/version"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_centerInParent="true"
-            android:text="v1.0.0/1" />
-    </RelativeLayout>
+            <TextView
+                android:id="@+id/auto_paging_time_key"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignParentStart="true"
+                android:gravity="center"
+                android:text="@string/auto_paging_time" />
 
-    <!-- 프로버전 구매하기 -->
-    <RelativeLayout
-        android:id="@+id/pro_purchase"
-        android:layout_width="match_parent"
-        android:layout_height="36dp"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
-        android:orientation="horizontal"
-        android:visibility="gone">
+            <SeekBar
+                android:id="@+id/seek_time"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_toStartOf="@+id/auto_paging_time_value"
+                android:layout_toEndOf="@+id/auto_paging_time_key" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_alignParentStart="true"
-            android:gravity="center"
-            android:text="@string/pro_version" />
+            <TextView
+                android:id="@+id/auto_paging_time_value"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="6dp"
+                android:gravity="center"
+                android:text="0" />
 
-        <Button
-            android:id="@+id/purchase"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_centerInParent="true"
-            android:text="@string/purchase" />
-    </RelativeLayout>
-
-    <!-- 오픈소스 라이센스 -->
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="36dp"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
-        android:orientation="horizontal">
+        </RelativeLayout>
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_alignParentStart="true"
-            android:gravity="center"
-            android:text="@string/action_license" />
+            android:layout_width="match_parent"
+            android:layout_height="36dp"
+            android:layout_marginStart="10dp"
+            android:gravity="center_vertical"
+            android:text="@string/history"
+            android:textSize="16sp"
+            android:textStyle="bold" />
 
-        <Button
-            android:id="@+id/action_license"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_centerInParent="true"
-            android:text="@string/check" />
-    </RelativeLayout>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="36dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:orientation="horizontal">
 
-</LinearLayout>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignParentStart="true"
+                android:gravity="center"
+                android:text="@string/action_clear_cache" />
+
+            <Button
+                android:id="@+id/action_clear_cache"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerInParent="true"
+                android:text="@string/execute" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="36dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignParentStart="true"
+                android:gravity="center"
+                android:text="@string/action_clear_history" />
+
+            <Button
+                android:id="@+id/action_clear_history"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerInParent="true"
+                android:text="@string/execute" />
+        </RelativeLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="36dp"
+            android:layout_marginStart="10dp"
+            android:gravity="center_vertical"
+            android:text="@string/system"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <!-- 버전 확인 -->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="36dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignParentStart="true"
+                android:gravity="center"
+                android:text="@string/version" />
+
+            <TextView
+                android:id="@+id/version"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerInParent="true"
+                android:text="v1.0.0/1" />
+        </RelativeLayout>
+
+        <!-- 프로버전 구매하기 -->
+        <RelativeLayout
+            android:id="@+id/pro_purchase"
+            android:layout_width="match_parent"
+            android:layout_height="36dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:orientation="horizontal"
+            android:visibility="gone">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignParentStart="true"
+                android:gravity="center"
+                android:text="@string/pro_version" />
+
+            <Button
+                android:id="@+id/purchase"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerInParent="true"
+                android:text="@string/purchase" />
+        </RelativeLayout>
+
+        <!-- 오픈소스 라이센스 -->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="36dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignParentStart="true"
+                android:gravity="center"
+                android:text="@string/action_license" />
+
+            <Button
+                android:id="@+id/action_license"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerInParent="true"
+                android:text="@string/check" />
+        </RelativeLayout>
+
+    </LinearLayout>
+</ScrollView>
