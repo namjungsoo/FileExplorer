@@ -10,6 +10,7 @@ import com.dropbox.core.v2.files.FileMetadata;
 import com.dropbox.core.v2.files.FolderMetadata;
 import com.dropbox.core.v2.files.ListFolderResult;
 import com.dropbox.core.v2.files.Metadata;
+import com.duongame.MainApplication;
 import com.duongame.R;
 import com.duongame.activity.main.BaseMainActivity;
 import com.duongame.adapter.ExplorerItem;
@@ -58,7 +59,7 @@ public class DropboxSearchTask extends AsyncTask<String, Void, FileExplorer.Resu
         // 추가적으로 TXT, PDF를 지원
         int type = FileHelper.getFileType(metadata.getName());
 
-        switch(type) {
+        switch (type) {
             case FILETYPE_ZIP:
             case FILETYPE_TEXT:
             case FILETYPE_PDF:
@@ -139,24 +140,29 @@ public class DropboxSearchTask extends AsyncTask<String, Void, FileExplorer.Resu
         if (fragment == null)
             return;
 
-        //FIX: Index Out of Bound
-        // 쓰레드에서 메인쓰레드로 옮김
-        fragment.setFileList(result.fileList);
-        fragment.getApplication().setImageList(result.imageList);
-        fragment.getAdapter().setFileList(fragment.getFileList());
+        try {
+            //FIX: Index Out of Bound
+            // 쓰레드에서 메인쓰레드로 옮김
+            fragment.setFileList(result.fileList);
+            MainApplication.getInstance(fragment.getActivity()).setImageList(result.imageList);
+            fragment.getAdapter().setFileList(fragment.getFileList());
 
-        fragment.getAdapter().notifyDataSetChanged();
+            fragment.getAdapter().notifyDataSetChanged();
 
-        // 성공했을때 현재 패스를 업데이트
-        // 드롭박스에서만 앞에 /를 붙여준다.
-        if (path.length() == 0)
-            path = "/";
+            // 성공했을때 현재 패스를 업데이트
+            // 드롭박스에서만 앞에 /를 붙여준다.
+            if (path.length() == 0)
+                path = "/";
 
-        fragment.getApplication().setLastPath(path);
-        fragment.getTextPath().setText(path);
-        fragment.getTextPath().requestLayout();
+            MainApplication.getInstance(fragment.getActivity()).setLastPath(path);
+            fragment.getTextPath().setText(path);
+            fragment.getTextPath().requestLayout();
 
-        fragment.setCanClick(true);
+            fragment.setCanClick(true);
+
+        } catch (NullPointerException e) {
+
+        }
     }
 
     private void onExit() {
@@ -172,7 +178,7 @@ public class DropboxSearchTask extends AsyncTask<String, Void, FileExplorer.Resu
         ToastHelper.showToast(fragment.getContext(), R.string.toast_error);
 
         BaseMainActivity activity = (BaseMainActivity) fragment.getActivity();
-        if(activity == null)
+        if (activity == null)
             return;
 
         // 로그아웃 처리

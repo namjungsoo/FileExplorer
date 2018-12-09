@@ -5,7 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.core.CrashlyticsCore;
-import com.duongame.AnalyticsApplication;
+import com.duongame.MainApplication;
 import com.duongame.BuildConfig;
 import com.duongame.helper.JLog;
 import com.duongame.helper.PreferenceHelper;
@@ -21,12 +21,10 @@ import io.fabric.sdk.android.Fabric;
 //
 public class BaseActivity extends AppCompatActivity {
     protected FirebaseAnalytics mFirebaseAnalytics;
-    protected AnalyticsApplication application;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        application = (AnalyticsApplication) getApplication();
 
         JLog.e("Jungsoo", "BaseActivity.onCreate begin");
 

@@ -3,7 +3,7 @@
     package="com.duongame">
 
     <application
-        android:name=".AnalyticsApplication"
+        android:name=".MainApplication"
         android:allowBackup="true"
         android:icon="@mipmap/comicz"
         android:label="${APP_NAME}"

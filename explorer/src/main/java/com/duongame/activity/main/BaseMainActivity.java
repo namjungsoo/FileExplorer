@@ -36,7 +36,7 @@ import android.widget.RelativeLayout;
 
 import com.dropbox.core.android.Auth;
 import com.dropbox.core.v2.users.FullAccount;
-import com.duongame.AnalyticsApplication;
+import com.duongame.MainApplication;
 import com.duongame.BuildConfig;
 import com.duongame.R;
 import com.duongame.activity.BaseActivity;
@@ -496,10 +496,12 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
         }
 
         if (id == R.id.action_exit) {
-            AnalyticsApplication application = (AnalyticsApplication) getApplication();
-            if (application != null)
-                application.exit(this);
-            return true;
+            try {
+                MainApplication.getInstance(this).exit(this);
+                return true;
+            } catch (NullPointerException e) {
+
+            }
         }
 
         return super.onOptionsItemSelected(item);
@@ -1020,9 +1022,10 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
             Intent intent = SettingsActivity.getLocalIntent(this);
             startActivity(intent);
         } else if (id == R.id.action_exit) {
-            AnalyticsApplication application = (AnalyticsApplication) getApplication();
-            if (application != null)
-                application.exit(this);
+            try {
+                MainApplication.getInstance(this).exit(this);
+            } catch (NullPointerException e) {
+            }
         }
 
 //        if (id == R.id.nav_camera) {

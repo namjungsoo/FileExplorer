@@ -10,17 +10,14 @@ import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
-import com.duongame.AnalyticsApplication;
+import com.duongame.MainApplication;
 import com.duongame.R;
-import com.duongame.activity.SettingsActivity;
 import com.duongame.adapter.ViewerPagerAdapter;
 import com.duongame.bitmap.BitmapCacheManager;
 import com.duongame.helper.JLog;
 import com.duongame.helper.PreferenceHelper;
 import com.duongame.listener.PagerOnTouchListener;
 import com.felipecsl.gifimageview.library.GifImageView;
-
-import org.apache.commons.lang3.time.StopWatch;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -102,10 +99,13 @@ public class PagerActivity extends BaseViewerActivity {
                         return;
 
                     // smooth 연산
-                    AnalyticsApplication application = (AnalyticsApplication) getApplication();
                     boolean smoothScroll = true;
-                    if (application != null) {
-                        smoothScroll = !application.isPagingAnimationDisabled();
+                    try {
+                        if (!MainApplication.getInstance(PagerActivity.this).isPagingAnimationDisabled()) {
+                            smoothScroll = false;
+                        }
+                    } catch (NullPointerException e) {
+
                     }
 
                     PagingInfo info = new PagingInfo();
@@ -124,7 +124,7 @@ public class PagerActivity extends BaseViewerActivity {
     }
 
     void pauseTimer() {
-        if(timer != null)
+        if (timer != null)
             timer.cancel();
 
         lastAutoTime = 0;// 초기화 시켜준다.
@@ -158,7 +158,7 @@ public class PagerActivity extends BaseViewerActivity {
     void updateAutoTime(boolean updatePreference) {
         textAutoTime.setText(String.valueOf(autoTime));
 
-        if(updatePreference) {
+        if (updatePreference) {
             PreferenceHelper.setAutoPagingTime(this, autoTime);
         }
     }

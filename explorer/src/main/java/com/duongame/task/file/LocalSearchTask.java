@@ -3,6 +3,7 @@ package com.duongame.task.file;
 import android.os.AsyncTask;
 import android.view.View;
 
+import com.duongame.MainApplication;
 import com.duongame.adapter.ExplorerItem;
 import com.duongame.file.FileExplorer;
 import com.duongame.file.FileHelper;
@@ -116,47 +117,51 @@ public class LocalSearchTask extends AsyncTask<String, Void, FileExplorer.Result
         if (fragment == null)
             return;
 
-        //FIX: Index Out of Bound
-        // 쓰레드에서 메인쓰레드로 옮김
-        fragment.setFileList(result.fileList);
-        fragment.getApplication().setImageList(result.imageList);
-        fragment.getAdapter().setFileList(fragment.getFileList());
+        try {
+            //FIX: Index Out of Bound
+            // 쓰레드에서 메인쓰레드로 옮김
+            fragment.setFileList(result.fileList);
+            MainApplication.getInstance(fragment.getActivity()).setImageList(result.imageList);
+            fragment.getAdapter().setFileList(fragment.getFileList());
 
-        fragment.getAdapter().notifyDataSetChanged();
+            fragment.getAdapter().notifyDataSetChanged();
 
-        // SearchTask가 resume
-        if (pathChanged) {
-            synchronized (fragment) {
-                if (fragment.getFileList() != null && fragment.getFileList().size() > 0) {
-                    fragment.getCurrentView().scrollToPosition(0);
-                    fragment.getCurrentView().invalidate();
+            // SearchTask가 resume
+            if (pathChanged) {
+                synchronized (fragment) {
+                    if (fragment.getFileList() != null && fragment.getFileList().size() > 0) {
+                        fragment.getCurrentView().scrollToPosition(0);
+                        fragment.getCurrentView().invalidate();
+                    }
                 }
             }
-        }
 
-        // 성공했을때 현재 패스를 업데이트
-        fragment.getApplication().setLastPath(path);
-        fragment.getTextPath().setText(path);
-        fragment.getTextPath().requestLayout();
+            // 성공했을때 현재 패스를 업데이트
+            MainApplication.getInstance(fragment.getActivity()).setLastPath(path);
+            fragment.getTextPath().setText(path);
+            fragment.getTextPath().requestLayout();
 
-        if (fragment.getSwitcherContents() != null) {
-            if (fragment.getFileList() == null || fragment.getFileList().size() <= 0) {
-                fragment.getSwitcherContents().setDisplayedChild(1);
+            if (fragment.getSwitcherContents() != null) {
+                if (fragment.getFileList() == null || fragment.getFileList().size() <= 0) {
+                    fragment.getSwitcherContents().setDisplayedChild(1);
 
-                // 퍼미션이 있으면 퍼미션 버튼을 보이지 않게 함
-                if (PermissionManager.checkStoragePermissions(fragment.getActivity())) {
-                    fragment.getPermissionButton().setVisibility(GONE);
-                    fragment.getTextNoFiles().setVisibility(View.VISIBLE);
+                    // 퍼미션이 있으면 퍼미션 버튼을 보이지 않게 함
+                    if (PermissionManager.checkStoragePermissions(fragment.getActivity())) {
+                        fragment.getPermissionButton().setVisibility(GONE);
+                        fragment.getTextNoFiles().setVisibility(View.VISIBLE);
+                    } else {
+                        fragment.getPermissionButton().setVisibility(View.VISIBLE);
+                        fragment.getTextNoFiles().setVisibility(GONE);
+                    }
                 } else {
-                    fragment.getPermissionButton().setVisibility(View.VISIBLE);
-                    fragment.getTextNoFiles().setVisibility(GONE);
+                    fragment.getSwitcherContents().setDisplayedChild(0);
                 }
-            } else {
-                fragment.getSwitcherContents().setDisplayedChild(0);
             }
-        }
 
-        fragment.setCanClick(true);
-        JLog.e("Jungsoo", "LocalSearchTask onPostExecute end");
+            fragment.setCanClick(true);
+            JLog.e("Jungsoo", "LocalSearchTask onPostExecute end");
+        } catch (NullPointerException e) {
+
+        }
     }
 }

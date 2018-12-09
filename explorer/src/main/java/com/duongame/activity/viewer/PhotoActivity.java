@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
+import com.duongame.MainApplication;
 import com.duongame.adapter.ExplorerItem;
 import com.duongame.adapter.PhotoPagerAdapter;
 import com.duongame.adapter.ViewerPagerAdapter;
@@ -36,13 +37,6 @@ public class PhotoActivity extends PagerActivity {
         processIntent();
     }
 
-    protected ArrayList<ExplorerItem> getImageList() {
-        if (application == null)
-            return null;
-
-        return application.getImageList();
-    }
-
     @Override
     protected ViewerPagerAdapter createPagerAdapter() {
         // 이때는 애니메이션을 한다.
@@ -51,50 +45,58 @@ public class PhotoActivity extends PagerActivity {
     }
 
     private void initPagerAdapter() {
-        final ArrayList<ExplorerItem> imageList = getImageList();
-        if (imageList == null)
-            return;
+        try {
+            final ArrayList<ExplorerItem> imageList = MainApplication.getInstance(this).getImageList();
+            if (imageList == null)
+                return;
 
-        pagerAdapter.setImageList(imageList);
-        pager.setAdapter(pagerAdapter);
+            pagerAdapter.setImageList(imageList);
+            pager.setAdapter(pagerAdapter);
 
-        seekPage.setMax(imageList.size());
+            seekPage.setMax(imageList.size());
+        } catch (NullPointerException e) {
+
+        }
     }
 
     protected void processIntent() {
-        final ArrayList<ExplorerItem> imageList = getImageList();
-        if (imageList == null)
-            return;
+        try {
+            final ArrayList<ExplorerItem> imageList = MainApplication.getInstance(this).getImageList();
+            if (imageList == null)
+                return;
 
-        final Intent intent = getIntent();
-        final Bundle extras = intent.getExtras();
-        if (extras != null) {
-            name = extras.getString("name");
-            path = extras.getString("path");
-            size = extras.getLong("size");
+            final Intent intent = getIntent();
+            final Bundle extras = intent.getExtras();
+            if (extras != null) {
+                name = extras.getString("name");
+                path = extras.getString("path");
+                size = extras.getLong("size");
 
-            textName.setText(name);
+                textName.setText(name);
 
-            //FIX:
-            // 이미지 리스트가 없거나 사이즈가 0이라면 리턴한다.
-            if (imageList == null || imageList.size() == 0) {
-                finish();
-            }
-
-            // 이미지 파일 리스트에서 현재 위치를 찾자
-            int current = 0;
-            for (int i = 0; i < imageList.size(); i++) {
-                if (imageList.get(i).name.equals(name)) {
-                    current = i;
-                    break;
+                //FIX:
+                // 이미지 리스트가 없거나 사이즈가 0이라면 리턴한다.
+                if (imageList.size() == 0) {
+                    finish();
                 }
+
+                // 이미지 파일 리스트에서 현재 위치를 찾자
+                int current = 0;
+                for (int i = 0; i < imageList.size(); i++) {
+                    if (imageList.get(i).name.equals(name)) {
+                        current = i;
+                        break;
+                    }
+                }
+
+                pager.setCurrentItem(current);
+
+                updateName(current);
+                updateInfo(current);
+                updateScrollInfo(current);
             }
+        } catch (NullPointerException e) {
 
-            pager.setCurrentItem(current);
-
-            updateName(current);
-            updateInfo(current);
-            updateScrollInfo(current);
         }
     }
 

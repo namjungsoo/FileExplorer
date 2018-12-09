@@ -3,6 +3,7 @@ package com.duongame.task.file;
 import android.os.AsyncTask;
 import android.view.MenuItem;
 
+import com.duongame.MainApplication;
 import com.duongame.R;
 import com.duongame.activity.main.BaseMainActivity;
 import com.duongame.adapter.ExplorerItem;
@@ -159,7 +160,7 @@ public class GoogleDriveSearchTask extends AsyncTask<String, Void, FileExplorer.
                 } else {
                     type = FileHelper.getFileType(item.name);
 
-                    switch(type) {
+                    switch (type) {
                         case FILETYPE_ZIP:
                         case FILETYPE_TEXT:
                         case FILETYPE_PDF:
@@ -202,19 +203,23 @@ public class GoogleDriveSearchTask extends AsyncTask<String, Void, FileExplorer.
         if (fragment == null)
             return;
 
-        //FIX: Index Out of Bound
-        // 쓰레드에서 메인쓰레드로 옮김
-        fragment.setFileList(result.fileList);
-        fragment.getApplication().setImageList(result.imageList);
-        fragment.getAdapter().setFileList(fragment.getFileList());
+        try {
+            //FIX: Index Out of Bound
+            // 쓰레드에서 메인쓰레드로 옮김
+            fragment.setFileList(result.fileList);
+            MainApplication.getInstance(fragment.getActivity()).setImageList(result.imageList);
+            fragment.getAdapter().setFileList(fragment.getFileList());
 
-        fragment.getAdapter().notifyDataSetChanged();
+            fragment.getAdapter().notifyDataSetChanged();
 
-        fragment.getApplication().setLastPath(path);
-        fragment.getTextPath().setText(path);
-        fragment.getTextPath().requestLayout();
+            MainApplication.getInstance(fragment.getActivity()).setLastPath(path);
+            fragment.getTextPath().setText(path);
+            fragment.getTextPath().requestLayout();
 
-        fragment.setCanClick(true);
+            fragment.setCanClick(true);
+        } catch (NullPointerException e) {
+
+        }
     }
 
     private void onExit() {
@@ -230,7 +235,7 @@ public class GoogleDriveSearchTask extends AsyncTask<String, Void, FileExplorer.
         ToastHelper.showToast(fragment.getContext(), R.string.toast_error);
 
         BaseMainActivity activity = (BaseMainActivity) fragment.getActivity();
-        if(activity == null)
+        if (activity == null)
             return;
 
         // 로그아웃 처리

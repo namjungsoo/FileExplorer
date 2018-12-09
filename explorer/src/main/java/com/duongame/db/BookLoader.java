@@ -10,7 +10,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
 
-import com.duongame.AnalyticsApplication;
+import com.duongame.MainApplication;
 import com.duongame.R;
 import com.duongame.activity.viewer.PdfActivity;
 import com.duongame.activity.viewer.TextActivity;
@@ -116,7 +116,7 @@ public class BookLoader {
 
     // 탐색기에서 클릭하여 로딩할 경우
     private static Intent getIntentNew(final Activity context, ExplorerItem item) {
-        Class<?> cls = null;
+        Class<?> cls;
         switch (FileHelper.getCompressType(item.path)) {
             case ExplorerItem.COMPRESSTYPE_ZIP:
             case ExplorerItem.COMPRESSTYPE_RAR:
@@ -134,31 +134,29 @@ public class BookLoader {
                 break;
         }
 
-        if (cls != null) {
-            final Intent intent = new Intent(context, cls);
-            intent.putExtra("path", item.path);
-            intent.putExtra("name", item.name);
-            intent.putExtra("current_page", 0);
-            intent.putExtra("size", item.size);
-            intent.putExtra("current_file", 0);
-            intent.putExtra("extract_file", 0);
+        final Intent intent = new Intent(context, cls);
+        intent.putExtra("path", item.path);
+        intent.putExtra("name", item.name);
+        intent.putExtra("current_page", 0);
+        intent.putExtra("size", item.size);
+        intent.putExtra("current_file", 0);
+        intent.putExtra("extract_file", 0);
 
-            AnalyticsApplication application = (AnalyticsApplication) context.getApplication();
-            int side = ExplorerItem.SIDE_LEFT;
-            if (application != null) {
-                if (application.isJapaneseDirection()) {
-                    side = ExplorerItem.SIDE_RIGHT;
-                }
+        int side = ExplorerItem.SIDE_LEFT;
+        try {
+            if (MainApplication.getInstance(context).isJapaneseDirection()) {
+                side = ExplorerItem.SIDE_RIGHT;
             }
-            intent.putExtra("side", side);
-            return intent;
+        } catch (NullPointerException e) {
+
         }
-        return null;
+        intent.putExtra("side", side);
+        return intent;
     }
 
     // 기존에 읽던 책을 처음부터 다시 로딩할 경우
     private static Intent getIntentNew(final Activity context, Book book) {
-        Class<?> cls = null;
+        Class<?> cls;
         switch (FileHelper.getCompressType(book.path)) {
             case ExplorerItem.COMPRESSTYPE_ZIP:
             case ExplorerItem.COMPRESSTYPE_RAR:
@@ -176,19 +174,16 @@ public class BookLoader {
                 break;
         }
 
-        if (cls != null) {
-            final Intent intent = new Intent(context, cls);
-            intent.putExtra("path", book.path);
-            intent.putExtra("name", book.name);
-            intent.putExtra("current_page", 0);
-            intent.putExtra("size", book.size);
-            intent.putExtra("current_file", book.current_file);
-            intent.putExtra("extract_file", book.extract_file);
-            intent.putExtra("side", book.side);
+        final Intent intent = new Intent(context, cls);
+        intent.putExtra("path", book.path);
+        intent.putExtra("name", book.name);
+        intent.putExtra("current_page", 0);
+        intent.putExtra("size", book.size);
+        intent.putExtra("current_file", book.current_file);
+        intent.putExtra("extract_file", book.extract_file);
+        intent.putExtra("side", book.side);
 
-            return intent;
-        }
-        return null;
+        return intent;
     }
 
     private static void loadNew(final Activity context, ExplorerItem item) {
@@ -259,7 +254,7 @@ public class BookLoader {
     }
 
     private static void loadDefaultThumbnail(Activity context, HistoryRecyclerAdapter.HistoryViewHolder holder, String path) {
-        if(FileHelper.getCompressType(path) != ExplorerItem.COMPRESSTYPE_OTHER) {
+        if (FileHelper.getCompressType(path) != ExplorerItem.COMPRESSTYPE_OTHER) {
             // 압축파일
             holder.thumb.setImageResource(R.drawable.ic_file_zip);
         } else {
@@ -267,6 +262,7 @@ public class BookLoader {
             holder.thumb.setImageResource(R.drawable.ic_file_pdf);
         }
     }
+
     public static void loadBookBitmap(Activity context, HistoryRecyclerAdapter.HistoryViewHolder holder, String path) {
         // zip 파일의 썸네일을 읽자
         if (FileHelper.isText(path)) {
@@ -276,31 +272,32 @@ public class BookLoader {
 
         loadDefaultThumbnail(context, holder, path);
 
-        AnalyticsApplication application = (AnalyticsApplication)context.getApplication();
-        if (application != null && application.isThumbnailDisabled()) {// 썸네일 비활성화라면
-            return;
-        } else {
-            final Bitmap bitmap = getThumbnail(path);
-            if (bitmap == null) {
-                switch (FileHelper.getCompressType(path)) {
-                    case ExplorerItem.COMPRESSTYPE_ZIP:
-                    case ExplorerItem.COMPRESSTYPE_SEVENZIP:
-                    case ExplorerItem.COMPRESSTYPE_RAR: {
-                        final LoadZipThumbnailTask task = new LoadZipThumbnailTask(context, holder.thumb, holder.more);
-                        task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, path);
-                    }
-                    break;
-                    default:
-                        if (path.endsWith(".pdf")) {
-                            final LoadThumbnailTask task = new LoadThumbnailTask(context, holder.thumb, holder.more, ExplorerItem.FILETYPE_PDF);
+        try {
+            if (!MainApplication.getInstance(context).isThumbnailDisabled()) {// 썸네일 비활성화가 아니라면
+                final Bitmap bitmap = getThumbnail(path);
+                if (bitmap == null) {
+                    switch (FileHelper.getCompressType(path)) {
+                        case ExplorerItem.COMPRESSTYPE_ZIP:
+                        case ExplorerItem.COMPRESSTYPE_SEVENZIP:
+                        case ExplorerItem.COMPRESSTYPE_RAR: {
+                            final LoadZipThumbnailTask task = new LoadZipThumbnailTask(context, holder.thumb, holder.more);
                             task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, path);
                         }
                         break;
+                        default:
+                            if (path.endsWith(".pdf")) {
+                                final LoadThumbnailTask task = new LoadThumbnailTask(context, holder.thumb, holder.more, ExplorerItem.FILETYPE_PDF);
+                                task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, path);
+                            }
+                            break;
+                    }
+                } else {
+                    holder.thumb.setImageBitmap(bitmap);
+                    BitmapCacheManager.setThumbnail(path, bitmap, holder.thumb);
                 }
-            } else {
-                holder.thumb.setImageBitmap(bitmap);
-                BitmapCacheManager.setThumbnail(path, bitmap, holder.thumb);
             }
+        } catch (NullPointerException e) {
+
         }
     }
 

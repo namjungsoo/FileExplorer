@@ -20,6 +20,7 @@ import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import com.duongame.MainApplication;
 import com.duongame.BuildConfig;
 import com.duongame.R;
 import com.duongame.activity.BaseActivity;
@@ -131,6 +132,15 @@ public class BaseViewerActivity extends BaseActivity {
         }
     }
 
+    // UI의 색상을 변경시킨다. 그리고
+    void updateNightMode() {
+
+    }
+
+    void updatePagingAnim() {
+
+    }
+
     protected void initToolBox() {
         textName = findViewById(R.id.text_name);
 
@@ -156,16 +166,31 @@ public class BaseViewerActivity extends BaseActivity {
         nightMode.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // 값을 반전시킨다.
+                try {
+                    MainApplication.getInstance(BaseViewerActivity.this).setNightMode(!MainApplication.getInstance(BaseViewerActivity.this).isNightMode());
+                } catch (NullPointerException e) {
 
+                }
+                updateNightMode();
             }
         });
+        updateNightMode();
+
         pagingAnim.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
-                
+                // 값을 반전시킨다.
+                try {
+                    MainApplication.getInstance(BaseViewerActivity.this).setPagingAnimationDisabled(!MainApplication.getInstance(BaseViewerActivity.this).isPagingAnimationDisabled());
+                } catch (NullPointerException e) {
+
+                }
+                updatePagingAnim();
             }
         });
+        updatePagingAnim();
 
         //ADVIEW
         if (BuildConfig.SHOW_AD) {

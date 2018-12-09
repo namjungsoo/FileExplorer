@@ -7,6 +7,7 @@ import android.support.v4.view.ViewPager;
 import android.view.KeyEvent;
 import android.view.View;
 
+import com.duongame.MainApplication;
 import com.duongame.R;
 import com.duongame.adapter.ComicPagerAdapter;
 import com.duongame.fragment.BaseFragment;
@@ -36,7 +37,7 @@ public class ComicActivity extends BaseMainActivity {
         initTabs();
         JLog.e("Jungsoo", "initTabs end");
 
-        if(!PreferenceHelper.getPermissionAgreed(this)) {
+        if (!PreferenceHelper.getPermissionAgreed(this)) {
             AlertHelper.showAlert(this,
                     AppHelper.getAppName(this),
                     getString(R.string.required_permission),
@@ -51,7 +52,11 @@ public class ComicActivity extends BaseMainActivity {
                     new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            application.exit(ComicActivity.this);
+                            try {
+                                MainApplication.getInstance(ComicActivity.this).exit(ComicActivity.this);
+                            } catch (NullPointerException e) {
+
+                            }
                         }
                     },
                     new DialogInterface.OnKeyListener() {

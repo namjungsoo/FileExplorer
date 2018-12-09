@@ -15,7 +15,7 @@ import android.widget.SeekBar;
 import android.widget.Switch;
 import android.widget.TextView;
 
-import com.duongame.AnalyticsApplication;
+import com.duongame.MainApplication;
 import com.duongame.BuildConfig;
 import com.duongame.R;
 import com.duongame.bitmap.BitmapCacheManager;
@@ -136,18 +136,24 @@ public class SettingsActivity extends BaseActivity {
         autoPagingTimeValue.setText(String.valueOf(time));
         autoPagingTime.setProgress(time);
 
-        nightMode.setChecked(application.isNightMode());
-        thumbnailDisabled.setChecked(application.isThumbnailDisabled());
-        japaneseDirection.setChecked(application.isJapaneseDirection());
-        pagingAnimationDisabled.setChecked(application.isPagingAnimationDisabled());
+        try {
+            MainApplication application = MainApplication.getInstance(this);
+            nightMode.setChecked(application.isNightMode());
+            thumbnailDisabled.setChecked(application.isThumbnailDisabled());
+            japaneseDirection.setChecked(application.isJapaneseDirection());
+            pagingAnimationDisabled.setChecked(application.isPagingAnimationDisabled());
+        } catch (NullPointerException e) {
+
+        }
 
         // viewer
         nightMode.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                AnalyticsApplication application = (AnalyticsApplication) getApplication();
-                if (application != null) {
-                    application.setNightMode(isChecked);
+                try {
+                    MainApplication.getInstance(SettingsActivity.this).setNightMode(isChecked);
+                } catch (NullPointerException e) {
+
                 }
             }
         });
@@ -155,9 +161,10 @@ public class SettingsActivity extends BaseActivity {
         thumbnailDisabled.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                AnalyticsApplication application = (AnalyticsApplication) getApplication();
-                if (application != null) {
-                    application.setThumbnailDisabled(isChecked);
+                try {
+                    MainApplication.getInstance(SettingsActivity.this).setThumbnailDisabled(isChecked);
+                } catch (NullPointerException e) {
+
                 }
             }
         });
@@ -165,9 +172,10 @@ public class SettingsActivity extends BaseActivity {
         japaneseDirection.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                AnalyticsApplication application = (AnalyticsApplication) getApplication();
-                if (application != null) {
-                    application.setJapaneseDirection(isChecked);
+                try {
+                    MainApplication.getInstance(SettingsActivity.this).setJapaneseDirection(isChecked);
+                } catch (NullPointerException e) {
+
                 }
             }
         });
@@ -175,9 +183,10 @@ public class SettingsActivity extends BaseActivity {
         pagingAnimationDisabled.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                AnalyticsApplication application = (AnalyticsApplication) getApplication();
-                if (application != null) {
-                    application.setPagingAnimationDisabled(isChecked);
+                try {
+                    MainApplication.getInstance(SettingsActivity.this).setPagingAnimationDisabled(isChecked);
+                } catch (NullPointerException e) {
+
                 }
             }
         });

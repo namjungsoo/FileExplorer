@@ -2,7 +2,6 @@ package com.duongame.adapter;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -11,7 +10,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.duongame.AnalyticsApplication;
+import com.duongame.MainApplication;
 import com.duongame.R;
 import com.duongame.bitmap.BitmapCacheManager;
 import com.duongame.file.FileHelper;
@@ -97,14 +96,11 @@ public class SearchRecyclerAdapter extends RecyclerView.Adapter<SearchRecyclerAd
     }
 
     boolean isThumbnailEnabled() {
-        AnalyticsApplication application = (AnalyticsApplication) context.getApplication();
-        boolean thumbnail = true;
-
-        // isThumbnail은 disable일때 true이다.
-        if (application != null) {
-            thumbnail = !application.isThumbnailDisabled();
+        try {
+            return !MainApplication.getInstance(context).isThumbnailDisabled();
+        } catch (NullPointerException e) {
+            return true;
         }
-        return thumbnail;
     }
 
     void setIconZip(SearchViewHolder holder, ExplorerItem item) {

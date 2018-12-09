@@ -1,7 +1,6 @@
 package com.duongame.fragment;
 
 import android.app.Activity;
-import android.app.Application;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
@@ -29,7 +28,6 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.ViewSwitcher;
 
-import com.duongame.AnalyticsApplication;
 import com.duongame.BuildConfig;
 import com.duongame.R;
 import com.duongame.activity.main.BaseMainActivity;
@@ -68,7 +66,6 @@ import com.duongame.view.Indicator;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Map;
 
 import static android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION;
 import static com.duongame.ExplorerConfig.MAX_THUMBNAILS;

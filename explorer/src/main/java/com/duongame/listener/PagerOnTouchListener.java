@@ -4,8 +4,10 @@ import android.os.AsyncTask;
 import android.view.MotionEvent;
 import android.view.View;
 
-import com.duongame.AnalyticsApplication;
+import com.duongame.MainApplication;
 import com.duongame.activity.viewer.PagerActivity;
+
+import org.mortbay.jetty.Main;
 
 import java.lang.ref.WeakReference;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -66,21 +68,19 @@ public class PagerOnTouchListener extends BaseOnTouchListener {
 
         @Override
         protected void onPostExecute(Void result) {
-            if (listener.getActionDownTime() < listener.getActionUpTime()) {
-                PagerActivity activity = listener.getActivityWeakReference().get();
-                if (activity != null) {
-                    // smooth 연산
-                    AnalyticsApplication application = (AnalyticsApplication) activity.getApplication();
+            try {
+                if (listener.getActionDownTime() < listener.getActionUpTime()) {
+                    PagerActivity activity = listener.getActivityWeakReference().get();
                     boolean smoothScroll = true;
-                    if (application != null) {
-                        smoothScroll = !application.isPagingAnimationDisabled();
+                    if (!MainApplication.getInstance(activity).isPagingAnimationDisabled()) {
+                        smoothScroll = false;
                     }
-
                     activity.getPager().setCurrentItem(page, smoothScroll);
                 }
-            }
+                listener.getIsTaskRunning().set(false);
+            } catch (NullPointerException e) {
 
-            listener.getIsTaskRunning().set(false);
+            }
         }
     }
 

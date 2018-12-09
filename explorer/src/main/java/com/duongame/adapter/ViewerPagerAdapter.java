@@ -4,7 +4,7 @@ import android.graphics.ColorMatrix;
 import android.support.v4.view.PagerAdapter;
 import android.view.View;
 
-import com.duongame.AnalyticsApplication;
+import com.duongame.MainApplication;
 import com.duongame.activity.viewer.PagerActivity;
 
 import java.util.ArrayList;
@@ -53,21 +53,23 @@ public abstract class ViewerPagerAdapter extends PagerAdapter {
     }
 
     ColorMatrix getColorMatrix() {
-        AnalyticsApplication application = (AnalyticsApplication) context.getApplication();
         ColorMatrix colorMatrix = new ColorMatrix(new float[]{
                 1, 0, 0, 0, 0,
                 0, 1, 0, 0, 0,
                 0, 0, 1, 0, 0,
                 0, 0, 0, 1, 0});
-        if (application != null) {
-            if (application.isNightMode()) {
+
+        try {
+            if (MainApplication.getInstance(context).isNightMode()) {
                 colorMatrix = new ColorMatrix(new float[]{
                         -1, 0, 0, 0, 192,
                         0, -1, 0, 0, 192,
                         0, 0, -1, 0, 192,
                         0, 0, 0, 1, 0});
             }
+            return colorMatrix;
+        } catch (NullPointerException e) {
+            return null;
         }
-        return colorMatrix;
     }
 }

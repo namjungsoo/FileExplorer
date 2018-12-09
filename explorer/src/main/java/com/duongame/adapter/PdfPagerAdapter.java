@@ -10,12 +10,13 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 
-import com.duongame.AnalyticsApplication;
+import com.duongame.MainApplication;
 import com.duongame.R;
 import com.duongame.activity.viewer.PagerActivity;
 import com.duongame.attacher.ImageViewAttacher;
-import com.duongame.bitmap.BitmapCacheManager;
 import com.duongame.listener.PagerOnTouchListener;
+
+import org.apache.commons.lang3.ObjectUtils;
 
 /**
  * Created by namjungsoo on 2016-12-25.
@@ -105,11 +106,14 @@ public class PdfPagerAdapter extends ViewerPagerAdapter {
                     imageView.setImageBitmap(bitmap);
 
                     //TODO: 무조건 해주지 않으면 안된다. 알파로 처리되어 있기 때문이다. (RENDER_MODE_FOR_DISPLAY)
-                    AnalyticsApplication application = (AnalyticsApplication) context.getApplication();
-                    if (application.isNightMode()) {
-                        imageView.setBackgroundColor(Color.BLACK);
-                    } else {
-                        imageView.setBackgroundColor(Color.WHITE);
+                    try {
+                        if (MainApplication.getInstance(context).isNightMode()) {
+                            imageView.setBackgroundColor(Color.BLACK);
+                        } else {
+                            imageView.setBackgroundColor(Color.WHITE);
+                        }
+                    } catch (NullPointerException e) {
+
                     }
 
                     imageView.setColorFilter(new ColorMatrixColorFilter(getColorMatrix()));

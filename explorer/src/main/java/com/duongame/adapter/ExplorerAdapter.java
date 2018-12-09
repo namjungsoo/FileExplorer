@@ -14,7 +14,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.target.ImageViewTarget;
-import com.duongame.AnalyticsApplication;
+import com.duongame.MainApplication;
 import com.duongame.BuildConfig;
 import com.duongame.GlideApp;
 import com.duongame.R;
@@ -244,14 +244,11 @@ public class ExplorerAdapter extends RecyclerView.Adapter<ExplorerAdapter.Explor
     }
 
     boolean isThumbnailEnabled() {
-        AnalyticsApplication application = (AnalyticsApplication) context.getApplication();
-        boolean thumbnailEnabled = true;
-
-        // isThumbnail은 disable일때 true이다.
-        if (application != null) {
-            thumbnailEnabled = !application.isThumbnailDisabled();
+        try {
+            return !MainApplication.getInstance(context).isThumbnailDisabled();
+        } catch (NullPointerException e) {
+            return true;
         }
-        return thumbnailEnabled;
     }
 
     void setIconZip(final ExplorerViewHolder viewHolder, ExplorerItem item) {

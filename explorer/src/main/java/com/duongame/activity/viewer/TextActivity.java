@@ -13,6 +13,7 @@ import android.widget.ScrollView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import com.duongame.MainApplication;
 import com.duongame.R;
 import com.duongame.db.Book;
 import com.duongame.db.BookDB;
@@ -93,12 +94,15 @@ public class TextActivity extends BaseViewerActivity {
         textContent.setTextSize(fontSize);
         textContent.setLineSpacing(0, 1.5f);
 
-        if (application.isNightMode()) {
-            scrollText.setBackgroundColor(Color.BLACK);
-            textContent.setTextColor(Color.rgb(192, 192, 192));
-        } else {
-            scrollText.setBackgroundColor(Color.WHITE);
-            textContent.setTextColor(Color.BLACK);
+        try {
+            if (MainApplication.getInstance(this).isNightMode()) {
+                scrollText.setBackgroundColor(Color.BLACK);
+                textContent.setTextColor(Color.rgb(192, 192, 192));
+            } else {
+                scrollText.setBackgroundColor(Color.WHITE);
+                textContent.setTextColor(Color.BLACK);
+            }
+        } catch (NullPointerException e) {
         }
 
         scrollText.setOnTouchListener(new TextOnTouchListener(this));
@@ -255,7 +259,7 @@ public class TextActivity extends BaseViewerActivity {
             @Override
             public void onClick(View v) {
                 int progress = seekPage.getProgress();
-                if(progress > 0) {
+                if (progress > 0) {
                     page = progress - 1;
                     updateTextView();
                     updateScrollInfo(progress - 1);
@@ -268,7 +272,7 @@ public class TextActivity extends BaseViewerActivity {
             public void onClick(View v) {
                 int progress = seekPage.getProgress();
                 int max = seekPage.getMax();
-                if(progress < max) {
+                if (progress < max) {
                     page = progress + 1;
                     updateTextView();
                     updateScrollInfo(progress + 1);
@@ -327,7 +331,7 @@ public class TextActivity extends BaseViewerActivity {
                 nRead = fileInputStream.read(buf);
                 //TODO: FIX: 빠른속도를 위해서 8192b만 읽어서 처리
                 //while ((nRead = fileInputStream.read(buf)) > 0 && !detector.isDone()) {
-                    detector.handleData(buf, 0, nRead);
+                detector.handleData(buf, 0, nRead);
                 //}
                 // (3)
                 detector.dataEnd();
