@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -132,13 +133,35 @@ public class BaseViewerActivity extends BaseActivity {
         }
     }
 
-    // UI의 색상을 변경시킨다. 그리고
+    // 현재 값을 읽어서 UI의 색상을 변경시킨다.
     void updateNightMode() {
+        ImageView iv;
+        TextView tv;
 
+        iv = findViewById(R.id.img_night);
+        tv = findViewById(R.id.text_night);
+        if (MainApplication.getInstance(BaseViewerActivity.this).isNightMode()) {
+            iv.setColorFilter(ContextCompat.getColor(this, android.R.color.holo_orange_light));
+            tv.setTextColor(ContextCompat.getColor(this, android.R.color.holo_orange_light));
+        } else {
+            iv.setColorFilter(ContextCompat.getColor(this, android.R.color.white));
+            tv.setTextColor(ContextCompat.getColor(this, android.R.color.white));
+        }
     }
 
     void updatePagingAnim() {
+        ImageView iv;
+        TextView tv;
 
+        iv = findViewById(R.id.img_anim);
+        tv = findViewById(R.id.text_anim);
+        if (MainApplication.getInstance(BaseViewerActivity.this).isNightMode()) {
+            iv.setColorFilter(ContextCompat.getColor(this, android.R.color.holo_orange_light));
+            tv.setTextColor(ContextCompat.getColor(this, android.R.color.holo_orange_light));
+        } else {
+            iv.setColorFilter(ContextCompat.getColor(this, android.R.color.white));
+            tv.setTextColor(ContextCompat.getColor(this, android.R.color.white));
+        }
     }
 
     protected void initToolBox() {
