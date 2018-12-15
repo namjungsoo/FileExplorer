@@ -1,8 +1,10 @@
 package com.duongame.adapter;
 
 import android.graphics.ColorMatrix;
+import android.graphics.ColorMatrixColorFilter;
 import android.support.v4.view.PagerAdapter;
 import android.view.View;
+import android.widget.ImageView;
 
 import com.duongame.MainApplication;
 import com.duongame.activity.viewer.PagerActivity;
@@ -71,5 +73,12 @@ public abstract class ViewerPagerAdapter extends PagerAdapter {
         } catch (NullPointerException e) {
             return null;
         }
+    }
+
+    public void updateColorFilter(ImageView imageView) {
+        if (imageView == null)
+            return;
+
+        imageView.setColorFilter(new ColorMatrixColorFilter(getColorMatrix()));
     }
 }

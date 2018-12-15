@@ -116,7 +116,8 @@ public class PdfPagerAdapter extends ViewerPagerAdapter {
 
                     }
 
-                    imageView.setColorFilter(new ColorMatrixColorFilter(getColorMatrix()));
+                    updateColorFilter(imageView);
+
                     // 이미지 확대 축소
                     // 및 matrix을 사용하여 화면 가운데 정렬
                     item.attacher = new ImageViewAttacher(imageView);

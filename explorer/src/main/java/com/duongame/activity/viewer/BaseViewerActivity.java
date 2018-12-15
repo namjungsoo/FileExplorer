@@ -134,7 +134,7 @@ public class BaseViewerActivity extends BaseActivity {
     }
 
     // 현재 값을 읽어서 UI의 색상을 변경시킨다.
-    void updateNightMode() {
+    protected void updateNightMode() {
         ImageView iv;
         TextView tv;
 
@@ -155,7 +155,7 @@ public class BaseViewerActivity extends BaseActivity {
 
         iv = findViewById(R.id.img_anim);
         tv = findViewById(R.id.text_anim);
-        if (MainApplication.getInstance(BaseViewerActivity.this).isNightMode()) {
+        if (!MainApplication.getInstance(BaseViewerActivity.this).isPagingAnimationDisabled()) {
             iv.setColorFilter(ContextCompat.getColor(this, android.R.color.holo_orange_light));
             tv.setTextColor(ContextCompat.getColor(this, android.R.color.holo_orange_light));
         } else {

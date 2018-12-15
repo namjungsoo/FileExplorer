@@ -72,7 +72,7 @@ public class PagerOnTouchListener extends BaseOnTouchListener {
                 if (listener.getActionDownTime() < listener.getActionUpTime()) {
                     PagerActivity activity = listener.getActivityWeakReference().get();
                     boolean smoothScroll = true;
-                    if (!MainApplication.getInstance(activity).isPagingAnimationDisabled()) {
+                    if (MainApplication.getInstance(activity).isPagingAnimationDisabled()) {
                         smoothScroll = false;
                     }
                     activity.getPager().setCurrentItem(page, smoothScroll);

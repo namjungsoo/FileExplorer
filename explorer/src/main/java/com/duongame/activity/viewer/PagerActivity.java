@@ -71,6 +71,26 @@ public class PagerActivity extends BaseViewerActivity {
     Handler handler = new TimerHandler();
 
     @Override
+    protected void updateNightMode() {
+        super.updateNightMode();
+
+        if(pager == null)
+            return;
+
+        int count = pager.getChildCount();
+        for (int i = 0; i < count; i++) {
+            View view = pager.getChildAt(i);
+            if (view == null)
+                continue;
+            ImageView imageView = view.findViewById(R.id.image_viewer);
+            if (imageView == null)
+                continue;
+
+            pagerAdapter.updateColorFilter(imageView);
+        }
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         contentViewResId = R.layout.activity_pager;
         super.onCreate(savedInstanceState);
@@ -101,7 +121,7 @@ public class PagerActivity extends BaseViewerActivity {
                     // smooth 연산
                     boolean smoothScroll = true;
                     try {
-                        if (!MainApplication.getInstance(PagerActivity.this).isPagingAnimationDisabled()) {
+                        if (MainApplication.getInstance(PagerActivity.this).isPagingAnimationDisabled()) {
                             smoothScroll = false;
                         }
                     } catch (NullPointerException e) {

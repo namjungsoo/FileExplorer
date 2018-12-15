@@ -102,7 +102,7 @@ public class PhotoPagerAdapter extends ViewerPagerAdapter {
         item.attacher.setActivity(context);
         taskList.add(task);
 
-        imageView.setColorFilter(new ColorMatrixColorFilter(getColorMatrix()));
+        updateColorFilter(imageView);
     }
 
     @Override
