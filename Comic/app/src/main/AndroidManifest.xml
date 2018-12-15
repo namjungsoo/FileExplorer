@@ -88,7 +88,7 @@
         <!--android:value="479ae7d868a353eb8da82e059fd1a04418af3cf3" />-->
     <meta-data
         android:name="firebase_crashlytics_collection_enabled"
-        android:value="false" />
+        android:value="${crashlyticsEnabled}" />
 
     <!-- google drive -->
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />

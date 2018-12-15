@@ -44,7 +44,7 @@ public class BaseActivity extends AppCompatActivity {
 
     private void setupFabric() {
         CrashlyticsCore crashlyticsCore = new CrashlyticsCore.Builder()
-                .disabled(BuildConfig.DEBUG)
+//                .disabled(BuildConfig.DEBUG)
                 .build();
         Fabric.with(this, new Crashlytics.Builder().core(crashlyticsCore).build());
     }
@@ -52,10 +52,10 @@ public class BaseActivity extends AppCompatActivity {
     private void setupFirebase() {
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
         // 디버그 개발중에는 크래쉬 오류 보고 하지 않음
-        if (BuildConfig.DEBUG)
-            FirebaseCrash.setCrashCollectionEnabled(false);
-        else
-            FirebaseCrash.setCrashCollectionEnabled(true);
+//        if (BuildConfig.DEBUG)
+//            FirebaseCrash.setCrashCollectionEnabled(false);
+//        else
+//            FirebaseCrash.setCrashCollectionEnabled(true);
     }
 
     @Override
