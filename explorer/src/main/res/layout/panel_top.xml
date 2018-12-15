@@ -81,7 +81,7 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="38dp"
-            android:layout_marginEnd="20dp"
+            android:layout_marginEnd="10dp"
             android:layout_gravity="end">
             <Button
                 android:layout_width="30dp"
@@ -118,7 +118,15 @@
                 android:text="+"
                 android:visibility="invisible"
                 android:id="@+id/plus_time"/>
-
+            <ImageView
+                android:id="@+id/settings"
+                android:layout_width="38dp"
+                android:layout_height="38dp"
+                android:padding="4dp"
+                android:src="@drawable/ic_menu_settings"
+                android:tint="@android:color/white"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                />
         </LinearLayout>
         <ViewSwitcher
             android:id="@+id/switcher_info"

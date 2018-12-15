@@ -47,9 +47,6 @@ public class TextActivity extends BaseViewerActivity {
     private TextView textContent;
     private ProgressBar progressBar;
 
-    private Button leftPage;
-    private Button rightPage;
-
     private String path;
     private String name;
 
@@ -81,29 +78,45 @@ public class TextActivity extends BaseViewerActivity {
     };
 
     @Override
+    protected void updateNightMode() {
+        super.updateNightMode();
+
+        updateNightModeText();
+    }
+
+    void updateNightModeText() {
+        try {
+            if (MainApplication.getInstance(this).isNightMode()) {
+                if(scrollText != null)
+                    scrollText.setBackgroundColor(Color.BLACK);
+                if(textContent != null)
+                    textContent.setTextColor(Color.rgb(192, 192, 192));
+            } else {
+                if(scrollText != null)
+                    scrollText.setBackgroundColor(Color.WHITE);
+                if(textContent != null)
+                    textContent.setTextColor(Color.BLACK);
+            }
+        } catch (NullPointerException e) {
+        }
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         contentViewResId = R.layout.activity_text;
+
+        // onCreate안에서 updateNightModeText가 호출됨
         super.onCreate(savedInstanceState);
 
         initToolBox();
 
         scrollText = findViewById(R.id.scroll_text);
-
         textContent = findViewById(R.id.text_content);
         textContent.setTypeface(FontManager.getTypeFaceNanumMeyongjo(this));
         textContent.setTextSize(fontSize);
         textContent.setLineSpacing(0, 1.5f);
 
-        try {
-            if (MainApplication.getInstance(this).isNightMode()) {
-                scrollText.setBackgroundColor(Color.BLACK);
-                textContent.setTextColor(Color.rgb(192, 192, 192));
-            } else {
-                scrollText.setBackgroundColor(Color.WHITE);
-                textContent.setTextColor(Color.BLACK);
-            }
-        } catch (NullPointerException e) {
-        }
+        updateNightModeText();
 
         scrollText.setOnTouchListener(new TextOnTouchListener(this));
         scrollText.getViewTreeObserver().addOnScrollChangedListener(new ViewTreeObserver.OnScrollChangedListener() {
@@ -230,6 +243,8 @@ public class TextActivity extends BaseViewerActivity {
     protected void initToolBox() {
         super.initToolBox();
 
+        pagingAnim.setVisibility(View.INVISIBLE);
+
         seekPage.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             boolean dragging;
 
@@ -254,7 +269,6 @@ public class TextActivity extends BaseViewerActivity {
             }
         });
 
-        leftPage = findViewById(R.id.left_page);
         leftPage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -266,7 +280,7 @@ public class TextActivity extends BaseViewerActivity {
                 }
             }
         });
-        rightPage = findViewById(R.id.right_page);
+
         rightPage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

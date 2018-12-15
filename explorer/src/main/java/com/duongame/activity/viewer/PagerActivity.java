@@ -74,7 +74,7 @@ public class PagerActivity extends BaseViewerActivity {
     protected void updateNightMode() {
         super.updateNightMode();
 
-        if(pager == null)
+        if (pager == null)
             return;
 
         int count = pager.getChildCount();
@@ -104,6 +104,19 @@ public class PagerActivity extends BaseViewerActivity {
         setFullscreen(true);
     }
 
+    boolean getSmoothScroll() {
+        // smooth 연산
+        boolean smoothScroll = true;
+        try {
+            if (MainApplication.getInstance(PagerActivity.this).isPagingAnimationDisabled()) {
+                smoothScroll = false;
+            }
+        } catch (NullPointerException e) {
+
+        }
+        return smoothScroll;
+    }
+
     void resumeTimer() {
         if (getFullscreen() && autoTime > 0 && lastAutoTime != autoTime) {// 이제 타이머를 시작
             JLog.e(TAG, "resumeTimer autoTime=" + autoTime);
@@ -118,19 +131,9 @@ public class PagerActivity extends BaseViewerActivity {
                     if (current == pagerAdapter.getCount() - 1)
                         return;
 
-                    // smooth 연산
-                    boolean smoothScroll = true;
-                    try {
-                        if (MainApplication.getInstance(PagerActivity.this).isPagingAnimationDisabled()) {
-                            smoothScroll = false;
-                        }
-                    } catch (NullPointerException e) {
-
-                    }
-
                     PagingInfo info = new PagingInfo();
                     info.page = current + 1;
-                    info.smoothScroll = smoothScroll;
+                    info.smoothScroll = getSmoothScroll();
                     info.pager = pager;
                     Message msg = new Message();
                     msg.obj = info;
@@ -266,6 +269,28 @@ public class PagerActivity extends BaseViewerActivity {
 
                 JLog.e("PagerActivity", "setCurrentItem");
                 pager.setCurrentItem(page, false);
+            }
+        });
+
+        leftPage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int current = pager.getCurrentItem();
+                if (current > 0) {
+                    boolean smooth = getSmoothScroll();
+                    pager.setCurrentItem(current - 1, smooth);
+                }
+            }
+        });
+
+        rightPage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int current = pager.getCurrentItem();
+                if (current == pagerAdapter.getCount() - 1)
+                    return;
+                boolean smooth = getSmoothScroll();
+                pager.setCurrentItem(current + 1, smooth);
             }
         });
     }

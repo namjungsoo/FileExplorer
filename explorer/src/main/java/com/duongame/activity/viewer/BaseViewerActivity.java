@@ -1,9 +1,11 @@
 package com.duongame.activity.viewer;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.util.DisplayMetrics;
@@ -15,6 +17,7 @@ import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -25,6 +28,7 @@ import com.duongame.MainApplication;
 import com.duongame.BuildConfig;
 import com.duongame.R;
 import com.duongame.activity.BaseActivity;
+import com.duongame.activity.SettingsActivity;
 import com.duongame.bitmap.BitmapCacheManager;
 import com.duongame.helper.JLog;
 import com.duongame.manager.AdBannerManager;
@@ -57,8 +61,11 @@ public class BaseViewerActivity extends BaseActivity {
     //private View mainView;
     private AdView adView;
 
-    LinearLayout nightMode;
-    LinearLayout pagingAnim;
+    protected LinearLayout nightMode;
+    protected LinearLayout pagingAnim;
+
+    protected Button leftPage;
+    protected Button rightPage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -242,7 +249,17 @@ public class BaseViewerActivity extends BaseActivity {
             }
         });
 
+        ImageView settings = findViewById(R.id.settings);
+        settings.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = SettingsActivity.getLocalIntent(BaseViewerActivity.this);
+                startActivity(intent);
+            }
+        });
 
+        leftPage = findViewById(R.id.left_page);
+        rightPage = findViewById(R.id.right_page);
     }
 
     public boolean getFullscreen() {
