@@ -25,7 +25,6 @@ public class BaseFragment extends Fragment {
     public final static int CLOUD_GOOGLEDRIVE = 2;
 
     // Search
-    protected MainApplication application;
     protected FileExplorer fileExplorer;
     protected FileExplorer.Result fileResult;
     protected int cloud = CLOUD_LOCAL;

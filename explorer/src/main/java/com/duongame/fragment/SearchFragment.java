@@ -16,6 +16,7 @@ import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.ViewSwitcher;
 
+import com.duongame.MainApplication;
 import com.duongame.R;
 import com.duongame.adapter.ExplorerItem;
 import com.duongame.adapter.SearchRecyclerAdapter;
@@ -61,20 +62,19 @@ public class SearchFragment extends BaseFragment {
                 return false;
             }
 
-            fragment.fileResult = fragment.fileExplorer.setKeyword(keyword)
-                    .setExtensions(ext)
-                    .setRecursiveDirectory(true)
-                    .setExcludeDirectory(true)
-                    .setImageListEnable(false)
-                    .search(fragment.application.getInitialPath());
-
-            fragment = fragmentWeakReference.get();
-            if (fragment == null) {
+            FragmentActivity activity = fragment.getActivity();
+            if (activity == null) {
                 return false;
             }
 
-            FragmentActivity activity = fragment.getActivity();
-            if (activity == null) {
+            try {
+                fragment.fileResult = fragment.fileExplorer.setKeyword(keyword)
+                        .setExtensions(ext)
+                        .setRecursiveDirectory(true)
+                        .setExcludeDirectory(true)
+                        .setImageListEnable(false)
+                        .search(MainApplication.getInstance(activity).getInitialPath());
+            } catch (NullPointerException e) {
                 return false;
             }
 
