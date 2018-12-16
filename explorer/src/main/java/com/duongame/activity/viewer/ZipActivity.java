@@ -51,6 +51,19 @@ public class ZipActivity extends PagerActivity {
         this.side = side;
     }
 
+    @Override
+    public void gotoNextBook() {
+        super.gotoNextBook();
+
+        if(isGoingNextBook)
+            return;
+
+        // 팝업을 띄운다.
+
+        // 확인시 현재 위치에서 Activity를 재시작 한다.
+        // 옵션을 어떻게 넣을지 확인한다.
+    }
+
     // 퍼센트를 기록함
     @Override
     protected void updateScrollInfo(int position) {

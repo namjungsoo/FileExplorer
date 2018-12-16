@@ -51,10 +51,12 @@ public class PagerActivity extends BaseViewerActivity {
 
     private GifImageView gifImageView;
 
-    int autoTime, lastAutoTime;
-    TextView textAutoTime;
-    Button btnPlusTime, btnMinusTime;
-    Timer timer;
+    private int autoTime, lastAutoTime;
+    private TextView textAutoTime;
+    private Button btnPlusTime, btnMinusTime;
+    private Timer timer;
+
+    protected boolean isGoingNextBook;
 
     static class PagingInfo {
         int page;
