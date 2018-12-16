@@ -17,6 +17,7 @@ import com.duongame.bitmap.BitmapCacheManager;
 import com.duongame.helper.JLog;
 import com.duongame.helper.PreferenceHelper;
 import com.duongame.listener.PagerOnTouchListener;
+import com.duongame.view.ViewPagerEx;
 import com.felipecsl.gifimageview.library.GifImageView;
 
 import java.util.Timer;
@@ -34,6 +35,8 @@ import java.util.TimerTask;
 public class PagerActivity extends BaseViewerActivity {
     private static final String TAG = PagerActivity.class.getSimpleName();
     private final static int AUTO_PAGING = 1;
+    private final static int GOTO_NEXTBOOK = 2;
+
     public final static int SEC_TO_MS = 1000;
     public final static int AUTO_SEC_MAX = 10;
 
@@ -42,7 +45,7 @@ public class PagerActivity extends BaseViewerActivity {
     protected String name;
     protected long size;// zip 파일의 용량
 
-    protected ViewPager pager;
+    protected ViewPagerEx pager;
     protected ViewerPagerAdapter pagerAdapter;
     protected boolean isPagerIdle = true;
 
@@ -56,14 +59,17 @@ public class PagerActivity extends BaseViewerActivity {
     static class PagingInfo {
         int page;
         boolean smoothScroll;
-        ViewPager pager;
+        ViewPagerEx pager;
+        PagerActivity activity;
     }
 
     static class TimerHandler extends Handler {
         public void handleMessage(Message msg) {
+            PagingInfo info = (PagingInfo) msg.obj;
             if (msg.what == AUTO_PAGING) {
-                PagingInfo info = (PagingInfo) msg.obj;
                 info.pager.setCurrentItem(info.page, info.smoothScroll);
+            } else if (msg.what == GOTO_NEXTBOOK) {
+                info.activity.gotoNextBook();
             }
         }
     }
@@ -128,16 +134,19 @@ public class PagerActivity extends BaseViewerActivity {
                     int current = pager.getCurrentItem();
 
                     //TODO: 마지막 페이지
-                    if (current == pagerAdapter.getCount() - 1)
-                        return;
-
                     PagingInfo info = new PagingInfo();
-                    info.page = current + 1;
-                    info.smoothScroll = getSmoothScroll();
-                    info.pager = pager;
                     Message msg = new Message();
-                    msg.obj = info;
-                    msg.what = AUTO_PAGING;
+                    if (current == pagerAdapter.getCount() - 1) {
+                        info.activity = PagerActivity.this;
+                        msg.obj = info;
+                        msg.what = GOTO_NEXTBOOK;
+                    } else {
+                        info.page = current + 1;
+                        info.smoothScroll = getSmoothScroll();
+                        info.pager = pager;
+                        msg.obj = info;
+                        msg.what = AUTO_PAGING;
+                    }
                     handler.sendMessage(msg);
                 }
             }, autoTime * SEC_TO_MS, autoTime * SEC_TO_MS);
@@ -287,10 +296,12 @@ public class PagerActivity extends BaseViewerActivity {
             @Override
             public void onClick(View v) {
                 int current = pager.getCurrentItem();
-                if (current == pagerAdapter.getCount() - 1)
-                    return;
-                boolean smooth = getSmoothScroll();
-                pager.setCurrentItem(current + 1, smooth);
+                if (current == pagerAdapter.getCount() - 1) {
+                    gotoNextBook();
+                } else {
+                    boolean smooth = getSmoothScroll();
+                    pager.setCurrentItem(current + 1, smooth);
+                }
             }
         });
     }
@@ -337,15 +348,36 @@ public class PagerActivity extends BaseViewerActivity {
 
     }
 
+    public void gotoNextBook() {
+        // 마지막 페이지를 드래깅 하고 잇는 것임
+        JLog.w(TAG, "onPageScrolled last page dragging");
+
+        //TODO: PDF와 ZIP에 대해서만 다음 책을 읽을수 있다.
+    }
+
     protected void initPagerListeners() {
         pager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+
+            int lastState;
+
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-//                textName.setText(pagerAdapter.getImageList().get(position).name);
+                JLog.w(TAG, "onPageScrolled position=" + position + " positionOffset=" + positionOffset + " positionOffsetPixels=" + positionOffsetPixels);
+
+                if (pagerAdapter == null) {
+                    return;
+                }
+
+                if (pagerAdapter.getCount() == position + 1) {
+                    if (lastState == ViewPager.SCROLL_STATE_DRAGGING) {
+                        gotoNextBook();
+                    }
+                }
             }
 
             @Override
             public void onPageSelected(int position) {
+                JLog.w(TAG, "onPageSelected position=" + position);
                 updateScrollInfo(position);
                 updateName(position);
                 updateInfo(position);
@@ -353,23 +385,7 @@ public class PagerActivity extends BaseViewerActivity {
 
             @Override
             public void onPageScrollStateChanged(int state) {
-
-            }
-        });
-
-        pager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-            }
-
-            @Override
-            public void onPageSelected(int position) {
-
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
+                JLog.w(TAG, "onPageScrollStateChanged state=" + state);
                 switch (state) {
                     case ViewPager.SCROLL_STATE_IDLE:
                         isPagerIdle = true;
@@ -379,6 +395,7 @@ public class PagerActivity extends BaseViewerActivity {
                         isPagerIdle = false;
                         break;
                 }
+                lastState = state;
             }
         });
 

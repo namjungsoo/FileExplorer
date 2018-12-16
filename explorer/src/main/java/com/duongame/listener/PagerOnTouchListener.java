@@ -30,19 +30,19 @@ public class PagerOnTouchListener extends BaseOnTouchListener {
         activityWeakReference = new WeakReference<PagerActivity>(activity);
     }
 
-    long getActionUpTime() {
+    private long getActionUpTime() {
         return actionUpTime;
     }
 
-    long getActionDownTime() {
+    private long getActionDownTime() {
         return actionDownTime;
     }
 
-    WeakReference<PagerActivity> getActivityWeakReference() {
+    private WeakReference<PagerActivity> getActivityWeakReference() {
         return activityWeakReference;
     }
 
-    AtomicBoolean getIsTaskRunning() {
+    private AtomicBoolean getIsTaskRunning() {
         return isTaskRunning;
     }
 
@@ -163,6 +163,9 @@ public class PagerOnTouchListener extends BaseOnTouchListener {
                         PagingTask task = new PagingTask(page + 1, this);
                         task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                     }
+                } else {
+                    // 마지막 페이지 이면
+                    activity.gotoNextBook();
                 }
             } else {
                 if (!isTaskRunning.getAndSet(true)) {

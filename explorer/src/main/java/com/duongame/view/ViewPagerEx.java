@@ -39,6 +39,7 @@ public class ViewPagerEx extends android.support.v4.view.ViewPager {
         return false;
     }
 
+    // Custom view… overrides onTouchEvent but not performClick
     @Override
     public boolean performClick() {
         return super.performClick();
