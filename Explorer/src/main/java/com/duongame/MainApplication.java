@@ -17,6 +17,7 @@ import java.util.ArrayList;
 public class MainApplication extends MultiDexApplication {
     // path
     private ArrayList<ExplorerItem> imageList;
+    private ArrayList<ExplorerItem> fileList;
     private final String initialPath = Environment.getExternalStorageDirectory().getAbsolutePath();
     private String lastPath;
 
@@ -52,6 +53,14 @@ public class MainApplication extends MultiDexApplication {
 
     public ArrayList<ExplorerItem> getImageList() {
         return imageList;
+    }
+
+    public void setFileList(ArrayList<ExplorerItem> fileList) {
+        this.fileList = fileList;
+    }
+
+    public ArrayList<ExplorerItem> getFileList() {
+        return fileList;
     }
 
     public String getInitialPath() {

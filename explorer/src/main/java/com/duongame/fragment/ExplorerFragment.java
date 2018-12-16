@@ -157,7 +157,6 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
     private boolean pasteMode = false;// 붙여넣기 모드는 뒤로가기 버튼이 있고
     private String capturePath;
 
-
     // 정렬
     private int sortType;
     private int sortDirection;

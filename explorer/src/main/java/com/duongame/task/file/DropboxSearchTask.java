@@ -144,6 +144,7 @@ public class DropboxSearchTask extends AsyncTask<String, Void, FileExplorer.Resu
             //FIX: Index Out of Bound
             // 쓰레드에서 메인쓰레드로 옮김
             fragment.setFileList(result.fileList);
+            MainApplication.getInstance(fragment.getActivity()).setFileList(result.fileList);
             MainApplication.getInstance(fragment.getActivity()).setImageList(result.imageList);
             fragment.getAdapter().setFileList(fragment.getFileList());
 

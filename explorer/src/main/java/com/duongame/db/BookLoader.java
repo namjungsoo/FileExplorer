@@ -38,6 +38,10 @@ public class BookLoader {
     private static ArrayList<String> seriesList;
     private static int seriesPosition;
 
+    static String findNextBook(Activity context) {
+
+    }
+    
     //TODO: 마지막 책읽기는 comicz만 수행
     // 액티비티 시작할때
     public static boolean openLastBook(Activity context) {
@@ -115,44 +119,44 @@ public class BookLoader {
     }
 
     // 탐색기에서 클릭하여 로딩할 경우
-    private static Intent getIntentNew(final Activity context, ExplorerItem item) {
-        Class<?> cls;
-        switch (FileHelper.getCompressType(item.path)) {
-            case ExplorerItem.COMPRESSTYPE_ZIP:
-            case ExplorerItem.COMPRESSTYPE_RAR:
-            case ExplorerItem.COMPRESSTYPE_SEVENZIP:
-                cls = ZipActivity.class;
-                break;
-            default:
-                if (item.path.endsWith(".pdf")) {
-                    cls = PdfActivity.class;
-                } else if (FileHelper.isText(item.path)) {
-                    cls = TextActivity.class;
-                } else {
-                    return null;
-                }
-                break;
-        }
-
-        final Intent intent = new Intent(context, cls);
-        intent.putExtra("path", item.path);
-        intent.putExtra("name", item.name);
-        intent.putExtra("current_page", 0);
-        intent.putExtra("size", item.size);
-        intent.putExtra("current_file", 0);
-        intent.putExtra("extract_file", 0);
-
-        int side = ExplorerItem.SIDE_LEFT;
-        try {
-            if (MainApplication.getInstance(context).isJapaneseDirection()) {
-                side = ExplorerItem.SIDE_RIGHT;
-            }
-        } catch (NullPointerException e) {
-
-        }
-        intent.putExtra("side", side);
-        return intent;
-    }
+//    private static Intent getIntentNew(final Activity context, ExplorerItem item) {
+//        Class<?> cls;
+//        switch (FileHelper.getCompressType(item.path)) {
+//            case ExplorerItem.COMPRESSTYPE_ZIP:
+//            case ExplorerItem.COMPRESSTYPE_RAR:
+//            case ExplorerItem.COMPRESSTYPE_SEVENZIP:
+//                cls = ZipActivity.class;
+//                break;
+//            default:
+//                if (item.path.endsWith(".pdf")) {
+//                    cls = PdfActivity.class;
+//                } else if (FileHelper.isText(item.path)) {
+//                    cls = TextActivity.class;
+//                } else {
+//                    return null;
+//                }
+//                break;
+//        }
+//
+//        final Intent intent = new Intent(context, cls);
+//        intent.putExtra("path", item.path);
+//        intent.putExtra("name", item.name);
+//        intent.putExtra("current_page", 0);
+//        intent.putExtra("size", item.size);
+//        intent.putExtra("current_file", 0);
+//        intent.putExtra("extract_file", 0);
+//
+//        int side = ExplorerItem.SIDE_LEFT;
+//        try {
+//            if (MainApplication.getInstance(context).isJapaneseDirection()) {
+//                side = ExplorerItem.SIDE_RIGHT;
+//            }
+//        } catch (NullPointerException e) {
+//
+//        }
+//        intent.putExtra("side", side);
+//        return intent;
+//    }
 
     // 기존에 읽던 책을 처음부터 다시 로딩할 경우
     private static Intent getIntentNew(final Activity context, Book book) {
@@ -187,9 +191,26 @@ public class BookLoader {
     }
 
     private static void loadNew(final Activity context, ExplorerItem item) {
-        Intent intent = getIntentNew(context, item);
-        if (intent != null)
-            context.startActivity(intent);
+        Book book = new Book();
+        book.path = item.path;
+        book.name = item.name;
+        book.current_page = 0;
+        book.size = item.size;
+        book.current_file = 0;
+        book.extract_file = 0;
+        book.side = ExplorerItem.SIDE_LEFT;
+        try {
+            if (MainApplication.getInstance(context).isJapaneseDirection()) {
+                book.side = ExplorerItem.SIDE_RIGHT;
+            }
+        } catch (NullPointerException e) {
+
+        }
+
+        loadNew(context, book);
+//        Intent intent = getIntentNew(context, item);
+//        if (intent != null)
+//            context.startActivity(intent);
     }
 
     private static void loadNew(final Activity context, Book book) {
@@ -220,7 +241,7 @@ public class BookLoader {
         holder.more.setVisibility(View.GONE);
     }
 
-    public static void loadWithAlert(final Activity context, final Book book, final boolean cancelToRead) {
+    static void loadWithAlert(final Activity context, final Book book, final boolean cancelToRead) {
         View view = context.getLayoutInflater().inflate(R.layout.history_item, null, false);
         updateHistoryItem(context, view, book);
 
