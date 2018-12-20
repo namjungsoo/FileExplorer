@@ -192,10 +192,9 @@ public class BookDB extends SQLiteOpenHelper {
                     + " WHERE path='" + book.path + "'";
             db.execSQL(sql2);
         } else {// 없으면 추가
-            int type = book.type;
             final String sql2 = "INSERT INTO book VALUES('" + book.path
                     + "','" + book.name
-                    + "'," + type
+                    + "'," + book.type
                     + "," + book.size
                     + "," + book.total_file
 
