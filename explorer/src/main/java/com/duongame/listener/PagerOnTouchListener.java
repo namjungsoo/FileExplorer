@@ -7,8 +7,6 @@ import android.view.View;
 import com.duongame.MainApplication;
 import com.duongame.activity.viewer.PagerActivity;
 
-import org.mortbay.jetty.Main;
-
 import java.lang.ref.WeakReference;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -157,7 +155,7 @@ public class PagerOnTouchListener extends BaseOnTouchListener {
                 //int total_file = pager.getChildCount();
                 int count = activity.getPagerAdapter().getCount();
                 int page = activity.getPager().getCurrentItem();
-                if (page < count + 1) {
+                if (page < count - 1) {
                     if (!isTaskRunning.getAndSet(true)) {
                         actionUpTime = System.currentTimeMillis();
                         PagingTask task = new PagingTask(page + 1, this);
@@ -165,7 +163,7 @@ public class PagerOnTouchListener extends BaseOnTouchListener {
                     }
                 } else {
                     // 마지막 페이지 이면
-                    activity.gotoNextBook();
+                    activity.openNextBook();
                 }
             } else {
                 if (!isTaskRunning.getAndSet(true)) {

@@ -52,16 +52,17 @@ public class ZipActivity extends PagerActivity {
     }
 
     @Override
-    public void gotoNextBook() {
-        super.gotoNextBook();
+    public void openNextBook() {
+        super.openNextBook();
 
-        if(isGoingNextBook)
+        if (isGoingNextBook)
             return;
 
-        // 팝업을 띄운다.
+        if (nextBook == null)
+            return;
 
-        // 확인시 현재 위치에서 Activity를 재시작 한다.
-        // 옵션을 어떻게 넣을지 확인한다.
+        if(AppHelper.isComicz(this))
+            openNextBookWithPopup();
     }
 
     // 퍼센트를 기록함
@@ -205,8 +206,9 @@ public class ZipActivity extends PagerActivity {
             name = extras.getString("name");
             size = extras.getLong("size");
             extractFileCount = extras.getInt("extract_file");
-            int intentSide = extras.getInt("side");
-            side = intentSide;
+            side = extras.getInt("side");
+            nextBook = extras.getString("next_book");
+
             lastSide = side;
 
             // initPagerAdapter의 기능이다.

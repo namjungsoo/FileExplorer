@@ -1,5 +1,6 @@
 package com.duongame.activity.viewer;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -10,10 +11,15 @@ import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import com.duongame.BuildConfig;
 import com.duongame.MainApplication;
 import com.duongame.R;
 import com.duongame.adapter.ViewerPagerAdapter;
 import com.duongame.bitmap.BitmapCacheManager;
+import com.duongame.db.BookLoader;
+import com.duongame.file.FileHelper;
+import com.duongame.helper.AlertHelper;
+import com.duongame.helper.AppHelper;
 import com.duongame.helper.JLog;
 import com.duongame.helper.PreferenceHelper;
 import com.duongame.listener.PagerOnTouchListener;
@@ -57,6 +63,7 @@ public class PagerActivity extends BaseViewerActivity {
     private Timer timer;
 
     protected boolean isGoingNextBook;
+    protected String nextBook;
 
     static class PagingInfo {
         int page;
@@ -71,12 +78,59 @@ public class PagerActivity extends BaseViewerActivity {
             if (msg.what == AUTO_PAGING) {
                 info.pager.setCurrentItem(info.page, info.smoothScroll);
             } else if (msg.what == GOTO_NEXTBOOK) {
-                info.activity.gotoNextBook();
+                info.activity.openNextBook();
             }
         }
     }
 
     Handler handler = new TimerHandler();
+
+    protected void openNextBookWithPopup() {
+        isGoingNextBook = true;
+
+        // 팝업을 띄운다.
+        // 확인시 현재 위치에서 Activity를 재시작 한다.
+        String fileName = FileHelper.getFileName(nextBook);
+        String message = String.format(getString(R.string.msg_next_book), fileName);
+
+        if (BuildConfig.SHOW_AD) {
+            AlertHelper.showAlertWithAd(this,
+                    AppHelper.getAppName(this),
+                    message,
+                    new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            BookLoader.openNextBook(PagerActivity.this, nextBook);
+                        }
+                    }, new DialogInterface.OnClickListener() {// 취소일 경우 액티비티 닫음
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            PagerActivity.this.finish();
+                        }
+                    }, null
+            );
+        } else {
+            AlertHelper.showAlert(this,
+                    AppHelper.getAppName(this),
+                    message,
+                    null,
+                    new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            BookLoader.openNextBook(PagerActivity.this, nextBook);
+                        }
+                    }, new DialogInterface.OnClickListener() {// 취소일 경우 액티비티 닫음
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            PagerActivity.this.finish();
+                        }
+                    }, null
+            );
+        }
+
+        // 옵션을 어떻게 넣을지 확인한다.
+        isGoingNextBook = false;
+    }
 
     @Override
     protected void updateNightMode() {
@@ -299,7 +353,7 @@ public class PagerActivity extends BaseViewerActivity {
             public void onClick(View v) {
                 int current = pager.getCurrentItem();
                 if (current == pagerAdapter.getCount() - 1) {
-                    gotoNextBook();
+                    openNextBook();
                 } else {
                     boolean smooth = getSmoothScroll();
                     pager.setCurrentItem(current + 1, smooth);
@@ -350,7 +404,7 @@ public class PagerActivity extends BaseViewerActivity {
 
     }
 
-    public void gotoNextBook() {
+    public void openNextBook() {
         // 마지막 페이지를 드래깅 하고 잇는 것임
         JLog.w(TAG, "onPageScrolled last page dragging");
 
@@ -372,7 +426,7 @@ public class PagerActivity extends BaseViewerActivity {
 
                 if (pagerAdapter.getCount() == position + 1) {
                     if (lastState == ViewPager.SCROLL_STATE_DRAGGING) {
-                        gotoNextBook();
+                        openNextBook();
                     }
                 }
             }

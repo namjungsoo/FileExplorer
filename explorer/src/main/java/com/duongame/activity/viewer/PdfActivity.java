@@ -1,12 +1,10 @@
 package com.duongame.activity.viewer;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.graphics.pdf.PdfRenderer;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.ParcelFileDescriptor;
-import android.view.View;
 
 import com.duongame.adapter.ExplorerItem;
 import com.duongame.db.Book;
@@ -17,7 +15,6 @@ import com.duongame.adapter.PdfPagerAdapter;
 import com.duongame.adapter.ViewerPagerAdapter;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -30,6 +27,20 @@ public class PdfActivity extends PagerActivity {
     private PdfRenderer renderer;
     private PdfPagerAdapter adapter;
     private long size;// zip 파일의 용량
+
+    @Override
+    public void openNextBook() {
+        super.openNextBook();
+
+        if (isGoingNextBook)
+            return;
+
+        if (nextBook == null)
+            return;
+
+        if(AppHelper.isComicz(this))
+            openNextBookWithPopup();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,6 +114,7 @@ public class PdfActivity extends PagerActivity {
             path = extras.getString("path");
             name = extras.getString("name");
             size = extras.getLong("size");
+            nextBook = extras.getString("next_book");
 
             textSize.setText(FileHelper.getMinimizedSize(size));
 
@@ -133,13 +145,9 @@ public class PdfActivity extends PagerActivity {
                 } else {
                     finish();
                 }
-
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
         }
     }
 }

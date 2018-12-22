@@ -102,6 +102,7 @@
     <string name="paging_animation_disabled">페이징 애니메이션 비활성화</string>
     <string name="auto_paging_time">자동 페이징 시간</string>
 
+    <string name="msg_next_book">다음 책 %s를 읽으시겠습니까?</string>
     <string-array name="search_file">
         <item>압축파일</item>
         <item>TXT</item>

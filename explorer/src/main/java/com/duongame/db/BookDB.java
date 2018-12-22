@@ -98,6 +98,7 @@ public class BookDB extends SQLiteOpenHelper {
 //        db.close();
     }
 
+    // path에 해당하는 책이 있는지 확인하고 있으면 돌려줌
     public static Book getBook(Context context, String path) {
         if (path == null)
             return null;

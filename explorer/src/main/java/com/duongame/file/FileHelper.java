@@ -43,6 +43,14 @@ public class FileHelper {
         return formatter.format(size);
     }
 
+    public static long getFileSize(String path) {
+        try {
+            File file = new File(path);
+            return file.length();
+        } catch (Exception e) {
+            return 0;
+        }
+    }
     public static String getFileName(String path) {
         return path.substring(path.lastIndexOf("/") + 1);
     }

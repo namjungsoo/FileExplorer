@@ -31,6 +31,7 @@ import com.duongame.task.thumbnail.LoadZipThumbnailTask;
 import java.io.File;
 import java.util.ArrayList;
 
+import static android.content.Intent.FLAG_ACTIVITY_CLEAR_TOP;
 import static com.duongame.bitmap.BitmapCacheManager.getThumbnail;
 
 /**
@@ -38,7 +39,7 @@ import static com.duongame.bitmap.BitmapCacheManager.getThumbnail;
  */
 
 public class BookLoader {
-    static String findNextBook(Activity context, String path, int type) {
+    private static String findNextBook(Activity context, String path, int type) {
         // 다음 책을 찾는다.
         // 현재 폴더인지 아닌지 확인한다.
         try {
@@ -72,7 +73,7 @@ public class BookLoader {
                 }
             }
 
-
+            // 내것의 위치를 찾아보자
             int found = -1;
             for (int i = 0; i < filteredList.size(); i++) {
                 if (filteredList.get(i).path.equals(path)) {
@@ -81,9 +82,13 @@ public class BookLoader {
                 }
             }
 
-            if (found != -1 && found != filteredList.size() - 1) {
-                // 마지막 파일이 있다.
-                return filteredList.get(found + 1).path;
+            if (found != -1) {
+                if (found != filteredList.size() - 1) {// 마지막 파일이 아니면
+                    // 다음 파일이 있다.
+                    return filteredList.get(found + 1).path;
+                } else if (filteredList.size() > 1) {// 마지막 파일일 경우 나 외에 다른 것이 있으면
+                    return filteredList.get(0).path;// 0번을 돌려준다.
+                }
             }
 
         } catch (NullPointerException e) {
@@ -92,7 +97,14 @@ public class BookLoader {
         return null;
     }
 
-    //TODO: 마지막 책읽기는 comicz만 수행
+    public static void openNextBook(Activity context, String path) {
+        Book book = BookDB.getBook(context, path);
+        if (book == null) {
+            book = BookLoader.makeBook(context, path);
+        }
+        loadContinue(context, book);
+    }
+
     // 액티비티 시작할때
     public static boolean openLastBook(Activity context) {
         final Book book = BookDB.getLastBook(context);
@@ -136,7 +148,7 @@ public class BookLoader {
         return false;
     }
 
-    static Class<? extends BaseViewerActivity> getViewerClass(Book book) {
+    private static Class<? extends BaseViewerActivity> getViewerClass(Book book) {
         switch (book.type) {
             case ExplorerItem.FILETYPE_ZIP:
                 return ZipActivity.class;
@@ -161,6 +173,8 @@ public class BookLoader {
         intent.putExtra("extract_file", book.extract_file);
         intent.putExtra("side", book.side);
         intent.putExtra("next_book", nextBook);
+
+        intent.addFlags(FLAG_ACTIVITY_CLEAR_TOP);
         context.startActivity(intent);
     }
 
@@ -177,10 +191,17 @@ public class BookLoader {
         intent.putExtra("extract_file", book.extract_file);
         intent.putExtra("side", book.side);
         intent.putExtra("next_book", nextBook);
+
+        intent.addFlags(FLAG_ACTIVITY_CLEAR_TOP);
         return intent;
     }
 
-    private static void loadNew(final Activity context, ExplorerItem item) {
+    static Book makeBook(Activity context, String path) {
+        ExplorerItem item = new ExplorerItem(path, FileHelper.getFileName(path), null, FileHelper.getFileSize(path), FileHelper.getFileType(path));
+        return makeBook(context, item);
+    }
+
+    static Book makeBook(Activity context, ExplorerItem item) {
         Book book = new Book();
         book.path = item.path;
         book.name = item.name;
@@ -196,7 +217,11 @@ public class BookLoader {
         } catch (NullPointerException e) {
 
         }
+        return book;
+    }
 
+    private static void loadNew(final Activity context, ExplorerItem item) {
+        Book book = makeBook(context, item);
         loadNew(context, book);
     }
 
