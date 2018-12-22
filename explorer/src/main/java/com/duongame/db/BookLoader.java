@@ -19,7 +19,9 @@ import com.duongame.activity.viewer.ZipActivity;
 import com.duongame.adapter.ExplorerItem;
 import com.duongame.adapter.HistoryRecyclerAdapter;
 import com.duongame.bitmap.BitmapCacheManager;
+import com.duongame.file.FileExplorer;
 import com.duongame.file.FileHelper;
+import com.duongame.file.LocalExplorer;
 import com.duongame.helper.AppHelper;
 import com.duongame.helper.DateHelper;
 import com.duongame.helper.ToastHelper;
@@ -45,25 +47,49 @@ public class BookLoader {
             ArrayList<ExplorerItem> filteredList = new ArrayList<>();
             ArrayList<ExplorerItem> fileList;
 
+            String folderPath = FileHelper.getParentPath(path);
+
             // 현재 폴더에서 읽은 것이면
-            if (lastPath.equals(path)) {
+            if (lastPath.equals(folderPath)) {
                 fileList = MainApplication.getInstance(context).getFileList();
 
             } else {
                 // 검색을 해서 찾는다.
+                FileExplorer explorer = new LocalExplorer();
+                FileExplorer.Result result = explorer.setRecursiveDirectory(true)
+                        .setHiddenFile(true)
+                        .setExcludeDirectory(false)
+                        .setImageListEnable(false)
+                        .search(folderPath);
+                fileList = result.fileList;
             }
 
             // 분류속에서 내가 몇번째인지 찾음. 그리고 다음번 것을 찾음
             // 필터링 함
-            for(ExplorerItem item : fileList) {
-                if(item.type == type) {
+            for (ExplorerItem item : fileList) {
+                if (item.type == type) {
                     filteredList.add(item);
                 }
+            }
+
+
+            int found = -1;
+            for (int i = 0; i < filteredList.size(); i++) {
+                if (filteredList.get(i).path.equals(path)) {
+                    found = i;
+                    break;
+                }
+            }
+
+            if (found != -1 && found != filteredList.size() - 1) {
+                // 마지막 파일이 있다.
+                return filteredList.get(found + 1).path;
             }
 
         } catch (NullPointerException e) {
 
         }
+        return null;
     }
 
     //TODO: 마지막 책읽기는 comicz만 수행
