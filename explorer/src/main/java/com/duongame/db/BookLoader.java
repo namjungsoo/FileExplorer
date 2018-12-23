@@ -203,6 +203,8 @@ public class BookLoader {
 
     static Book makeBook(Activity context, ExplorerItem item) {
         Book book = new Book();
+        book.type = item.type;
+
         book.path = item.path;
         book.name = item.name;
         book.current_page = 0;
