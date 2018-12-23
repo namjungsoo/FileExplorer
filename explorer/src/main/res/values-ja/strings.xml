@@ -102,6 +102,8 @@
     <string name="paging_animation_disabled">ページングアニメーションを無効にする</string>
     <string name="auto_paging_time">自動ページング時間</string>
 
+    <string name="msg_next_book">次の本[%s]を読みますか？</string>
+
     <string-array name="search_file">
         <item>アーカイブ</item>
         <item>TXT</item>

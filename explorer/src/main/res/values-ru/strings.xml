@@ -99,6 +99,8 @@
     <string name="paging_animation_disabled">Отключить анимацию подкачки</string>
     <string name="auto_paging_time">Время автоматического подкачки</string>
 
+    <string name="msg_next_book">Вы хотите прочитать следующую книгу [%s]?</string>
+
     <string-array name="search_file">
         <item>Архив</item>
         <item>TXT</item>

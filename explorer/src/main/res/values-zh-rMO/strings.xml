@@ -102,6 +102,8 @@
     <string name="paging_animation_disabled">禁用分頁動畫</string>
     <string name="auto_paging_time">自動尋呼時間</string>
 
+    <string name="msg_next_book">你想閱讀下面的書[%s]嗎？</string>
+
     <string-array name="search_file">
         <item>壓縮文件</item>
         <item>TXT</item>

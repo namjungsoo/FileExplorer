@@ -99,6 +99,8 @@
     <string name="paging_animation_disabled">Désactiver l\'animation de pagination</string>
     <string name="auto_paging_time">Temps de pagination automatique</string>
 
+    <string name="msg_next_book">Voulez-vous lire le livre suivant [%s]?</string>
+
     <string-array name="search_file">
         <item>Archiver</item>
         <item>TXT</item>

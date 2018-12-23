@@ -99,6 +99,8 @@
     <string name="paging_animation_disabled">تعطيل الرسوم المتحركة الترحيل</string>
     <string name="auto_paging_time">وقت الترحيل التلقائي</string>
 
+    <string name="msg_next_book">هل تريد قراءة الكتاب التالي [٪s]؟</string>
+
     <string-array name="search_file">
         <item>أرشيف</item>
         <item>TXT</item>

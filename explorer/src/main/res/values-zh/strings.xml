@@ -102,6 +102,8 @@
     <string name="paging_animation_disabled">禁用分页动画</string>
     <string name="auto_paging_time">自动寻呼时间</string>
 
+    <string name="msg_next_book">你想阅读下面的书[%s]吗？</string>
+
     <string-array name="search_file">
         <item>压缩文件</item>
         <item>TXT</item>

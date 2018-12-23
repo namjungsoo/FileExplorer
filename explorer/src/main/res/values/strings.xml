@@ -102,7 +102,7 @@
     <string name="paging_animation_disabled">Disable paging animation</string>
     <string name="auto_paging_time">Auto paging time</string>
 
-    <string name="msg_next_book">다음 책 [%s]를 읽으시겠습니까?</string>
+    <string name="msg_next_book">Do you want to read the following book [%s]?</string>
 
     <string-array name="search_file">
         <item>Archive</item>
