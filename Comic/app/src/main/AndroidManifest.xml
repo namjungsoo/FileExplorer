@@ -19,9 +19,8 @@
 
         <activity
             android:name=".activity.SettingsActivity"
-            android:theme="@style/AppTheme">
+            android:theme="@style/AppTheme"/>
 
-        </activity>
         <activity
             android:name=".activity.viewer.PhotoActivity"
             android:theme="@style/ComicViewerTheme" />

@@ -51,6 +51,7 @@
 
         <!-- 만화책 읽기 방향 일본식, 기본값: false -->
         <RelativeLayout
+            android:id="@+id/layout_japanese_direction"
             android:layout_width="match_parent"
             android:layout_height="36dp"
             android:layout_marginLeft="15dp"
@@ -186,6 +187,7 @@
         </RelativeLayout>
 
         <RelativeLayout
+            android:id="@+id/layout_action_clear_history"
             android:layout_width="match_parent"
             android:layout_height="36dp"
             android:layout_marginLeft="15dp"

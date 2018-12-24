@@ -104,6 +104,11 @@ public class SettingsActivity extends BaseActivity {
     }
 
     void initUI() {
+        if(!AppHelper.isComicz(this)) {
+            findViewById(R.id.layout_japanese_direction).setVisibility(View.GONE);
+            findViewById(R.id.layout_action_clear_history).setVisibility(View.GONE);
+        }
+
         Switch nightMode = findViewById(R.id.night_mode);
         Switch thumbnailDisabled = findViewById(R.id.thumbnail_disabled);
         Switch japaneseDirection = findViewById(R.id.japanese_direction);

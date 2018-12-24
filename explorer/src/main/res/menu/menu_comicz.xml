@@ -29,31 +29,12 @@
         android:title="@string/sort"
         app:showAsAction="always" />
 
-    <!--<item-->
-        <!--android:id="@+id/action_clear_cache"-->
-        <!--android:orderInCategory="100"-->
-        <!--android:title="@string/action_clear_cache"-->
-        <!--app:showAsAction="never" />-->
-
-    <!--<item-->
-        <!--android:id="@+id/action_clear_history"-->
-        <!--android:orderInCategory="100"-->
-        <!--android:title="@string/action_clear_history"-->
-        <!--app:showAsAction="never" />-->
-
     <item
         android:id="@+id/action_open_lastbook"
         android:orderInCategory="100"
         android:title="@string/action_open_lastbook"
         app:showAsAction="never" />
 
-    <!--<item-->
-        <!--android:id="@+id/action_license"-->
-        <!--android:orderInCategory="100"-->
-        <!--android:title="@string/action_license"-->
-        <!--app:showAsAction="never" />-->
-
-    <!-- 나중에 action_setting activity가 완성되면 다시 부활 -->
     <item
         android:id="@+id/action_settings"
         android:orderInCategory="100"
