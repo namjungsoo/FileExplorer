@@ -40,4 +40,14 @@ public class RarFile implements IArchiveFile {
     public void destroy() {
 
     }
+
+    @Override
+    public boolean isEncryped() {
+        return false;
+    }
+
+    @Override
+    public void setPassword(String password) {
+
+    }
 }

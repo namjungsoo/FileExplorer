@@ -11,4 +11,6 @@ public interface IArchiveFile {
     boolean extractFile(String fileName, String destPath);
     boolean extractAll(String destPath);
     void destroy();
+    boolean isEncryped();
+    void setPassword(String password);
 }

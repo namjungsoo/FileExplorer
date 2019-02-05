@@ -43,4 +43,14 @@ public class Z7File implements IArchiveFile {
     public void destroy() {
         z7Extractor.destroy();
     }
+
+    @Override
+    public boolean isEncryped() {
+        return false;
+    }
+
+    @Override
+    public void setPassword(String password) {
+
+    }
 }

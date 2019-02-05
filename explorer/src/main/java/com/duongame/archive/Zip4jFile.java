@@ -24,11 +24,34 @@ public class Zip4jFile implements IArchiveFile {
     }
 
     @Override
-    public ArrayList<ArchiveHeader> getHeaders() {
+    public boolean isEncryped() {
+        if (file != null) {
+            try {
+                return file.isEncrypted();
+            } catch (Exception e) {
+
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public void setPassword(String password) {
         if(file != null) {
             try {
+                file.setPassword(password);
+            } catch (ZipException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    @Override
+    public ArrayList<ArchiveHeader> getHeaders() {
+        if (file != null) {
+            try {
                 List<FileHeader> headers = file.getFileHeaders();
-                if(headers == null)
+                if (headers == null)
                     return null;
 
                 ArrayList<ArchiveHeader> newHeaders = new ArrayList<>();
