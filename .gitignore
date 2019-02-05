@@ -12,10 +12,11 @@
 *.apk
 *.properties
 output.json
-/local.properties
-/.idea
-/build
-/captures
+local.properties
+.idea
+build
+captures
 Explorer/gradlew.bat
 Explorer/gradlew
 Explorer/gradle/wrapper/gradle-wrapper.jar
+*.aab
