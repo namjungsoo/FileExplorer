@@ -110,4 +110,10 @@
         <item>PDF</item>
     </string-array>
 
+    <string name="action_ad_remove">広告を削除</string>
+    <string name="ad_remove_onetime">広告1回の削除</string>
+    <string name="ads">広告</string>
+    <string name="ad_remove_success">広告が1時間削除されます。</string>
+    <string name="ad_remove_fail">広告はすでに削除されました。</string>
+    <string name="ad_not_loaded">広告がロードされていない。</string>
 </resources>

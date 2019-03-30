@@ -107,4 +107,10 @@
         <item>PDF</item>
     </string-array>
 
+    <string name="action_ad_remove">विज्ञापन निकालें</string>
+    <string name="ad_remove_onetime">1 बार विज्ञापन निकालें</string>
+    <string name="ads">विज्ञापन</string>
+    <string name="ad_remove_success">विज्ञापन 1 घंटे के लिए हटा दिया जाएगा।</string>
+    <string name="ad_remove_fail">विज्ञापन पहले ही हटा दिया गया है।</string>
+    <string name="ad_not_loaded">विज्ञापन लोड नहीं हुआ है।</string>
 </resources>

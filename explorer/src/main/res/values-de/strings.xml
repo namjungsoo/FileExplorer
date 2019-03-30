@@ -106,4 +106,11 @@
         <item>TXT</item>
         <item>PDF</item>
     </string-array>
+
+    <string name="action_ad_remove">Anzeige entfernen</string>
+    <string name="ad_remove_onetime">Anzeige entfernen 1 Mal</string>
+    <string name="ads">Anzeigen</string>
+    <string name="ad_remove_success">Die Anzeige wird für 1 Stunde entfernt.</string>
+    <string name="ad_remove_fail">Die Anzeige wurde bereits entfernt.</string>
+    <string name="ad_not_loaded">Die Anzeige wird nicht geladen.</string>
 </resources>

@@ -107,4 +107,10 @@
         <item>PDF</item>
     </string-array>
 
+    <string name="action_ad_remove">Annonce supprimer</string>
+    <string name="ad_remove_onetime">Annonce supprimer 1 fois</string>
+    <string name="ads">Annonces</string>
+    <string name="ad_remove_success">L\'annonce sera supprimée pendant 1 heure.</string>
+    <string name="ad_remove_fail">L\'annonce a déjà été supprimée.</string>
+    <string name="ad_not_loaded">L\'annonce n\'est pas chargée.</string>
 </resources>

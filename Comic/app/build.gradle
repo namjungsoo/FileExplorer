@@ -15,14 +15,15 @@ android {
         buildConfigField "String", "POPUP_ID", "\"ca-app-pub-8174809468024854/2751365931\""
         buildConfigField "String", "BANNER_ID", "\"ca-app-pub-8174809468024854/8003692618\""
         //TEST
-        buildConfigField "String", "REWARD_ID", "\"ca-app-pub-3940256099942544/5224354917\""
+//        buildConfigField "String", "REWARD_ID", "\"ca-app-pub-3940256099942544/5224354917\""
+        buildConfigField "String", "REWARD_ID", "\"ca-app-pub-8174809468024854/9785486682\""
 
         //ga
         buildConfigField "String", "GA_TRACKING_ID", "\"UA-61499807-13\""
         buildConfigField "boolean", "PREVIEW_ZIP", "true"
 
-        versionCode 54
-        versionName "1.5.2"
+        versionCode 55
+        versionName "1.5.3"
     }
     signingConfigs {
         release {

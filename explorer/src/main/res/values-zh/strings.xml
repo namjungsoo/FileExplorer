@@ -110,4 +110,10 @@
         <item>PDF</item>
     </string-array>
 
+    <string name="action_ad_remove">删除广告</string>
+    <string name="ad_remove_onetime">删除广告一次</string>
+    <string name="ads">广告</string>
+    <string name="ad_remove_success">该广告将被删除1小时。</string>
+    <string name="ad_remove_fail">该广告已被删除。</string>
+    <string name="ad_not_loaded">广告未加载。</string>
 </resources>

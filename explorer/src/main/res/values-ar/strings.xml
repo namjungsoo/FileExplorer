@@ -106,4 +106,12 @@
         <item>TXT</item>
         <item>PDF</item>
     </string-array>
+
+    <string name="action_ad_remove">إزالة الإعلان</string>
+    <string name="ad_remove_onetime">إعلان إزالة 1 مرة</string>
+    <string name="ads">إعلانات</string>
+    <string name="ad_remove_success">ستتم إزالة الإعلان لمدة ساعة واحدة.</string>
+    <string name="ad_remove_fail">تمت إزالة الإعلان بالفعل.</string>
+    <string name="ad_not_loaded">لم يتم تحميل الإعلان.</string>
+
 </resources>

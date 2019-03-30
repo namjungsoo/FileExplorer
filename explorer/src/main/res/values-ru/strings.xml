@@ -107,4 +107,10 @@
         <item>PDF</item>
     </string-array>
 
+    <string name="action_ad_remove">Объявление удалить</string>
+    <string name="ad_remove_onetime">Удалить объявление 1 раз</string>
+    <string name="ads">Объявления</string>
+    <string name="ad_remove_success">Объявление будет удалено за 1 час.</string>
+    <string name="ad_remove_fail">Объявление уже удалено.</string>
+    <string name="ad_not_loaded">Объявление не загружено.</string>
 </resources>
