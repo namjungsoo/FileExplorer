@@ -109,4 +109,8 @@
         <item>TXT</item>
         <item>PDF</item>
     </string-array>
+
+    <string name="action_ad_remove">Ad remove</string>
+    <string name="ad_remove_onetime">Ad remove 1 time</string>
+    <string name="ads">Ads</string>
 </resources>

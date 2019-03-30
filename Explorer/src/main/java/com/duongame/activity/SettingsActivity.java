@@ -26,6 +26,7 @@ import com.duongame.helper.JLog;
 import com.duongame.helper.PreferenceHelper;
 import com.duongame.helper.ToastHelper;
 import com.duongame.manager.AdBannerManager;
+import com.duongame.manager.AdRewardManager;
 import com.google.android.gms.ads.AdView;
 
 import java.io.File;
@@ -108,6 +109,14 @@ public class SettingsActivity extends BaseActivity {
             findViewById(R.id.layout_japanese_direction).setVisibility(View.GONE);
             findViewById(R.id.layout_action_clear_history).setVisibility(View.GONE);
         }
+
+        Button adRemove = findViewById(R.id.action_ad_remove);
+        adRemove.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AdRewardManager.show();
+            }
+        });
 
         Switch nightMode = findViewById(R.id.night_mode);
         Switch thumbnailDisabled = findViewById(R.id.thumbnail_disabled);

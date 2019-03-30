@@ -57,10 +57,14 @@ import com.duongame.helper.ToastHelper;
 import com.duongame.helper.UnitHelper;
 import com.duongame.manager.AdBannerManager;
 import com.duongame.manager.AdInterstitialManager;
+import com.duongame.manager.AdRewardManager;
 import com.duongame.manager.PermissionManager;
 import com.duongame.manager.ReviewManager;
+import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.reward.RewardedVideoAd;
+import com.google.android.gms.ads.reward.RewardedVideoAdListener;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
@@ -102,7 +106,6 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
     boolean isDropboxLoginClicked;
     boolean isGoogleDriveLoginClicked;
 
-
     public boolean getShowReview() {
         return showReview;
     }
@@ -131,11 +134,14 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (BuildConfig.SHOW_AD)
+        if (BuildConfig.SHOW_AD) {
             MobileAds.initialize(this);
 
-        AdBannerManager.init(BaseMainActivity.this);
-        AdInterstitialManager.init(BaseMainActivity.this);
+            AdRewardManager.init(BaseMainActivity.this);
+            AdBannerManager.init(BaseMainActivity.this);
+            AdInterstitialManager.init(BaseMainActivity.this);
+        }
+
 
         JLog.e("Jungsoo", "initContentView begin");
         initContentView();
@@ -502,6 +508,10 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
             } catch (NullPointerException e) {
 
             }
+        }
+
+        if (id == R.id.action_ad_remove) {
+            AdRewardManager.show();
         }
 
         return super.onOptionsItemSelected(item);
@@ -1026,6 +1036,8 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
                 MainApplication.getInstance(this).exit(this);
             } catch (NullPointerException e) {
             }
+        } else if (id == R.id.action_ad_remove) {
+            AdRewardManager.show();
         }
 
 //        if (id == R.id.nav_camera) {

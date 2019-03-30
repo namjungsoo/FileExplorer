@@ -13,6 +13,68 @@
             android:layout_height="36dp"
             android:layout_marginStart="10dp"
             android:gravity="center_vertical"
+            android:text="Ads"
+            android:textSize="16sp"
+            android:textColor="@color/colorAccent"
+            android:textStyle="bold" />
+
+        <!-- 보상형 광고로 광고 1회 제거 -->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="36dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignParentStart="true"
+                android:gravity="center"
+                android:textColor="@color/colorAccent"
+                android:text="@string/ad_remove_onetime" />
+
+            <Button
+                android:id="@+id/action_ad_remove"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerInParent="true"
+                android:textColor="@color/colorAccent"
+                android:text="@string/execute" />
+        </RelativeLayout>
+
+        <!-- 인앱 구매로 광고 제거 -->
+        <!--<RelativeLayout-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="36dp"-->
+            <!--android:layout_marginLeft="15dp"-->
+            <!--android:layout_marginRight="15dp"-->
+            <!--android:orientation="horizontal">-->
+
+            <!--<TextView-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="match_parent"-->
+                <!--android:layout_alignParentStart="true"-->
+                <!--android:gravity="center"-->
+                <!--android:textColor="@color/colorAccent"-->
+                <!--android:text="AD remove by donation" />-->
+
+            <!--<Button-->
+                <!--android:id="@+id/action_clear_cache"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_alignParentEnd="true"-->
+                <!--android:layout_centerInParent="true"-->
+                <!--android:textColor="@color/colorAccent"-->
+                <!--android:text="Donate" />-->
+        <!--</RelativeLayout>-->
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="36dp"
+            android:layout_marginStart="10dp"
+            android:gravity="center_vertical"
             android:text="@string/explorer"
             android:textSize="16sp"
             android:textStyle="bold" />

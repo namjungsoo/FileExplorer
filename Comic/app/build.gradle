@@ -14,6 +14,9 @@ android {
         buildConfigField "String", "INTERSTITIAL_ID", "\"ca-app-pub-8174809468024854/1821427640\""
         buildConfigField "String", "POPUP_ID", "\"ca-app-pub-8174809468024854/2751365931\""
         buildConfigField "String", "BANNER_ID", "\"ca-app-pub-8174809468024854/8003692618\""
+        //TEST
+        buildConfigField "String", "REWARD_ID", "\"ca-app-pub-3940256099942544/5224354917\""
+
         //ga
         buildConfigField "String", "GA_TRACKING_ID", "\"UA-61499807-13\""
         buildConfigField "boolean", "PREVIEW_ZIP", "true"

@@ -110,4 +110,7 @@
         <item>PDF</item>
     </string-array>
 
+    <string name="action_ad_remove">광고 제거</string>
+    <string name="ad_remove_onetime">광고 1회 제거</string>
+    <string name="ads">광고</string>
 </resources>

@@ -1,5 +1,6 @@
 package com.duongame.activity;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
@@ -10,6 +11,7 @@ import com.duongame.BuildConfig;
 import com.duongame.helper.JLog;
 import com.duongame.helper.PreferenceHelper;
 import com.duongame.manager.AdInterstitialManager;
+import com.duongame.manager.AdRewardManager;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.crash.FirebaseCrash;
 
@@ -60,7 +62,20 @@ public class BaseActivity extends AppCompatActivity {
 
     @Override
     protected void onResume() {
+        AdRewardManager.onResume(this);
         super.onResume();
+    }
+
+    @Override
+    protected void onPause() {
+        AdRewardManager.onPause(this);
+        super.onPause();
+    }
+
+    @Override
+    protected void onDestroy() {
+        AdRewardManager.onDestroy(this);
+        super.onDestroy();
     }
 
     public void showInterstitialAd(Runnable runnable) {
@@ -95,4 +110,5 @@ public class BaseActivity extends AppCompatActivity {
 
         boolean ret = fileOrDirectory.delete();
     }
+
 }
