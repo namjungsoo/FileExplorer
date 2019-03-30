@@ -8,6 +8,7 @@ import android.support.v7.app.ActionBar;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.RelativeLayout;
@@ -50,6 +51,7 @@ import java.io.File;
 // 7. 이미지 프로세싱
 public class SettingsActivity extends BaseActivity {
     private static final String TAG = SettingsActivity.class.getSimpleName();
+    private AdView adView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +61,44 @@ public class SettingsActivity extends BaseActivity {
         initToolbar();
 
         initUI();
+    }
+
+    @Override
+    protected void onDestroy() {
+        if (adView != null) {
+            ViewGroup vg = (ViewGroup) adView.getParent();
+            if (vg != null) {
+                vg.removeView(adView);
+            }
+            adView.removeAllViews();
+            adView.destroy();
+        }
+
+        super.onDestroy();
+    }
+
+    @Override
+    protected void onPause() {
+        if (adView != null) {
+            adView.pause();
+        }
+
+        super.onPause();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        if (adView != null) {
+            adView.resume();
+            // 광고 리워드 제거 시간 중인가?
+            if(isAdRemoveReward()) {
+                adView.setVisibility(View.GONE);
+            } else {
+                adView.setVisibility(View.VISIBLE);
+            }
+        }
     }
 
     void clearHistory() {
@@ -281,7 +321,7 @@ public class SettingsActivity extends BaseActivity {
             final RelativeLayout layout = new RelativeLayout(this);
             layout.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT));
 
-            AdView adView = AdBannerManager.getAdBannerView(2);
+            adView = AdBannerManager.getAdBannerView(2);
 
             // adview layout params
             RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);

@@ -202,8 +202,9 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
 
     @Override
     protected void onPause() {
-        if (adView != null)
+        if (adView != null) {
             adView.pause();
+        }
 
         super.onPause();
     }
@@ -214,11 +215,12 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
 
         if (adView != null) {
             adView.resume();
-        }
-
-        // 광고 리워드 제거 시간 중인가?
-        if(isAdRemoveReward()) {
-            adView.setVisibility(View.GONE);
+            // 광고 리워드 제거 시간 중인가?
+            if(isAdRemoveReward()) {
+                adView.setVisibility(View.GONE);
+            } else {
+                adView.setVisibility(View.VISIBLE);
+            }
         }
 
         //TODO: 코믹z만 클라우드 지원. 추후 다른 앱에서 지원하려면 해제해야함

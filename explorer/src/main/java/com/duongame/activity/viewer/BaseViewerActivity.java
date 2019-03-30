@@ -103,8 +103,9 @@ public class BaseViewerActivity extends BaseActivity {
 
     @Override
     protected void onPause() {
-        if (adView != null)
+        if (adView != null) {
             adView.pause();
+        }
 
         super.onPause();
     }
@@ -115,11 +116,12 @@ public class BaseViewerActivity extends BaseActivity {
 
         if (adView != null) {
             adView.resume();
-        }
-
-        // 광고 리워드 제거 시간 중인가?
-        if(isAdRemoveReward()) {
-            adView.setVisibility(View.GONE);
+            // 광고 리워드 제거 시간 중인가?
+            if(isAdRemoveReward()) {
+                adView.setVisibility(View.GONE);
+            } else {
+                adView.setVisibility(View.VISIBLE);
+            }
         }
     }
 

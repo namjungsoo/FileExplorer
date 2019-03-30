@@ -104,6 +104,7 @@ public class AdRewardManager {
             mRewardedVideoAd.show();
         } else {
             // 광고가 준비되지 않았다는 메세지를 출력
+            ToastHelper.error(context, R.string.ad_not_loaded);
         }
     }
 

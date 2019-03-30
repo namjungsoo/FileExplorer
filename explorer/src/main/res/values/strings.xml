@@ -115,4 +115,5 @@
     <string name="ads">Ads</string>
     <string name="ad_remove_success">The ad will be removed for 1 hour.</string>
     <string name="ad_remove_fail">The ad has already been removed.</string>
+    <string name="ad_not_loaded">Ad is not loaded</string>
 </resources>
