@@ -116,6 +116,11 @@ public class BaseViewerActivity extends BaseActivity {
         if (adView != null) {
             adView.resume();
         }
+
+        // 광고 리워드 제거 시간 중인가?
+        if(isAdRemoveReward()) {
+            adView.setVisibility(View.GONE);
+        }
     }
 
     private void initActionBar() {

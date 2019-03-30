@@ -93,7 +93,7 @@ public class PagerActivity extends BaseViewerActivity {
         String fileName = FileHelper.getFileName(nextBook);
         String message = String.format(getString(R.string.msg_next_book), fileName);
 
-        if (BuildConfig.SHOW_AD) {
+        if (BuildConfig.SHOW_AD && !isAdRemoveReward()) {
             AlertHelper.showAlertWithAd(this,
                     AppHelper.getAppName(this),
                     message,

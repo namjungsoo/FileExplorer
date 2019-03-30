@@ -8,6 +8,7 @@ import android.net.Uri;
 
 import com.duongame.BuildConfig;
 import com.duongame.R;
+import com.duongame.activity.BaseActivity;
 import com.duongame.db.BookLoader;
 import com.duongame.helper.AlertHelper;
 import com.duongame.helper.AppHelper;
@@ -52,7 +53,8 @@ public class ReviewManager {
                         }
                     };
 
-                    if (BuildConfig.SHOW_AD) {
+                    BaseActivity baseActivity = (BaseActivity )context;
+                    if (BuildConfig.SHOW_AD && !baseActivity.isAdRemoveReward()) {
                         AlertHelper.showAlertWithAd(context,
                                 title,
                                 content,

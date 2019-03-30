@@ -36,8 +36,8 @@ import android.widget.RelativeLayout;
 
 import com.dropbox.core.android.Auth;
 import com.dropbox.core.v2.users.FullAccount;
-import com.duongame.MainApplication;
 import com.duongame.BuildConfig;
+import com.duongame.MainApplication;
 import com.duongame.R;
 import com.duongame.activity.BaseActivity;
 import com.duongame.activity.SettingsActivity;
@@ -60,11 +60,8 @@ import com.duongame.manager.AdInterstitialManager;
 import com.duongame.manager.AdRewardManager;
 import com.duongame.manager.PermissionManager;
 import com.duongame.manager.ReviewManager;
-import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
-import com.google.android.gms.ads.reward.RewardedVideoAd;
-import com.google.android.gms.ads.reward.RewardedVideoAdListener;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
@@ -217,6 +214,11 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
 
         if (adView != null) {
             adView.resume();
+        }
+
+        // 광고 리워드 제거 시간 중인가?
+        if(isAdRemoveReward()) {
+            adView.setVisibility(View.GONE);
         }
 
         //TODO: 코믹z만 클라우드 지원. 추후 다른 앱에서 지원하려면 해제해야함
@@ -467,7 +469,7 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
         }
 
         if (id == R.id.action_license) {
-            if (BuildConfig.SHOW_AD) {
+            if (BuildConfig.SHOW_AD && !isAdRemoveReward()) {
                 AlertHelper.showAlertWithAd(this,
                         AppHelper.getAppName(this),
                         "Icon license: designed by Smashicons from Flaticon",
@@ -511,7 +513,7 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
         }
 
         if (id == R.id.action_ad_remove) {
-            AdRewardManager.show();
+            AdRewardManager.show(this);
         }
 
         return super.onOptionsItemSelected(item);
@@ -916,7 +918,7 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
             }
         };
 
-        if (BuildConfig.SHOW_AD) {
+        if (BuildConfig.SHOW_AD && !isAdRemoveReward()) {
             AlertHelper.showAlertWithAd(this,
                     title,
                     content,
@@ -973,7 +975,7 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
             }
         };
 
-        if (BuildConfig.SHOW_AD) {
+        if (BuildConfig.SHOW_AD && !isAdRemoveReward()) {
             AlertHelper.showAlertWithAd(this,
                     title,
                     content,
@@ -1037,7 +1039,7 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
             } catch (NullPointerException e) {
             }
         } else if (id == R.id.action_ad_remove) {
-            AdRewardManager.show();
+            AdRewardManager.show(this);
         }
 
 //        if (id == R.id.nav_camera) {

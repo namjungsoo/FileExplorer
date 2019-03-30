@@ -226,7 +226,7 @@ public class ZipActivity extends PagerActivity {
                     }
                 };
 
-                if (BuildConfig.SHOW_AD) {
+                if (BuildConfig.SHOW_AD && !isAdRemoveReward()) {
                     AlertHelper.showAlertWithAd(this,
                             title,
                             content,

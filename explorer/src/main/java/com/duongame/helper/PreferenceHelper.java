@@ -51,6 +51,8 @@ public class PreferenceHelper {
     private static final String PAGING_ANIMATION_DISABLED = "paging_animation_disabled";
     private static final String AUTO_PAGING_TIME = "auto_paging_time";
 
+    private static final String AD_REMOVE_TIME_REWARD = "ad_remove_time_reward";
+
     private static SharedPreferences pref = null;
 
     private static void checkPrefManager(Context context) {
@@ -331,6 +333,20 @@ public class PreferenceHelper {
         checkPrefManager(context);
         final SharedPreferences.Editor editor = pref.edit();
         editor.putInt(AUTO_PAGING_TIME, time);
+        editor.apply();
+    }
+
+
+    //ad_remove_time_reward
+    public static long getAdRemoveTimeReward(Context context) {
+        checkPrefManager(context);
+        return pref.getLong(AD_REMOVE_TIME_REWARD, 0L);
+    }
+
+    public static void setAdRemoveTimeReward(Context context, long time) {
+        checkPrefManager(context);
+        final SharedPreferences.Editor editor = pref.edit();
+        editor.putLong(AD_REMOVE_TIME_REWARD, time);
         editor.apply();
     }
 

@@ -16,6 +16,7 @@ import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.crash.FirebaseCrash;
 
 import java.io.File;
+import java.util.Date;
 
 import io.fabric.sdk.android.Fabric;
 
@@ -34,11 +35,11 @@ public class BaseActivity extends AppCompatActivity {
 //        new Thread(new Runnable() {
 //            @Override
 //            public void run() {
-                JLog.e("Jungsoo", "setupFabric begin");
-                setupFabric();
-                JLog.e("Jungsoo", "setupFabric end");
-                setupFirebase();
-                JLog.e("Jungsoo", "setupFirebase end");
+        JLog.e("Jungsoo", "setupFabric begin");
+        setupFabric();
+        JLog.e("Jungsoo", "setupFabric end");
+        setupFirebase();
+        JLog.e("Jungsoo", "setupFirebase end");
 //            }
 //        }).start();
 //        JLog.e("Jungsoo", "BaseActivity.onCreate end");
@@ -78,15 +79,24 @@ public class BaseActivity extends AppCompatActivity {
         super.onDestroy();
     }
 
+    public boolean isAdRemoveReward() {
+        long rewardTime = PreferenceHelper.getAdRemoveTimeReward(this);
+        Date date = new Date();
+        if (rewardTime > date.getTime()) {
+            return true;
+        }
+        return false;
+    }
+
     public void showInterstitialAd(Runnable runnable) {
-        if(BuildConfig.SHOW_AD) {
+        if (BuildConfig.SHOW_AD && !isAdRemoveReward()) {
             final int count = PreferenceHelper.getExitAdCount(this);
 
             // 2번중에 1번을 띄워준다.
             if (count % AdInterstitialManager.getMaxCount() == 1) {// 전면 팝업후 종료 팝업
                 if (!AdInterstitialManager.showAd(runnable)) {
                     // 보여지지 않았다면 insterstitial후 카운트 증가하지 않음
-                    if(runnable != null)
+                    if (runnable != null)
                         runnable.run();
                 } else {
                     // 보여졌다면, 여기서 카운트 증가하고 광고가 끝난후 내부에서 run을 함
@@ -94,7 +104,7 @@ public class BaseActivity extends AppCompatActivity {
                 }
             } else {
                 PreferenceHelper.setExitAdCount(this, count + 1);
-                if(runnable != null)
+                if (runnable != null)
                     runnable.run();
             }
         }
