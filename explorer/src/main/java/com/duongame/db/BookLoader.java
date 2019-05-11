@@ -352,7 +352,7 @@ public class BookLoader {
     }
 
     private static String getPercentText(Book book) {
-        return String.valueOf(book.percent) + "%";
+        return book.percent + "%";
     }
 
     public static void updateBookHolder(Activity context, HistoryRecyclerAdapter.HistoryViewHolder holder, Book book) {
