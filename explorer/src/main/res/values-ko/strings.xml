@@ -112,6 +112,7 @@
 
     <string name="action_ad_remove">광고 제거</string>
     <string name="ad_remove_onetime">광고 1회 제거</string>
+    <string name="ad_remove_donate">기부하기</string>
     <string name="ads">광고</string>
     <string name="ad_remove_success">광고가 1시간 동안 제거됩니다.</string>
     <string name="ad_remove_fail">광고가 이미 제거되었습니다.</string>

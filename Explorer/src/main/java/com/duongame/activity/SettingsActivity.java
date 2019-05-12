@@ -16,10 +16,9 @@ import android.widget.SeekBar;
 import android.widget.Switch;
 import android.widget.TextView;
 
-import com.duongame.MainApplication;
 import com.duongame.BuildConfig;
+import com.duongame.MainApplication;
 import com.duongame.R;
-import com.duongame.activity.main.BaseMainActivity;
 import com.duongame.bitmap.BitmapCacheManager;
 import com.duongame.db.BookDB;
 import com.duongame.helper.AlertHelper;
@@ -156,6 +155,15 @@ public class SettingsActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 AdRewardManager.show(SettingsActivity.this);
+            }
+        });
+
+        Button donate = findViewById(R.id.action_ad_donate);
+        donate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(SettingsActivity.this, DonateActivity.class);
+                startActivity(intent);
             }
         });
 
