@@ -20,6 +20,9 @@
         <activity
             android:name=".activity.SettingsActivity"
             android:theme="@style/AppTheme"/>
+        <activity
+            android:name=".activity.DonateActivity"
+            android:theme="@style/AppTheme"/>
 
         <activity
             android:name=".activity.viewer.PhotoActivity"
