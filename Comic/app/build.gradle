@@ -157,8 +157,6 @@ dependencies {
     // https://mvnrepository.com/artifact/org.apache.commons/commons-lang3
     implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.4'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-
-    implementation 'com.anjlab.android.iab.v3:library:1.0.44'
 }
 
 apply plugin: 'io.fabric'
