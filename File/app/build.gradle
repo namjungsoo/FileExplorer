@@ -21,8 +21,8 @@ android {
         buildConfigField "String", "GA_TRACKING_ID", "\"UA-61499807-14\""
         buildConfigField "boolean", "PREVIEW_ZIP", "false"
 
-        versionCode 29
-        versionName "1.2.7"
+        versionCode 30
+        versionName "1.2.8"
     }
     signingConfigs {
         release {
