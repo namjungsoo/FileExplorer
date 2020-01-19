@@ -8,35 +8,39 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
+        <!-- 정기적 기부 -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="36dp"
             android:layout_marginStart="10dp"
             android:gravity="center_vertical"
-            android:text="Ads"
+            android:text="@string/donate_regularly"
             android:textColor="@color/colorAccent"
             android:textSize="16sp"
             android:textStyle="bold" />
 
         <android.support.v7.widget.RecyclerView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:id="@+id/list_regularly">
 
         </android.support.v7.widget.RecyclerView>
 
+        <!-- 일회성 기부 -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="36dp"
             android:layout_marginStart="10dp"
             android:gravity="center_vertical"
-            android:text="Ads"
+            android:text="@string/donate_onetime"
             android:textColor="@color/colorAccent"
             android:textSize="16sp"
             android:textStyle="bold" />
 
         <android.support.v7.widget.RecyclerView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:id="@+id/list_onetime">
 
         </android.support.v7.widget.RecyclerView>
 

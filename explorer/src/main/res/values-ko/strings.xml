@@ -117,4 +117,8 @@
     <string name="ad_remove_success">광고가 1시간 동안 제거됩니다.</string>
     <string name="ad_remove_fail">광고가 이미 제거되었습니다.</string>
     <string name="ad_not_loaded">광고 로딩 되지 않았습니다.</string>
+
+    <string name="donate_regularly">정기 후원하기</string>
+    <string name="donate_onetime">한번 후원하기</string>
+
 </resources>
