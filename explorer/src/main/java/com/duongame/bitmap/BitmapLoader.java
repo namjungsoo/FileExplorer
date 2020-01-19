@@ -20,7 +20,6 @@ import android.os.Environment;
 import android.os.ParcelFileDescriptor;
 import android.provider.MediaStore;
 
-import com.duongame.R;
 import com.duongame.adapter.ExplorerItem;
 import com.duongame.archive.ArchiveLoader;
 import com.duongame.file.FileHelper;
