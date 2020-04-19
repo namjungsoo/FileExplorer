@@ -2,13 +2,15 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 
 android {
-    compileSdkVersion 28
+    compileSdkVersion 29
+    buildToolsVersion "29.0.3"
+
     defaultConfig {
         multiDexEnabled true
         applicationId "com.duongame.file"
         
         minSdkVersion 14
-        targetSdkVersion 28
+        targetSdkVersion 29
 
         //admob
         buildConfigField "String", "INTERSTITIAL_ID", "\"ca-app-pub-8174809468024854/9810925855\""
