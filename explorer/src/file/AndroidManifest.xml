@@ -3,7 +3,7 @@
     package="com.duongame">
 
     <application
-        android:name=".AnalyticsApplication"
+        android:name=".MainApplication"
         android:allowBackup="true"
         android:icon="@mipmap/explorer"
         android:label="${APP_NAME}"
@@ -13,10 +13,13 @@
         <activity android:name=".activity.main.FileActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".activity.SettingsActivity"
+            android:theme="@style/AppTheme"/>
 
         <activity
             android:name=".activity.viewer.PhotoActivity"
@@ -54,6 +57,9 @@
 
     <!-- shortcut -->
     <uses-permission android:name="com.android.launcher.permission.INSTALL_SHORTCUT" />
+
+    <!-- Android P install apk -->
+    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
 
     <!--<meta-data-->
     <!--android:name="io.fabric.ApiKey"-->
