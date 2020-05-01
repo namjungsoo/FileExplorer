@@ -2,10 +2,9 @@ package com.duongame.activity.main;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.support.design.widget.TabLayout;
-import android.support.v4.view.ViewPager;
+import com.google.android.material.tabs.TabLayout;
+import androidx.viewpager.widget.ViewPager;
 import android.view.KeyEvent;
-import android.view.View;
 
 import com.duongame.MainApplication;
 import com.duongame.R;
@@ -17,7 +16,6 @@ import com.duongame.helper.AppHelper;
 import com.duongame.helper.JLog;
 import com.duongame.helper.PreferenceHelper;
 import com.duongame.manager.PermissionManager;
-import com.google.android.gms.ads.MobileAds;
 
 public class ComicActivity extends BaseMainActivity {
     private final static String TAG = ComicActivity.class.getSimpleName();

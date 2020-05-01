@@ -2,7 +2,7 @@ package com.duongame;
 
 import android.app.Activity;
 import android.os.Environment;
-import android.support.multidex.MultiDexApplication;
+import androidx.multidex.MultiDexApplication;
 
 import com.duongame.activity.BaseActivity;
 import com.duongame.adapter.ExplorerItem;

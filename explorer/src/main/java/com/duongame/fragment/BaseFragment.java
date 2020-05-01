@@ -1,8 +1,8 @@
 package com.duongame.fragment;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 
 import com.duongame.MainApplication;
 import com.duongame.R;
@@ -10,8 +10,6 @@ import com.duongame.activity.BaseActivity;
 import com.duongame.file.FileExplorer;
 import com.duongame.file.LocalExplorer;
 import com.duongame.helper.ToastHelper;
-
-import org.mortbay.jetty.Main;
 
 /**
  * Created by namjungsoo on 2017-01-02.

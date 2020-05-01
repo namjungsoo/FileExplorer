@@ -1,7 +1,7 @@
 package com.duongame.ziptest.util;
 
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 
 /**
  * Created by namjungsoo on 2018-01-26.
