@@ -85,4 +85,6 @@
 
     <!-- Android P install apk -->
     <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
+
+    <uses-permission android:name="com.android.vending.BILLING"/>
 </manifest>
