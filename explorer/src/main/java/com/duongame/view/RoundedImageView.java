@@ -11,7 +11,7 @@ import com.duongame.helper.UnitHelper;
 /**
  * Created by namjungsoo on 2016-06-19.
  */
-public class RoundedImageView extends android.support.v7.widget.AppCompatImageView {
+public class RoundedImageView extends androidx.appcompat.widget.AppCompatImageView {
     Path clipPath;
 
     public RoundedImageView(Context context) {

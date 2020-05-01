@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <android.support.design.widget.CoordinatorLayout
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:id="@+id/activity_main"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -13,7 +13,7 @@
 
         <!-- AppBarLayout is a wrapper for a Toolbar in order to apply scrolling effects. -->
         <!-- Note that AppBarLayout expects to be the first child nested within a CoordinatorLayout -->
-        <android.support.design.widget.AppBarLayout
+        <com.google.android.material.appbar.AppBarLayout
             android:id="@+id/appBar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -21,7 +21,7 @@
 
             <!-- Toolbar is the actual app bar with text and the action items
             app:layout_scrollFlags="scroll|enterAlways" -->
-            <android.support.v7.widget.Toolbar
+            <androidx.appcompat.widget.Toolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
@@ -30,7 +30,7 @@
                 app:popupTheme="@style/ThemeOverlay.AppCompat.Dark"
                 app:theme="@style/ThemeOverlay.AppCompat.Dark" />
 
-            <android.support.design.widget.TabLayout
+            <com.google.android.material.tabs.TabLayout
                 android:id="@+id/tab"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
@@ -38,7 +38,7 @@
                 app:tabMode="fixed"
                 app:tabSelectedTextColor="@color/colorText"
                 app:tabTextColor="@color/colorTextSecondary" />
-        </android.support.design.widget.AppBarLayout>
+        </com.google.android.material.appbar.AppBarLayout>
 
         <com.duongame.view.ViewPagerEx
             android:id="@+id/pager"
@@ -46,7 +46,7 @@
             android:layout_height="match_parent"
             app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
-    </android.support.design.widget.CoordinatorLayout>
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
     <include layout="@layout/explorer_bottom" />
 
