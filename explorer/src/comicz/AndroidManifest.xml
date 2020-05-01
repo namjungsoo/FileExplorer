@@ -9,91 +9,13 @@
         android:icon="@mipmap/comicz"
         android:label="${APP_NAME}"
         android:largeHeap="true"
-        android:theme="@style/SplashTheme">
-
+        android:theme="@style/SplashTheme"
+        tools:node="merge">
         <activity android:name=".activity.main.ComicActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <activity
-            android:name=".activity.SettingsActivity"
-            android:theme="@style/AppTheme" />
-
-        <activity
-            android:name=".activity.viewer.PhotoActivity"
-            android:theme="@style/ComicViewerTheme" />
-        <activity
-            android:name=".activity.viewer.ZipActivity"
-            android:theme="@style/ComicViewerTheme" />
-        <activity
-            android:name=".activity.viewer.TextActivity"
-            android:theme="@style/ComicViewerTheme" />
-        <activity
-            android:name=".activity.viewer.PdfActivity"
-            android:theme="@style/ComicViewerTheme" />
-
-        <provider
-            android:name="android.support.v4.content.FileProvider"
-            android:authorities="${applicationId}.provider"
-            android:exported="false"
-            android:grantUriPermissions="true">
-            <meta-data
-                android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/provider_paths" />
-        </provider>
-
-        <!-- Dropbox -->
-        <activity
-            android:name="com.dropbox.core.android.AuthActivity"
-            android:configChanges="orientation|keyboard"
-            android:launchMode="singleTask">
-            <intent-filter>
-
-                <!-- Change this to be db- followed by your app key -->
-                <data android:scheme="${DB_APP_KEY}" />
-
-                <action android:name="android.intent.action.VIEW" />
-
-                <category android:name="android.intent.category.BROWSABLE" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
-
-        <meta-data
-            android:name="com.google.android.gms.ads.APPLICATION_ID"
-            android:value="ca-app-pub-8174809468024854~5760672659" />
     </application>
-
-    <protected-broadcast android:name="android.intent.action.MEDIA_MOUNTED" />
-
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-
-    <!-- admob, firebase -->
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-
-    <!-- firebase -->
-    <uses-permission android:name="android.permission.WAKE_LOCK" />
-
-    <!-- shortcut -->
-    <uses-permission android:name="com.android.launcher.permission.INSTALL_SHORTCUT" />
-
-    <!--<meta-data
-    필요없음. firebase에서 직접 관리하기 때문-->
-    <!--android:name="io.fabric.ApiKey"-->
-    <!--android:value="479ae7d868a353eb8da82e059fd1a04418af3cf3" />-->
-    <meta-data
-        android:name="firebase_crashlytics_collection_enabled"
-        android:value="${crashlyticsEnabled}" />
-
-    <!-- google drive -->
-    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
-    <uses-permission android:name="android.permission.WAKE_LOCK" />
-
-    <!-- Android P install apk -->
-    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
 </manifest>

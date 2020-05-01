@@ -12,4 +12,6 @@
     <string name="right_arrow" translatable="false">&gt;</string>
     <string name="menu_night" translatable="false">Night</string>
     <string name="menu_anim" translatable="false">Anim</string>
+    <string name="comicz_admob_app_id" translatable="false">ca-app-pub-8174809468024854~5760672659</string>
+    <string name="file_admob_app_id" translatable="false">ca-app-pub-8174809468024854~5974433252</string>
 </resources>

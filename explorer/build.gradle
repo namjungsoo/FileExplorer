@@ -98,7 +98,8 @@ android {
             dimension "project"
             versionCode 58
             versionName "1.5.4"
-            addManifestPlaceholders([APP_NAME: "@string/comicz_name_pro"])
+            addManifestPlaceholders([APP_NAME: "@string/comicz_name_pro",
+                                    ADMOB_APP_ID: "@string/comicz_admob_app_id"])
         }
 
         // 2. 파일탐색기
@@ -118,7 +119,8 @@ android {
             dimension "project"
             versionCode 29
             versionName "1.2.7"
-            addManifestPlaceholders([APP_NAME: "@string/file_name_pro"])
+            addManifestPlaceholders([APP_NAME: "@string/file_name_pro",
+                                     ADMOB_APP_ID: "@string/file_admob_app_id"])
         }
 
         // 유료(현재 사용하지 않음)
