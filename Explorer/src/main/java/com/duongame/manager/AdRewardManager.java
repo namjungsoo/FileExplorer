@@ -24,6 +24,9 @@ public class AdRewardManager {
     public static void init(final Context context) {
         // Use an activity context to get the rewarded video instance.
         mRewardedVideoAd = MobileAds.getRewardedVideoAdInstance(context);
+        if (mRewardedVideoAd == null)
+            return;
+
         mRewardedVideoAd.setRewardedVideoAdListener(new RewardedVideoAdListener() {
 
             @Override
@@ -94,12 +97,17 @@ public class AdRewardManager {
     }
 
     private static void loadRewardedVideoAd() {
-        mRewardedVideoAd.loadAd(REWARD_ID,
-                new AdRequest.Builder().build());
+        if (mRewardedVideoAd == null)
+            return;
+
+        mRewardedVideoAd.loadAd(REWARD_ID, new AdRequest.Builder().build());
     }
 
     public static void show(Context context) {
         AdRewardManager.context = context;
+        if (mRewardedVideoAd == null)
+            return;
+
         if (mRewardedVideoAd.isLoaded()) {
             mRewardedVideoAd.show();
         } else {
@@ -110,16 +118,25 @@ public class AdRewardManager {
 
     public static void onResume(Context context) {
         AdRewardManager.context = context;
+        if (mRewardedVideoAd == null)
+            return;
+
         mRewardedVideoAd.resume(context);
     }
 
     public static void onPause(Context context) {
         AdRewardManager.context = context;
+        if (mRewardedVideoAd == null)
+            return;
+
         mRewardedVideoAd.pause(context);
     }
 
     public static void onDestroy(Context context) {
         AdRewardManager.context = context;
+        if (mRewardedVideoAd == null)
+            return;
+
         mRewardedVideoAd.destroy(context);
     }
 }
