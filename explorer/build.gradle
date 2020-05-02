@@ -80,7 +80,7 @@ android {
         }
         production {
             dimension "mode"
-            minSdkVersion 14
+            minSdkVersion 16
         }
 
         // 1. 코믹제트
@@ -98,8 +98,8 @@ android {
             buildConfigField "boolean", "PREVIEW_ZIP", "true"
             applicationIdSuffix '.comicz'
             dimension "project"
-            versionCode 58
-            versionName "1.5.4"
+            versionCode 59
+            versionName "1.5.5"
             addManifestPlaceholders([APP_NAME: "@string/comicz_name_pro",
                                     ADMOB_APP_ID: "@string/comicz_admob_app_id"])
         }
@@ -119,8 +119,8 @@ android {
             buildConfigField "boolean", "PREVIEW_ZIP", "false"
             applicationIdSuffix '.file'
             dimension "project"
-            versionCode 29
-            versionName "1.2.7"
+            versionCode 31
+            versionName "1.2.8"
             addManifestPlaceholders([APP_NAME: "@string/file_name_pro",
                                      ADMOB_APP_ID: "@string/file_admob_app_id"])
         }
@@ -155,6 +155,14 @@ android {
                 variant.productFlavors.get(1).name == "free") {
             mergedFlavor.manifestPlaceholders.APP_NAME = "@string/file_name_free"
         }
+    }
+}
+configurations {
+    all {
+//        exclude module: 'httpclient'
+//        exclude module: 'commons-logging'
+        exclude group: 'commons-logging', module: 'commons-logging'
+        exclude group: 'org.apache.httpcomponents'
     }
 }
 
