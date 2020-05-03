@@ -7,6 +7,7 @@ import android.os.AsyncTask;
 import androidx.annotation.Nullable;
 import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.target.ImageViewTarget;
 import com.duongame.GlideApp;
@@ -64,7 +65,7 @@ public class LoadZipThumbnailTask extends AsyncTask<String, Void, String> {
             return;
 
         try {
-            GlideApp.with(context.getApplicationContext())
+            Glide.with(context.getApplicationContext())
                     .load(new File(param))
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .placeholder(R.drawable.ic_file_zip)
