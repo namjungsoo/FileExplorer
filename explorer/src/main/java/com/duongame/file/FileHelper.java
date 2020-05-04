@@ -2,6 +2,7 @@ package com.duongame.file;
 
 import android.content.Context;
 
+import com.duongame.R;
 import com.duongame.adapter.ExplorerItem;
 import com.duongame.helper.DateHelper;
 
@@ -141,6 +142,58 @@ public class FileHelper {
         return 0;
     }
 
+    // 파일 타입과 아이콘 타입은 종류가 다르므로 직접 입력하도록 함
+    public static int getFileFolderIconResId(String fileName) {
+        int type = getFileFolderType(fileName);
+        int resId = R.drawable.ic_file_normal;
+
+        // 이미지일 경우 구분
+        switch(type) {
+            case ExplorerItem.FILETYPE_FOLDER:
+                resId = R.drawable.ic_file_folder;
+                break;
+            case ExplorerItem.FILETYPE_IMAGE:
+            {
+                String lowerFileName = fileName.toLowerCase();
+                if (lowerFileName.endsWith(".gif"))
+                    resId = R.drawable.ic_file_jpg;// gif가 없음
+                else if (lowerFileName.endsWith(".png"))
+                    resId = R.drawable.ic_file_png;
+                else
+                    resId = R.drawable.ic_file_jpg;
+            }
+                break;
+            case ExplorerItem.FILETYPE_ZIP:
+                resId = R.drawable.ic_file_zip;
+                break;
+            case ExplorerItem.FILETYPE_PDF:
+                resId = R.drawable.ic_file_pdf;
+                break;
+            case ExplorerItem.FILETYPE_VIDEO:
+            {
+                String lowerFileName = fileName.toLowerCase();
+                if (lowerFileName.endsWith(".mp4"))
+                    resId = R.drawable.ic_file_mp4;
+                else if (lowerFileName.endsWith(".fla"))
+                    resId = R.drawable.ic_file_fla;
+                else
+                    resId = R.drawable.ic_file_avi;
+            }
+                break;
+            case ExplorerItem.FILETYPE_AUDIO:
+                resId = R.drawable.ic_file_mp3;
+                break;
+            case ExplorerItem.FILETYPE_TEXT:
+                resId = R.drawable.ic_file_txt;
+                break;
+            case ExplorerItem.FILETYPE_APK:
+                resId = R.drawable.ic_file_apk;
+                break;
+        }
+        return resId;
+    }
+
+    // 폴더는 제외한다
     public static int getFileType(String fileName) {
         int type = ExplorerItem.FILETYPE_FILE;
 
@@ -163,7 +216,12 @@ public class FileHelper {
         return type;
     }
 
-    public static int getFileType(File eachFile) {
+    public static int getFileFolderType(String fileName) {
+        final File file = new File(fileName);
+        return getFileFolderType(file);
+    }
+
+    public static int getFileFolderType(File eachFile) {
         int type = eachFile.isDirectory() ? ExplorerItem.FILETYPE_FOLDER : ExplorerItem.FILETYPE_FILE;
 
         // 폴더면 바로 리턴

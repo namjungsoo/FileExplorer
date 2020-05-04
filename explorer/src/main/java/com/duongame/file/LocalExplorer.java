@@ -10,8 +10,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 
-import static com.duongame.file.FileHelper.getFileType;
-
 /**
  * Created by namjungsoo on 2016-11-06.
  */
@@ -57,7 +55,7 @@ public class LocalExplorer extends FileExplorer {
             String date = DateHelper.getExplorerDateString(dateSource);
             long size = eachFile.length();
 
-            int type = getFileType(eachFile);
+            int type = FileHelper.getFileFolderType(eachFile);
 
             String fullPath = FileHelper.getFullPath(path, name);
             ExplorerItem item = new ExplorerItem(fullPath, name, date, size, type);

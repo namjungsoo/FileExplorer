@@ -37,6 +37,8 @@ public class LoadBitmapTask extends AsyncTask<ExplorerItem, Void, BitmapLoader.S
     private int count;
     private boolean loadingByOther;
 
+    // 동기화를 위해서 사용함 CopyOnWriteArraySet
+    // 현재 읽고 있는 bitmap을 중복적으로 읽는 것을 방지하기 위함
     private static CopyOnWriteArraySet<String> currentLoadingBitmapList = new CopyOnWriteArraySet<>();
 
     public static boolean isCurrentLoadingBitmap(String path) {
