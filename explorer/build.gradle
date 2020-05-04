@@ -98,8 +98,8 @@ android {
             buildConfigField "boolean", "PREVIEW_ZIP", "true"
             applicationIdSuffix '.comicz'
             dimension "project"
-            versionCode 61
-            versionName "1.5.7"
+            versionCode 62
+            versionName "1.5.8"
             addManifestPlaceholders([APP_NAME: "@string/comicz_name_pro",
                                     ADMOB_APP_ID: "@string/comicz_admob_app_id"])
         }
@@ -119,8 +119,8 @@ android {
             buildConfigField "boolean", "PREVIEW_ZIP", "false"
             applicationIdSuffix '.file'
             dimension "project"
-            versionCode 33
-            versionName "1.2.10"
+            versionCode 34
+            versionName "1.2.11"
             addManifestPlaceholders([APP_NAME: "@string/file_name_pro",
                                      ADMOB_APP_ID: "@string/file_admob_app_id"])
         }
