@@ -8,6 +8,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentActivity;
@@ -15,6 +16,8 @@ import androidx.core.content.FileProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,6 +44,7 @@ import com.duongame.adapter.ExplorerNarrowAdapter;
 import com.duongame.adapter.ExplorerScrollListener;
 import com.duongame.bitmap.BitmapCacheManager;
 import com.duongame.db.BookLoader;
+import com.duongame.db.ExplorerItemDB;
 import com.duongame.dialog.SortDialog;
 import com.duongame.file.FileHelper;
 import com.duongame.helper.AlertHelper;
@@ -67,6 +71,7 @@ import com.duongame.view.Indicator;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 
 import static android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION;
 import static com.duongame.ExplorerConfig.MAX_THUMBNAILS;
@@ -161,11 +166,13 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
     private int sortType;
     private int sortDirection;
 
-    private boolean canClick = true;
+    private boolean canClick = false;
     private int viewType = SWITCH_LIST;
 
     private boolean backupDropbox = false;
     private boolean backupGoogleDrive = false;
+
+    private Handler handler;
 
     public boolean isCanClick() {
         return canClick;
@@ -201,6 +208,20 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
 
         initViewType();
         JLog.e("Jungsoo", "initViewType end");
+
+        handler = new Handler();
+        // 현재 파일 리스트를 얻어서 바로 셋팅
+        JLog.e("Jungsoo", "ExplorerItemDB begin");
+        new Thread(() -> {
+            JLog.e("Jungsoo", "ExplorerItemDB thread");
+            List<ExplorerItem> fileList = ExplorerItemDB.Companion.getInstance(getContext()).getDb().explorerItemDao().getItems();
+            handler.postAtFrontOfQueue(() -> {
+                adapter.setFileList(fileList);
+                adapter.notifyDataSetChanged();
+                setCanClick(true);
+                JLog.e("Jungsoo", "ExplorerItemDB end");
+            });
+        }).start();
 
         FragmentActivity activity = getActivity();
         if (activity != null) {
@@ -257,14 +278,11 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
         final int position = 0;
         final int top = getCurrentViewScrollTop();
 
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                FragmentActivity activity = getActivity();
-                if (activity != null) {
-                    PreferenceHelper.setLastPosition(activity, position);
-                    PreferenceHelper.setLastTop(activity, top);
-                }
+        new Thread(() -> {
+            FragmentActivity activity = getActivity();
+            if (activity != null) {
+                PreferenceHelper.setLastPosition(activity, position);
+                PreferenceHelper.setLastTop(activity, top);
             }
         }).start();
     }
@@ -774,20 +792,24 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
             if (fileList == null)
                 return;
 
-            ExplorerItem item = fileList.get(position);
-            if (item == null)
-                return;
+            try {// java.lang.IndexOutOfBoundsException
+                ExplorerItem item = fileList.get(position);
+                if (item == null)
+                    return;
 
-            // 이미 선택 모드라면 이름변경을 해줌
-            if (selectMode) {
-                //renameFileWithDialog
-                if (getSelectedFileCount() == 1) {
-                    renameFileWithDialog(item);
-                } else {
-                    ToastHelper.warning(getActivity(), R.string.toast_multi_rename_error);
+                // 이미 선택 모드라면 이름변경을 해줌
+                if (selectMode) {
+                    //renameFileWithDialog
+                    if (getSelectedFileCount() == 1) {
+                        renameFileWithDialog(item);
+                    } else {
+                        ToastHelper.warning(getActivity(), R.string.toast_multi_rename_error);
+                    }
+                } else {// 선택 모드로 진입 + 현재 파일 선택
+                    onSelectMode(item, position);
                 }
-            } else {// 선택 모드로 진입 + 현재 파일 선택
-                onSelectMode(item, position);
+            } catch (Exception ignored) {
+
             }
         }
     }
@@ -1059,12 +1081,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
         }
 
         // 오래 걸림. 이것도 쓰레드로...
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                requestThumbnailScan();
-            }
-        }).start();
+        new Thread(this::requestThumbnailScan).start();
     }
 
     //TODO: 차후에 pull to refresh로 새로고침 해줘야 함
