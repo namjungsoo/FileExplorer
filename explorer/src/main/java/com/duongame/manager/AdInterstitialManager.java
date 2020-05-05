@@ -1,8 +1,9 @@
 package com.duongame.manager;
 
-import android.app.Activity;
+import android.content.Context;
 
-import com.duongame.BuildConfig;
+import com.duongame.R;
+import com.duongame.helper.AppHelper;
 import com.duongame.helper.JLog;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
@@ -14,9 +15,6 @@ import com.google.android.gms.ads.InterstitialAd;
 public class AdInterstitialManager {
     private final static String TAG = "AdInterstitialManager";
 
-    // 코믹뷰어 전면광고
-//    private static final String INTERSTITIAL_ID = "ca-app-pub-5576037828251153/9737551820";
-    private static final String INTERSTITIAL_ID = BuildConfig.INTERSTITIAL_ID;
     private static InterstitialAd interstitialAD;
     private static Runnable runnable;
 
@@ -26,8 +24,12 @@ public class AdInterstitialManager {
         return maxCount;
     }
 
-    public static  void setMaxCount(int count) {
+    public static void setMaxCount(int count) {
         maxCount = count;
+    }
+
+    public static void request() {
+        requestNewInterstitial();
     }
 
     private static void requestNewInterstitial() {
@@ -39,19 +41,24 @@ public class AdInterstitialManager {
         interstitialAD.loadAd(adRequest);
     }
 
-    public static void init(final Activity context) {
+    public static void init(final Context context) {
         interstitialAD = new InterstitialAd(context);            // 삽입 광고 생성관련 메소드들.
+
+        final String INTERSTITIAL_ID;
+        if (AppHelper.isComicz(context)) {
+            INTERSTITIAL_ID = context.getString(R.string.comicz_admob_interstitial_id);
+        } else {
+            INTERSTITIAL_ID = context.getString(R.string.file_admob_interstitial_id);
+        }
+
         interstitialAD.setAdUnitId(INTERSTITIAL_ID);
-        requestNewInterstitial();
-
         interstitialAD.setAdListener(new AdListener() {
-
             @Override
             public void onAdClosed() {
                 super.onAdClosed();
                 JLog.d(TAG, "onAdClosed");
                 requestNewInterstitial();
-                if(runnable != null) {
+                if (runnable != null) {
                     runnable.run();
                 }
             }
@@ -80,7 +87,6 @@ public class AdInterstitialManager {
                 JLog.d(TAG, "onAdLoaded");
             }
         });                                // 광고의 리스너를 설정합니다.
-
     }
 
     public static boolean showAd(Runnable runnable) {

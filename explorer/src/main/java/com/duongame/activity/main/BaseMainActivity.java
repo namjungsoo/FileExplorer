@@ -15,6 +15,11 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
+
+import com.google.android.gms.ads.initialization.InitializationStatus;
+import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
+import com.google.android.gms.ads.reward.RewardItem;
+import com.google.android.gms.ads.reward.RewardedVideoAdListener;
 import com.google.android.material.navigation.NavigationView;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -22,6 +27,8 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.appcompat.widget.Toolbar;
+
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -103,6 +110,8 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
     boolean isDropboxLoginClicked;
     boolean isGoogleDriveLoginClicked;
 
+    Handler handler;
+
     public boolean getShowReview() {
         return showReview;
     }
@@ -131,14 +140,33 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (BuildConfig.SHOW_AD) {
-            MobileAds.initialize(this);
+        handler = new Handler();
 
-            AdRewardManager.init(BaseMainActivity.this);
-            AdBannerManager.init(BaseMainActivity.this);
-            AdInterstitialManager.init(BaseMainActivity.this);
+        JLog.e("Jungsoo", "onCreate begin");
+        if (BuildConfig.SHOW_AD) {
+            new Thread(() -> MobileAds.initialize(BaseMainActivity.this,
+                    initializationStatus -> {
+                        JLog.e("Jungsoo", "onCreate MobileAds.initialize onInitializationComplete end");
+                        handler.post(() -> {// UI thread에서 처리
+                            // init에서 제외한 request 수행
+                            // banner는 initContentView에서 수행
+                            AdRewardManager.request(this);
+                            AdBannerManager.requestAd(AdBannerManager.getAdPopupView());
+                            AdInterstitialManager.request();
+                        });
+                    })).start();
+            JLog.e("Jungsoo", "onCreate MobileAds.initialize end");
         }
 
+        // init에서 request는 제외함
+        // init은 MobileAds.initialize 완료되기전에 가능
+        AdRewardManager.init(BaseMainActivity.this);
+        JLog.e("Jungsoo", "onCreate AdRewardManager.initialize end");
+        //AdBannerManager.init(BaseMainActivity.this);
+        AdBannerManager.initExt(BaseMainActivity.this);
+        JLog.e("Jungsoo", "onCreate AdBannerManager.initialize end");
+        AdInterstitialManager.init(BaseMainActivity.this);
+        JLog.e("Jungsoo", "onCreate AdInterstitialManager.initialize end");
 
         JLog.e("Jungsoo", "initContentView begin");
         initContentView();
@@ -181,6 +209,7 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
                 }
             }
         });
+        JLog.e("Jungsoo", "onCreate end");
     }
 
     @Override
@@ -538,34 +567,48 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
 
     private void initContentView() {
         if (BuildConfig.SHOW_AD) {
-            final LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            activityView = inflater.inflate(getLayoutResId(), null, true);
+            setContentView(getLayoutResId());
+            // getContentView
+            mainView = this.findViewById(R.id.activity_main);
+            AdView adView = this.findViewById(R.id.adView);
+            AdBannerManager.initBannerAdExt(this, 0, adView);
+            handler.postDelayed(() -> {
+                JLog.e("Jungsoo", "requestAd begin");
+                AdBannerManager.requestAd(0);
+                JLog.e("Jungsoo", "requestAd end");
+            }, 1000);
 
-            mainView = activityView.findViewById(R.id.activity_main);
-
-            final RelativeLayout layout = new RelativeLayout(this);
-            layout.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT));
-
-            adView = AdBannerManager.getAdBannerView(0);
-
-            // adview layout params
-            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-            params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
-            adView.setLayoutParams(params);
-
-            JLog.e("Jungsoo", "requestAd begin");
-            AdBannerManager.requestAd(0);
-            JLog.e("Jungsoo", "requestAd end");
-
-            // mainview layout params
-            params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
-            params.addRule(RelativeLayout.ABOVE, adView.getId());
-            activityView.setLayoutParams(params);
-
-            layout.addView(adView);
-            layout.addView(activityView);
-
-            setContentView(layout);
+//            final LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+//            activityView = inflater.inflate(getLayoutResId(), null, true);
+//
+//            // 향후 bottomUI에 사용하기 위해서 mainView를 받아 놓는다
+//            mainView = activityView.findViewById(R.id.activity_main);
+//
+//            final RelativeLayout layout = new RelativeLayout(this);
+//            layout.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT));
+//
+//            adView = AdBannerManager.getAdBannerView(0);
+//
+//            // adview layout params
+//            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+//            params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+//            adView.setLayoutParams(params);
+//
+//            handler.postDelayed(() -> {
+//                JLog.e("Jungsoo", "requestAd begin");
+//                AdBannerManager.requestAd(0);
+//                JLog.e("Jungsoo", "requestAd end");
+//            }, 1000);
+//
+//            // mainview layout params
+//            params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
+//            params.addRule(RelativeLayout.ABOVE, adView.getId());
+//            activityView.setLayoutParams(params);
+//
+//            layout.addView(adView);
+//            layout.addView(activityView);
+//
+//            setContentView(layout);
         } else {
             JLog.e("Jungsoo", "initContentView setContentView begin");
             setContentView(getLayoutResId());
