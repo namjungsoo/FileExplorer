@@ -98,6 +98,9 @@ public class BaseActivity extends AppCompatActivity {
                 if (runnable != null)
                     runnable.run();
             }
+        } else {// 광고 제거되었을때는 카운트 증가 없이 그냥 종료 
+            if (runnable != null)
+                runnable.run();
         }
     }
 
