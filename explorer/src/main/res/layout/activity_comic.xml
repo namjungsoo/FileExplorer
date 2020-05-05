@@ -49,6 +49,7 @@
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
     <include layout="@layout/explorer_bottom" />
+    <include layout="@layout/explorer_miniplayer"/>
 
     <ProgressBar
         android:visibility="gone"
