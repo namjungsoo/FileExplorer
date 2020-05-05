@@ -38,12 +38,14 @@ public class MainApplication extends MultiDexApplication {
     public void onCreate() {
         super.onCreate();
 
+        JLog.e("Jungsoo", "MainApplication.onCreate begin");
+
         nightMode = PreferenceHelper.getNightMode(this);
         thumbnailDisabled = PreferenceHelper.getThumbnailDisabled(this);
         japaneseDirection = PreferenceHelper.getJapaneseDirection(this);
         pagingAnimationDisabled = PreferenceHelper.getPagingAnimationDisabled(this);
 
-        JLog.e("Jungsoo", "onCreate end");
+        JLog.e("Jungsoo", "MainApplication.onCreate end");
     }
 
     //region Path

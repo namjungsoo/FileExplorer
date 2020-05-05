@@ -5,6 +5,7 @@ import android.os.Bundle;
 import com.duongame.R;
 import com.duongame.fragment.BaseFragment;
 import com.duongame.fragment.ExplorerFragment;
+import com.duongame.helper.AppHelper;
 
 public class FileActivity extends BaseMainActivity {
     private final static String TAG = FileActivity.class.getSimpleName();;
@@ -19,7 +20,11 @@ public class FileActivity extends BaseMainActivity {
 
     @Override
     protected int getLayoutResId() {
-        return R.layout.activity_main_file;
+        if (AppHelper.isPro(this)) {
+            return R.layout.activity_main_file;
+        } else {
+            return R.layout.activity_main_file_ad;
+        }
     }
 
     @Override

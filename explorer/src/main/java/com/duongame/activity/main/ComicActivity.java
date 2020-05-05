@@ -1,10 +1,8 @@
 package com.duongame.activity.main;
 
-import android.content.DialogInterface;
 import android.os.Bundle;
-import com.google.android.material.tabs.TabLayout;
+
 import androidx.viewpager.widget.ViewPager;
-import android.view.KeyEvent;
 
 import com.duongame.MainApplication;
 import com.duongame.R;
@@ -16,6 +14,7 @@ import com.duongame.helper.AppHelper;
 import com.duongame.helper.JLog;
 import com.duongame.helper.PreferenceHelper;
 import com.duongame.manager.PermissionManager;
+import com.google.android.material.tabs.TabLayout;
 
 public class ComicActivity extends BaseMainActivity {
     private final static String TAG = ComicActivity.class.getSimpleName();
@@ -40,36 +39,28 @@ public class ComicActivity extends BaseMainActivity {
                     AppHelper.getAppName(this),
                     getString(R.string.required_permission),
                     null,
-                    new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            PreferenceHelper.setPermissionAgreed(ComicActivity.this, true);
-                            PermissionManager.checkStoragePermissions(ComicActivity.this);
-                        }
+                    (dialog, which) -> {
+                        PreferenceHelper.setPermissionAgreed(ComicActivity.this, true);
+                        PermissionManager.checkStoragePermissions(ComicActivity.this);
                     },
-                    new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            try {
-                                MainApplication.getInstance(ComicActivity.this).exit(ComicActivity.this);
-                            } catch (NullPointerException e) {
+                    (dialog, which) -> {
+                        try {
+                            MainApplication.getInstance(ComicActivity.this).exit(ComicActivity.this);
+                        } catch (NullPointerException e) {
 
-                            }
                         }
                     },
-                    new DialogInterface.OnKeyListener() {
-                        @Override
-                        public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
-                            return false;
-                        }
-                    });
+                    (dialog, keyCode, event) -> false);
         }
     }
 
     @Override
     protected int getLayoutResId() {
-        return R.layout.activity_main_comic;
-        //return R.layout.activity_comic;// navigation drawer 없는 버전 = cloud 지원 안하는 버전
+        if (AppHelper.isPro(this)) {
+            return R.layout.activity_main_comic;
+        } else {
+            return R.layout.activity_main_comic_ad;
+        }
     }
 
     @Override
@@ -89,16 +80,13 @@ public class ComicActivity extends BaseMainActivity {
     }
 
     private void initTabs() {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                pager = findViewById(R.id.pager);
-                adapter = new ComicPagerAdapter(getSupportFragmentManager(), ComicActivity.this);
-                pager.setAdapter(adapter);
-                pager.setOffscreenPageLimit(3);
-                TabLayout tab = findViewById(R.id.tab);
-                tab.setupWithViewPager(pager);
-            }
+        new Thread(() -> {
+            pager = findViewById(R.id.pager);
+            adapter = new ComicPagerAdapter(getSupportFragmentManager(), ComicActivity.this);
+            pager.setAdapter(adapter);
+            pager.setOffscreenPageLimit(3);
+            TabLayout tab = findViewById(R.id.tab);
+            tab.setupWithViewPager(pager);
         }).start();
     }
 }
