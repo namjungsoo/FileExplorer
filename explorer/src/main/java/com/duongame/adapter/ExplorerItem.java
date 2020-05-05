@@ -1,12 +1,18 @@
 package com.duongame.adapter;
 
+import androidx.room.Entity;
+import androidx.room.Ignore;
+import androidx.room.PrimaryKey;
+
 import com.duongame.attacher.ImageViewAttacher;
 import com.duongame.helper.DateHelper;
+
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Created by namjungsoo on 2016-11-06.
  */
-
+@Entity
 public class ExplorerItem implements Cloneable {
     //FILETYPE_IMAGE
     public static final int EXTTYPE_JPG = 0;// JPG, GIF
@@ -48,29 +54,42 @@ public class ExplorerItem implements Cloneable {
     public static final int SIDE_LEFT = 1;
     public static final int SIDE_RIGHT = 2;
 
+    @PrimaryKey
+    @NotNull
+    public String path;// 파일명+패스이다.
     public String name;
     public String date;
     public long size;
-    public String path;// 파일명+패스이다.
     public int type;// FileType
 
     // 이미지 ZIP 데이터
+    @Ignore
     public int side = SIDE_ALL;
+    @Ignore
     public int index;// 내자신의 인덱스
+    @Ignore
     public int orgIndex;// 원본의 인덱스(zip파일에 해당함)
+    @Ignore
     public int position;// adapter의 position
 
     // ZIP 추가 데이터
+    @Ignore
     public int width;
+    @Ignore
     public int height;
 
     // 로딩큐 우선순위
+    @Ignore
     public int priority;// 0이면 최우선, 1이면 낮음
+    @Ignore
     public boolean selected;// 선택되었는가 표시
 
     //    public WeakReference<ImageView> imageViewRef;
+    @Ignore
     public ImageViewAttacher attacher;
+    @Ignore
     public Object metadata;
+    @Ignore
     public String simpleDate;
 
     public ExplorerItem(String path, String name, String date, long size, int type) {

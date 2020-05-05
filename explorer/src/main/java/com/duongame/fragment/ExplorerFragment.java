@@ -212,15 +212,25 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
         handler = new Handler();
         // 현재 파일 리스트를 얻어서 바로 셋팅
         JLog.e("Jungsoo", "ExplorerItemDB begin");
+
+        setCanClick(false);
         new Thread(() -> {
             JLog.e("Jungsoo", "ExplorerItemDB thread");
             List<ExplorerItem> fileList = ExplorerItemDB.Companion.getInstance(getContext()).getDb().explorerItemDao().getItems();
-            handler.postAtFrontOfQueue(() -> {
+
+            // DB에 저장된게 있으면 adapter에 적용
+            if(fileList.size() > 0) {
                 adapter.setFileList(fileList);
-                adapter.notifyDataSetChanged();
-                setCanClick(true);
-                JLog.e("Jungsoo", "ExplorerItemDB end");
-            });
+
+                handler.postAtFrontOfQueue(() -> {
+                    adapter.notifyDataSetChanged();
+
+                    // 이제 클릭할수 있음
+                    // 프로그레스바 안보이기
+                    setCanClick(true);
+                    JLog.e("Jungsoo", "ExplorerItemDB end");
+                });
+            }
         }).start();
 
         FragmentActivity activity = getActivity();
@@ -1049,7 +1059,13 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
         if (localSearchTask != null) {
             localSearchTask.cancel(true);
         }
-        localSearchTask = new LocalSearchTask(this, isPathChanged);
+
+        // 최초 로딩시에만 적용됨
+        boolean disableUpdateCanClick = false;
+        if(adapter.getItemCount() > 0) {// 이미 DB에서 데이터를 로딩했으므로 canClick을 업데이트 하지 않
+            disableUpdateCanClick = true;
+        }
+        localSearchTask = new LocalSearchTask(this, isPathChanged, disableUpdateCanClick);
         localSearchTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, path);
 
         // 패스 UI를 가장 오른쪽으로 스크롤

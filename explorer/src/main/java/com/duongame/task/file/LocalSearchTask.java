@@ -5,6 +5,8 @@ import android.view.View;
 
 import com.duongame.MainApplication;
 import com.duongame.adapter.ExplorerItem;
+import com.duongame.db.ExplorerItemDB;
+import com.duongame.db.ExplorerItemDao;
 import com.duongame.file.FileExplorer;
 import com.duongame.file.FileHelper;
 import com.duongame.fragment.ExplorerFragment;
@@ -18,9 +20,17 @@ import static android.view.View.GONE;
 
 public class LocalSearchTask extends AsyncTask<String, Void, FileExplorer.Result> {
     private WeakReference<ExplorerFragment> fragmentWeakReference;
+
+    // 기본값 false
     private boolean pathChanged;
+    private boolean disableUpdateCanClick;
     private String path;
     private Comparator<ExplorerItem> comparator;
+
+    public LocalSearchTask(ExplorerFragment fragment, boolean pathChanged, boolean disableUpdateCanClick) {
+        this(fragment, pathChanged);
+        this.disableUpdateCanClick = disableUpdateCanClick;
+    }
 
     public LocalSearchTask(ExplorerFragment fragment, boolean pathChanged) {
         this.pathChanged = pathChanged;
@@ -102,7 +112,9 @@ public class LocalSearchTask extends AsyncTask<String, Void, FileExplorer.Result
         if (fragment == null)
             return;
 
-        fragment.setCanClick(false);// 이제부터 클릭할수 없음
+        if (!disableUpdateCanClick) {
+            fragment.setCanClick(false);// 이제부터 클릭할수 없음. 프로그래스바 표시
+        }
     }
 
     @Override
@@ -160,6 +172,15 @@ public class LocalSearchTask extends AsyncTask<String, Void, FileExplorer.Result
             }
 
             fragment.setCanClick(true);
+            new Thread(() -> {
+                // 결과가 왔으므로 DB에 저장해 준다.
+                JLog.e("Jungsoo", "LocalSearchTask doInBackground DB begin");
+                ExplorerItemDao dao = ExplorerItemDB.Companion.getInstance(fragment.getContext()).getDb().explorerItemDao();
+                dao.deleteAll();
+                if (result.fileList != null)
+                    dao.insertItems(result.fileList);
+                JLog.e("Jungsoo", "LocalSearchTask doInBackground DB end");
+            });
             JLog.e("Jungsoo", "LocalSearchTask onPostExecute end");
         } catch (NullPointerException e) {
 
