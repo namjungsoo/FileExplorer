@@ -27,7 +27,7 @@ android {
 
     signingConfigs {
         release {
-            storeFile file("../fileexplorer.jks")
+            storeFile file("../FileExplorer.jks")
             storePassword "love77"
             keyAlias "comicz"
             keyPassword "love77"
@@ -86,15 +86,15 @@ android {
         // 1. 코믹제트
         comicz {
             //admob
-            buildConfigField "String", "INTERSTITIAL_ID", "\"ca-app-pub-8174809468024854/1821427640\""
-            buildConfigField "String", "POPUP_ID", "\"ca-app-pub-8174809468024854/2751365931\""
-            buildConfigField "String", "BANNER_ID", "\"ca-app-pub-8174809468024854/8003692618\""
+//            buildConfigField "String", "INTERSTITIAL_ID", "@string/comicz_admob_interstitial_id"
+//            buildConfigField "String", "POPUP_ID", "@string/comicz_admob_popup_id"
+//            buildConfigField "String", "BANNER_ID", "@string/comicz_admob_banner_id"
             //TEST
             //buildConfigField "String", "REWARD_ID", "\"ca-app-pub-3940256099942544/5224354917\""
-            buildConfigField "String", "REWARD_ID", "\"ca-app-pub-8174809468024854/9785486682\""
+//            buildConfigField "String", "REWARD_ID", "@string/comicz_admob_reward_id"
 
             //ga
-            buildConfigField "String", "GA_TRACKING_ID", "\"UA-61499807-13\""
+//            buildConfigField "String", "GA_TRACKING_ID", "@string/comicz_ga_tracking_id"
             buildConfigField "boolean", "PREVIEW_ZIP", "true"
             applicationIdSuffix '.comicz'
             dimension "project"
@@ -107,15 +107,15 @@ android {
         // 2. 파일탐색기
         file {
             //admob
-            buildConfigField "String", "INTERSTITIAL_ID", "\"ca-app-pub-8174809468024854/9810925855\""
-            buildConfigField "String", "POPUP_ID", "\"ca-app-pub-8174809468024854/4034665627\""
-            buildConfigField "String", "BANNER_ID", "\"ca-app-pub-8174809468024854/2530012260\""
+//            buildConfigField "String", "INTERSTITIAL_ID", "@string/file_admob_interstitial_id"
+//            buildConfigField "String", "POPUP_ID", "@string/file_admob_popup_id"
+//            buildConfigField "String", "BANNER_ID", "@string/file_admob_banner_id"
             //TEST
             //buildConfigField "String", "REWARD_ID", "\"ca-app-pub-3940256099942544/5224354917\""
-            buildConfigField "String", "REWARD_ID", "\"ca-app-pub-8174809468024854/8963359606\""
+//            buildConfigField "String", "REWARD_ID", "@string/file_admob_reward_id"
 
             //ga
-            buildConfigField "String", "GA_TRACKING_ID", "\"UA-61499807-14\""
+//            buildConfigField "String", "GA_TRACKING_ID", "@string/file_ga_tracking_id"
             buildConfigField "boolean", "PREVIEW_ZIP", "false"
             applicationIdSuffix '.file'
             dimension "project"
@@ -125,7 +125,7 @@ android {
                                      ADMOB_APP_ID: "@string/file_admob_app_id"])
         }
 
-        // 유료(현재 사용하지 않음)
+        // 유료 (아직 사용함. 그런데 무료버전에 기부방식으로 변경할 예정)
         pro {
             buildConfigField "boolean", "SHOW_AD", "false"
             applicationIdSuffix '.pro'

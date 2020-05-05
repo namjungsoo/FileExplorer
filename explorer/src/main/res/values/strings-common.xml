@@ -12,6 +12,18 @@
     <string name="right_arrow" translatable="false">&gt;</string>
     <string name="menu_night" translatable="false">Night</string>
     <string name="menu_anim" translatable="false">Anim</string>
+
+    <string name="comicz_ga_tracking_id" translatable="false">UA-61499807-13</string>
     <string name="comicz_admob_app_id" translatable="false">ca-app-pub-8174809468024854~5760672659</string>
+    <string name="comicz_admob_interstitial_id" translatable="false">ca-app-pub-8174809468024854/1821427640</string>
+    <string name="comicz_admob_popup_id" translatable="false">ca-app-pub-8174809468024854/2751365931</string>
+    <string name="comicz_admob_banner_id" translatable="false">ca-app-pub-8174809468024854/8003692618</string>
+    <string name="comicz_admob_reward_id" translatable="false">ca-app-pub-8174809468024854/9785486682</string>
+
+    <string name="file_ga_tracking_id" translatable="false">UA-61499807-14</string>
     <string name="file_admob_app_id" translatable="false">ca-app-pub-8174809468024854~5974433252</string>
+    <string name="file_admob_interstitial_id" translatable="false">ca-app-pub-8174809468024854/9810925855</string>
+    <string name="file_admob_popup_id" translatable="false">ca-app-pub-8174809468024854/4034665627</string>
+    <string name="file_admob_banner_id" translatable="false">ca-app-pub-8174809468024854/2530012260</string>
+    <string name="file_admob_reward_id" translatable="false">ca-app-pub-8174809468024854/8963359606</string>
 </resources>
