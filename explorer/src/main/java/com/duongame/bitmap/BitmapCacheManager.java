@@ -123,7 +123,7 @@ public class BitmapCacheManager {
     }
 
     public static void removeAllPages() {
-        Log.e(TAG, "removeAllPages");
+        JLog.e(TAG, "removeAllPages");
         for (String key : pageCache.keySet()) {
             BitmapCache cache = pageCache.get(key);
             if (cache == null) {
@@ -182,7 +182,7 @@ public class BitmapCacheManager {
     }
 
     public static void removeAllBitmaps() {
-        Log.e(TAG, "removeAllBitmaps");
+        JLog.e(TAG, "removeAllBitmaps");
 
         for (String key : bitmapCache.keySet()) {
             BitmapCache cache = bitmapCache.get(key);
