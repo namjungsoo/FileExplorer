@@ -80,13 +80,12 @@ public class ComicActivity extends BaseMainActivity {
     }
 
     private void initTabs() {
-        new Thread(() -> {
-            pager = findViewById(R.id.pager);
-            adapter = new ComicPagerAdapter(getSupportFragmentManager(), ComicActivity.this);
-            pager.setAdapter(adapter);
-            pager.setOffscreenPageLimit(3);
-            TabLayout tab = findViewById(R.id.tab);
-            tab.setupWithViewPager(pager);
-        }).start();
+        // 이부분은 쓰레드에서 할 것이 아니다. 성능상의 이점도 없음
+        pager = findViewById(R.id.pager);
+        adapter = new ComicPagerAdapter(getSupportFragmentManager(), ComicActivity.this);
+        pager.setAdapter(adapter);
+        pager.setOffscreenPageLimit(3);
+        TabLayout tab = findViewById(R.id.tab);
+        tab.setupWithViewPager(pager);
     }
 }
