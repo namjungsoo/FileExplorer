@@ -1,6 +1,7 @@
 package com.duongame.file;
 
 import android.content.Context;
+import android.os.Build;
 
 import com.duongame.R;
 import com.duongame.adapter.ExplorerItem;
@@ -10,6 +11,7 @@ import java.io.File;
 import java.text.DecimalFormat;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.Locale;
 
 /**
  * Created by namjungsoo on 2016-11-19.
@@ -27,6 +29,29 @@ public class FileHelper {
         public int index;
         public String fileName;
         public int count;
+    }
+
+    public static String getFileNameCharset(Context context) {
+        Locale locale;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            locale = context.getResources().getConfiguration().getLocales().get(0);
+        } else {
+            locale = context.getResources().getConfiguration().locale;
+        }
+
+        String charset = null;
+        switch (locale.getLanguage()) {
+            case "ko":
+                charset = "cp949";
+                break;
+            case "ja":
+                charset = "cp932";
+                break;
+            case "zh":
+                charset = "cp936";
+                break;
+        }
+        return charset;
     }
 
     public static String getNameWithoutTar(String name) {
@@ -52,6 +77,7 @@ public class FileHelper {
             return 0;
         }
     }
+
     public static String getFileName(String path) {
         return path.substring(path.lastIndexOf("/") + 1);
     }
@@ -148,12 +174,11 @@ public class FileHelper {
         int resId = R.drawable.ic_file_normal;
 
         // 이미지일 경우 구분
-        switch(type) {
+        switch (type) {
             case ExplorerItem.FILETYPE_FOLDER:
                 resId = R.drawable.ic_file_folder;
                 break;
-            case ExplorerItem.FILETYPE_IMAGE:
-            {
+            case ExplorerItem.FILETYPE_IMAGE: {
                 String lowerFileName = fileName.toLowerCase();
                 if (lowerFileName.endsWith(".gif"))
                     resId = R.drawable.ic_file_jpg;// gif가 없음
@@ -162,15 +187,14 @@ public class FileHelper {
                 else
                     resId = R.drawable.ic_file_jpg;
             }
-                break;
+            break;
             case ExplorerItem.FILETYPE_ZIP:
                 resId = R.drawable.ic_file_zip;
                 break;
             case ExplorerItem.FILETYPE_PDF:
                 resId = R.drawable.ic_file_pdf;
                 break;
-            case ExplorerItem.FILETYPE_VIDEO:
-            {
+            case ExplorerItem.FILETYPE_VIDEO: {
                 String lowerFileName = fileName.toLowerCase();
                 if (lowerFileName.endsWith(".mp4"))
                     resId = R.drawable.ic_file_mp4;
@@ -179,7 +203,7 @@ public class FileHelper {
                 else
                     resId = R.drawable.ic_file_avi;
             }
-                break;
+            break;
             case ExplorerItem.FILETYPE_AUDIO:
                 resId = R.drawable.ic_file_mp3;
                 break;
@@ -266,8 +290,8 @@ public class FileHelper {
     }
 
     public static boolean isJpegImage(String filename) {
-        if (filename.endsWith(".jpg")|| filename.endsWith(".jpeg") ||
-                filename.endsWith(".JPG")|| filename.endsWith(".JPEG")) {
+        if (filename.endsWith(".jpg") || filename.endsWith(".jpeg") ||
+                filename.endsWith(".JPG") || filename.endsWith(".JPEG")) {
             return true;
         }
         return false;

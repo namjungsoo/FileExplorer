@@ -47,6 +47,15 @@ public class Zip4jFile implements IArchiveFile {
     }
 
     @Override
+    public void setFileNameCharset(String charset) {
+        try {
+            file.setFileNameCharset(charset);
+        } catch (ZipException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
     public ArrayList<ArchiveHeader> getHeaders() {
         if (file != null) {
             try {
