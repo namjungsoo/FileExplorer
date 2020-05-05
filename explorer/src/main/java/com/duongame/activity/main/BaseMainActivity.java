@@ -577,38 +577,6 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
                 AdBannerManager.requestAd(0);
                 JLog.e("Jungsoo", "requestAd end");
             }, 1000);
-
-//            final LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-//            activityView = inflater.inflate(getLayoutResId(), null, true);
-//
-//            // 향후 bottomUI에 사용하기 위해서 mainView를 받아 놓는다
-//            mainView = activityView.findViewById(R.id.activity_main);
-//
-//            final RelativeLayout layout = new RelativeLayout(this);
-//            layout.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT));
-//
-//            adView = AdBannerManager.getAdBannerView(0);
-//
-//            // adview layout params
-//            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-//            params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
-//            adView.setLayoutParams(params);
-//
-//            handler.postDelayed(() -> {
-//                JLog.e("Jungsoo", "requestAd begin");
-//                AdBannerManager.requestAd(0);
-//                JLog.e("Jungsoo", "requestAd end");
-//            }, 1000);
-//
-//            // mainview layout params
-//            params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
-//            params.addRule(RelativeLayout.ABOVE, adView.getId());
-//            activityView.setLayoutParams(params);
-//
-//            layout.addView(adView);
-//            layout.addView(activityView);
-//
-//            setContentView(layout);
         } else {
             JLog.e("Jungsoo", "initContentView setContentView begin");
             setContentView(getLayoutResId());
@@ -1086,20 +1054,6 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
         } else if (id == R.id.action_ad_remove) {
             AdRewardManager.show(this);
         }
-
-//        if (id == R.id.nav_camera) {
-//            // Handle the camera action
-//        } else if (id == R.id.nav_gallery) {
-//
-//        } else if (id == R.id.nav_slideshow) {
-//
-//        } else if (id == R.id.nav_manage) {
-//
-//        } else if (id == R.id.nav_share) {
-//
-//        } else if (id == R.id.nav_send) {
-//
-//        }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);

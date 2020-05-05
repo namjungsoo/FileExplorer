@@ -44,9 +44,10 @@ public class BaseActivity extends AppCompatActivity {
 
     private void setupFabric() {
         CrashlyticsCore crashlyticsCore = new CrashlyticsCore.Builder()
-//                .disabled(BuildConfig.DEBUG)
+                .disabled(BuildConfig.DEBUG)
                 .build();
-        Fabric.with(this, new Crashlytics.Builder().core(crashlyticsCore).build());
+        Crashlytics crashlytics = new Crashlytics.Builder().core(crashlyticsCore).build();
+        Fabric.with(this, crashlytics);
     }
 
     private void setupFirebase() {
