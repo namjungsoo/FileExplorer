@@ -177,10 +177,14 @@ public class LocalSearchTask extends AsyncTask<String, Void, FileExplorer.Result
                 JLog.e("Jungsoo", "LocalSearchTask doInBackground DB begin");
                 ExplorerItemDao dao = ExplorerItemDB.Companion.getInstance(fragment.getContext()).getDb().explorerItemDao();
                 dao.deleteAll();
-                if (result.fileList != null)
+                if (result.fileList != null) {
+                    for(ExplorerItem item : result.fileList) {
+                        JLog.e("Jungsoo", item.toString());
+                    }
                     dao.insertItems(result.fileList);
+                }
                 JLog.e("Jungsoo", "LocalSearchTask doInBackground DB end");
-            });
+            }).start();
             JLog.e("Jungsoo", "LocalSearchTask onPostExecute end");
         } catch (NullPointerException e) {
 
