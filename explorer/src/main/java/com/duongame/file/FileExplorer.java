@@ -10,6 +10,9 @@ public abstract class FileExplorer {
     public static class Result {
         public ArrayList<ExplorerItem> fileList;
         public ArrayList<ExplorerItem> imageList;
+
+        public ArrayList<ExplorerItem> videoList;
+        public ArrayList<ExplorerItem> audioList;
     }
 
     private ArrayList<String> extensions;

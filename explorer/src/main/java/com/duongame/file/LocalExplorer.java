@@ -40,8 +40,7 @@ public class LocalExplorer extends FileExplorer {
         FileExplorer.Result result = new FileExplorer.Result();
 
         // 파일로 아이템을 만듬
-        for (int i = 0; i < files.length; i++) {
-            File eachFile = files[i];
+        for (File eachFile : files) {
             //if (eachFile.getName().equals(".") || eachFile.getName().equals("..")) {// .으로 시작되면 패스 함
             if (!isHiddenFile() && eachFile.getName().startsWith(".")) {// .으로 시작되면 패스 함 (숨김파일임)
                 continue;

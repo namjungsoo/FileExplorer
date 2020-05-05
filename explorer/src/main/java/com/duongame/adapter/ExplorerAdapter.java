@@ -17,7 +17,6 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.target.ImageViewTarget;
 import com.duongame.MainApplication;
 import com.duongame.BuildConfig;
-import com.duongame.GlideApp;
 import com.duongame.R;
 import com.duongame.bitmap.BitmapCacheManager;
 import com.duongame.bitmap.BitmapLoader;
@@ -29,6 +28,7 @@ import com.duongame.task.thumbnail.LoadZipThumbnailTask;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import static com.duongame.bitmap.BitmapCacheManager.getThumbnail;
 
@@ -40,7 +40,7 @@ public class ExplorerAdapter extends RecyclerView.Adapter<ExplorerAdapter.Explor
     private final static String TAG = "ExplorerAdapter";
     private final static boolean DEBUG = false;
 
-    protected ArrayList<ExplorerItem> fileList;
+    protected List<ExplorerItem> fileList;
     private HashMap<String, ExplorerItem> fileMap;// file path와 file item을 묶어 놓음
     protected Activity context;
 
@@ -157,7 +157,7 @@ public class ExplorerAdapter extends RecyclerView.Adapter<ExplorerAdapter.Explor
         return fileList.size();
     }
 
-    public void setFileList(ArrayList<ExplorerItem> fileList) {
+    public void setFileList(List<ExplorerItem> fileList) {
         this.fileList = fileList;
         if (fileList == null)
             return;
