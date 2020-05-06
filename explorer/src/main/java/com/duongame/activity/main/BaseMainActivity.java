@@ -94,6 +94,8 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
     protected Menu menu;
     protected LinearLayout bottom;
 
+    protected LinearLayout miniPlayer;
+
     ImageButton btnCopy;
     ImageButton btnCut;
     ImageButton btnPaste;
@@ -644,6 +646,12 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
         });
 
         loadingProgressBar = findViewById(R.id.progress_loading);
+
+
+
+        // miniplayer
+        miniPlayer = findViewById(R.id.miniplayer);
+        miniPlayer.setTranslationY(UnitHelper.dpToPx(56));
     }
 
     public ProgressBar getProgressBarLoading() {

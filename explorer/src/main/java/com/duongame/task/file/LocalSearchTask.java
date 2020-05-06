@@ -135,6 +135,8 @@ public class LocalSearchTask extends AsyncTask<String, Void, FileExplorer.Result
             fragment.setFileList(result.fileList);
             MainApplication.getInstance(fragment.getActivity()).setFileList(result.fileList);
             MainApplication.getInstance(fragment.getActivity()).setImageList(result.imageList);
+            MainApplication.getInstance(fragment.getActivity()).setVideoList(result.videoList);
+            MainApplication.getInstance(fragment.getActivity()).setAudioList(result.audioList);
             fragment.getAdapter().setFileList(fragment.getFileList());
 
             fragment.getAdapter().notifyDataSetChanged();

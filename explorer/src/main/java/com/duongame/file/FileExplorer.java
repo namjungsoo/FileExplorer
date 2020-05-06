@@ -22,7 +22,10 @@ public abstract class FileExplorer {
     private boolean excludeDirectory;
     private boolean recursiveDirectory;
     private boolean hiddenFile;
+
     private boolean imageListEnable;
+    private boolean videoListEnable;
+    private boolean audioListEnable;
 
     public abstract Result search(String path);
 
@@ -33,7 +36,7 @@ public abstract class FileExplorer {
 
     public FileExplorer setExtension(String ext) {
         //this.extension = ext;
-        if(extensions == null) {
+        if (extensions == null) {
             extensions = new ArrayList<>();
         }
         extensions.clear();
@@ -71,12 +74,22 @@ public abstract class FileExplorer {
         return this;
     }
 
+    public FileExplorer setVideoListEnable(boolean b) {
+        this.videoListEnable = b;
+        return this;
+    }
+
+    public FileExplorer setAudioListEnable(boolean b) {
+        this.audioListEnable = b;
+        return this;
+    }
+
     public static class DirectoryPreferComparator implements Comparator<File> {
         @Override
         public int compare(File lhs, File rhs) {
-            if(lhs.isDirectory())
+            if (lhs.isDirectory())
                 return -1;
-            if(rhs.isDirectory())
+            if (rhs.isDirectory())
                 return 1;
             return 0;
         }
@@ -108,5 +121,13 @@ public abstract class FileExplorer {
 
     public boolean isImageListEnable() {
         return imageListEnable;
+    }
+
+    public boolean isVideoListEnable() {
+        return videoListEnable;
+    }
+
+    public boolean isAudioListEnable() {
+        return audioListEnable;
     }
 }
