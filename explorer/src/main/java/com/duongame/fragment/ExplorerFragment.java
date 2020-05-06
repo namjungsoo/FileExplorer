@@ -8,15 +8,6 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.FragmentActivity;
-import androidx.core.content.FileProvider;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,6 +21,14 @@ import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.ViewSwitcher;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.content.FileProvider;
+import androidx.fragment.app.FragmentActivity;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.duongame.BuildConfig;
 import com.duongame.MainApplication;
@@ -71,7 +70,6 @@ import com.duongame.view.Indicator;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.List;
 
 import static android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION;
 import static com.duongame.ExplorerConfig.MAX_THUMBNAILS;
@@ -198,17 +196,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
         return sortDirection;
     }
 
-    @Nullable
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
-                             Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.fragment_explorer, container, false);
-
-        initUI();
-        JLog.e("Jungsoo", "initUI end");
-
-        initViewType();
-        JLog.e("Jungsoo", "initViewType end");
-
+    private void loadFileListFromLocalDB() {
         handler = new Handler();
         // 현재 파일 리스트를 얻어서 바로 셋팅
         JLog.e("Jungsoo", "ExplorerItemDB begin");
@@ -216,10 +204,21 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
         setCanClick(false);
         new Thread(() -> {
             JLog.e("Jungsoo", "ExplorerItemDB thread");
-            List<ExplorerItem> fileList = ExplorerItemDB.Companion.getInstance(getContext()).getDb().explorerItemDao().getItems();
+            ArrayList<ExplorerItem> fileList = (ArrayList<ExplorerItem>) ExplorerItemDB.Companion.getInstance(getContext()).getDb().explorerItemDao().getItems();
+            ArrayList<ExplorerItem> imageList = FileHelper.getImageFileList(fileList);
+            ArrayList<ExplorerItem> videoList = FileHelper.getVideoFileList(fileList);
+            ArrayList<ExplorerItem> audioList = FileHelper.getAudioFileList(fileList);
+
+            MainApplication app = MainApplication.getInstance(getActivity());
+            if (app != null) {
+                app.setFileList(fileList);
+                app.setFileList(imageList);
+                app.setFileList(videoList);
+                app.setFileList(audioList);
+            }
 
             // DB에 저장된게 있으면 adapter에 적용
-            if(fileList.size() > 0) {
+            if (fileList.size() > 0) {
                 adapter.setFileList(fileList);
 
                 handler.postAtFrontOfQueue(() -> {
@@ -232,6 +231,21 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
                 });
             }
         }).start();
+
+    }
+
+    @Nullable
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             Bundle savedInstanceState) {
+        rootView = inflater.inflate(R.layout.fragment_explorer, container, false);
+
+        initUI();
+        JLog.e("Jungsoo", "initUI end");
+
+        initViewType();
+        JLog.e("Jungsoo", "initViewType end");
+
+        loadFileListFromLocalDB();
 
         FragmentActivity activity = getActivity();
         if (activity != null) {
@@ -1062,7 +1076,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
 
         // 최초 로딩시에만 적용됨
         boolean disableUpdateCanClick = false;
-        if(adapter.getItemCount() > 0) {// 이미 DB에서 데이터를 로딩했으므로 canClick을 업데이트 하지 않
+        if (adapter.getItemCount() > 0) {// 이미 DB에서 데이터를 로딩했으므로 canClick을 업데이트 하지 않
             disableUpdateCanClick = true;
         }
         localSearchTask = new LocalSearchTask(this, isPathChanged, disableUpdateCanClick);
