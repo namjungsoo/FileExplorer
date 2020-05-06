@@ -9,8 +9,10 @@ import com.duongame.helper.DateHelper;
 
 import java.io.File;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 /**
@@ -435,5 +437,38 @@ public class FileHelper {
     // 마지막에 /를 포함하지 않는다.
     public static String getParentPath(String path) {
         return path.substring(0, path.lastIndexOf('/'));
+    }
+
+    public static ArrayList<ExplorerItem> getImageFileList(List<ExplorerItem> fileList) {
+        ArrayList<ExplorerItem> imageList = new ArrayList<>();
+
+        for(ExplorerItem item : fileList) {
+            if (item.type == ExplorerItem.FILETYPE_IMAGE) {
+                imageList.add(item);
+            }
+        }
+        return imageList;
+    }
+
+    public static ArrayList<ExplorerItem> getVideoFileList(List<ExplorerItem> fileList) {
+        ArrayList<ExplorerItem> videoList = new ArrayList<>();
+
+        for(ExplorerItem item : fileList) {
+            if (item.type == ExplorerItem.FILETYPE_VIDEO) {
+                videoList.add(item);
+            }
+        }
+        return videoList;
+    }
+
+    public static ArrayList<ExplorerItem> getAudioFileList(List<ExplorerItem> fileList) {
+        ArrayList<ExplorerItem> audioList = new ArrayList<>();
+
+        for(ExplorerItem item : fileList) {
+            if (item.type == ExplorerItem.FILETYPE_AUDIO) {
+                audioList.add(item);
+            }
+        }
+        return audioList;
     }
 }
