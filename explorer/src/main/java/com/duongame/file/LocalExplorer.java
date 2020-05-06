@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
+import java.util.stream.Collectors;
 
 /**
  * Created by namjungsoo on 2016-11-06.
@@ -27,16 +28,16 @@ public class LocalExplorer extends FileExplorer {
         if (files == null)
             return null;
 
-        JLog.e("Jungsoo", "LocalExplorer listFiles end "+files.length);
+        JLog.e("Jungsoo", "LocalExplorer listFiles end " + files.length);
 
         // 폴더를 우선하도록 정렬 해야 함
         // 안드로이드는 폴더와 파일을 섞어서 리턴을 해준다.
         Collections.sort(Arrays.asList(files), new FileExplorer.DirectoryPreferComparator());
         JLog.e("Jungsoo", "LocalExplorer listFiles sort end");
 
-        ArrayList<ExplorerItem> fileList = new ArrayList<ExplorerItem>();
-        ArrayList<ExplorerItem> directoryList = new ArrayList<ExplorerItem>();
-        ArrayList<ExplorerItem> normalList = new ArrayList<ExplorerItem>();
+        ArrayList<ExplorerItem> fileList = new ArrayList<>();
+        ArrayList<ExplorerItem> directoryList = new ArrayList<>();
+        ArrayList<ExplorerItem> normalList = new ArrayList<>();
         FileExplorer.Result result = new FileExplorer.Result();
 
         // 파일로 아이템을 만듬
@@ -117,18 +118,27 @@ public class LocalExplorer extends FileExplorer {
 
         // 이미지 리스트를 따로 모을 것인지?
         if (isImageListEnable()) {
-            ArrayList<ExplorerItem> imageList = new ArrayList<ExplorerItem>();
-
-            // 이미지는 마지막에 모아서 처리한다.
-            for (int i = 0; i < normalList.size(); i++) {
-                if (normalList.get(i).type == ExplorerItem.FILETYPE_IMAGE) {
-                    imageList.add(normalList.get(i));
-                }
-            }
-
-            result.imageList = imageList;
+//            ArrayList<ExplorerItem> imageList = new ArrayList<>();
+//
+//            // 이미지는 마지막에 모아서 처리한다.
+//            for (int i = 0; i < normalList.size(); i++) {
+//                if (normalList.get(i).type == ExplorerItem.FILETYPE_IMAGE) {
+//                    imageList.add(normalList.get(i));
+//                }
+//            }
+//
+//            result.imageList = imageList;
+            result.imageList = FileHelper.getImageFileList(normalList);
         }
         JLog.e("Jungsoo", "LocalExplorer image list end");
+
+        if (isVideoListEnable()) {
+            result.videoList = FileHelper.getVideoFileList(normalList);
+        }
+
+        if (isAudioListEnable()) {
+            result.audioList = FileHelper.getAudioFileList(normalList);
+        }
 
         result.fileList = fileList;
         JLog.e("Jungsoo", "LocalExplorer search end");
