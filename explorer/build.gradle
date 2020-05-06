@@ -22,7 +22,7 @@ android {
         applicationId 'com.duongame'
         buildConfigField "boolean", "SHOW_AD", "true"
         buildConfigField "boolean", "PREVIEW_ZIP", "false"
-        minSdkVersion 14
+        minSdkVersion 16
         targetSdkVersion 29
         versionCode 1
         versionName "1.0.0"
@@ -77,7 +77,7 @@ android {
     productFlavors {
         development {
             dimension "mode"
-            minSdkVersion 21
+            minSdkVersion 24
             resConfigs("ko", "xxhdpi")
             aaptOptions.cruncherEnabled = false
         }
