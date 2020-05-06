@@ -56,5 +56,14 @@
             android:background="?attr/selectableItemBackground"
             android:src="@drawable/ic_player_forward"/>
 
+        <ImageButton
+            android:id="@+id/btn_close"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:scaleType="fitCenter"
+            android:padding="5dp"
+            android:background="?attr/selectableItemBackground"
+            android:src="@drawable/ic_player_close"/>
+
     </LinearLayout>
 </LinearLayout>
