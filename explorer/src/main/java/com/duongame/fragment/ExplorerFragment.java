@@ -35,6 +35,7 @@ import com.duongame.MainApplication;
 import com.duongame.R;
 import com.duongame.activity.main.BaseMainActivity;
 import com.duongame.activity.viewer.PhotoActivity;
+import com.duongame.activity.viewer.VideoActivity;
 import com.duongame.adapter.ExplorerAdapter;
 import com.duongame.adapter.ExplorerGridAdapter;
 import com.duongame.adapter.ExplorerItem;
@@ -572,6 +573,12 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
 
     void onClickImage(ExplorerItem item) {
         final Intent intent = PhotoActivity.getLocalIntent(getContext(), item);
+        startActivity(intent);
+    }
+
+    void onClickVideo(ExplorerItem item) {
+        final Intent intent = new Intent(getContext(), VideoActivity.class);
+        intent.putExtra("item", item);
         startActivity(intent);
     }
 
@@ -1339,6 +1346,12 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
                 break;
             case ExplorerItem.FILETYPE_APK:
                 onClickApk(item);
+                break;
+
+            case ExplorerItem.FILETYPE_VIDEO:
+                onClickVideo(item);
+                break;
+            case ExplorerItem.FILETYPE_AUDIO:
                 break;
 
             case ExplorerItem.FILETYPE_PDF:

@@ -24,6 +24,10 @@
             android:name=".activity.viewer.PdfActivity"
             android:theme="@style/ComicViewerTheme" />
 
+        <activity
+            android:name=".activity.viewer.VideoActivity"
+            android:theme="@style/ComicViewerTheme" />
+
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.provider"

@@ -9,11 +9,13 @@ import com.duongame.helper.DateHelper;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.io.Serializable;
+
 /**
  * Created by namjungsoo on 2016-11-06.
  */
 @Entity
-public class ExplorerItem implements Cloneable {
+public class ExplorerItem implements Cloneable, Serializable {
     //FILETYPE_IMAGE
     public static final int EXTTYPE_JPG = 0;// JPG, GIF
     public static final int EXTTYPE_PNG = 1;
