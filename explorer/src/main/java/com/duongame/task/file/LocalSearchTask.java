@@ -93,6 +93,8 @@ public class LocalSearchTask extends AsyncTask<String, Void, FileExplorer.Result
                 .setComparator(comparator)
                 .setHiddenFile(false)
                 .setImageListEnable(true)
+                .setVideoListEnable(true)
+                .setAudioListEnable(true)
                 .search(path);
 
         if (result == null) {
