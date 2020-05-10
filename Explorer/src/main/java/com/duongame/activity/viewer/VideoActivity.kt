@@ -4,6 +4,7 @@ import android.net.Uri
 import android.os.Bundle
 import com.duongame.R
 import com.duongame.adapter.ExplorerItem
+import com.google.android.exoplayer2.DefaultRenderersFactory
 import com.google.android.exoplayer2.SimpleExoPlayer
 import com.google.android.exoplayer2.source.MediaSource
 import com.google.android.exoplayer2.source.ProgressiveMediaSource
@@ -34,8 +35,10 @@ class VideoActivity : BaseViewerActivity() {
 
     private fun buildPlayer(): SimpleExoPlayer {
         // simple player 만들기
-        val player = SimpleExoPlayer.Builder(this).build()
-        return player
+        val factory = DefaultRenderersFactory(this)
+        factory.setExtensionRendererMode(DefaultRenderersFactory.EXTENSION_RENDERER_MODE_PREFER)// for ffmpeg extension
+        val builder = SimpleExoPlayer.Builder(this, factory)
+        return builder.build()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
