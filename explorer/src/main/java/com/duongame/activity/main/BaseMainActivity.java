@@ -1,5 +1,6 @@
 package com.duongame.activity.main;
 
+import android.animation.Animator;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.app.Activity;
@@ -20,6 +21,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewPropertyAnimator;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -596,7 +598,7 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
     private void initBottomUI() {
         // 최초에는 하단으로 숨겨둠
         bottom = findViewById(R.id.bottom);
-        bottom.setTranslationY(UnitHelper.dpToPx(48));
+//        bottom.setTranslationY(UnitHelper.dpToPx(48));
 
         btnCopy = bottom.findViewById(R.id.btn_copy);
         btnCopy.setEnabled(false);
@@ -651,7 +653,7 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
     private void initPlayerUI() {
         // miniplayer
         miniPlayer = findViewById(R.id.miniplayer);
-        miniPlayer.setTranslationY(UnitHelper.dpToPx(56));
+//        miniPlayer.setTranslationY(UnitHelper.dpToPx(56));
 
         // 원래 대로 돌아옴
         btnClose = findViewById(R.id.btn_close);
@@ -828,36 +830,46 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
     }
 
     public void showMiniPlayerUI() {
-        showUI(miniPlayer);
+        JLog.e("Jungoo", "showMiniPlayerUI");
+//        miniPlayer.setTranslationY(UnitHelper.dpToPx(56));
+        showUI(miniPlayer, UnitHelper.dpToPx(56));
     }
 
     public void hideMiniPlayerUI() {
+        JLog.e("Jungoo", "hideMiniPlayerUI");
         hideUI(miniPlayer);
     }
 
-    private void showUI(View bottomView) {
-        final int defaultHeight = mainView.getHeight();
-
-        // setUpdateListener requires API 19
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            bottomView.animate().translationYBy(-bottomView.getHeight()).setUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-                @Override
-                public void onAnimationUpdate(ValueAnimator animation) {
-                    int offset = (int) ((float) animation.getAnimatedValue() * bottomView.getHeight());
+    private void showUI(View bottomView, int initPositionY) {
+//        final int defaultHeight = mainView.getHeight();
+        bottomView.setVisibility(View.VISIBLE);
+        bottomView.setTranslationY(initPositionY);
+        bottomView.post(() -> {
+            JLog.e("Jungsoo", "bottomView.height=" + bottomView.getHeight());
+            JLog.e("Jungsoo", "bottomView.translationY=" + bottomView.getTranslationY());
+            JLog.e("Jungsoo", "bottomView.y=" + bottomView.getY());
+            // setUpdateListener requires API 19
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                bottomView.animate().translationYBy(-bottomView.getHeight()).setUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                    @Override
+                    public void onAnimationUpdate(ValueAnimator animation) {
+                        int offset = (int) ((float) animation.getAnimatedValue() * bottomView.getHeight());
 //                JLog.e("TAG", "" + animation.getAnimatedValue() + " " + offset + " " + mainView.getHeight());
 //                    mainView.getLayoutParams().height = defaultHeight - offset;
 //                    mainView.requestLayout();
-                }
-            });
-        } else {
-            ObjectAnimator oa = ObjectAnimator.ofFloat(bottomView, View.TRANSLATION_Y, bottomView.getTranslationY(), bottomView.getTranslationY() - bottomView.getHeight());
-            oa.setDuration(300);
-            oa.start();
-        }
+                    }
+                }).setListener(null);
+            } else {
+                ObjectAnimator oa = ObjectAnimator.ofFloat(bottomView, View.TRANSLATION_Y, bottomView.getTranslationY(), bottomView.getTranslationY() - bottomView.getHeight());
+                oa.setDuration(300);
+                oa.start();
+            }
+        });
     }
 
     private void hideUI(View bottomView) {
-        final int defaultHeight = mainView.getHeight();
+//        final int defaultHeight = mainView.getHeight();
+        JLog.e("Jungsoo", "hideUI");
 
         // setUpdateListener requires API 19
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
@@ -869,6 +881,26 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
 //                    mainView.getLayoutParams().height = defaultHeight + offset;
 //                    mainView.requestLayout();
                 }
+            }).setListener(new Animator.AnimatorListener() {
+                @Override
+                public void onAnimationStart(Animator animation) {
+
+                }
+
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    bottomView.setVisibility(View.GONE);
+                }
+
+                @Override
+                public void onAnimationCancel(Animator animation) {
+
+                }
+
+                @Override
+                public void onAnimationRepeat(Animator animation) {
+
+                }
             });
         } else {
             ObjectAnimator oa = ObjectAnimator.ofFloat(bottomView, View.TRANSLATION_Y, bottomView.getTranslationY(), bottomView.getTranslationY() + bottomView.getHeight());
@@ -879,7 +911,9 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
 
     // from onSelectMode()
     public void showBottomUI() {
-        showUI(bottom);
+        JLog.e("Jungoo", "showBottomUI");
+//        bottom.setTranslationY(UnitHelper.dpToPx(48));
+        showUI(bottom, UnitHelper.dpToPx(48));
 
         // 타이틀을 숫자(선택된 파일 갯수)와 화살표로 변경
         ActionBar actionBar = getSupportActionBar();
@@ -892,6 +926,7 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
 
     // from onNormalMode()
     public void hideBottomUI() {
+        JLog.e("Jungoo", "hideBottomUI");
         hideUI(bottom);
 
         // 원래 타이틀로 돌려준다.
