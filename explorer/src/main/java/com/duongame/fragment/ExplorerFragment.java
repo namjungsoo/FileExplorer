@@ -1,5 +1,6 @@
 package com.duongame.fragment;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -346,7 +347,12 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
         up.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                gotoUpDirectory();
+                // up으로 갈수있는 조건은 normal, paste 모드이다.
+                // 나머지는 normal로 모드를 변경한다.
+                if(mode == MODE_NORMAL || mode == MODE_PASTE)
+                    gotoUpDirectory();
+                else
+                    onNormalMode();
             }
         });
 
@@ -591,7 +597,16 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
 
     void onClickAudio(ExplorerItem item) {
         // 현재 화면에서 오디오 플레이를 한다
-        ((BaseMainActivity)getActivity()).showMiniPlayerUI();
+        // 오디오 리스트를 받아서 리스트에 넣고
+        // 플레이를 한다
+        if(mode != MODE_PLAYER) {
+            ((BaseMainActivity) getActivity()).showMiniPlayerUI();
+            mode = MODE_PLAYER;
+        }
+
+        // 음악 목록을 만들어서 mediaplayer로 넘기자
+        //
+//        ((BaseMainActivity)getActivity()).getMediaPlayer()
     }
 
     void onClickApk(ExplorerItem item) {
@@ -628,6 +643,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
             final String title = AppHelper.getAppName(activity);
             final String content = getString(R.string.msg_overwrite);
             final DialogInterface.OnClickListener positiveListener = new DialogInterface.OnClickListener() {
+                @SuppressLint("StringFormatInvalid")
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
                     // 확인을 눌렀으므로 다운로드하여 덮어씌움
@@ -1288,7 +1304,14 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
         return viewType;
     }
 
-    void onSelectMode(ExplorerItem item, int position) {
+    private void exitPlayerMode() {
+        if (mode == MODE_PLAYER) {
+            ((BaseMainActivity) getActivity()).hideMiniPlayerUI();
+        }
+    }
+
+    private void onSelectMode(ExplorerItem item, int position) {
+        exitPlayerMode();
         mode = MODE_SELECT;
 
         // UI 상태만 리프레시
@@ -1304,7 +1327,8 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
         ((BaseMainActivity) activity).showBottomUI();
     }
 
-    public void onPasteMode() {
+    private void onPasteMode() {
+        exitPlayerMode();
         mode = MODE_PASTE;
 
         // 다시 리프레시를 해야지 체크박스를 새로 그린다.
@@ -1312,6 +1336,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
     }
 
     public void onNormalMode() {
+        exitPlayerMode();
         mode = MODE_NORMAL;
 
         // 다시 리프레시를 해야지 체크박스를 새로 그린다.
@@ -1326,7 +1351,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
 
     // 이건 뭐지?
     // 아이템이 선택될때마다 선택된 아이템의 갯수를 업데이트하기위해서 여기에다가 모음
-    void onSelectItemClick(ExplorerItem item, int position) {
+    private void onSelectItemClick(ExplorerItem item, int position) {
         item.selected = !item.selected;
 
         // 아이템을 찾아서 UI를 업데이트 해주어야 함
@@ -1336,7 +1361,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
         updateSelectedFileCount();
     }
 
-    void updateSelectedFileCount() {
+    private void updateSelectedFileCount() {
         int count = getSelectedFileCount();
 
         FragmentActivity activity = getActivity();
@@ -1345,32 +1370,39 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
         ((BaseMainActivity) activity).updateSelectedFileCount(count);
     }
 
-    void onRunItemClick(ExplorerItem item) {
+    private void onRunItemClick(ExplorerItem item) {
         switch (item.type) {
             case ExplorerItem.FILETYPE_FOLDER:
+                onNormalMode();
                 onClickDirectory(item);
                 break;
             case ExplorerItem.FILETYPE_IMAGE:
+                onNormalMode();
                 onClickImage(item);
                 break;
             case ExplorerItem.FILETYPE_APK:
+                onNormalMode();
                 onClickApk(item);
                 break;
 
             case ExplorerItem.FILETYPE_VIDEO:
+                onNormalMode();
                 onClickVideo(item);
                 break;
             case ExplorerItem.FILETYPE_AUDIO:
+                //onNormalMode()을 예외적으로 적용하지 않는다.
                 onClickAudio(item);
                 break;
 
             case ExplorerItem.FILETYPE_PDF:
             case ExplorerItem.FILETYPE_TEXT:
                 //TODO: 나중에 읽던 책의 현재위치 이미지의 preview를 만들자.
+                onNormalMode();
                 onClickBook(item);
                 break;
 
             case ExplorerItem.FILETYPE_ZIP:
+                onNormalMode();
                 if (AppHelper.isComicz(getActivity())) {
                     onClickBook(item);
                 } else {

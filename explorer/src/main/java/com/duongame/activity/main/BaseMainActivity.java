@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -23,6 +24,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
@@ -85,14 +87,22 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
 
     protected Menu menu;
     protected LinearLayout bottom;
-
     protected LinearLayout miniPlayer;
 
+    // bottom
     ImageButton btnCopy;
     ImageButton btnCut;
     ImageButton btnPaste;
     ImageButton btnArchive;
     ImageButton btnDelete;
+
+    // mini player
+    ImageButton btnRewind;
+    ImageButton btnForward;
+    ImageButton btnPlay;
+    ImageButton btnClose;
+    TextView textTitle;
+    MediaPlayer mediaPlayer = new MediaPlayer();
 
     protected boolean showReview;
     protected boolean drawerOpened;
@@ -117,6 +127,10 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
     protected abstract ExplorerFragment getExplorerFragment();
 
     protected abstract BaseFragment getCurrentFragment();
+
+    public MediaPlayer getMediaPlayer() {
+        return mediaPlayer;
+    }
 
     void gotoAppStorePage(String packageName) {
         try {
@@ -386,6 +400,7 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
 
         // 탐색기일 경우에는 붙이기 모드에서만 상단의 바를 활성화 함
         if (fragment == explorerFragment) {
+            // 붙여넣기 모드에서는 상위 폴더로 올라가기 쉽게 함
             if (explorerFragment.isPasteMode()) {
                 explorerFragment.gotoUpDirectory();
             } else {
@@ -544,15 +559,6 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
         return super.onOptionsItemSelected(item);
     }
 
-    void onPasteModeBackPressed() {
-        if (getExplorerFragment().isPasteMode()) {
-            onBackPressed();
-        } else {
-            // 붙이기 모드는 상단 홈버튼을 통해서만 취소가 가능하고, 백버튼은 폴더를 이동해야 한다.
-            getExplorerFragment().gotoUpDirectory();
-        }
-    }
-
     private void initToolbar() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -583,9 +589,11 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
         JLog.e("Jungsoo", "initContentView initBottomUI begin");
         initBottomUI();
         JLog.e("Jungsoo", "initContentView initBottomUI end");
+
+        initPlayerUI();
     }
 
-    void initBottomUI() {
+    private void initBottomUI() {
         // 최초에는 하단으로 숨겨둠
         bottom = findViewById(R.id.bottom);
         bottom.setTranslationY(UnitHelper.dpToPx(48));
@@ -638,12 +646,31 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
         });
 
         loadingProgressBar = findViewById(R.id.progress_loading);
+    }
 
-
-
+    private void initPlayerUI() {
         // miniplayer
         miniPlayer = findViewById(R.id.miniplayer);
         miniPlayer.setTranslationY(UnitHelper.dpToPx(56));
+
+        // 원래 대로 돌아옴
+        btnClose = findViewById(R.id.btn_close);
+        btnClose.setOnClickListener(v ->
+            getExplorerFragment().onNormalMode()
+        );
+
+        btnForward = findViewById(R.id.btn_forward);
+        btnForward.setOnClickListener(v -> {
+
+        });
+        btnRewind = findViewById(R.id.btn_rewind);
+        btnRewind.setOnClickListener(v -> {
+
+        });
+        btnPlay = findViewById(R.id.btn_play_pause);
+        btnPlay.setOnClickListener(v -> {
+
+        });
     }
 
     public ProgressBar getProgressBarLoading() {
@@ -800,10 +827,6 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
         ToastHelper.showToast(this, getResources().getString(R.string.msg_clear_history));
     }
 
-    public LinearLayout getBottomUI() {
-        return bottom;
-    }
-
     public void showMiniPlayerUI() {
         showUI(miniPlayer);
     }
@@ -822,8 +845,8 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
                 public void onAnimationUpdate(ValueAnimator animation) {
                     int offset = (int) ((float) animation.getAnimatedValue() * bottomView.getHeight());
 //                JLog.e("TAG", "" + animation.getAnimatedValue() + " " + offset + " " + mainView.getHeight());
-                    mainView.getLayoutParams().height = defaultHeight - offset;
-                    mainView.requestLayout();
+//                    mainView.getLayoutParams().height = defaultHeight - offset;
+//                    mainView.requestLayout();
                 }
             });
         } else {
@@ -843,8 +866,8 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
                 public void onAnimationUpdate(ValueAnimator animation) {
                     int offset = (int) ((float) animation.getAnimatedValue() * bottomView.getHeight());
 //                JLog.e("TAG", "" + animation.getAnimatedValue() + " " + offset + " " + mainView.getHeight());
-                    mainView.getLayoutParams().height = defaultHeight + offset;
-                    mainView.requestLayout();
+//                    mainView.getLayoutParams().height = defaultHeight + offset;
+//                    mainView.requestLayout();
                 }
             });
         } else {
