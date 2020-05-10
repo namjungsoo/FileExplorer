@@ -213,9 +213,9 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
             MainApplication app = MainApplication.getInstance(getActivity());
             if (app != null) {
                 app.setFileList(fileList);
-                app.setFileList(imageList);
-                app.setFileList(videoList);
-                app.setFileList(audioList);
+                app.setImageList(imageList);
+                app.setVideoList(videoList);
+                app.setAudioList(audioList);
             }
 
             // DB에 저장된게 있으면 adapter에 적용

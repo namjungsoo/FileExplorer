@@ -2,10 +2,12 @@ package com.duongame.activity.viewer
 
 import android.net.Uri
 import android.os.Bundle
+import com.duongame.MainApplication
 import com.duongame.R
 import com.duongame.adapter.ExplorerItem
 import com.google.android.exoplayer2.DefaultRenderersFactory
 import com.google.android.exoplayer2.SimpleExoPlayer
+import com.google.android.exoplayer2.source.ConcatenatingMediaSource
 import com.google.android.exoplayer2.source.MediaSource
 import com.google.android.exoplayer2.source.ProgressiveMediaSource
 import com.google.android.exoplayer2.upstream.DataSource
@@ -17,7 +19,15 @@ import java.io.File
 
 class VideoActivity : BaseViewerActivity() {
     private lateinit var player: SimpleExoPlayer
-    private var positionMs: Long = 0L
+    private var positionMs: Long = 0L // pause/resume을 위해서 설정함
+
+    private fun buildMediaSourceMulti(): ConcatenatingMediaSource {
+        val ret = ConcatenatingMediaSource()
+        for (video in MainApplication.getInstance(this).videoList) {
+            ret.addMediaSource(buildMediaSource(video.path))
+        }
+        return ret
+    }
 
     private fun buildMediaSource(path: String): MediaSource {
         val uri = Uri.fromFile(File(path))
@@ -29,7 +39,6 @@ class VideoActivity : BaseViewerActivity() {
             e.printStackTrace()
         }
         val factory: DataSource.Factory = DataSource.Factory { fileDataSource }
-//        ProgressiveMediaSource.Factory(factory)
         return ProgressiveMediaSource.Factory(factory).createMediaSource(uri)
     }
 
@@ -51,8 +60,17 @@ class VideoActivity : BaseViewerActivity() {
         player = buildPlayer()
         exoPlayerView.player = player
 
-        val mediaSource = buildMediaSource(item.path)
+        val mediaSource = buildMediaSourceMulti()
+        var windowIndex = -1
+        for (i in MainApplication.getInstance(this).videoList.indices) {
+            if (MainApplication.getInstance(this).videoList[i].path == item.path) {
+                windowIndex = i
+                break
+            }
+        }
+
         player.prepare(mediaSource)
+        player.seekTo(windowIndex, 0)
         player.playWhenReady = true
     }
 
@@ -78,5 +96,4 @@ class VideoActivity : BaseViewerActivity() {
         player.stop()
         player.release()
     }
-
 }
