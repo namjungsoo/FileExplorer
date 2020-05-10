@@ -20,6 +20,7 @@ import com.duongame.BuildConfig;
 import com.duongame.R;
 import com.duongame.bitmap.BitmapCacheManager;
 import com.duongame.bitmap.BitmapLoader;
+import com.duongame.fragment.ExplorerFragment;
 import com.duongame.helper.JLog;
 import com.duongame.task.thumbnail.LoadGifThumbnailTask;
 import com.duongame.task.thumbnail.LoadThumbnailTask;
@@ -44,14 +45,15 @@ public class ExplorerAdapter extends RecyclerView.Adapter<ExplorerAdapter.Explor
     private HashMap<String, ExplorerItem> fileMap;// file path와 file item을 묶어 놓음
     protected Activity context;
 
-    private boolean selectMode = false;
+    //private boolean selectMode = false;
+    private int mode = ExplorerFragment.MODE_NORMAL;
 
-    private boolean getSelectMode() {
-        return selectMode;
+    private int getMode() {
+        return mode;
     }
 
-    public void setSelectMode(boolean mode) {
-        selectMode = mode;
+    public void setMode(int mode) {
+        this.mode = mode;
     }
 
     private OnItemClickListener onItemClickListener;
@@ -169,7 +171,7 @@ public class ExplorerAdapter extends RecyclerView.Adapter<ExplorerAdapter.Explor
     }
 
     protected void updateCheckBox(ExplorerViewHolder viewHolder, ExplorerItem item) {
-        if (getSelectMode()) {
+        if (getMode() == ExplorerFragment.MODE_SELECT) {
 //            JLog.e(TAG, "updateCheckBox position=" + item.position + " item=" + item.hashCode() + " " + item.selected);
             viewHolder.check.setVisibility(View.VISIBLE);
             viewHolder.check.setChecked(item.selected);

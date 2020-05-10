@@ -4,7 +4,6 @@ import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.ColorStateList;
@@ -14,23 +13,8 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-
-import com.google.android.gms.ads.initialization.InitializationStatus;
-import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
-import com.google.android.gms.ads.reward.RewardItem;
-import com.google.android.gms.ads.reward.RewardedVideoAdListener;
-import com.google.android.material.navigation.NavigationView;
-import androidx.core.view.GravityCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.ActionBarDrawerToggle;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.appcompat.widget.Toolbar;
-
 import android.os.Handler;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -39,7 +23,14 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.dropbox.core.android.Auth;
 import com.dropbox.core.v2.users.FullAccount;
@@ -71,6 +62,7 @@ import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 
 import java.io.File;
@@ -812,26 +804,61 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
         return bottom;
     }
 
-    public void showBottomUI() {
+    public void showMiniPlayerUI() {
+        showUI(miniPlayer);
+    }
+
+    public void hideMiniPlayerUI() {
+        hideUI(miniPlayer);
+    }
+
+    private void showUI(View bottomView) {
         final int defaultHeight = mainView.getHeight();
 
         // setUpdateListener requires API 19
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            bottom.animate().translationYBy(-bottom.getHeight()).setUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            bottomView.animate().translationYBy(-bottomView.getHeight()).setUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
                 @Override
                 public void onAnimationUpdate(ValueAnimator animation) {
-                    int offset = (int) ((float) animation.getAnimatedValue() * bottom.getHeight());
+                    int offset = (int) ((float) animation.getAnimatedValue() * bottomView.getHeight());
 //                JLog.e("TAG", "" + animation.getAnimatedValue() + " " + offset + " " + mainView.getHeight());
                     mainView.getLayoutParams().height = defaultHeight - offset;
                     mainView.requestLayout();
                 }
             });
         } else {
-            ObjectAnimator oa = ObjectAnimator.ofFloat(bottom, View.TRANSLATION_Y, bottom.getTranslationY(), bottom.getTranslationY() - bottom.getHeight());
+            ObjectAnimator oa = ObjectAnimator.ofFloat(bottomView, View.TRANSLATION_Y, bottomView.getTranslationY(), bottomView.getTranslationY() - bottomView.getHeight());
             oa.setDuration(300);
             oa.start();
         }
+    }
 
+    private void hideUI(View bottomView) {
+        final int defaultHeight = mainView.getHeight();
+
+        // setUpdateListener requires API 19
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            bottomView.animate().translationYBy(bottomView.getHeight()).setUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                @Override
+                public void onAnimationUpdate(ValueAnimator animation) {
+                    int offset = (int) ((float) animation.getAnimatedValue() * bottomView.getHeight());
+//                JLog.e("TAG", "" + animation.getAnimatedValue() + " " + offset + " " + mainView.getHeight());
+                    mainView.getLayoutParams().height = defaultHeight + offset;
+                    mainView.requestLayout();
+                }
+            });
+        } else {
+            ObjectAnimator oa = ObjectAnimator.ofFloat(bottomView, View.TRANSLATION_Y, bottomView.getTranslationY(), bottomView.getTranslationY() + bottomView.getHeight());
+            oa.setDuration(300);
+            oa.start();
+        }
+    }
+
+    // from onSelectMode()
+    public void showBottomUI() {
+        showUI(bottom);
+
+        // 타이틀을 숫자(선택된 파일 갯수)와 화살표로 변경
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
@@ -840,25 +867,9 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
         updateSelectMenuIcon(true, false);
     }
 
+    // from onNormalMode()
     public void hideBottomUI() {
-        final int defaultHeight = mainView.getHeight();
-
-        // setUpdateListener requires API 19
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            bottom.animate().translationYBy(bottom.getHeight()).setUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-                @Override
-                public void onAnimationUpdate(ValueAnimator animation) {
-                    int offset = (int) ((float) animation.getAnimatedValue() * bottom.getHeight());
-//                JLog.e("TAG", "" + animation.getAnimatedValue() + " " + offset + " " + mainView.getHeight());
-                    mainView.getLayoutParams().height = defaultHeight + offset;
-                    mainView.requestLayout();
-                }
-            });
-        } else {
-            ObjectAnimator oa = ObjectAnimator.ofFloat(bottom, View.TRANSLATION_Y, bottom.getTranslationY(), bottom.getTranslationY() + bottom.getHeight());
-            oa.setDuration(300);
-            oa.start();
-        }
+        hideUI(bottom);
 
         // 원래 타이틀로 돌려준다.
         ActionBar actionBar = getSupportActionBar();

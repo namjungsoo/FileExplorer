@@ -87,6 +87,11 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
     public final static int SWITCH_GRID = 1;
     public final static int SWITCH_NARROW = 2;
 
+    public final static int MODE_NORMAL = 0;
+    public final static int MODE_SELECT = 1;
+    public final static int MODE_PASTE = 2;
+    public final static int MODE_PLAYER = 3;
+
     // Android UI 관련
     // 패스 관련
     private TextView textPath;
@@ -117,6 +122,32 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
     // Model 관련
     // 파일 관련
     private ExplorerAdapter adapter;
+    private ArrayList<ExplorerItem> fileList;
+
+    // 붙이기 관련
+    private ArrayList<ExplorerItem> selectedFileList;
+    private boolean cut;
+
+    private LocalSearchTask localSearchTask = null;
+    private DropboxSearchTask dropboxSearchTask = null;
+    private GoogleDriveSearchTask googleDriveSearchTask = null;
+
+    // 선택
+//    private boolean selectMode = false;
+//    private boolean pasteMode = false;// 붙여넣기 모드는 뒤로가기 버튼이 있고
+    private int mode = MODE_NORMAL;
+
+    private String capturePath;
+
+    // 정렬
+    private int sortType;
+    private int sortDirection;
+
+    private boolean canClick = false;
+    private int viewType = SWITCH_LIST;
+
+    private boolean backupDropbox = false;
+    private boolean backupGoogleDrive = false;
 
     public ViewSwitcher getSwitcherContents() {
         return switcherContents;
@@ -146,32 +177,8 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
         this.fileList = fileList;
     }
 
-    private ArrayList<ExplorerItem> fileList;
-
-    // 붙이기 관련
-    private ArrayList<ExplorerItem> selectedFileList;
-    private boolean cut;
-
-    private LocalSearchTask localSearchTask = null;
-    private DropboxSearchTask dropboxSearchTask = null;
-    private GoogleDriveSearchTask googleDriveSearchTask = null;
-
-    // 선택
-    private boolean selectMode = false;
-    private boolean pasteMode = false;// 붙여넣기 모드는 뒤로가기 버튼이 있고
-    private String capturePath;
-
-    // 정렬
-    private int sortType;
-    private int sortDirection;
-
-    private boolean canClick = false;
-    private int viewType = SWITCH_LIST;
-
-    private boolean backupDropbox = false;
-    private boolean backupGoogleDrive = false;
-
     private Handler handler;
+    protected boolean playerMode = false;
 
     public boolean isCanClick() {
         return canClick;
@@ -313,7 +320,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
     }
 
     public boolean isPasteMode() {
-        return pasteMode;
+        return mode == MODE_PASTE;
     }
 
     void initUI() {
@@ -500,7 +507,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
         }
 
         if (adapter != null) {
-            adapter.setSelectMode(selectMode);
+            adapter.setMode(mode);
             adapter.setOnItemClickListener(this);
             adapter.setOnLongItemClickListener(this);
         }
@@ -580,6 +587,11 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
         final Intent intent = new Intent(getContext(), VideoActivity.class);
         intent.putExtra("item", item);
         startActivity(intent);
+    }
+
+    void onClickAudio(ExplorerItem item) {
+        // 현재 화면에서 오디오 플레이를 한다
+        ((BaseMainActivity)getActivity()).showMiniPlayerUI();
     }
 
     void onClickApk(ExplorerItem item) {
@@ -829,7 +841,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
                     return;
 
                 // 이미 선택 모드라면 이름변경을 해줌
-                if (selectMode) {
+                if (mode == MODE_SELECT) {
                     //renameFileWithDialog
                     if (getSelectedFileCount() == 1) {
                         renameFileWithDialog(item);
@@ -1003,7 +1015,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
             ExplorerItem item = fileList.get(position);
             if (item == null)
                 return;
-            if (selectMode) {
+            if (mode == MODE_SELECT) {
                 onSelectItemClick(item, position);
             } else {
                 onRunItemClick(item);
@@ -1067,7 +1079,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
         }
 
         // 선택모드인지 설정해준다.
-        adapter.setSelectMode(selectMode);
+        adapter.setMode(mode);
 
         // 썸네일이 꽉찼을때는 비워준다.
         if (BitmapCacheManager.getThumbnailCount() > MAX_THUMBNAILS) {
@@ -1143,7 +1155,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
         }
 
         // 선택모드인지 설정해준다.
-        adapter.setSelectMode(selectMode);
+        adapter.setMode(mode);
 
         // 썸네일이 꽉찼을때는 비워준다.
         if (BitmapCacheManager.getThumbnailCount() > MAX_THUMBNAILS) {
@@ -1183,7 +1195,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
         }
 
         // 선택모드인지 설정해준다.
-        adapter.setSelectMode(selectMode);
+        adapter.setMode(mode);
 
         // 썸네일이 꽉찼을때는 비워준다.
         if (BitmapCacheManager.getThumbnailCount() > MAX_THUMBNAILS) {
@@ -1224,7 +1236,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
 
     private void softRefresh() {
         if (adapter != null) {
-            adapter.setSelectMode(selectMode);
+            adapter.setMode(mode);
             adapter.notifyDataSetChanged();
         }
     }
@@ -1254,7 +1266,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
 
         // 선택모드이면 선택모드를 취소하는 방향으로
         // 둘다 normal mode로 돌아간다.
-        if (pasteMode || selectMode) {
+        if (mode != MODE_NORMAL) {
             onNormalMode();
         } else {
             try {
@@ -1277,8 +1289,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
     }
 
     void onSelectMode(ExplorerItem item, int position) {
-        selectMode = true;
-        pasteMode = false;
+        mode = MODE_SELECT;
 
         // UI 상태만 리프레시
         // 왜냐하면 전체 체크박스를 나오게 해야 하기 때문이다.
@@ -1294,16 +1305,14 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
     }
 
     public void onPasteMode() {
-        selectMode = false;
-        pasteMode = true;
+        mode = MODE_PASTE;
 
         // 다시 리프레시를 해야지 체크박스를 새로 그린다.
         softRefresh();
     }
 
     public void onNormalMode() {
-        selectMode = false;
-        pasteMode = false;
+        mode = MODE_NORMAL;
 
         // 다시 리프레시를 해야지 체크박스를 새로 그린다.
         softRefresh();
@@ -1352,6 +1361,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
                 onClickVideo(item);
                 break;
             case ExplorerItem.FILETYPE_AUDIO:
+                onClickAudio(item);
                 break;
 
             case ExplorerItem.FILETYPE_PDF:
