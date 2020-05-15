@@ -21,7 +21,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewPropertyAnimator;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -43,6 +42,7 @@ import com.duongame.MainApplication;
 import com.duongame.R;
 import com.duongame.activity.BaseActivity;
 import com.duongame.activity.SettingsActivity;
+import com.duongame.adapter.ExplorerItem;
 import com.duongame.bitmap.BitmapCacheManager;
 import com.duongame.cloud.dropbox.DropboxClientFactory;
 import com.duongame.cloud.dropbox.GetCurrentAccountTask;
@@ -70,6 +70,7 @@ import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 
 import java.io.File;
+import java.util.ArrayList;
 
 import static com.duongame.fragment.ExplorerFragment.SWITCH_GRID;
 import static com.duongame.fragment.ExplorerFragment.SWITCH_LIST;
@@ -98,13 +99,16 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
     ImageButton btnArchive;
     ImageButton btnDelete;
 
-    // mini player
+    // miniPlayer
     ImageButton btnRewind;
     ImageButton btnForward;
     ImageButton btnPlay;
     ImageButton btnClose;
     TextView textTitle;
-    MediaPlayer mediaPlayer = new MediaPlayer();
+
+    MediaPlayer player = new MediaPlayer();
+    int position;
+    int track;
 
     protected boolean showReview;
     protected boolean drawerOpened;
@@ -130,8 +134,8 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
 
     protected abstract BaseFragment getCurrentFragment();
 
-    public MediaPlayer getMediaPlayer() {
-        return mediaPlayer;
+    public MediaPlayer getPlayer() {
+        return player;
     }
 
     void gotoAppStorePage(String packageName) {
@@ -255,7 +259,7 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
         if (adView != null) {
             adView.resume();
             // 광고 리워드 제거 시간 중인가?
-            if(isAdRemoveReward()) {
+            if (isAdRemoveReward()) {
                 adView.setVisibility(View.GONE);
             } else {
                 adView.setVisibility(View.VISIBLE);
@@ -655,6 +659,8 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
         miniPlayer = findViewById(R.id.miniplayer);
 //        miniPlayer.setTranslationY(UnitHelper.dpToPx(56));
 
+        textTitle = findViewById(R.id.txt_title);
+
         // 원래 대로 돌아옴
         btnClose = findViewById(R.id.btn_close);
         btnClose.setOnClickListener(v ->
@@ -663,15 +669,19 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
 
         btnForward = findViewById(R.id.btn_forward);
         btnForward.setOnClickListener(v -> {
-
+            forwardAudio();
         });
         btnRewind = findViewById(R.id.btn_rewind);
         btnRewind.setOnClickListener(v -> {
-
+            rewardAudio();
         });
         btnPlay = findViewById(R.id.btn_play_pause);
         btnPlay.setOnClickListener(v -> {
-
+            if(player.isPlaying()) {
+                pauseAudio();
+            } else {
+                playAudio(track);
+            }
         });
     }
 
@@ -829,15 +839,68 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
         ToastHelper.showToast(this, getResources().getString(R.string.msg_clear_history));
     }
 
-    public void showMiniPlayerUI() {
-        JLog.e("Jungoo", "showMiniPlayerUI");
+    public void showPlayerUI() {
+        JLog.e("Jungoo", "showPlayerUI");
 //        miniPlayer.setTranslationY(UnitHelper.dpToPx(56));
+        position = 0;
         showUI(miniPlayer, UnitHelper.dpToPx(56));
     }
 
-    public void hideMiniPlayerUI() {
-        JLog.e("Jungoo", "hideMiniPlayerUI");
+    public void hidePlayerUI() {
+        JLog.e("Jungoo", "hidePlayerUI");
+        stopAudio();
         hideUI(miniPlayer);
+    }
+
+    public void stopAudio() {
+        player.stop();
+    }
+
+    public void playAudio(int track) {
+        try {
+            if (position > 0) {
+                player.seekTo(position);
+                player.start();
+            } else {
+                ArrayList<ExplorerItem> audioList = MainApplication.getInstance(this).getAudioList();
+                ExplorerItem item = audioList.get(track);
+                player.reset();
+                player.setDataSource(item.path);
+                player.prepareAsync();
+                player.setOnCompletionListener(mp -> {
+                    forwardAudio();
+                });
+                player.setOnPreparedListener(mp -> {
+                    mp.start();
+                });
+                this.track = track;
+                textTitle.setText(item.name);
+            }
+            btnPlay.setImageResource(R.drawable.ic_player_pause);
+        } catch (Exception e) {
+            ToastHelper.error(this, R.string.toast_error);
+        }
+    }
+
+    public void pauseAudio() {
+        player.pause();
+        position = player.getCurrentPosition();
+        btnPlay.setImageResource(R.drawable.ic_player_play);
+    }
+
+    public void forwardAudio() {
+        ArrayList<ExplorerItem> audioList = MainApplication.getInstance(this).getAudioList();
+        if (this.track < audioList.size() - 1) {
+            position = 0;
+            playAudio(this.track + 1);
+        }
+    }
+
+    public void rewardAudio() {
+        if (this.track > 0) {
+            position = 0;
+            playAudio(this.track - 1);
+        }
     }
 
     private void showUI(View bottomView, int initPositionY) {

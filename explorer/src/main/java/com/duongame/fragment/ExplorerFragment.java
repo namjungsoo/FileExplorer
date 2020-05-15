@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -349,7 +350,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
             public void onClick(View view) {
                 // up으로 갈수있는 조건은 normal, paste 모드이다.
                 // 나머지는 normal로 모드를 변경한다.
-                if(mode == MODE_NORMAL || mode == MODE_PASTE)
+                if (mode == MODE_NORMAL || mode == MODE_PASTE)
                     gotoUpDirectory();
                 else
                     onNormalMode();
@@ -599,14 +600,22 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
         // 현재 화면에서 오디오 플레이를 한다
         // 오디오 리스트를 받아서 리스트에 넣고
         // 플레이를 한다
-        if(mode != MODE_PLAYER) {
-            ((BaseMainActivity) getActivity()).showMiniPlayerUI();
+        BaseMainActivity activity = (BaseMainActivity) getActivity();
+        if (activity == null)
+            return;
+
+        if (mode != MODE_PLAYER) {
+            activity.showPlayerUI();
             mode = MODE_PLAYER;
         }
 
-        // 음악 목록을 만들어서 mediaplayer로 넘기자
-        //
-//        ((BaseMainActivity)getActivity()).getMediaPlayer()
+        ArrayList<ExplorerItem> audioList = MainApplication.getInstance(activity).getAudioList();
+        for (int i = 0; i < audioList.size(); i++) {
+            if (audioList.get(i).path.equals(item.path)) {
+                activity.playAudio(i);
+                break;
+            }
+        }
     }
 
     void onClickApk(ExplorerItem item) {
@@ -1306,7 +1315,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
 
     private void exitPlayerMode() {
         if (mode == MODE_PLAYER) {
-            ((BaseMainActivity) getActivity()).hideMiniPlayerUI();
+            ((BaseMainActivity) getActivity()).hidePlayerUI();
         }
     }
 
