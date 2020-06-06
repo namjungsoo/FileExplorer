@@ -361,6 +361,14 @@ public class UnzipTask extends AsyncTask<Void, FileHelper.Progress, Boolean> {
 //        stream.close();
 
         Zip4jFile zip4j = new Zip4jFile(item.path);
+        Activity activity = activityWeakReference.get();
+        if(activity != null) {
+            String charset = FileHelper.getFileNameCharset(activity);
+            if(charset != null) {
+                zip4j.setFileNameCharset(charset);
+            }
+        }
+
         ArrayList<ArchiveHeader> headers = zip4j.getHeaders();
         if (headers == null)
             return false;

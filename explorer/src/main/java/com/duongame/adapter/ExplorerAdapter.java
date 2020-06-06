@@ -12,14 +12,15 @@ import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.target.ImageViewTarget;
 import com.duongame.MainApplication;
 import com.duongame.BuildConfig;
-import com.duongame.GlideApp;
 import com.duongame.R;
 import com.duongame.bitmap.BitmapCacheManager;
 import com.duongame.bitmap.BitmapLoader;
+import com.duongame.fragment.ExplorerFragment;
 import com.duongame.helper.JLog;
 import com.duongame.task.thumbnail.LoadGifThumbnailTask;
 import com.duongame.task.thumbnail.LoadThumbnailTask;
@@ -28,6 +29,7 @@ import com.duongame.task.thumbnail.LoadZipThumbnailTask;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import static com.duongame.bitmap.BitmapCacheManager.getThumbnail;
 
@@ -39,18 +41,19 @@ public class ExplorerAdapter extends RecyclerView.Adapter<ExplorerAdapter.Explor
     private final static String TAG = "ExplorerAdapter";
     private final static boolean DEBUG = false;
 
-    protected ArrayList<ExplorerItem> fileList;
+    protected List<ExplorerItem> fileList;
     private HashMap<String, ExplorerItem> fileMap;// file path와 file item을 묶어 놓음
     protected Activity context;
 
-    private boolean selectMode = false;
+    //private boolean selectMode = false;
+    private int mode = ExplorerFragment.MODE_NORMAL;
 
-    private boolean getSelectMode() {
-        return selectMode;
+    private int getMode() {
+        return mode;
     }
 
-    public void setSelectMode(boolean mode) {
-        selectMode = mode;
+    public void setMode(int mode) {
+        this.mode = mode;
     }
 
     private OnItemClickListener onItemClickListener;
@@ -156,7 +159,7 @@ public class ExplorerAdapter extends RecyclerView.Adapter<ExplorerAdapter.Explor
         return fileList.size();
     }
 
-    public void setFileList(ArrayList<ExplorerItem> fileList) {
+    public void setFileList(List<ExplorerItem> fileList) {
         this.fileList = fileList;
         if (fileList == null)
             return;
@@ -168,7 +171,7 @@ public class ExplorerAdapter extends RecyclerView.Adapter<ExplorerAdapter.Explor
     }
 
     protected void updateCheckBox(ExplorerViewHolder viewHolder, ExplorerItem item) {
-        if (getSelectMode()) {
+        if (getMode() == ExplorerFragment.MODE_SELECT) {
 //            JLog.e(TAG, "updateCheckBox position=" + item.position + " item=" + item.hashCode() + " " + item.selected);
             viewHolder.check.setVisibility(View.VISIBLE);
             viewHolder.check.setChecked(item.selected);
@@ -199,7 +202,7 @@ public class ExplorerAdapter extends RecyclerView.Adapter<ExplorerAdapter.Explor
 
                 if (isThumbnailEnabled()) {
                     // Glide로 읽자
-                    GlideApp.with(context)
+                    Glide.with(context)
                             .load(new File(item.path))
                             .diskCacheStrategy(DiskCacheStrategy.ALL)
                             .placeholder(R.drawable.ic_file_normal)

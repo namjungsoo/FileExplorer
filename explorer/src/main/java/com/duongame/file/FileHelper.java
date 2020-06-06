@@ -1,14 +1,19 @@
 package com.duongame.file;
 
 import android.content.Context;
+import android.os.Build;
 
+import com.duongame.R;
 import com.duongame.adapter.ExplorerItem;
 import com.duongame.helper.DateHelper;
 
 import java.io.File;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by namjungsoo on 2016-11-19.
@@ -26,6 +31,29 @@ public class FileHelper {
         public int index;
         public String fileName;
         public int count;
+    }
+
+    public static String getFileNameCharset(Context context) {
+        Locale locale;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            locale = context.getResources().getConfiguration().getLocales().get(0);
+        } else {
+            locale = context.getResources().getConfiguration().locale;
+        }
+
+        String charset = null;
+        switch (locale.getLanguage()) {
+            case "ko":
+                charset = "cp949";
+                break;
+            case "ja":
+                charset = "cp932";
+                break;
+            case "zh":
+                charset = "cp936";
+                break;
+        }
+        return charset;
     }
 
     public static String getNameWithoutTar(String name) {
@@ -51,6 +79,7 @@ public class FileHelper {
             return 0;
         }
     }
+
     public static String getFileName(String path) {
         return path.substring(path.lastIndexOf("/") + 1);
     }
@@ -141,6 +170,56 @@ public class FileHelper {
         return 0;
     }
 
+    // 파일 타입과 아이콘 타입은 종류가 다르므로 직접 입력하도록 함
+    public static int getFileFolderIconResId(String fileName) {
+        int type = getFileFolderType(fileName);
+        int resId = R.drawable.ic_file_normal;
+
+        // 이미지일 경우 구분
+        switch (type) {
+            case ExplorerItem.FILETYPE_FOLDER:
+                resId = R.drawable.ic_file_folder;
+                break;
+            case ExplorerItem.FILETYPE_IMAGE: {
+                String lowerFileName = fileName.toLowerCase();
+                if (lowerFileName.endsWith(".gif"))
+                    resId = R.drawable.ic_file_jpg;// gif가 없음
+                else if (lowerFileName.endsWith(".png"))
+                    resId = R.drawable.ic_file_png;
+                else
+                    resId = R.drawable.ic_file_jpg;
+            }
+            break;
+            case ExplorerItem.FILETYPE_ZIP:
+                resId = R.drawable.ic_file_zip;
+                break;
+            case ExplorerItem.FILETYPE_PDF:
+                resId = R.drawable.ic_file_pdf;
+                break;
+            case ExplorerItem.FILETYPE_VIDEO: {
+                String lowerFileName = fileName.toLowerCase();
+                if (lowerFileName.endsWith(".mp4"))
+                    resId = R.drawable.ic_file_mp4;
+                else if (lowerFileName.endsWith(".fla"))
+                    resId = R.drawable.ic_file_fla;
+                else
+                    resId = R.drawable.ic_file_avi;
+            }
+            break;
+            case ExplorerItem.FILETYPE_AUDIO:
+                resId = R.drawable.ic_file_mp3;
+                break;
+            case ExplorerItem.FILETYPE_TEXT:
+                resId = R.drawable.ic_file_txt;
+                break;
+            case ExplorerItem.FILETYPE_APK:
+                resId = R.drawable.ic_file_apk;
+                break;
+        }
+        return resId;
+    }
+
+    // 폴더는 제외한다
     public static int getFileType(String fileName) {
         int type = ExplorerItem.FILETYPE_FILE;
 
@@ -163,7 +242,12 @@ public class FileHelper {
         return type;
     }
 
-    public static int getFileType(File eachFile) {
+    public static int getFileFolderType(String fileName) {
+        final File file = new File(fileName);
+        return getFileFolderType(file);
+    }
+
+    public static int getFileFolderType(File eachFile) {
         int type = eachFile.isDirectory() ? ExplorerItem.FILETYPE_FOLDER : ExplorerItem.FILETYPE_FILE;
 
         // 폴더면 바로 리턴
@@ -208,8 +292,8 @@ public class FileHelper {
     }
 
     public static boolean isJpegImage(String filename) {
-        if (filename.endsWith(".jpg")|| filename.endsWith(".jpeg") ||
-                filename.endsWith(".JPG")|| filename.endsWith(".JPEG")) {
+        if (filename.endsWith(".jpg") || filename.endsWith(".jpeg") ||
+                filename.endsWith(".JPG") || filename.endsWith(".JPEG")) {
             return true;
         }
         return false;
@@ -353,5 +437,38 @@ public class FileHelper {
     // 마지막에 /를 포함하지 않는다.
     public static String getParentPath(String path) {
         return path.substring(0, path.lastIndexOf('/'));
+    }
+
+    public static ArrayList<ExplorerItem> getImageFileList(List<ExplorerItem> fileList) {
+        ArrayList<ExplorerItem> imageList = new ArrayList<>();
+
+        for(ExplorerItem item : fileList) {
+            if (item.type == ExplorerItem.FILETYPE_IMAGE) {
+                imageList.add(item);
+            }
+        }
+        return imageList;
+    }
+
+    public static ArrayList<ExplorerItem> getVideoFileList(List<ExplorerItem> fileList) {
+        ArrayList<ExplorerItem> videoList = new ArrayList<>();
+
+        for(ExplorerItem item : fileList) {
+            if (item.type == ExplorerItem.FILETYPE_VIDEO) {
+                videoList.add(item);
+            }
+        }
+        return videoList;
+    }
+
+    public static ArrayList<ExplorerItem> getAudioFileList(List<ExplorerItem> fileList) {
+        ArrayList<ExplorerItem> audioList = new ArrayList<>();
+
+        for(ExplorerItem item : fileList) {
+            if (item.type == ExplorerItem.FILETYPE_AUDIO) {
+                audioList.add(item);
+            }
+        }
+        return audioList;
     }
 }

@@ -13,4 +13,5 @@ public interface IArchiveFile {
     void destroy();
     boolean isEncryped();
     void setPassword(String password);
+    void setFileNameCharset(String charset);
 }

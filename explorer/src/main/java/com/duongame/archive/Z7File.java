@@ -53,4 +53,9 @@ public class Z7File implements IArchiveFile {
     public void setPassword(String password) {
 
     }
+
+    @Override
+    public void setFileNameCharset(String charset) {
+
+    }
 }

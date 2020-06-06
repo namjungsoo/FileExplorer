@@ -28,25 +28,19 @@ public class BaseActivity extends AppCompatActivity {
 
         JLog.e("Jungsoo", "BaseActivity.onCreate begin");
 
-        // 0.1초 단축
-//        new Thread(new Runnable() {
-//            @Override
-//            public void run() {
-        JLog.e("Jungsoo", "setupFabric begin");
         setupFabric();
         JLog.e("Jungsoo", "setupFabric end");
+
         setupFirebase();
         JLog.e("Jungsoo", "setupFirebase end");
-//            }
-//        }).start();
-//        JLog.e("Jungsoo", "BaseActivity.onCreate end");
     }
 
     private void setupFabric() {
         CrashlyticsCore crashlyticsCore = new CrashlyticsCore.Builder()
-//                .disabled(BuildConfig.DEBUG)
+                .disabled(BuildConfig.DEBUG)
                 .build();
-        Fabric.with(this, new Crashlytics.Builder().core(crashlyticsCore).build());
+        Crashlytics crashlytics = new Crashlytics.Builder().core(crashlyticsCore).build();
+        Fabric.with(this, crashlytics);
     }
 
     private void setupFirebase() {
@@ -104,6 +98,9 @@ public class BaseActivity extends AppCompatActivity {
                 if (runnable != null)
                     runnable.run();
             }
+        } else {// 광고 제거되었을때는 카운트 증가 없이 그냥 종료 
+            if (runnable != null)
+                runnable.run();
         }
     }
 

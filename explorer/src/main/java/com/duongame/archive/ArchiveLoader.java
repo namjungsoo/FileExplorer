@@ -3,6 +3,7 @@ package com.duongame.archive;
 import android.content.Context;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
+import android.os.Build;
 
 import com.duongame.adapter.ExplorerItem;
 import com.duongame.bitmap.BitmapLoader;
@@ -15,6 +16,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by namjungsoo on 2018-01-23.
@@ -94,7 +96,7 @@ public class ArchiveLoader {
                     return null;
             } else {
                 // 이미 있으면, 사이즈가 같은지 확인하고 이 파일을 로딩하자
-                if(file.length() == imageList.get(0).size) {
+                if (file.length() == imageList.get(0).size) {
                     return imageList;
                 }
             }
@@ -197,8 +199,13 @@ public class ArchiveLoader {
 
         //zipFile = new net.lingala.zip4j.core.ZipFile(filename);
         //zipFile.setFileNameCharset(zipEncoding);// 일단 무조건 한국 사용자를 위해서 이렇게 설정함
+        String charset = FileHelper.getFileNameCharset(context);
+        if(charset != null) {
+            zipFile.setFileNameCharset(charset);
+        }
+
         zipHeaders = zipFile.getHeaders();
-        if(zipHeaders == null)
+        if (zipHeaders == null)
             return null;
 
         extractPath = FileHelper.getZipCachePath(context, filename);// 파일이 풀릴 예상 경로

@@ -1,29 +1,22 @@
 package com.duongame.activity.main;
 
+import android.animation.Animator;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import com.google.android.material.navigation.NavigationView;
-import androidx.core.view.GravityCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.ActionBarDrawerToggle;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.appcompat.widget.Toolbar;
+import android.os.Handler;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -32,7 +25,15 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
+import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.dropbox.core.android.Auth;
 import com.dropbox.core.v2.users.FullAccount;
@@ -41,6 +42,7 @@ import com.duongame.MainApplication;
 import com.duongame.R;
 import com.duongame.activity.BaseActivity;
 import com.duongame.activity.SettingsActivity;
+import com.duongame.adapter.ExplorerItem;
 import com.duongame.bitmap.BitmapCacheManager;
 import com.duongame.cloud.dropbox.DropboxClientFactory;
 import com.duongame.cloud.dropbox.GetCurrentAccountTask;
@@ -64,9 +66,11 @@ import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 
 import java.io.File;
+import java.util.ArrayList;
 
 import static com.duongame.fragment.ExplorerFragment.SWITCH_GRID;
 import static com.duongame.fragment.ExplorerFragment.SWITCH_LIST;
@@ -86,12 +90,25 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
 
     protected Menu menu;
     protected LinearLayout bottom;
+    protected LinearLayout miniPlayer;
 
+    // bottom
     ImageButton btnCopy;
     ImageButton btnCut;
     ImageButton btnPaste;
     ImageButton btnArchive;
     ImageButton btnDelete;
+
+    // miniPlayer
+    ImageButton btnRewind;
+    ImageButton btnForward;
+    ImageButton btnPlay;
+    ImageButton btnClose;
+    TextView textTitle;
+
+    MediaPlayer player = new MediaPlayer();
+    int position;
+    int track;
 
     protected boolean showReview;
     protected boolean drawerOpened;
@@ -102,6 +119,8 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
     ProgressBar loadingProgressBar;
     boolean isDropboxLoginClicked;
     boolean isGoogleDriveLoginClicked;
+
+    Handler handler;
 
     public boolean getShowReview() {
         return showReview;
@@ -114,6 +133,10 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
     protected abstract ExplorerFragment getExplorerFragment();
 
     protected abstract BaseFragment getCurrentFragment();
+
+    public MediaPlayer getPlayer() {
+        return player;
+    }
 
     void gotoAppStorePage(String packageName) {
         try {
@@ -131,14 +154,33 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (BuildConfig.SHOW_AD) {
-            MobileAds.initialize(this);
+        handler = new Handler();
 
-            AdRewardManager.init(BaseMainActivity.this);
-            AdBannerManager.init(BaseMainActivity.this);
-            AdInterstitialManager.init(BaseMainActivity.this);
+        JLog.e("Jungsoo", "onCreate begin");
+        if (BuildConfig.SHOW_AD) {
+            new Thread(() -> MobileAds.initialize(BaseMainActivity.this,
+                    initializationStatus -> {
+                        JLog.e("Jungsoo", "onCreate MobileAds.initialize onInitializationComplete end");
+                        handler.post(() -> {// UI thread에서 처리
+                            // init에서 제외한 request 수행
+                            // banner는 initContentView에서 수행
+                            AdRewardManager.request(this);
+                            AdBannerManager.requestAd(AdBannerManager.getAdPopupView());
+                            AdInterstitialManager.request();
+                        });
+                    })).start();
+            JLog.e("Jungsoo", "onCreate MobileAds.initialize end");
         }
 
+        // init에서 request는 제외함
+        // init은 MobileAds.initialize 완료되기전에 가능
+        AdRewardManager.init(BaseMainActivity.this);
+        JLog.e("Jungsoo", "onCreate AdRewardManager.initialize end");
+        //AdBannerManager.init(BaseMainActivity.this);
+        AdBannerManager.initExt(BaseMainActivity.this);
+        JLog.e("Jungsoo", "onCreate AdBannerManager.initialize end");
+        AdInterstitialManager.init(BaseMainActivity.this);
+        JLog.e("Jungsoo", "onCreate AdInterstitialManager.initialize end");
 
         JLog.e("Jungsoo", "initContentView begin");
         initContentView();
@@ -181,6 +223,7 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
                 }
             }
         });
+        JLog.e("Jungsoo", "onCreate end");
     }
 
     @Override
@@ -216,7 +259,7 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
         if (adView != null) {
             adView.resume();
             // 광고 리워드 제거 시간 중인가?
-            if(isAdRemoveReward()) {
+            if (isAdRemoveReward()) {
                 adView.setVisibility(View.GONE);
             } else {
                 adView.setVisibility(View.VISIBLE);
@@ -363,6 +406,7 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
 
         // 탐색기일 경우에는 붙이기 모드에서만 상단의 바를 활성화 함
         if (fragment == explorerFragment) {
+            // 붙여넣기 모드에서는 상위 폴더로 올라가기 쉽게 함
             if (explorerFragment.isPasteMode()) {
                 explorerFragment.gotoUpDirectory();
             } else {
@@ -521,15 +565,6 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
         return super.onOptionsItemSelected(item);
     }
 
-    void onPasteModeBackPressed() {
-        if (getExplorerFragment().isPasteMode()) {
-            onBackPressed();
-        } else {
-            // 붙이기 모드는 상단 홈버튼을 통해서만 취소가 가능하고, 백버튼은 폴더를 이동해야 한다.
-            getExplorerFragment().gotoUpDirectory();
-        }
-    }
-
     private void initToolbar() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -538,34 +573,16 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
 
     private void initContentView() {
         if (BuildConfig.SHOW_AD) {
-            final LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            activityView = inflater.inflate(getLayoutResId(), null, true);
-
-            mainView = activityView.findViewById(R.id.activity_main);
-
-            final RelativeLayout layout = new RelativeLayout(this);
-            layout.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT));
-
-            adView = AdBannerManager.getAdBannerView(0);
-
-            // adview layout params
-            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-            params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
-            adView.setLayoutParams(params);
-
-            JLog.e("Jungsoo", "requestAd begin");
-            AdBannerManager.requestAd(0);
-            JLog.e("Jungsoo", "requestAd end");
-
-            // mainview layout params
-            params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
-            params.addRule(RelativeLayout.ABOVE, adView.getId());
-            activityView.setLayoutParams(params);
-
-            layout.addView(adView);
-            layout.addView(activityView);
-
-            setContentView(layout);
+            setContentView(getLayoutResId());
+            // getContentView
+            mainView = this.findViewById(R.id.activity_main);
+            AdView adView = this.findViewById(R.id.adView);
+            AdBannerManager.initBannerAdExt(this, 0, adView);
+            handler.postDelayed(() -> {
+                JLog.e("Jungsoo", "requestAd begin");
+                AdBannerManager.requestAd(0);
+                JLog.e("Jungsoo", "requestAd end");
+            }, 1000);
         } else {
             JLog.e("Jungsoo", "initContentView setContentView begin");
             setContentView(getLayoutResId());
@@ -578,12 +595,14 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
         JLog.e("Jungsoo", "initContentView initBottomUI begin");
         initBottomUI();
         JLog.e("Jungsoo", "initContentView initBottomUI end");
+
+        initPlayerUI();
     }
 
-    void initBottomUI() {
+    private void initBottomUI() {
         // 최초에는 하단으로 숨겨둠
         bottom = findViewById(R.id.bottom);
-        bottom.setTranslationY(UnitHelper.dpToPx(48));
+//        bottom.setTranslationY(UnitHelper.dpToPx(48));
 
         btnCopy = bottom.findViewById(R.id.btn_copy);
         btnCopy.setEnabled(false);
@@ -633,6 +652,37 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
         });
 
         loadingProgressBar = findViewById(R.id.progress_loading);
+    }
+
+    private void initPlayerUI() {
+        // miniplayer
+        miniPlayer = findViewById(R.id.miniplayer);
+//        miniPlayer.setTranslationY(UnitHelper.dpToPx(56));
+
+        textTitle = findViewById(R.id.txt_title);
+
+        // 원래 대로 돌아옴
+        btnClose = findViewById(R.id.btn_close);
+        btnClose.setOnClickListener(v ->
+            getExplorerFragment().onNormalMode()
+        );
+
+        btnForward = findViewById(R.id.btn_forward);
+        btnForward.setOnClickListener(v -> {
+            forwardAudio();
+        });
+        btnRewind = findViewById(R.id.btn_rewind);
+        btnRewind.setOnClickListener(v -> {
+            rewardAudio();
+        });
+        btnPlay = findViewById(R.id.btn_play_pause);
+        btnPlay.setOnClickListener(v -> {
+            if(player.isPlaying()) {
+                pauseAudio();
+            } else {
+                playAudio(track);
+            }
+        });
     }
 
     public ProgressBar getProgressBarLoading() {
@@ -789,30 +839,146 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
         ToastHelper.showToast(this, getResources().getString(R.string.msg_clear_history));
     }
 
-    public LinearLayout getBottomUI() {
-        return bottom;
+    public void showPlayerUI() {
+        JLog.e("Jungoo", "showPlayerUI");
+//        miniPlayer.setTranslationY(UnitHelper.dpToPx(56));
+        position = 0;
+        showUI(miniPlayer, UnitHelper.dpToPx(56));
     }
 
-    public void showBottomUI() {
-        final int defaultHeight = mainView.getHeight();
+    public void hidePlayerUI() {
+        JLog.e("Jungoo", "hidePlayerUI");
+        stopAudio();
+        hideUI(miniPlayer);
+    }
+
+    public void stopAudio() {
+        player.stop();
+    }
+
+    public void playAudio(int track) {
+        try {
+            if (position > 0) {
+                player.seekTo(position);
+                player.start();
+            } else {
+                ArrayList<ExplorerItem> audioList = MainApplication.getInstance(this).getAudioList();
+                ExplorerItem item = audioList.get(track);
+                player.reset();
+                player.setDataSource(item.path);
+                player.prepareAsync();
+                player.setOnCompletionListener(mp -> {
+                    forwardAudio();
+                });
+                player.setOnPreparedListener(mp -> {
+                    mp.start();
+                });
+                this.track = track;
+                textTitle.setText(item.name);
+            }
+            btnPlay.setImageResource(R.drawable.ic_player_pause);
+        } catch (Exception e) {
+            ToastHelper.error(this, R.string.toast_error);
+        }
+    }
+
+    public void pauseAudio() {
+        player.pause();
+        position = player.getCurrentPosition();
+        btnPlay.setImageResource(R.drawable.ic_player_play);
+    }
+
+    public void forwardAudio() {
+        ArrayList<ExplorerItem> audioList = MainApplication.getInstance(this).getAudioList();
+        if (this.track < audioList.size() - 1) {
+            position = 0;
+            playAudio(this.track + 1);
+        }
+    }
+
+    public void rewardAudio() {
+        if (this.track > 0) {
+            position = 0;
+            playAudio(this.track - 1);
+        }
+    }
+
+    private void showUI(View bottomView, int initPositionY) {
+//        final int defaultHeight = mainView.getHeight();
+        bottomView.setVisibility(View.VISIBLE);
+        bottomView.setTranslationY(initPositionY);
+        bottomView.post(() -> {
+            JLog.e("Jungsoo", "bottomView.height=" + bottomView.getHeight());
+            JLog.e("Jungsoo", "bottomView.translationY=" + bottomView.getTranslationY());
+            JLog.e("Jungsoo", "bottomView.y=" + bottomView.getY());
+            // setUpdateListener requires API 19
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                bottomView.animate().translationYBy(-bottomView.getHeight()).setUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                    @Override
+                    public void onAnimationUpdate(ValueAnimator animation) {
+                        int offset = (int) ((float) animation.getAnimatedValue() * bottomView.getHeight());
+//                JLog.e("TAG", "" + animation.getAnimatedValue() + " " + offset + " " + mainView.getHeight());
+//                    mainView.getLayoutParams().height = defaultHeight - offset;
+//                    mainView.requestLayout();
+                    }
+                }).setListener(null);
+            } else {
+                ObjectAnimator oa = ObjectAnimator.ofFloat(bottomView, View.TRANSLATION_Y, bottomView.getTranslationY(), bottomView.getTranslationY() - bottomView.getHeight());
+                oa.setDuration(300);
+                oa.start();
+            }
+        });
+    }
+
+    private void hideUI(View bottomView) {
+//        final int defaultHeight = mainView.getHeight();
+        JLog.e("Jungsoo", "hideUI");
 
         // setUpdateListener requires API 19
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            bottom.animate().translationYBy(-bottom.getHeight()).setUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            bottomView.animate().translationYBy(bottomView.getHeight()).setUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
                 @Override
                 public void onAnimationUpdate(ValueAnimator animation) {
-                    int offset = (int) ((float) animation.getAnimatedValue() * bottom.getHeight());
+                    int offset = (int) ((float) animation.getAnimatedValue() * bottomView.getHeight());
 //                JLog.e("TAG", "" + animation.getAnimatedValue() + " " + offset + " " + mainView.getHeight());
-                    mainView.getLayoutParams().height = defaultHeight - offset;
-                    mainView.requestLayout();
+//                    mainView.getLayoutParams().height = defaultHeight + offset;
+//                    mainView.requestLayout();
+                }
+            }).setListener(new Animator.AnimatorListener() {
+                @Override
+                public void onAnimationStart(Animator animation) {
+
+                }
+
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    bottomView.setVisibility(View.GONE);
+                }
+
+                @Override
+                public void onAnimationCancel(Animator animation) {
+
+                }
+
+                @Override
+                public void onAnimationRepeat(Animator animation) {
+
                 }
             });
         } else {
-            ObjectAnimator oa = ObjectAnimator.ofFloat(bottom, View.TRANSLATION_Y, bottom.getTranslationY(), bottom.getTranslationY() - bottom.getHeight());
+            ObjectAnimator oa = ObjectAnimator.ofFloat(bottomView, View.TRANSLATION_Y, bottomView.getTranslationY(), bottomView.getTranslationY() + bottomView.getHeight());
             oa.setDuration(300);
             oa.start();
         }
+    }
 
+    // from onSelectMode()
+    public void showBottomUI() {
+        JLog.e("Jungoo", "showBottomUI");
+//        bottom.setTranslationY(UnitHelper.dpToPx(48));
+        showUI(bottom, UnitHelper.dpToPx(48));
+
+        // 타이틀을 숫자(선택된 파일 갯수)와 화살표로 변경
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
@@ -821,25 +987,10 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
         updateSelectMenuIcon(true, false);
     }
 
+    // from onNormalMode()
     public void hideBottomUI() {
-        final int defaultHeight = mainView.getHeight();
-
-        // setUpdateListener requires API 19
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            bottom.animate().translationYBy(bottom.getHeight()).setUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-                @Override
-                public void onAnimationUpdate(ValueAnimator animation) {
-                    int offset = (int) ((float) animation.getAnimatedValue() * bottom.getHeight());
-//                JLog.e("TAG", "" + animation.getAnimatedValue() + " " + offset + " " + mainView.getHeight());
-                    mainView.getLayoutParams().height = defaultHeight + offset;
-                    mainView.requestLayout();
-                }
-            });
-        } else {
-            ObjectAnimator oa = ObjectAnimator.ofFloat(bottom, View.TRANSLATION_Y, bottom.getTranslationY(), bottom.getTranslationY() + bottom.getHeight());
-            oa.setDuration(300);
-            oa.start();
-        }
+        JLog.e("Jungoo", "hideBottomUI");
+        hideUI(bottom);
 
         // 원래 타이틀로 돌려준다.
         ActionBar actionBar = getSupportActionBar();
@@ -1043,20 +1194,6 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
         } else if (id == R.id.action_ad_remove) {
             AdRewardManager.show(this);
         }
-
-//        if (id == R.id.nav_camera) {
-//            // Handle the camera action
-//        } else if (id == R.id.nav_gallery) {
-//
-//        } else if (id == R.id.nav_slideshow) {
-//
-//        } else if (id == R.id.nav_manage) {
-//
-//        } else if (id == R.id.nav_share) {
-//
-//        } else if (id == R.id.nav_send) {
-//
-//        }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);

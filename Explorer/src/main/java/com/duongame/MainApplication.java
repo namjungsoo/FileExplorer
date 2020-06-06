@@ -10,14 +10,19 @@ import com.duongame.helper.JLog;
 import com.duongame.helper.PreferenceHelper;
 
 import java.util.ArrayList;
+import java.util.List;
 
 // 여기서 말하는 Analytics란 Google Analytics(이하 GA)를 말한다.
 // GA 앱의 구분은 GA_TRACKING_ID로 하며, free/pro의 구분은 없다.
 // FA 앱의 구분은 자동으로 이루어 진다. package name에 의존적이다.
 public class MainApplication extends MultiDexApplication {
     // path
-    private ArrayList<ExplorerItem> imageList;
     private ArrayList<ExplorerItem> fileList;
+
+    private ArrayList<ExplorerItem> imageList;
+    private ArrayList<ExplorerItem> videoList;
+    private ArrayList<ExplorerItem> audioList;
+
     private final String initialPath = Environment.getExternalStorageDirectory().getAbsolutePath();
     private String lastPath;
 
@@ -38,12 +43,14 @@ public class MainApplication extends MultiDexApplication {
     public void onCreate() {
         super.onCreate();
 
+        JLog.e("Jungsoo", "MainApplication.onCreate begin");
+
         nightMode = PreferenceHelper.getNightMode(this);
         thumbnailDisabled = PreferenceHelper.getThumbnailDisabled(this);
         japaneseDirection = PreferenceHelper.getJapaneseDirection(this);
         pagingAnimationDisabled = PreferenceHelper.getPagingAnimationDisabled(this);
 
-        JLog.e("Jungsoo", "onCreate end");
+        JLog.e("Jungsoo", "MainApplication.onCreate end");
     }
 
     //region Path
@@ -53,6 +60,22 @@ public class MainApplication extends MultiDexApplication {
 
     public ArrayList<ExplorerItem> getImageList() {
         return imageList;
+    }
+
+    public void setVideoList(ArrayList<ExplorerItem> videoList) {
+        this.videoList = videoList;
+    }
+
+    public ArrayList<ExplorerItem> getVideoList() {
+        return videoList;
+    }
+
+    public void setAudioList(ArrayList<ExplorerItem> audioList) {
+        this.audioList = audioList;
+    }
+
+    public ArrayList<ExplorerItem> getAudioList() {
+        return audioList;
     }
 
     public void setFileList(ArrayList<ExplorerItem> fileList) {
