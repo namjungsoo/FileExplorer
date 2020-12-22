@@ -1,13 +1,13 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 buildscript {
-    ext.kotlin_version = '1.4.10'
+    ext.kotlin_version = '1.4.21'
     ext.exoplayer_version = '2.11.3'
 
     repositories {
         jcenter()
         google()
-        maven { url 'https://maven.fabric.io/public' }
     }
+
     dependencies {
         classpath 'com.android.tools.build:gradle:4.1.1'
         // NOTE: Do not place your application dependencies here; they belong
@@ -16,10 +16,14 @@ buildscript {
         // 3.3.0은 compile project시 버그가 있으니 3.2.1에서 변경하지 마시오.
         // 4.0.2: registerResGeneratingTask is deprecated, use registerGeneratedResFolders(FileCollection)
         classpath 'com.google.gms:google-services:4.3.4'
-        classpath 'io.fabric.tools:gradle:1.28.0'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+
+        // Add the Crashlytics Gradle plugin (be sure to add version
+        // 2.0.0 or later if you built your app with Android Studio 4.1).
+        classpath 'com.google.firebase:firebase-crashlytics-gradle:2.4.1'
     }
 }
+
 allprojects {
     repositories {
         jcenter()
@@ -27,6 +31,7 @@ allprojects {
         maven { url "https://jitpack.io" }
     }
 }
+
 task clean(type: Delete) {
     delete rootProject.buildDir
 }

@@ -197,7 +197,7 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if (task.isSuccessful()) {
-                    mFirebaseRemoteConfig.activateFetched();
+                    mFirebaseRemoteConfig.fetchAndActivate();
 
                     long adMaxCount = mFirebaseRemoteConfig.getLong("ad_max_count");
                     if (adMaxCount > 0) {

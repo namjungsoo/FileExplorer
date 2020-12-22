@@ -3,8 +3,6 @@ package com.duongame.activity;
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.crashlytics.android.Crashlytics;
-import com.crashlytics.android.core.CrashlyticsCore;
 import com.duongame.BuildConfig;
 import com.duongame.helper.JLog;
 import com.duongame.helper.PreferenceHelper;
@@ -14,8 +12,6 @@ import com.google.firebase.analytics.FirebaseAnalytics;
 
 import java.io.File;
 import java.util.Date;
-
-import io.fabric.sdk.android.Fabric;
 
 // main, viewer의 통합 base activity
 //
@@ -36,11 +32,11 @@ public class BaseActivity extends AppCompatActivity {
     }
 
     private void setupFabric() {
-        CrashlyticsCore crashlyticsCore = new CrashlyticsCore.Builder()
-                .disabled(BuildConfig.DEBUG)
-                .build();
-        Crashlytics crashlytics = new Crashlytics.Builder().core(crashlyticsCore).build();
-        Fabric.with(this, crashlytics);
+//        CrashlyticsCore crashlyticsCore = new CrashlyticsCore.Builder()
+//                .disabled(BuildConfig.DEBUG)
+//                .build();
+//        Crashlytics crashlytics = new Crashlytics.Builder().core(crashlyticsCore).build();
+//        Fabric.with(this, crashlytics);
     }
 
     private void setupFirebase() {
