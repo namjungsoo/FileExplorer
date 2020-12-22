@@ -2,6 +2,7 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'com.google.firebase.crashlytics'
+apply plugin: 'kotlin-kapt'
 
 android {
     compileSdkVersion 29
@@ -246,8 +247,13 @@ dependencies {
     implementation "com.google.android.exoplayer:exoplayer-ui:$exoplayer_version"
     implementation files('../libs/extension-ffmpeg-release.aar')
 
-    implementation "android.arch.persistence.room:runtime:1.1.1"
+    //implementation "android.arch.persistence.room:runtime:1.1.1"
     implementation 'com.google.guava:listenablefuture:9999.0-empty-to-avoid-conflict-with-guava'
+
+    def room_version = "2.2.3" // check latest version from docs
+
+    implementation "androidx.room:room-runtime:$room_version"
+    kapt "androidx.room:room-compiler:$room_version"
 }
 
 // ADD THIS AT THE BOTTOM
