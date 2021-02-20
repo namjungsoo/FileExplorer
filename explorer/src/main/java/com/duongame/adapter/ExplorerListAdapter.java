@@ -47,7 +47,7 @@ public class ExplorerListAdapter extends ExplorerAdapter {
 
     @Override
     public View inflateLayout(ViewGroup parent) {
-        return context.getLayoutInflater().inflate(R.layout.file_list_item, parent, false);
+        return context.getLayoutInflater().inflate(R.layout.item_file_list, parent, false);
     }
 
     @Override

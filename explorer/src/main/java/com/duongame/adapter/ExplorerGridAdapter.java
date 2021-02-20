@@ -44,7 +44,7 @@ public class ExplorerGridAdapter extends ExplorerAdapter {
 
     @Override
     public View inflateLayout(ViewGroup parent) {
-        return context.getLayoutInflater().inflate(R.layout.file_grid_item, parent, false);
+        return context.getLayoutInflater().inflate(R.layout.item_file_grid, parent, false);
     }
 
     @Override

@@ -256,7 +256,7 @@ public class BookLoader {
     }
 
     private static void loadWithAlert(final Activity context, final Book book, final boolean cancelToRead) {
-        View view = context.getLayoutInflater().inflate(R.layout.history_item, null, false);
+        View view = context.getLayoutInflater().inflate(R.layout.item_history, null, false);
         updateHistoryItem(context, view, book);
 
         // 이부분은 물어보고 셋팅하자.

@@ -43,7 +43,7 @@ public class ExplorerNarrowAdapter extends ExplorerAdapter {
 
     @Override
     public View inflateLayout(ViewGroup parent) {
-        return context.getLayoutInflater().inflate(R.layout.file_narrow_item, parent, false);
+        return context.getLayoutInflater().inflate(R.layout.item_file_narrow, parent, false);
     }
 
     @Override

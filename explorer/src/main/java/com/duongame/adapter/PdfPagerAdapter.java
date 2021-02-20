@@ -2,7 +2,6 @@ package com.duongame.adapter;
 
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.graphics.ColorMatrixColorFilter;
 import android.graphics.pdf.PdfRenderer;
 import android.os.Build;
 import android.view.View;
@@ -15,8 +14,6 @@ import com.duongame.R;
 import com.duongame.activity.viewer.PagerActivity;
 import com.duongame.attacher.ImageViewAttacher;
 import com.duongame.listener.PagerOnTouchListener;
-
-import org.apache.commons.lang3.ObjectUtils;
 
 /**
  * Created by namjungsoo on 2016-12-25.
@@ -40,7 +37,7 @@ public class PdfPagerAdapter extends ViewerPagerAdapter {
 
     @Override
     public Object instantiateItem(final ViewGroup container, final int position) {
-        final ViewGroup rootView = (ViewGroup) context.getLayoutInflater().inflate(R.layout.viewer_page, container, false);
+        final ViewGroup rootView = (ViewGroup) context.getLayoutInflater().inflate(R.layout.page_viewer, container, false);
         final ImageView imageView = (ImageView) rootView.findViewById(R.id.image_viewer);
 
         container.addView(rootView);

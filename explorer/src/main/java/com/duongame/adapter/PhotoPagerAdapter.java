@@ -1,6 +1,5 @@
 package com.duongame.adapter;
 
-import android.graphics.ColorMatrixColorFilter;
 import android.os.AsyncTask;
 import android.view.View;
 import android.view.ViewGroup;
@@ -44,7 +43,7 @@ public class PhotoPagerAdapter extends ViewerPagerAdapter {
     public Object instantiateItem(final ViewGroup container, final int position) {
         JLog.e(TAG, "instantiateItem " + position);
 
-        final FrameLayout rootView = (FrameLayout) context.getLayoutInflater().inflate(R.layout.viewer_page, container, false);
+        final FrameLayout rootView = (FrameLayout) context.getLayoutInflater().inflate(R.layout.page_viewer, container, false);
         final ImageView imageView = rootView.findViewById(R.id.image_viewer);
 
 //        rootView.setBaseOnTouchListener(mPagerOnTouchListener);
