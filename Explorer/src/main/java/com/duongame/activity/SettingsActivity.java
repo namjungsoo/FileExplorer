@@ -5,6 +5,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.widget.SwitchCompat;
+
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -167,10 +169,10 @@ public class SettingsActivity extends BaseActivity {
             }
         });
 
-        Switch nightMode = findViewById(R.id.night_mode);
-        Switch thumbnailDisabled = findViewById(R.id.thumbnail_disabled);
-        Switch japaneseDirection = findViewById(R.id.japanese_direction);
-        Switch pagingAnimationDisabled = findViewById(R.id.paging_animation_disabled);
+        SwitchCompat nightMode = findViewById(R.id.night_mode);
+        SwitchCompat thumbnailDisabled = findViewById(R.id.thumbnail_disabled);
+        SwitchCompat japaneseDirection = findViewById(R.id.japanese_direction);
+        SwitchCompat pagingAnimationDisabled = findViewById(R.id.paging_animation_disabled);
 
         // 자동 페이징 시간 설정
         SeekBar autoPagingTime = findViewById(R.id.seek_time);

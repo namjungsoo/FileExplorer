@@ -119,7 +119,7 @@
                 android:gravity="center"
                 android:text="@string/thumbnail_disabled" />
 
-            <Switch
+            <androidx.appcompat.widget.SwitchCompat
                 android:id="@+id/thumbnail_disabled"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -152,7 +152,7 @@
                 android:gravity="center"
                 android:text="@string/japanese_direction" />
 
-            <Switch
+            <androidx.appcompat.widget.SwitchCompat
                 android:id="@+id/japanese_direction"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -176,7 +176,7 @@
                 android:gravity="center"
                 android:text="@string/night_mode" />
 
-            <Switch
+            <androidx.appcompat.widget.SwitchCompat
                 android:id="@+id/night_mode"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -199,7 +199,7 @@
                 android:gravity="center"
                 android:text="@string/paging_animation_disabled" />
 
-            <Switch
+            <androidx.appcompat.widget.SwitchCompat
                 android:id="@+id/paging_animation_disabled"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
