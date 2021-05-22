@@ -12,6 +12,8 @@ import com.duongame.helper.PreferenceHelper;
 import java.util.ArrayList;
 import java.util.List;
 
+import timber.log.Timber;
+
 // 여기서 말하는 Analytics란 Google Analytics(이하 GA)를 말한다.
 // GA 앱의 구분은 GA_TRACKING_ID로 하며, free/pro의 구분은 없다.
 // FA 앱의 구분은 자동으로 이루어 진다. package name에 의존적이다.
@@ -43,6 +45,7 @@ public class MainApplication extends MultiDexApplication {
     public void onCreate() {
         super.onCreate();
 
+        Timber.plant(new Timber.DebugTree());
         JLog.e("Jungsoo", "MainApplication.onCreate begin");
 
         nightMode = PreferenceHelper.getNightMode(this);

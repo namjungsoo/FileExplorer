@@ -4,14 +4,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.anjlab.android.iab.v3.SkuDetails
+import com.android.billingclient.api.SkuDetails
 import com.duongame.R
 import kotlinx.android.synthetic.main.item_donate.view.*
 
-class DonateAdapter(private val items: List<SkuDetails>?) : RecyclerView.Adapter<DonateAdapter.DonateViewHolder>() {
-    var onClick: ((id: String) -> Unit)? = null
+class DonateAdapter(private val items: List<SkuDetails>) : RecyclerView.Adapter<DonateAdapter.DonateViewHolder>() {
+    var onClick: ((skuDetails: SkuDetails) -> Unit)? = null
 
-    fun setOnClickCallback(onClick: (id: String) -> Unit) {
+    fun setOnClickCallback(onClick: (skuDetails: SkuDetails) -> Unit) {
         this.onClick = onClick
     }
 
@@ -25,15 +25,16 @@ class DonateAdapter(private val items: List<SkuDetails>?) : RecyclerView.Adapter
     }
 
     override fun onBindViewHolder(holder: DonateViewHolder, position: Int) {
-        holder.itemView.title.text = items?.get(position)?.title
+        val title = items[position].title.substring(0, items[position].title.indexOf('('))
+        holder.itemView.title.text = title
         holder.itemView.execute.setOnClickListener {
-            onClick?.let {
-                items?.get(position)?.productId?.let { it1 -> it(it1) }
+            onClick?.let { callback ->
+                callback(items[position])
             }
         }
     }
 
     override fun getItemCount(): Int {
-        return items?.size ?: 0
+        return items.size
     }
 }
