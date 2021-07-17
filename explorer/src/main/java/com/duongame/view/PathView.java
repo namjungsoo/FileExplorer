@@ -1,10 +1,11 @@
 package com.duongame.view;
 
 import android.content.Context;
-import androidx.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.widget.HorizontalScrollView;
+
+import androidx.annotation.Nullable;
 
 public class PathView extends HorizontalScrollView {
     public PathView(Context context) {

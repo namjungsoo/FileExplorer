@@ -5,7 +5,6 @@ import android.os.Handler;
 
 import com.duongame.R;
 import com.duongame.helper.AppHelper;
-import com.duongame.helper.JLog;
 import com.duongame.helper.PreferenceHelper;
 import com.duongame.helper.ToastHelper;
 import com.google.android.gms.ads.AdRequest;
@@ -17,6 +16,8 @@ import com.google.android.gms.ads.reward.RewardedVideoAdListener;
 import java.util.Calendar;
 import java.util.Date;
 
+import timber.log.Timber;
+
 public class AdRewardManager {
     private static RewardedVideoAd mRewardedVideoAd;
 
@@ -26,11 +27,11 @@ public class AdRewardManager {
         // Use an activity context to get the rewarded video instance.
         // getRewardedVideoAdInstance()가 성능이 느리므로 thread에서 처리하고, setRewardedVideoAdListener()는 UI thread에서 처리한다.
         new Thread(() -> {
-            JLog.e("Jungsoo", "AdRewardManager instance begin");
+            Timber.e("AdRewardManager instance begin");
             mRewardedVideoAd = MobileAds.getRewardedVideoAdInstance(context);
             if (mRewardedVideoAd == null)
                 return;
-            JLog.e("Jungsoo", "AdRewardManager instance end");
+            Timber.e("AdRewardManager instance end");
 
             handler.post(() -> {
                 mRewardedVideoAd.setRewardedVideoAdListener(new RewardedVideoAdListener() {
@@ -60,7 +61,7 @@ public class AdRewardManager {
                         // 리워드가 성공적으로 호출되었으면 시간을 늘려준다.
                         // 시간을 늘려주고 결과를 토스트로 뿌려준다.
                         Date date = new Date();
-                        JLog.e("reward", "now=" + date.toString() + " " + " long=" + date.getTime());
+                        Timber.e("reward", "now=" + date.toString() + " " + " long=" + date.getTime());
 
                         long nowTime = date.getTime();
                         Calendar c = Calendar.getInstance();
@@ -68,7 +69,7 @@ public class AdRewardManager {
                         date = c.getTime();
 
                         long nextTime = date.getTime();
-                        JLog.e("reward", "now + 1 hour=" + date.toString() + " " + date.getTime());
+                        Timber.e("reward", "now + 1 hour=" + date.toString() + " " + date.getTime());
 
                         long rewardTime = PreferenceHelper.getAdRemoveTimeReward(context);
 

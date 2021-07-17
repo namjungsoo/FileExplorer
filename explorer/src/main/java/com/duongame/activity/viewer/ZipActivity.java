@@ -3,12 +3,13 @@ package com.duongame.activity.viewer;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import androidx.core.content.ContextCompat;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.ViewSwitcher;
+
+import androidx.core.content.ContextCompat;
 
 import com.duongame.BuildConfig;
 import com.duongame.R;
@@ -21,12 +22,13 @@ import com.duongame.db.Book;
 import com.duongame.db.BookDB;
 import com.duongame.helper.AlertHelper;
 import com.duongame.helper.AppHelper;
-import com.duongame.helper.JLog;
 import com.duongame.manager.AdBannerManager;
 
 import net.lingala.zip4j.exception.ZipException;
 
 import java.util.ArrayList;
+
+import timber.log.Timber;
 
 /**
  * Created by namjungsoo on 2016-11-19.
@@ -97,12 +99,12 @@ public class ZipActivity extends PagerActivity {
             pagerAdapter.notifyDataSetChanged();
 
             updateScrollInfo(pager.getCurrentItem());
-//            JLog.e(TAG, "onSuccess i=" + i);
+//            Timber.e("onSuccess i=" + i);
         }
 
         @Override
         public void onFail(int i, String name) {
-            JLog.e(TAG, "onFail i=" + i + " " + name);
+            Timber.e("onFail i=" + i + " " + name);
         }
 
         @Override

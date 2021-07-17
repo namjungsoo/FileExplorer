@@ -18,12 +18,13 @@ import com.duongame.cloud.dropbox.DropboxClientFactory;
 import com.duongame.file.FileExplorer;
 import com.duongame.file.FileHelper;
 import com.duongame.fragment.ExplorerFragment;
-import com.duongame.helper.JLog;
 import com.duongame.helper.ToastHelper;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
+
+import timber.log.Timber;
 
 import static com.duongame.adapter.ExplorerItem.FILETYPE_PDF;
 import static com.duongame.adapter.ExplorerItem.FILETYPE_TEXT;
@@ -110,7 +111,7 @@ public class DropboxSearchTask extends AsyncTask<String, Void, FileExplorer.Resu
 
                         // 패스를 찾았다. 리스트에 더해주자.
                         fileList.add(item);
-                        JLog.e("Jungsoo", "i=" + i + " " + item.toString());
+                        Timber.e("i=" + i + " " + item.toString());
                     }
                 }
 
@@ -119,9 +120,9 @@ public class DropboxSearchTask extends AsyncTask<String, Void, FileExplorer.Resu
                 return result;
             }
         } catch (DbxException e) {
-            JLog.e("Jungsoo", e.getLocalizedMessage());
+            Timber.e(e.getLocalizedMessage());
         } catch (IllegalStateException e) {
-            JLog.e("Jungsoo", e.getLocalizedMessage());
+            Timber.e(e.getLocalizedMessage());
         }
 
         return null;

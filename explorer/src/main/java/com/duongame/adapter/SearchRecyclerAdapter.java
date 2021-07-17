@@ -3,12 +3,13 @@ package com.duongame.adapter;
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
-import androidx.recyclerview.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.duongame.MainApplication;
 import com.duongame.R;

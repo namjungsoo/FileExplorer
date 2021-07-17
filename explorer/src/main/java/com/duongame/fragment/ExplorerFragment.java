@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -52,7 +51,6 @@ import com.duongame.file.FileHelper;
 import com.duongame.helper.AlertHelper;
 import com.duongame.helper.AppHelper;
 import com.duongame.helper.ExtSdCardHelper;
-import com.duongame.helper.JLog;
 import com.duongame.helper.PreferenceHelper;
 import com.duongame.helper.ToastHelper;
 import com.duongame.manager.AdBannerManager;
@@ -73,6 +71,8 @@ import com.duongame.view.Indicator;
 
 import java.io.File;
 import java.util.ArrayList;
+
+import timber.log.Timber;
 
 import static android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION;
 import static com.duongame.ExplorerConfig.MAX_THUMBNAILS;
@@ -209,11 +209,11 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
     private void loadFileListFromLocalDB() {
         handler = new Handler();
         // 현재 파일 리스트를 얻어서 바로 셋팅
-        JLog.e("Jungsoo", "ExplorerItemDB begin");
+        Timber.e("ExplorerItemDB begin");
 
         setCanClick(false);
         new Thread(() -> {
-            JLog.e("Jungsoo", "ExplorerItemDB thread");
+            Timber.e("ExplorerItemDB thread");
             ArrayList<ExplorerItem> fileList = (ArrayList<ExplorerItem>) ExplorerItemDB.Companion.getInstance(getContext()).getDb().explorerItemDao().getItems();
             ArrayList<ExplorerItem> imageList = FileHelper.getImageFileList(fileList);
             ArrayList<ExplorerItem> videoList = FileHelper.getVideoFileList(fileList);
@@ -237,7 +237,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
                     // 이제 클릭할수 있음
                     // 프로그레스바 안보이기
                     setCanClick(true);
-                    JLog.e("Jungsoo", "ExplorerItemDB end");
+                    Timber.e("ExplorerItemDB end");
                 });
             }
         }).start();
@@ -250,10 +250,10 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
         rootView = inflater.inflate(R.layout.fragment_explorer, container, false);
 
         initUI();
-        JLog.e("Jungsoo", "initUI end");
+        Timber.e("initUI end");
 
         initViewType();
-        JLog.e("Jungsoo", "initViewType end");
+        Timber.e("initViewType end");
 
         loadFileListFromLocalDB();
 
@@ -277,7 +277,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
         } catch (NullPointerException e) {
 
         }
-        JLog.e("Jungsoo", "onCreateView end");
+        Timber.e("onCreateView end");
         return rootView;
     }
 
@@ -293,7 +293,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
                 }
             }
         }
-        JLog.e("Jungsoo", "onActivityCreated end");
+        Timber.e("onActivityCreated end");
     }
 
     @Override
@@ -405,7 +405,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
     }
 
     public void updateDropboxUI(boolean show) {
-        JLog.e("Jungsoo", "updateDropboxUI " + show);
+        Timber.e("updateDropboxUI " + show);
         if (dropbox == null) {
             backupDropbox = show;
             return;
@@ -431,7 +431,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
     }
 
     public void updateGoogleDriveUI(boolean show) {
-        JLog.e("Jungsoo", "updateGoogleDriveUI " + show);
+        Timber.e("updateGoogleDriveUI " + show);
         if (googleDrive == null) {
             backupGoogleDrive = show;
             return;
@@ -855,7 +855,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
     }
 
     void onAdapterItemLongClick(int position) {
-//        JLog.e(TAG, "onAdapterItemLongClick=" + position);
+//        Timber.e("onAdapterItemLongClick=" + position);
         synchronized (this) {
             if (fileList == null)
                 return;
@@ -1138,10 +1138,10 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
 
         // preference는 쓰레드로 사용하지 않기로 함
         // 현재 패스를 저장
-        JLog.e("Jungsoo", "updateFileList set begin path=" + path + " cloud=" + cloud);
+        Timber.e("updateFileList set begin path=" + path + " cloud=" + cloud);
         PreferenceHelper.setLastPath(getActivity(), path);
         PreferenceHelper.setLastCloud(getActivity(), cloud);
-        JLog.e("Jungsoo", "updateFileList set end");
+        Timber.e("updateFileList set end");
 
         // 외장 패스인지 체크하여
         boolean isExtSdCard = false;
@@ -1268,11 +1268,11 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
 
     @Override
     public void onRefresh() {
-        JLog.e("Jungsoo", "onRefresh begin");
+        Timber.e("onRefresh begin");
         // 외부 resume시에 들어올수도 있으므로 pref에서 읽는다.
         int lastCloud = PreferenceHelper.getLastCloud(getContext());
         String lastPath = PreferenceHelper.getLastPath(getContext());
-        JLog.e("Jungsoo", "onRefresh end");
+        Timber.e("onRefresh end");
 
         cloud = lastCloud;
         updateFileList(lastPath);
@@ -1444,7 +1444,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
                         task.setOnDismissListener(new DialogInterface.OnDismissListener() {
                             @Override
                             public void onDismiss(DialogInterface dialog) {
-//                                JLog.e(TAG, "onDismiss");
+//                                Timber.e("onDismiss");
                                 onRefresh();
                             }
                         });

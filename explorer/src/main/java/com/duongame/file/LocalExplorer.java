@@ -2,14 +2,14 @@ package com.duongame.file;
 
 import com.duongame.adapter.ExplorerItem;
 import com.duongame.helper.DateHelper;
-import com.duongame.helper.JLog;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
-import java.util.stream.Collectors;
+
+import timber.log.Timber;
 
 /**
  * Created by namjungsoo on 2016-11-06.
@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 public class LocalExplorer extends FileExplorer {
     @Override
     public FileExplorer.Result search(String path) {
-        JLog.e("Jungsoo", "LocalExplorer search begin");
+        Timber.e("LocalExplorer search begin");
         File file = new File(path);
         if (file == null)
             return null;
@@ -28,12 +28,12 @@ public class LocalExplorer extends FileExplorer {
         if (files == null)
             return null;
 
-        JLog.e("Jungsoo", "LocalExplorer listFiles end " + files.length);
+        Timber.e("LocalExplorer listFiles end " + files.length);
 
         // 폴더를 우선하도록 정렬 해야 함
         // 안드로이드는 폴더와 파일을 섞어서 리턴을 해준다.
         Collections.sort(Arrays.asList(files), new FileExplorer.DirectoryPreferComparator());
-        JLog.e("Jungsoo", "LocalExplorer listFiles sort end");
+        Timber.e("LocalExplorer listFiles sort end");
 
         ArrayList<ExplorerItem> fileList = new ArrayList<>();
         ArrayList<ExplorerItem> directoryList = new ArrayList<>();
@@ -98,7 +98,7 @@ public class LocalExplorer extends FileExplorer {
             }
         }
 
-        JLog.e("Jungsoo", "LocalExplorer file item end");
+        Timber.e("LocalExplorer file item end");
 //        if (comparator == null) {
 //            comparator = new FileHelper.NameAscComparator();
 //        }
@@ -114,7 +114,7 @@ public class LocalExplorer extends FileExplorer {
             fileList.addAll(normalList);
             fileList.addAll(directoryList);
         }
-        JLog.e("Jungsoo", "LocalExplorer file item sort end");
+        Timber.e("LocalExplorer file item sort end");
 
         // 이미지 리스트를 따로 모을 것인지?
         if (isImageListEnable()) {
@@ -130,7 +130,7 @@ public class LocalExplorer extends FileExplorer {
 //            result.imageList = imageList;
             result.imageList = FileHelper.getImageFileList(normalList);
         }
-        JLog.e("Jungsoo", "LocalExplorer image list end");
+        Timber.e("LocalExplorer image list end");
 
         if (isVideoListEnable()) {
             result.videoList = FileHelper.getVideoFileList(normalList);
@@ -141,7 +141,7 @@ public class LocalExplorer extends FileExplorer {
         }
 
         result.fileList = fileList;
-        JLog.e("Jungsoo", "LocalExplorer search end");
+        Timber.e("LocalExplorer search end");
         return result;
     }
 }

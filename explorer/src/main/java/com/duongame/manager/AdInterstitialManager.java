@@ -4,10 +4,11 @@ import android.content.Context;
 
 import com.duongame.R;
 import com.duongame.helper.AppHelper;
-import com.duongame.helper.JLog;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
+
+import timber.log.Timber;
 
 /**
  * Created by namjungsoo on 2016-04-30.
@@ -56,7 +57,7 @@ public class AdInterstitialManager {
             @Override
             public void onAdClosed() {
                 super.onAdClosed();
-                JLog.d(TAG, "onAdClosed");
+                Timber.d("onAdClosed");
                 requestNewInterstitial();
                 if (runnable != null) {
                     runnable.run();
@@ -66,25 +67,25 @@ public class AdInterstitialManager {
             @Override
             public void onAdFailedToLoad(int errorCode) {
                 super.onAdFailedToLoad(errorCode);
-                JLog.d(TAG, "onAdFailedToLoad");
+                Timber.d("onAdFailedToLoad");
             }
 
             @Override
             public void onAdLeftApplication() {
                 super.onAdLeftApplication();
-                JLog.d(TAG, "onAdLeftApplication");
+                Timber.d("onAdLeftApplication");
             }
 
             @Override
             public void onAdOpened() {
                 super.onAdOpened();
-                JLog.d(TAG, "onAdOpened");
+                Timber.d("onAdOpened");
             }
 
             @Override
             public void onAdLoaded() {
                 super.onAdLoaded();
-                JLog.d(TAG, "onAdLoaded");
+                Timber.d("onAdLoaded");
             }
         });                                // 광고의 리스너를 설정합니다.
     }
@@ -96,10 +97,10 @@ public class AdInterstitialManager {
 
         if (interstitialAD.isLoaded()) {
             interstitialAD.show();
-            JLog.d(TAG, "show");
+            Timber.d("show");
             return true;
         } else {
-            JLog.d(TAG, "finish");
+            Timber.d("finish");
             return false;
         }
     }

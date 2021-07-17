@@ -10,10 +10,11 @@ import com.duongame.adapter.ExplorerItem;
 import com.duongame.bitmap.BitmapCacheManager;
 import com.duongame.bitmap.BitmapLoader;
 import com.duongame.file.FileHelper;
-import com.duongame.helper.JLog;
 
 import java.lang.ref.WeakReference;
 import java.util.concurrent.CopyOnWriteArraySet;
+
+import timber.log.Timber;
 
 import static com.duongame.adapter.ExplorerItem.SIDE_ALL;
 
@@ -72,7 +73,7 @@ public class LoadBitmapTask extends AsyncTask<ExplorerItem, Void, BitmapLoader.S
 
         item = params[0];
 //        setCurrentLoadingBitmap(item.path);
-        JLog.e(TAG, "setCurrentLoadingBitmap " + item.path);
+        Timber.e("setCurrentLoadingBitmap " + item.path);
         return loadBitmap(item);
     }
 
@@ -132,29 +133,29 @@ public class LoadBitmapTask extends AsyncTask<ExplorerItem, Void, BitmapLoader.S
         BitmapLoader.SplittedBitmap sb = new BitmapLoader.SplittedBitmap();
         if (item.side != ExplorerItem.SIDE_ALL) {// split인 이미지 이면서 캐쉬가 되어 있으면 바로 리턴한다.
             final String page = BitmapCacheManager.changePathToPage(item);
-            JLog.e(TAG, "loadBitmap changePathToPage " + page + " hash=" + this.hashCode());
+            Timber.e("loadBitmap changePathToPage " + page + " hash=" + this.hashCode());
 
             count = 0;
 //            boolean loadingByOther = isCurrentLoadingBitmap(item.path);
-            JLog.e(TAG, "isCurrentLoadingBitmap " + item.path + " " + loadingByOther);
+            Timber.e("isCurrentLoadingBitmap " + item.path + " " + loadingByOther);
 
             while (true) {
                 bitmap = BitmapCacheManager.getPage(page);
                 if (bitmap != null) {
-                    JLog.e(TAG, "loadBitmap found " + page);
+                    Timber.e("loadBitmap found " + page);
                     sb.key = page;
                     sb.page = bitmap;
                     return sb;
                 } else {
                     // 옆의 페이지가 내것을 로딩하고 있지 않으면 내가 직접 로딩해야 한다.
                     if (!loadingByOther) {
-                        JLog.e(TAG, "Not loading. Self load begin " + page);
+                        Timber.e("Not loading. Self load begin " + page);
                         break;
                     } else {
                         if (isTimedOutForImageExtracting()) {
                             break;
                         }
-                        JLog.e(TAG, "Loaded by next page " + page);
+                        Timber.e("Loaded by next page " + page);
                     }
                 }
             }

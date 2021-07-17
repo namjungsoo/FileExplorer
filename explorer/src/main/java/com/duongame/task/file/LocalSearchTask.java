@@ -10,11 +10,12 @@ import com.duongame.db.ExplorerItemDao;
 import com.duongame.file.FileExplorer;
 import com.duongame.file.FileHelper;
 import com.duongame.fragment.ExplorerFragment;
-import com.duongame.helper.JLog;
 import com.duongame.manager.PermissionManager;
 
 import java.lang.ref.WeakReference;
 import java.util.Comparator;
+
+import timber.log.Timber;
 
 import static android.view.View.GONE;
 
@@ -36,7 +37,7 @@ public class LocalSearchTask extends AsyncTask<String, Void, FileExplorer.Result
         this.pathChanged = pathChanged;
         fragmentWeakReference = new WeakReference<>(fragment);
 
-        JLog.e("Jungsoo", "LocalSearchTask begin");
+        Timber.e("LocalSearchTask begin");
     }
 
     void updateComparator() {
@@ -79,7 +80,7 @@ public class LocalSearchTask extends AsyncTask<String, Void, FileExplorer.Result
 
     @Override
     protected FileExplorer.Result doInBackground(String... params) {
-        JLog.e("Jungsoo", "LocalSearchTask doInBackground begin");
+        Timber.e("LocalSearchTask doInBackground begin");
         path = params[0];
         updateComparator();
 
@@ -102,7 +103,7 @@ public class LocalSearchTask extends AsyncTask<String, Void, FileExplorer.Result
         }
 //            fragment.fileResult = result;
 
-        JLog.e("Jungsoo", "LocalSearchTask doInBackground end");
+        Timber.e("LocalSearchTask doInBackground end");
         return result;
     }
 
@@ -121,7 +122,7 @@ public class LocalSearchTask extends AsyncTask<String, Void, FileExplorer.Result
 
     @Override
     protected void onPostExecute(FileExplorer.Result result) {
-        JLog.e("Jungsoo", "LocalSearchTask onPostExecute begin");
+        Timber.e("LocalSearchTask onPostExecute begin");
         super.onPostExecute(result);// AsyncTask는 아무것도 안함
 
         if (isCancelled())
@@ -178,18 +179,18 @@ public class LocalSearchTask extends AsyncTask<String, Void, FileExplorer.Result
             fragment.setCanClick(true);
             new Thread(() -> {
                 // 결과가 왔으므로 DB에 저장해 준다.
-                JLog.e("Jungsoo", "LocalSearchTask doInBackground DB begin");
+                Timber.e("LocalSearchTask doInBackground DB begin");
                 ExplorerItemDao dao = ExplorerItemDB.Companion.getInstance(fragment.getContext()).getDb().explorerItemDao();
                 dao.deleteAll();
                 if (result.fileList != null) {
                     for(ExplorerItem item : result.fileList) {
-                        JLog.e("Jungsoo", item.toString());
+                        Timber.e(item.toString());
                     }
                     dao.insertItems(result.fileList);
                 }
-                JLog.e("Jungsoo", "LocalSearchTask doInBackground DB end");
+                Timber.e("LocalSearchTask doInBackground DB end");
             }).start();
-            JLog.e("Jungsoo", "LocalSearchTask onPostExecute end");
+            Timber.e("LocalSearchTask onPostExecute end");
         } catch (NullPointerException e) {
 
         }

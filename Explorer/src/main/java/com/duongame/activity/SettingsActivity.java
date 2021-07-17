@@ -4,9 +4,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.widget.SwitchCompat;
-
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -15,8 +12,10 @@ import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
-import android.widget.Switch;
 import android.widget.TextView;
+
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.widget.SwitchCompat;
 
 import com.duongame.BuildConfig;
 import com.duongame.MainApplication;
@@ -25,7 +24,6 @@ import com.duongame.bitmap.BitmapCacheManager;
 import com.duongame.db.BookDB;
 import com.duongame.helper.AlertHelper;
 import com.duongame.helper.AppHelper;
-import com.duongame.helper.JLog;
 import com.duongame.helper.PreferenceHelper;
 import com.duongame.helper.ToastHelper;
 import com.duongame.manager.AdBannerManager;
@@ -33,6 +31,8 @@ import com.duongame.manager.AdRewardManager;
 import com.google.android.gms.ads.AdView;
 
 import java.io.File;
+
+import timber.log.Timber;
 
 
 // 셋팅을 전부 관장하는 액티비티이다.
@@ -183,18 +183,18 @@ public class SettingsActivity extends BaseActivity {
         autoPagingTime.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                JLog.e(TAG, "change track " + seekBar.getProgress());
+                Timber.e("change track " + seekBar.getProgress());
                 autoPagingTimeValue.setText(String.valueOf(seekBar.getProgress()));
             }
 
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
-                JLog.e(TAG, "start track " + seekBar.getProgress());
+                Timber.e("start track " + seekBar.getProgress());
             }
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-                JLog.e(TAG, "stop track " + seekBar.getProgress());
+                Timber.e("stop track " + seekBar.getProgress());
                 PreferenceHelper.setAutoPagingTime(SettingsActivity.this, seekBar.getProgress());
             }
         });

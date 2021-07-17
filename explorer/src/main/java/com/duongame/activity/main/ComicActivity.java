@@ -11,10 +11,11 @@ import com.duongame.fragment.BaseFragment;
 import com.duongame.fragment.ExplorerFragment;
 import com.duongame.helper.AlertHelper;
 import com.duongame.helper.AppHelper;
-import com.duongame.helper.JLog;
 import com.duongame.helper.PreferenceHelper;
 import com.duongame.manager.PermissionManager;
 import com.google.android.material.tabs.TabLayout;
+
+import timber.log.Timber;
 
 public class ComicActivity extends BaseMainActivity {
     private final static String TAG = ComicActivity.class.getSimpleName();
@@ -30,9 +31,9 @@ public class ComicActivity extends BaseMainActivity {
 
         super.onCreate(savedInstanceState);
 
-        JLog.e("Jungsoo", "initTabs begin");
+        Timber.e("initTabs begin");
         initTabs();
-        JLog.e("Jungsoo", "initTabs end");
+        Timber.e("initTabs end");
 
         if (!PreferenceHelper.getPermissionAgreed(this)) {
             AlertHelper.showAlert(this,

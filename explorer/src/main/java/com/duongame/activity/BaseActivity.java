@@ -1,10 +1,10 @@
 package com.duongame.activity;
 
 import android.os.Bundle;
+
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.duongame.BuildConfig;
-import com.duongame.helper.JLog;
 import com.duongame.helper.PreferenceHelper;
 import com.duongame.manager.AdInterstitialManager;
 import com.duongame.manager.AdRewardManager;
@@ -12,6 +12,8 @@ import com.google.firebase.analytics.FirebaseAnalytics;
 
 import java.io.File;
 import java.util.Date;
+
+import timber.log.Timber;
 
 // main, viewer의 통합 base activity
 //
@@ -22,13 +24,13 @@ public class BaseActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        JLog.e("Jungsoo", "BaseActivity.onCreate begin");
+        Timber.e("BaseActivity.onCreate begin");
 
         setupFabric();
-        JLog.e("Jungsoo", "setupFabric end");
+        Timber.e("setupFabric end");
 
         setupFirebase();
-        JLog.e("Jungsoo", "setupFirebase end");
+        Timber.e("setupFirebase end");
     }
 
     private void setupFabric() {

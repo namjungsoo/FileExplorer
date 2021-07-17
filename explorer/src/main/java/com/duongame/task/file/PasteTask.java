@@ -12,7 +12,6 @@ import com.duongame.dialog.PasteDialog;
 import com.duongame.file.FileExplorer;
 import com.duongame.file.FileHelper;
 import com.duongame.file.LocalExplorer;
-import com.duongame.helper.JLog;
 import com.duongame.helper.ToastHelper;
 
 import org.apache.commons.io.FileUtils;
@@ -25,6 +24,8 @@ import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.HashMap;
+
+import timber.log.Timber;
 
 import static com.duongame.file.FileHelper.BLOCK_SIZE;
 
@@ -159,7 +160,7 @@ public class PasteTask extends AsyncTask<Void, FileHelper.Progress, Boolean> {
                 // 폴더의 경우 하위 모든 아이템을 찾은뒤에 더한다.
                 FileExplorer.Result result = searchFile(item.path);
                 for (int j = 0; j < result.fileList.size(); j++) {
-                    JLog.e("TAG", "fileList j=" + j + " " + result.fileList.get(j).path);
+                    Timber.e("fileList j=" + j + " " + result.fileList.get(j).path);
                 }
                 prepareFolder(result, item.path);
 
@@ -238,19 +239,19 @@ public class PasteTask extends AsyncTask<Void, FileHelper.Progress, Boolean> {
         if (cut) {
             if (src.isDirectory()) {
                 // src가 디렉토리 이면, 이미 하위 파일은 폴더를 생성하고 옮겼으므로 delete해준다.
-                JLog.e("TAG", "delete folder path=" + src.getPath());
+                Timber.e("delete folder path=" + src.getPath());
                 src.delete();
                 //FileUtils.forceDelete(src);
-                JLog.e("TAG", "complete delete folder path=" + src.getPath());
+                Timber.e("complete delete folder path=" + src.getPath());
             } else {
-                JLog.e("TAG", "move folder path=" + src.getPath());
+                Timber.e("move folder path=" + src.getPath());
                 // 이동한다.
                 FileUtils.moveFile(src, dest);
                 updateProgress(i, 100);
             }
         } else {
             // 복사한다.
-//            JLog.e("TAG", "processInternal copy");
+//            Timber.e("processInternal copy");
 
             FileInputStream inputStream = new FileInputStream(src);
             FileOutputStream outputStream = new FileOutputStream(dest);
@@ -266,7 +267,7 @@ public class PasteTask extends AsyncTask<Void, FileHelper.Progress, Boolean> {
                 totalRead += nRead;
 
                 long percent = totalRead * 100 / srcLength;
-                JLog.e("TAG", "percent=" + percent + " totalRead=" + totalRead + " srcLength=" + srcLength);
+                Timber.e("percent=" + percent + " totalRead=" + totalRead + " srcLength=" + srcLength);
 
                 updateProgress(i, (int) percent);
             }
@@ -427,7 +428,7 @@ public class PasteTask extends AsyncTask<Void, FileHelper.Progress, Boolean> {
                 dialog.getTotalText().setText(String.format(activity.getString(R.string.total_text), progress.index + 1, size, totalPercent));
             }
         } else {
-//            JLog.e("PasteTask", "dialog is null");
+//            Timber.e("PasteTask", "dialog is null");
         }
     }
 

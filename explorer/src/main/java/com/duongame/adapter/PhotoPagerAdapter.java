@@ -12,13 +12,14 @@ import com.duongame.activity.viewer.PagerActivity;
 import com.duongame.attacher.ImageViewAttacher;
 import com.duongame.bitmap.BitmapCacheManager;
 import com.duongame.file.FileHelper;
-import com.duongame.helper.JLog;
 import com.duongame.listener.PagerOnTouchListener;
 import com.duongame.task.bitmap.LoadBitmapTask;
 import com.duongame.task.bitmap.LoadGifTask;
 import com.felipecsl.gifimageview.library.GifImageView;
 
 import java.util.ArrayList;
+
+import timber.log.Timber;
 
 /**
  * Created by namjungsoo on 2016-12-25.
@@ -41,7 +42,7 @@ public class PhotoPagerAdapter extends ViewerPagerAdapter {
 
     @Override
     public Object instantiateItem(final ViewGroup container, final int position) {
-        JLog.e(TAG, "instantiateItem " + position);
+        Timber.e("instantiateItem " + position);
 
         final FrameLayout rootView = (FrameLayout) context.getLayoutInflater().inflate(R.layout.page_viewer, container, false);
         final ImageView imageView = rootView.findViewById(R.id.image_viewer);
@@ -106,7 +107,7 @@ public class PhotoPagerAdapter extends ViewerPagerAdapter {
 
     @Override
     public void destroyItem(ViewGroup container, int position, Object object) {
-        JLog.e(TAG, "destroyItem position=" + position);
+        Timber.e("destroyItem position=" + position);
         // 공통 사항
         container.removeView((View) object);
 
@@ -145,7 +146,7 @@ public class PhotoPagerAdapter extends ViewerPagerAdapter {
 
     @Override
     public void setPrimaryItem(final ViewGroup container, final int position, Object object) {
-//        JLog.e(TAG, "setPrimaryItem " + position);
+//        Timber.e("setPrimaryItem " + position);
 
         final int width = container.getWidth();
         final int height = container.getHeight();

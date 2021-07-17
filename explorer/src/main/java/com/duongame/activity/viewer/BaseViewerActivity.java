@@ -5,9 +5,6 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
-
-import androidx.core.content.ContextCompat;
-import androidx.appcompat.app.ActionBar;
 import android.util.DisplayMetrics;
 import android.view.Display;
 import android.view.KeyCharacterMap;
@@ -24,15 +21,19 @@ import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
-import com.duongame.MainApplication;
+import androidx.appcompat.app.ActionBar;
+import androidx.core.content.ContextCompat;
+
 import com.duongame.BuildConfig;
+import com.duongame.MainApplication;
 import com.duongame.R;
 import com.duongame.activity.BaseActivity;
 import com.duongame.activity.SettingsActivity;
 import com.duongame.bitmap.BitmapCacheManager;
-import com.duongame.helper.JLog;
 import com.duongame.manager.AdBannerManager;
 import com.google.android.gms.ads.AdView;
+
+import timber.log.Timber;
 
 /**
  * Created by namjungsoo on 2016-11-16.
@@ -91,9 +92,9 @@ public class BaseViewerActivity extends BaseActivity {
         }
 
         BitmapCacheManager.removeAllBitmaps();
-        JLog.e(TAG, "onDestroy removeAllBitmaps");
+        Timber.e("onDestroy removeAllBitmaps");
         BitmapCacheManager.removeAllPages();
-        JLog.e(TAG, "onDestroy removeAllPages");
+        Timber.e("onDestroy removeAllPages");
 
         // 전면 광고 노출
         showInterstitialAd(null);

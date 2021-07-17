@@ -3,12 +3,6 @@ package com.duongame.helper;
 import android.os.Environment;
 
 import java.io.File;
-import java.io.InputStream;
-import java.util.HashSet;
-import java.util.Locale;
-
-import static android.os.Environment.getExternalStorageDirectory;
-import static com.duongame.file.FileHelper.BLOCK_SIZE;
 
 /**
  * Created by namjungsoo on 2017-01-22.

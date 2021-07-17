@@ -53,7 +53,6 @@ import com.duongame.fragment.BaseFragment;
 import com.duongame.fragment.ExplorerFragment;
 import com.duongame.helper.AlertHelper;
 import com.duongame.helper.AppHelper;
-import com.duongame.helper.JLog;
 import com.duongame.helper.PreferenceHelper;
 import com.duongame.helper.ToastHelper;
 import com.duongame.helper.UnitHelper;
@@ -71,6 +70,8 @@ import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 
 import java.io.File;
 import java.util.ArrayList;
+
+import timber.log.Timber;
 
 import static com.duongame.fragment.ExplorerFragment.SWITCH_GRID;
 import static com.duongame.fragment.ExplorerFragment.SWITCH_LIST;
@@ -156,11 +157,11 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
 
         handler = new Handler();
 
-        JLog.e("Jungsoo", "onCreate begin");
+        Timber.e("onCreate begin");
         if (BuildConfig.SHOW_AD) {
             new Thread(() -> MobileAds.initialize(BaseMainActivity.this,
                     initializationStatus -> {
-                        JLog.e("Jungsoo", "onCreate MobileAds.initialize onInitializationComplete end");
+                        Timber.e("onCreate MobileAds.initialize onInitializationComplete end");
                         handler.post(() -> {// UI thread에서 처리
                             // init에서 제외한 request 수행
                             // banner는 initContentView에서 수행
@@ -169,26 +170,26 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
                             AdInterstitialManager.request();
                         });
                     })).start();
-            JLog.e("Jungsoo", "onCreate MobileAds.initialize end");
+            Timber.e("onCreate MobileAds.initialize end");
         }
 
         // init에서 request는 제외함
         // init은 MobileAds.initialize 완료되기전에 가능
         AdRewardManager.init(BaseMainActivity.this);
-        JLog.e("Jungsoo", "onCreate AdRewardManager.initialize end");
+        Timber.e("onCreate AdRewardManager.initialize end");
         //AdBannerManager.init(BaseMainActivity.this);
         AdBannerManager.initExt(BaseMainActivity.this);
-        JLog.e("Jungsoo", "onCreate AdBannerManager.initialize end");
+        Timber.e("onCreate AdBannerManager.initialize end");
         AdInterstitialManager.init(BaseMainActivity.this);
-        JLog.e("Jungsoo", "onCreate AdInterstitialManager.initialize end");
+        Timber.e("onCreate AdInterstitialManager.initialize end");
 
-        JLog.e("Jungsoo", "initContentView begin");
+        Timber.e("initContentView begin");
         initContentView();
-        JLog.e("Jungsoo", "initContentView end");
+        Timber.e("initContentView end");
         initToolbar();
-        JLog.e("Jungsoo", "initToolbar end");
+        Timber.e("initToolbar end");
         initDrawer();
-        JLog.e("Jungsoo", "initDrawer end");
+        Timber.e("initDrawer end");
 
         showReview = ReviewManager.checkReview(BaseMainActivity.this);
 
@@ -223,7 +224,7 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
                 }
             }
         });
-        JLog.e("Jungsoo", "onCreate end");
+        Timber.e("onCreate end");
     }
 
     @Override
@@ -268,7 +269,7 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
 
         //TODO: 코믹z만 클라우드 지원. 추후 다른 앱에서 지원하려면 해제해야함
         if (AppHelper.isComicz(this)) {
-            JLog.e("Jungsoo", "onResume begin");
+            Timber.e("onResume begin");
 
             if (isDropboxLoginClicked) {
                 onResumeDropbox();
@@ -280,7 +281,7 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
                 isGoogleDriveLoginClicked = false;
             }
 
-            JLog.e("Jungsoo", "onResume end");
+            Timber.e("onResume end");
         }
     }
 
@@ -295,23 +296,23 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
         @Override
         public void onPostExecute(Void result) {
             super.onPostExecute(result);
-            JLog.e("Jungsoo", "GoogleDriveLoginTask.onPostExecute begin");
+            Timber.e("GoogleDriveLoginTask.onPostExecute begin");
             loadGoogleDrive(accountName);
-            JLog.e("Jungsoo", "GoogleDriveLoginTask.onPostExecute end");
+            Timber.e("GoogleDriveLoginTask.onPostExecute end");
         }
 
         @Override
         protected Void doInBackground(Void... voids) {
-            JLog.e("Jungsoo", "GoogleDriveLoginTask.doInBackground begin");
+            Timber.e("GoogleDriveLoginTask.doInBackground begin");
             accountName = PreferenceHelper.getAccountGoogleDrive(BaseMainActivity.this);
             GoogleDriveManager.login(BaseMainActivity.this, accountName);
-            JLog.e("Jungsoo", "GoogleDriveLoginTask.doInBackground end");
+            Timber.e("GoogleDriveLoginTask.doInBackground end");
             return null;
         }
     }
 
     void onResumeGoogleDrive() {
-        JLog.e("Jungsoo", "onResumeGoogleDrive");
+        Timber.e("onResumeGoogleDrive");
         GoogleDriveLoginTask task = new GoogleDriveLoginTask();
         task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
@@ -325,18 +326,18 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
         @Override
         public void onPostExecute(Boolean result) {
             super.onPostExecute(result);
-            JLog.e("Jungsoo", "DropboxLoginTask.onPostExecute begin");
+            Timber.e("DropboxLoginTask.onPostExecute begin");
             if (result.booleanValue()) {
                 loadDropbox();
             } else {
                 getExplorerFragment().updateDropboxUI(false);
             }
-            JLog.e("Jungsoo", "DropboxLoginTask.onPostExecute end");
+            Timber.e("DropboxLoginTask.onPostExecute end");
         }
 
         @Override
         protected Boolean doInBackground(Void... voids) {
-            JLog.e("Jungsoo", "DropboxLoginTask.doInBackground begin");
+            Timber.e("DropboxLoginTask.doInBackground begin");
             String accessToken = PreferenceHelper.getAccountDropbox(BaseMainActivity.this);
             if (accessToken == null) {
                 accessToken = Auth.getOAuth2Token();
@@ -349,13 +350,13 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
                 }
             }
             DropboxClientFactory.init(accessToken);
-            JLog.e("Jungsoo", "DropboxLoginTask.doInBackground end");
+            Timber.e("DropboxLoginTask.doInBackground end");
             return true;
         }
     }
 
     void onResumeDropbox() {
-        JLog.e("Jungsoo", "onResumeDropbox");
+        Timber.e("onResumeDropbox");
         DropboxLoginTask task = new DropboxLoginTask();
         task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
@@ -579,22 +580,22 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
             AdView adView = this.findViewById(R.id.adView);
             AdBannerManager.initBannerAdExt(this, 0, adView);
             handler.postDelayed(() -> {
-                JLog.e("Jungsoo", "requestAd begin");
+                Timber.e("requestAd begin");
                 AdBannerManager.requestAd(0);
-                JLog.e("Jungsoo", "requestAd end");
+                Timber.e("requestAd end");
             }, 1000);
         } else {
-            JLog.e("Jungsoo", "initContentView setContentView begin");
+            Timber.e("initContentView setContentView begin");
             setContentView(getLayoutResId());
 
             // getContentView
             mainView = this.findViewById(android.R.id.content);
-            JLog.e("Jungsoo", "initContentView setContentView end");
+            Timber.e("initContentView setContentView end");
         }
 
-        JLog.e("Jungsoo", "initContentView initBottomUI begin");
+        Timber.e("initContentView initBottomUI begin");
         initBottomUI();
-        JLog.e("Jungsoo", "initContentView initBottomUI end");
+        Timber.e("initContentView initBottomUI end");
 
         initPlayerUI();
     }
@@ -698,13 +699,13 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
         @Override
         public void onDrawerStateChanged(int newState) {
             super.onDrawerStateChanged(newState);
-            JLog.e("Jungsoo", "onDrawerStateChanged " + newState);
+            Timber.e("onDrawerStateChanged " + newState);
         }
 
         @Override
         public void onDrawerOpened(View drawerView) {
             super.onDrawerOpened(drawerView);
-            JLog.e("Jungsoo", "onDrawerOpened ");
+            Timber.e("onDrawerOpened ");
             drawerOpened = true;
 
             // drawer가 열리면 노말모드로 변환한다.
@@ -717,7 +718,7 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
         @Override
         public void onDrawerClosed(View drawerView) {
             super.onDrawerClosed(drawerView);
-            JLog.e("Jungsoo", "onDrawerClosed ");
+            Timber.e("onDrawerClosed ");
             drawerOpened = false;
         }
     }
@@ -840,14 +841,14 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
     }
 
     public void showPlayerUI() {
-        JLog.e("Jungoo", "showPlayerUI");
+        Timber.e("showPlayerUI");
 //        miniPlayer.setTranslationY(UnitHelper.dpToPx(56));
         position = 0;
         showUI(miniPlayer, UnitHelper.dpToPx(56));
     }
 
     public void hidePlayerUI() {
-        JLog.e("Jungoo", "hidePlayerUI");
+        Timber.e("hidePlayerUI");
         stopAudio();
         hideUI(miniPlayer);
     }
@@ -908,16 +909,16 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
         bottomView.setVisibility(View.VISIBLE);
         bottomView.setTranslationY(initPositionY);
         bottomView.post(() -> {
-            JLog.e("Jungsoo", "bottomView.height=" + bottomView.getHeight());
-            JLog.e("Jungsoo", "bottomView.translationY=" + bottomView.getTranslationY());
-            JLog.e("Jungsoo", "bottomView.y=" + bottomView.getY());
+            Timber.e("bottomView.height=" + bottomView.getHeight());
+            Timber.e("bottomView.translationY=" + bottomView.getTranslationY());
+            Timber.e("bottomView.y=" + bottomView.getY());
             // setUpdateListener requires API 19
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
                 bottomView.animate().translationYBy(-bottomView.getHeight()).setUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
                     @Override
                     public void onAnimationUpdate(ValueAnimator animation) {
                         int offset = (int) ((float) animation.getAnimatedValue() * bottomView.getHeight());
-//                JLog.e("TAG", "" + animation.getAnimatedValue() + " " + offset + " " + mainView.getHeight());
+//                Timber.e("" + animation.getAnimatedValue() + " " + offset + " " + mainView.getHeight());
 //                    mainView.getLayoutParams().height = defaultHeight - offset;
 //                    mainView.requestLayout();
                     }
@@ -932,7 +933,7 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
 
     private void hideUI(View bottomView) {
 //        final int defaultHeight = mainView.getHeight();
-        JLog.e("Jungsoo", "hideUI");
+        Timber.e("hideUI");
 
         // setUpdateListener requires API 19
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
@@ -940,7 +941,7 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
                 @Override
                 public void onAnimationUpdate(ValueAnimator animation) {
                     int offset = (int) ((float) animation.getAnimatedValue() * bottomView.getHeight());
-//                JLog.e("TAG", "" + animation.getAnimatedValue() + " " + offset + " " + mainView.getHeight());
+//                Timber.e("" + animation.getAnimatedValue() + " " + offset + " " + mainView.getHeight());
 //                    mainView.getLayoutParams().height = defaultHeight + offset;
 //                    mainView.requestLayout();
                 }
@@ -974,7 +975,7 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
 
     // from onSelectMode()
     public void showBottomUI() {
-        JLog.e("Jungoo", "showBottomUI");
+        Timber.e("showBottomUI");
 //        bottom.setTranslationY(UnitHelper.dpToPx(48));
         showUI(bottom, UnitHelper.dpToPx(48));
 
@@ -989,7 +990,7 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
 
     // from onNormalMode()
     public void hideBottomUI() {
-        JLog.e("Jungoo", "hideBottomUI");
+        Timber.e("hideBottomUI");
         hideUI(bottom);
 
         // 원래 타이틀로 돌려준다.
@@ -1213,7 +1214,7 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
     }
 
     void loadGoogleDrive(String accountName) {
-        JLog.e("Jungsoo", "loadGoogleDrive");
+        Timber.e("loadGoogleDrive");
 
         // 로그인이 성공했다고 봄
         if (navigationView == null)

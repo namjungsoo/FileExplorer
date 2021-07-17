@@ -1,15 +1,17 @@
 package com.duongame.activity.viewer;
 
+import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import androidx.viewpager.widget.ViewPager;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
+
+import androidx.viewpager.widget.ViewPager;
 
 import com.duongame.BuildConfig;
 import com.duongame.MainApplication;
@@ -20,7 +22,6 @@ import com.duongame.db.BookLoader;
 import com.duongame.file.FileHelper;
 import com.duongame.helper.AlertHelper;
 import com.duongame.helper.AppHelper;
-import com.duongame.helper.JLog;
 import com.duongame.helper.PreferenceHelper;
 import com.duongame.listener.PagerOnTouchListener;
 import com.duongame.view.ViewPagerEx;
@@ -28,6 +29,8 @@ import com.felipecsl.gifimageview.library.GifImageView;
 
 import java.util.Timer;
 import java.util.TimerTask;
+
+import timber.log.Timber;
 
 /**
  * Created by namjungsoo on 2016-11-19.
@@ -91,7 +94,7 @@ public class PagerActivity extends BaseViewerActivity {
         // 팝업을 띄운다.
         // 확인시 현재 위치에서 Activity를 재시작 한다.
         String fileName = FileHelper.getFileName(nextBook);
-        String message = String.format(getString(R.string.msg_next_book), fileName);
+        @SuppressLint({"StringFormatInvalid", "LocalSuppress"}) String message = String.format(getString(R.string.msg_next_book), fileName);
 
         if (BuildConfig.SHOW_AD && !isAdRemoveReward()) {
             AlertHelper.showAlertWithAd(this,
@@ -181,7 +184,7 @@ public class PagerActivity extends BaseViewerActivity {
 
     void resumeTimer() {
         if (getFullscreen() && autoTime > 0 && lastAutoTime != autoTime) {// 이제 타이머를 시작
-            JLog.e(TAG, "resumeTimer autoTime=" + autoTime);
+            Timber.e("resumeTimer autoTime=" + autoTime);
 
             timer = new Timer();
             timer.schedule(new TimerTask() {
@@ -223,7 +226,7 @@ public class PagerActivity extends BaseViewerActivity {
     protected void onResume() {
         super.onResume();
 
-        JLog.e(TAG, "onResume");
+        Timber.e("onResume");
         resumeTimer();
     }
 
@@ -332,7 +335,7 @@ public class PagerActivity extends BaseViewerActivity {
                     BitmapCacheManager.removeAllBitmaps();
                 }
 
-                JLog.e("PagerActivity", "setCurrentItem");
+                Timber.e("setCurrentItem");
                 pager.setCurrentItem(page, false);
             }
         });
@@ -406,7 +409,7 @@ public class PagerActivity extends BaseViewerActivity {
 
     public void openNextBook() {
         // 마지막 페이지를 드래깅 하고 잇는 것임
-        JLog.w(TAG, "onPageScrolled last page dragging");
+        Timber.w("onPageScrolled last page dragging");
 
         //TODO: PDF와 ZIP에 대해서만 다음 책을 읽을수 있다.
     }
@@ -418,7 +421,7 @@ public class PagerActivity extends BaseViewerActivity {
 
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-                JLog.w(TAG, "onPageScrolled position=" + position + " positionOffset=" + positionOffset + " positionOffsetPixels=" + positionOffsetPixels);
+                Timber.w("onPageScrolled position=" + position + " positionOffset=" + positionOffset + " positionOffsetPixels=" + positionOffsetPixels);
 
                 if (pagerAdapter == null) {
                     return;
@@ -433,7 +436,7 @@ public class PagerActivity extends BaseViewerActivity {
 
             @Override
             public void onPageSelected(int position) {
-                JLog.w(TAG, "onPageSelected position=" + position);
+                Timber.w("onPageSelected position=" + position);
                 updateScrollInfo(position);
                 updateName(position);
                 updateInfo(position);
@@ -441,7 +444,7 @@ public class PagerActivity extends BaseViewerActivity {
 
             @Override
             public void onPageScrollStateChanged(int state) {
-                JLog.w(TAG, "onPageScrollStateChanged state=" + state);
+                Timber.w("onPageScrollStateChanged state=" + state);
                 switch (state) {
                     case ViewPager.SCROLL_STATE_IDLE:
                         isPagerIdle = true;

@@ -1,18 +1,17 @@
 package com.duongame.bitmap;
 
 import android.graphics.Bitmap;
-import android.util.Log;
 import android.widget.ImageView;
 
 import com.duongame.adapter.ExplorerItem;
 import com.duongame.file.FileHelper;
-import com.duongame.helper.JLog;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+
+import timber.log.Timber;
 
 /**
  * Created by namjungsoo on 2016-11-16.
@@ -55,15 +54,15 @@ public class BitmapCacheManager {
         int bitmapHash = bitmap != null ? bitmap.hashCode() : 0;
 
         if (cache == null) {
-            JLog.e(TAG, "setPage cache == null " + key + " " + bitmapHash + " " + imageViewHash);
+            Timber.e("setPage cache == null " + key + " " + bitmapHash + " " + imageViewHash);
             cache = new BitmapCache();
             cache.bitmap = bitmap;
             cache.imageViewRef = new WeakReference<>(imageView);
             pageCache.put(key, cache);
         } else {
-            JLog.e(TAG, "setPage cache != null " + key + " " + bitmapHash + " " + imageViewHash);
+            Timber.e("setPage cache != null " + key + " " + bitmapHash + " " + imageViewHash);
             if (cache.bitmap != null && cache.bitmap != bitmap) {
-                JLog.e(TAG, "setPage removeBitmapCache cache.bitmap changed " + key + " " + bitmapHash + " " + imageViewHash);
+                Timber.e("setPage removeBitmapCache cache.bitmap changed " + key + " " + bitmapHash + " " + imageViewHash);
                 removeBitmapCache(cache, 0);
             }
             // bitmap은 정리가 끝났으므로 바로 대입
@@ -88,20 +87,20 @@ public class BitmapCacheManager {
 
     private static void removeBitmapCache(BitmapCache cache, int resId) {
         if (cache.bitmap == null) {
-            JLog.e(TAG, "removeBitmapCache bitmap is null");
+            Timber.e("removeBitmapCache bitmap is null");
             return;
         }
         if (cache.bitmap.isRecycled()) {
-            JLog.e(TAG, "removeBitmapCache is already recycled");
+            Timber.e("removeBitmapCache is already recycled");
             return;
         }
         if (cache.imageViewRef == null) {
-            JLog.e(TAG, "removeBitmapCache imageViewRef is null");
+            Timber.e("removeBitmapCache imageViewRef is null");
             return;
         }
         ImageView imageView = cache.imageViewRef.get();
         if (imageView == null) {
-            JLog.e(TAG, "removeBitmapCache imageView is null");
+            Timber.e("removeBitmapCache imageView is null");
             return;
         }
         if(resId > 0) {
@@ -109,7 +108,7 @@ public class BitmapCacheManager {
         } else {
             imageView.setImageBitmap(null);
         }
-        JLog.e(TAG, "removeBitmapCache imageView set bitmap null");
+        Timber.e("removeBitmapCache imageView set bitmap null");
     }
 
     public static void removePage(String key) {
@@ -117,19 +116,19 @@ public class BitmapCacheManager {
         if (cache == null) {
             return;
         }
-        JLog.e(TAG, "removePage removeBitmapCache");
+        Timber.e("removePage removeBitmapCache");
         removeBitmapCache(cache, 0);
         pageCache.remove(key);
     }
 
     public static void removeAllPages() {
-        JLog.e(TAG, "removeAllPages");
+        Timber.e("removeAllPages");
         for (String key : pageCache.keySet()) {
             BitmapCache cache = pageCache.get(key);
             if (cache == null) {
                 continue;
             }
-            JLog.e(TAG, "removeAllPages removeBitmapCache");
+            Timber.e("removeAllPages removeBitmapCache");
             removeBitmapCache(cache, 0);
         }
         pageCache.clear();
@@ -148,7 +147,7 @@ public class BitmapCacheManager {
             bitmapCache.put(path, cache);
         } else {
             if (cache.bitmap != null && cache.bitmap != bitmap) {
-                JLog.e(TAG, "setBitmap removeBitmapCache");
+                Timber.e("setBitmap removeBitmapCache");
                 removeBitmapCache(cache, 0);
             }
             // bitmap은 정리가 끝났으므로 바로 대입
@@ -176,20 +175,20 @@ public class BitmapCacheManager {
         if (cache == null) {
             return;
         }
-        JLog.e(TAG, "removeBitmap removeBitmapCache");
+        Timber.e("removeBitmap removeBitmapCache");
         removeBitmapCache(cache, 0);
         bitmapCache.remove(path);
     }
 
     public static void removeAllBitmaps() {
-        JLog.e(TAG, "removeAllBitmaps");
+        Timber.e("removeAllBitmaps");
 
         for (String key : bitmapCache.keySet()) {
             BitmapCache cache = bitmapCache.get(key);
             if (cache == null) {
                 continue;
             }
-            JLog.e(TAG, "removeAllBitmaps removeBitmapCache");
+            Timber.e("removeAllBitmaps removeBitmapCache");
             removeBitmapCache(cache, 0);
         }
         bitmapCache.clear();
@@ -198,11 +197,11 @@ public class BitmapCacheManager {
     //TODO: 하나의 썸네일이 여러곳에서 사용될수 있으니 해당 부분에 대해서 조치를 해야함
     public static void setThumbnail(String path, Bitmap bitmap, ImageView imageView) {
         if (path == null) {
-            JLog.e(TAG, "setThumbnail path is null");
+            Timber.e("setThumbnail path is null");
             return;
         }
 
-        JLog.e(TAG, "setThumbnail " + path);
+        Timber.e("setThumbnail " + path);
         ArrayList<BitmapCache> cacheList = thumbnailCache.get(path);
         if (cacheList == null) {
             cacheList = new ArrayList<>();
@@ -214,18 +213,18 @@ public class BitmapCacheManager {
 
             cacheList.add(cache);
             thumbnailCache.put(path, cacheList);
-            JLog.e(TAG, "setThumbnail " + path + " new");
+            Timber.e("setThumbnail " + path + " new");
         } else {
             for (BitmapCache cache : cacheList) {
                 // 이미 있으면 리턴
                 if (cache.bitmap == bitmap && cache.imageViewRef.get() == imageView) {
-                    JLog.e(TAG, "setThumbnail " + path + " reject");
+                    Timber.e("setThumbnail " + path + " reject");
                     return;
                 }
 
                 // 캐쉬와 다르면 거절
                 if (cache.bitmap != bitmap) {
-                    JLog.e(TAG, "setThumbnail " + path + " reject");
+                    Timber.e("setThumbnail " + path + " reject");
                     return;
                 }
             }
@@ -236,12 +235,12 @@ public class BitmapCacheManager {
             newCache.bitmap = cacheList.get(0).bitmap;
             newCache.imageViewRef = new WeakReference<>(imageView);
             cacheList.add(newCache);
-            JLog.e(TAG, "setThumbnail " + path + " add");
+            Timber.e("setThumbnail " + path + " add");
         }
     }
 
     public static Bitmap getThumbnail(String path) {
-        JLog.e(TAG, "getThumbnail " + path);
+        Timber.e("getThumbnail " + path);
         ArrayList<BitmapCache> cacheList = thumbnailCache.get(path);
         if (cacheList == null) {
             return null;
@@ -249,7 +248,7 @@ public class BitmapCacheManager {
         if (cacheList.size() == 0) {
             return null;
         }
-        JLog.e(TAG, "getThumbnail " + path + " OK");
+        Timber.e("getThumbnail " + path + " OK");
         return cacheList.get(0).bitmap;
     }
 
@@ -264,11 +263,11 @@ public class BitmapCacheManager {
                 continue;
             }
 
-            JLog.e(TAG, "removeAllThumbnails key=" + key + " size=" + cacheList.size());
+            Timber.e("removeAllThumbnails key=" + key + " size=" + cacheList.size());
 
             // 모든걸 다 지운다.
             for (BitmapCache cache : cacheList) {
-                JLog.e(TAG, "removeAllThumbnails key=" + key + " remove");
+                Timber.e("removeAllThumbnails key=" + key + " remove");
 
                 int resId = FileHelper.getFileFolderIconResId(key);
                 removeBitmapCache(cache, resId);

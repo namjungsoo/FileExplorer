@@ -1,10 +1,11 @@
 package com.duongame.adapter;
 
 import android.app.Activity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
+
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.duongame.R;
 import com.duongame.file.FileHelper;

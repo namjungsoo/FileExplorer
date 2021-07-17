@@ -12,7 +12,6 @@ import com.duongame.archive.RarFile;
 import com.duongame.archive.Zip4jFile;
 import com.duongame.dialog.UnzipDialog;
 import com.duongame.file.FileHelper;
-import com.duongame.helper.JLog;
 import com.duongame.helper.ToastHelper;
 import com.hzy.lib7z.ExtractCallback;
 import com.hzy.lib7z.Z7Extractor;
@@ -29,6 +28,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+
+import timber.log.Timber;
 
 import static com.duongame.file.FileHelper.BLOCK_SIZE;
 
@@ -279,12 +280,12 @@ public class UnzipTask extends AsyncTask<Void, FileHelper.Progress, Boolean> {
             @Override
             public void onGetFileNum(int fileNum) {
                 count = fileNum;
-                JLog.e("TAG", "7z fileNum=" + count);
+                Timber.e("7z fileNum=" + count);
             }
 
             @Override
             public void onProgress(String name, long size) {
-                JLog.e("TAG", "7z onProgress name=" + name + " count=" + size + " j=" + j);
+                Timber.e("7z onProgress name=" + name + " count=" + size + " j=" + j);
                 updateProgress(j, count, name, 100);
                 j++;
             }

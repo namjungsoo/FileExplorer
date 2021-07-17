@@ -4,11 +4,12 @@ import android.content.Context;
 
 import com.duongame.R;
 import com.duongame.helper.AppHelper;
-import com.duongame.helper.JLog;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
+
+import timber.log.Timber;
 
 /**
  * Created by namjungsoo on 2016-04-30.
@@ -53,31 +54,31 @@ public class AdBannerManager {
             @Override
             public void onAdClosed() {
                 super.onAdClosed();
-                JLog.d(TAG, "onAdClosed");
+                Timber.d("onAdClosed");
             }
 
             @Override
             public void onAdFailedToLoad(int errorCode) {
                 super.onAdFailedToLoad(errorCode);
-                JLog.d(TAG, "onAdFailedToLoad=" + errorCode);
+                Timber.d("onAdFailedToLoad=" + errorCode);
             }
 
             @Override
             public void onAdLeftApplication() {
                 super.onAdLeftApplication();
-                JLog.d(TAG, "onAdLeftApplication");
+                Timber.d("onAdLeftApplication");
             }
 
             @Override
             public void onAdOpened() {
                 super.onAdOpened();
-                JLog.d(TAG, "onAdOpened");
+                Timber.d("onAdOpened");
             }
 
             @Override
             public void onAdLoaded() {
                 super.onAdLoaded();
-                JLog.d(TAG, "onAdLoaded");
+                Timber.d("onAdLoaded");
             }
         });
         //requestAd(i);
@@ -98,31 +99,31 @@ public class AdBannerManager {
             @Override
             public void onAdClosed() {
                 super.onAdClosed();
-                JLog.d(TAG, "onAdClosed");
+                Timber.d("onAdClosed");
             }
 
             @Override
             public void onAdFailedToLoad(int errorCode) {
                 super.onAdFailedToLoad(errorCode);
-                JLog.d(TAG, "onAdFailedToLoad " + errorCode);
+                Timber.d("onAdFailedToLoad " + errorCode);
             }
 
             @Override
             public void onAdLeftApplication() {
                 super.onAdLeftApplication();
-                JLog.d(TAG, "onAdLeftApplication");
+                Timber.d("onAdLeftApplication");
             }
 
             @Override
             public void onAdOpened() {
                 super.onAdOpened();
-                JLog.d(TAG, "onAdOpened");
+                Timber.d("onAdOpened");
             }
 
             @Override
             public void onAdLoaded() {
                 super.onAdLoaded();
-                JLog.d(TAG, "onAdLoaded");
+                Timber.d("onAdLoaded");
             }
         });
     }

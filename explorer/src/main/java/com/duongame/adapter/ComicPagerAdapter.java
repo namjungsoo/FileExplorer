@@ -1,16 +1,17 @@
 package com.duongame.adapter;
 
 import android.app.Activity;
+import android.view.ViewGroup;
+
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
-import android.view.ViewGroup;
 
 import com.duongame.R;
-import com.duongame.fragment.HistoryFragment;
-import com.duongame.fragment.SearchFragment;
 import com.duongame.fragment.BaseFragment;
 import com.duongame.fragment.ExplorerFragment;
+import com.duongame.fragment.HistoryFragment;
+import com.duongame.fragment.SearchFragment;
 
 import java.util.HashMap;
 

@@ -2,9 +2,10 @@ package com.duongame.adapter;
 
 import android.graphics.ColorMatrix;
 import android.graphics.ColorMatrixColorFilter;
-import androidx.viewpager.widget.PagerAdapter;
 import android.view.View;
 import android.widget.ImageView;
+
+import androidx.viewpager.widget.PagerAdapter;
 
 import com.duongame.MainApplication;
 import com.duongame.activity.viewer.PagerActivity;

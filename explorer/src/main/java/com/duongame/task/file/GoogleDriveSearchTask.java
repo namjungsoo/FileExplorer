@@ -11,7 +11,6 @@ import com.duongame.cloud.googledrive.GoogleDriveManager;
 import com.duongame.file.FileExplorer;
 import com.duongame.file.FileHelper;
 import com.duongame.fragment.ExplorerFragment;
-import com.duongame.helper.JLog;
 import com.duongame.helper.ToastHelper;
 import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException;
 import com.google.api.services.drive.Drive;
@@ -22,6 +21,8 @@ import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Collections;
+
+import timber.log.Timber;
 
 import static com.duongame.adapter.ExplorerItem.FILETYPE_PDF;
 import static com.duongame.adapter.ExplorerItem.FILETYPE_TEXT;
@@ -174,7 +175,7 @@ public class GoogleDriveSearchTask extends AsyncTask<String, Void, FileExplorer.
                 }
                 //fileList.add(item);
 
-                JLog.e("Jungsoo", "name=" + file.getName() + " createdTime=" + file.getCreatedTime() + " fileId=" + file.getId() + " mime=" + file.getMimeType());
+                Timber.e("name=" + file.getName() + " createdTime=" + file.getCreatedTime() + " fileId=" + file.getId() + " mime=" + file.getMimeType());
             }
             pageToken = result.getNextPageToken();
         } while (pageToken != null);

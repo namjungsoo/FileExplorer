@@ -8,7 +8,6 @@ import android.os.Environment;
 import java.util.Locale;
 
 import static com.duongame.fragment.BaseFragment.CLOUD_LOCAL;
-import static com.duongame.fragment.ExplorerFragment.SWITCH_GRID;
 import static com.duongame.fragment.ExplorerFragment.SWITCH_NARROW;
 
 /**

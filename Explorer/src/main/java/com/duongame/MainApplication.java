@@ -2,15 +2,14 @@ package com.duongame;
 
 import android.app.Activity;
 import android.os.Environment;
+
 import androidx.multidex.MultiDexApplication;
 
 import com.duongame.activity.BaseActivity;
 import com.duongame.adapter.ExplorerItem;
-import com.duongame.helper.JLog;
 import com.duongame.helper.PreferenceHelper;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import timber.log.Timber;
 
@@ -46,14 +45,14 @@ public class MainApplication extends MultiDexApplication {
         super.onCreate();
 
         Timber.plant(new Timber.DebugTree());
-        JLog.e("Jungsoo", "MainApplication.onCreate begin");
+        Timber.e("MainApplication.onCreate begin");
 
         nightMode = PreferenceHelper.getNightMode(this);
         thumbnailDisabled = PreferenceHelper.getThumbnailDisabled(this);
         japaneseDirection = PreferenceHelper.getJapaneseDirection(this);
         pagingAnimationDisabled = PreferenceHelper.getPagingAnimationDisabled(this);
 
-        JLog.e("Jungsoo", "MainApplication.onCreate end");
+        Timber.e("MainApplication.onCreate end");
     }
 
     //region Path

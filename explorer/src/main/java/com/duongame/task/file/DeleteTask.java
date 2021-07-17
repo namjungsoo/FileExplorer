@@ -160,7 +160,7 @@ public class DeleteTask extends AsyncTask<Void, Integer, Boolean> {
     protected void onPostExecute(Boolean result) {
         super.onPostExecute(result);
 
-//        JLog.e("TAG", "onPostExecute");
+//        Timber.e("onPostExecute");
         Activity activity = activityWeakReference.get();
         if (activity != null) {
             if (result)
@@ -175,7 +175,7 @@ public class DeleteTask extends AsyncTask<Void, Integer, Boolean> {
 
         DeleteDialog dialog = dialogWeakReference.get();
         if (dialog != null) {
-//            JLog.e("TAG", "dialog.dismiss");
+//            Timber.e("dialog.dismiss");
             dialog.dismiss();
         }
     }

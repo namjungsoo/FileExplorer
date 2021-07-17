@@ -23,7 +23,6 @@ import android.provider.MediaStore;
 import com.duongame.adapter.ExplorerItem;
 import com.duongame.archive.ArchiveLoader;
 import com.duongame.file.FileHelper;
-import com.duongame.helper.JLog;
 
 import net.lingala.zip4j.exception.ZipException;
 
@@ -33,6 +32,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
+
+import timber.log.Timber;
 
 import static android.graphics.Bitmap.createBitmap;
 
@@ -275,7 +276,7 @@ public class BitmapLoader {
 //            inSampleSize = 2;
 //        }
 
-//        JLog.e(TAG, "calculateInSampleSize BEGIN screen=" + screenWidth + " " + screenHeight);
+//        Timber.e("calculateInSampleSize BEGIN screen=" + screenWidth + " " + screenHeight);
 
         float screenScaleFHD = 0.0f;
         if (screenWidth > 1080) {
@@ -284,7 +285,7 @@ public class BitmapLoader {
             screenHeight *= screenScaleFHD;
         }
 
-//        JLog.e(TAG, "calculateInSampleSize END screen=" + screenWidth + " " + screenHeight);
+//        Timber.e("calculateInSampleSize END screen=" + screenWidth + " " + screenHeight);
 
 //        if(screenHeight > 1920) {
 //            inSampleSize = 2;
@@ -297,14 +298,14 @@ public class BitmapLoader {
 
             // 둘다 1보다 크기 때문에 작은것으로 해야지 안깨진다.
             int ratioScale = (heightRatio < widthRatio ? heightRatio : widthRatio);
-//            JLog.e(TAG, "calculateInSampleSize widthRatio=" + screenWidth + " heightRatio=" + screenHeight + " ratioScale=" + ratioScale);
+//            Timber.e("calculateInSampleSize widthRatio=" + screenWidth + " heightRatio=" + screenHeight + " ratioScale=" + ratioScale);
 
             // 답이 소숫점이 있을수 있다.
             // 1보다 큰것이 sampling해야 되는 것이다.
             // 큰값으로 샘플링하면 메모리가 많이 줄어든다.
             inSampleSize *= (int) ratioScale;
         }
-//        JLog.e(TAG, String.format("calculateInSampleSize bmpWidth=%d bmpHeight=%d screenWidth=%d screenHeight=%d inSampleSize=%d", bmpWidth, bmpHeight, screenWidth, screenHeight, inSampleSize));
+//        Timber.e(String.format("calculateInSampleSize bmpWidth=%d bmpHeight=%d screenWidth=%d screenHeight=%d inSampleSize=%d", bmpWidth, bmpHeight, screenWidth, screenHeight, inSampleSize));
 
         return inSampleSize;
     }
@@ -336,7 +337,7 @@ public class BitmapLoader {
                 Bitmap rotated = createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), m, false);
                 if (rotated != null) {
                     bitmap.recycle();
-                    JLog.e(TAG, "rotateBitmapOnExif recycle");
+                    Timber.e("rotateBitmapOnExif recycle");
                     bitmap = rotated;
                 }
             }
@@ -359,7 +360,7 @@ public class BitmapLoader {
         options.inJustDecodeBounds = true;
         BitmapFactory.decodeFile(path, options);
 
-        JLog.e(TAG, String.format("sampleDecodeBounds reqWidth=%d reqHeight=%d", reqWidth, reqHeight));
+        Timber.e(String.format("sampleDecodeBounds reqWidth=%d reqHeight=%d", reqWidth, reqHeight));
         options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
         //FIX: 565로 메모리를 아낌
         options.inPreferredConfig = Bitmap.Config.RGB_565;
@@ -397,12 +398,12 @@ public class BitmapLoader {
             int top = (decoder.getHeight() - decoder.getWidth()) >> 1;
             bitmap = Bitmap.createBitmap(decoder, 0, top, decoder.getWidth(), decoder.getWidth());
             decoder.recycle();
-            JLog.e(TAG, "cropSquareBitmap recycle");
+            Timber.e("cropSquareBitmap recycle");
         } else {
             int left = (decoder.getWidth() - decoder.getHeight()) >> 1;
             bitmap = Bitmap.createBitmap(decoder, left, 0, decoder.getHeight(), decoder.getHeight());
             decoder.recycle();
-            JLog.e(TAG, "cropSquareBitmap recycle");
+            Timber.e("cropSquareBitmap recycle");
         }
         return bitmap;
     }
@@ -420,12 +421,12 @@ public class BitmapLoader {
             int top = (decoder.getHeight() - decoder.getWidth()) >> 1;
             bitmap = decoder.decodeRegion(new Rect(0, top, decoder.getWidth(), top + decoder.getWidth()), options);
             decoder.recycle();
-            JLog.e(TAG, "cropBitmapUsingDecoder recycle");
+            Timber.e("cropBitmapUsingDecoder recycle");
         } else {
             int left = (decoder.getWidth() - decoder.getHeight()) >> 1;
             bitmap = decoder.decodeRegion(new Rect(left, 0, left + decoder.getHeight(), decoder.getHeight()), options);
             decoder.recycle();
-            JLog.e(TAG, "cropBitmapUsingDecoder recycle");
+            Timber.e("cropBitmapUsingDecoder recycle");
         }
         return bitmap;
     }
@@ -542,14 +543,14 @@ public class BitmapLoader {
                                 pageOther = decoder.decodeRegion(rectOther, options);
 
                                 decoder.recycle();
-                                JLog.e(TAG, "splitBitmapSide decoder.recycle");
+                                Timber.e("splitBitmapSide decoder.recycle");
 
                                 break;
                             }
                         } catch (OutOfMemoryError e) {
                             if (decoder != null) {
                                 decoder.recycle();
-                                JLog.e(TAG, "splitBitmapSide OutOfMemoryError recycle");
+                                Timber.e("splitBitmapSide OutOfMemoryError recycle");
                             }
 
                             options.inSampleSize++;
@@ -573,13 +574,13 @@ public class BitmapLoader {
                                 pageOther = decoder.decodeRegion(rectOther, options);
 
                                 decoder.recycle();
-                                JLog.e(TAG, "splitBitmapSide decoder.recycle");
+                                Timber.e("splitBitmapSide decoder.recycle");
                                 break;
                             }
                         } catch (OutOfMemoryError e) {
                             if (decoder != null) {
                                 decoder.recycle();
-                                JLog.e(TAG, "splitBitmapSide OutOfMemoryError recycle");
+                                Timber.e("splitBitmapSide OutOfMemoryError recycle");
                             }
 
                             options.inSampleSize++;
@@ -597,7 +598,7 @@ public class BitmapLoader {
         } catch (Exception e) {
             if (decoder != null) {
                 decoder.recycle();
-                JLog.e(TAG, "splitBitmapSide Exception recycle");
+                Timber.e("splitBitmapSide Exception recycle");
             }
             return null;
         }

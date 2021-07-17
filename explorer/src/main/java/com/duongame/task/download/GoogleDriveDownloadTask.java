@@ -5,8 +5,6 @@ import android.os.Environment;
 
 import com.duongame.adapter.ExplorerItem;
 import com.duongame.cloud.googledrive.GoogleDriveManager;
-import com.duongame.fragment.ExplorerFragment;
-import com.duongame.helper.JLog;
 import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException;
 import com.google.api.services.drive.Drive;
 
@@ -15,6 +13,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+
+import timber.log.Timber;
 
 import static com.duongame.cloud.googledrive.GoogleDriveManager.REQUEST_AUTHORIZATION;
 import static com.duongame.file.FileHelper.BLOCK_SIZE;
@@ -70,7 +70,7 @@ public class GoogleDriveDownloadTask extends CloudDownloadTask {
                 totalRead += nRead;
 
                 long percent = totalRead * 100 / srcLength;
-                JLog.e("TAG", "percent=" + percent + " totalRead=" + totalRead + " srcLength=" + srcLength);
+                Timber.e("percent=" + percent + " totalRead=" + totalRead + " srcLength=" + srcLength);
 
                 updateProgress(0, (int) percent);
             }

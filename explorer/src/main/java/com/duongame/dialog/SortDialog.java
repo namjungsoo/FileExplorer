@@ -55,7 +55,7 @@ public class SortDialog extends DialogFragment {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         // 확인이므로 pref에 저장하고 소팅을 새로 해줌
-//                            JLog.e(TAG, "ok");
+//                            Timber.e("ok");
                         if (onSortListener != null) {
                             onSortListener.onSort(sortType, sortDir);
                         }
@@ -64,7 +64,7 @@ public class SortDialog extends DialogFragment {
                 .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-//                            JLog.e(TAG, "cancel");
+//                            Timber.e("cancel");
                     }
                 });
 

@@ -4,24 +4,24 @@ import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
-import androidx.annotation.Nullable;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.target.ImageViewTarget;
-import com.duongame.MainApplication;
 import com.duongame.BuildConfig;
+import com.duongame.MainApplication;
 import com.duongame.R;
 import com.duongame.bitmap.BitmapCacheManager;
 import com.duongame.bitmap.BitmapLoader;
 import com.duongame.fragment.ExplorerFragment;
-import com.duongame.helper.JLog;
 import com.duongame.task.thumbnail.LoadGifThumbnailTask;
 import com.duongame.task.thumbnail.LoadThumbnailTask;
 import com.duongame.task.thumbnail.LoadZipThumbnailTask;
@@ -30,6 +30,8 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
+import timber.log.Timber;
 
 import static com.duongame.bitmap.BitmapCacheManager.getThumbnail;
 
@@ -132,7 +134,7 @@ public class ExplorerAdapter extends RecyclerView.Adapter<ExplorerAdapter.Explor
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                JLog.e(TAG, "onClick " + holder.position);
+                Timber.e("onClick " + holder.position);
                 if (onItemClickListener != null) {
                     onItemClickListener.onItemClick(holder.position);
                 }
@@ -172,7 +174,7 @@ public class ExplorerAdapter extends RecyclerView.Adapter<ExplorerAdapter.Explor
 
     protected void updateCheckBox(ExplorerViewHolder viewHolder, ExplorerItem item) {
         if (getMode() == ExplorerFragment.MODE_SELECT) {
-//            JLog.e(TAG, "updateCheckBox position=" + item.position + " item=" + item.hashCode() + " " + item.selected);
+//            Timber.e("updateCheckBox position=" + item.position + " item=" + item.hashCode() + " " + item.selected);
             viewHolder.check.setVisibility(View.VISIBLE);
             viewHolder.check.setChecked(item.selected);
         } else {
@@ -255,7 +257,7 @@ public class ExplorerAdapter extends RecyclerView.Adapter<ExplorerAdapter.Explor
     }
 
     void setIconZip(final ExplorerViewHolder viewHolder, ExplorerItem item) {
-        JLog.e(TAG, "setIconZip " + item.path);
+        Timber.e("setIconZip " + item.path);
         final Bitmap bitmap = getThumbnail(item.path);
         if (bitmap == null) {
             viewHolder.icon.setImageResource(R.drawable.ic_file_zip);
