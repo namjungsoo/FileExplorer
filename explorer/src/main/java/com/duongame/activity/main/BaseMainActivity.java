@@ -559,10 +559,6 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
             }
         }
 
-        if (id == R.id.action_ad_remove) {
-            AdRewardManager.show(this);
-        }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -1190,10 +1186,8 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
         } else if (id == R.id.action_exit) {
             try {
                 MainApplication.getInstance(this).exit(this);
-            } catch (NullPointerException e) {
+            } catch (NullPointerException ignored) {
             }
-        } else if (id == R.id.action_ad_remove) {
-            AdRewardManager.show(this);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
