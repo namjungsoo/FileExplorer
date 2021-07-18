@@ -16,9 +16,6 @@
         </menu>
     </item>
     <item
-        android:id="@+id/action_ad_remove"
-        android:title="@string/action_ad_remove" />
-    <item
         android:id="@+id/action_open_lastbook"
         android:title="@string/action_open_lastbook" />
     <item
