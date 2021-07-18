@@ -152,13 +152,13 @@ public class SettingsActivity extends BaseActivity {
             findViewById(R.id.layout_action_clear_history).setVisibility(View.GONE);
         }
 
-        Button adRemove = findViewById(R.id.action_ad_remove);
-        adRemove.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                AdRewardManager.show(SettingsActivity.this);
-            }
-        });
+//        Button adRemove = findViewById(R.id.action_ad_remove);
+//        adRemove.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                AdRewardManager.show(SettingsActivity.this);
+//            }
+//        });
 
         Button donate = findViewById(R.id.action_ad_donate);
         donate.setOnClickListener(new View.OnClickListener() {

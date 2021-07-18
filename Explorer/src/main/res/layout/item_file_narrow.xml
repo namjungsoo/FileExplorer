@@ -1,6 +1,7 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="36dp"
+    android:layout_height="@dimen/setting_item_height"
     android:background="?android:attr/selectableItemBackground">
 
     <LinearLayout
@@ -33,14 +34,14 @@
         <!-- 전체 높이 60dp -->
         <LinearLayout
             android:layout_width="0dp"
-            android:layout_height="30dp"
+            android:layout_height="32dp"
             android:layout_weight="1"
             android:orientation="horizontal">
 
             <TextView
                 android:id="@+id/text_name"
                 android:layout_width="240dp"
-                android:layout_height="30dp"
+                android:layout_height="match_parent"
 
                 android:ellipsize="middle"
                 android:singleLine="true"
@@ -60,28 +61,30 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="30dp"
+                android:layout_height="match_parent"
                 android:orientation="vertical">
 
                 <TextView
                     android:id="@+id/text_size"
                     android:layout_width="match_parent"
-                    android:layout_height="15dp"
-                    android:gravity="end"
+                    android:layout_height="@dimen/narrow_info_height"
+                    android:gravity="end|center_vertical"
                     android:singleLine="true"
                     android:ellipsize="none"
-                    android:text="size"
-                    android:textSize="13sp" />
+                    android:text="SIZE"
+                    android:textSize="@dimen/narrow_info_font_size"
+                    tools:ignore="HardcodedText,SpUsage" />
 
                 <TextView
                     android:id="@+id/text_date"
                     android:layout_width="match_parent"
-                    android:layout_height="15dp"
-                    android:text="date"
+                    android:layout_height="@dimen/narrow_info_height"
+                    android:text="DATE"
                     android:singleLine="true"
                     android:ellipsize="none"
-                    android:gravity="end"
-                    android:textSize="13sp" />
+                    android:gravity="end|center_vertical"
+                    android:textSize="@dimen/narrow_info_font_size"
+                    tools:ignore="HardcodedText,SpUsage" />
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>

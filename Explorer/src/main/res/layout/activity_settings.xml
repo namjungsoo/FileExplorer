@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -10,18 +11,17 @@
 
         <TextView
             android:layout_width="match_parent"
-            android:layout_height="36dp"
+            android:layout_height="@dimen/setting_item_height"
             android:layout_marginStart="10dp"
             android:gravity="center_vertical"
-            android:text="Ads"
+            android:text="@string/ads"
             android:textSize="16sp"
             android:textColor="@color/colorAccent"
             android:textStyle="bold" />
 
-        <!-- 보상형 광고로 광고 1회 제거 -->
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="36dp"
+            android:layout_height="@dimen/setting_item_height"
             android:layout_marginLeft="15dp"
             android:layout_marginRight="15dp"
             android:orientation="horizontal">
@@ -30,31 +30,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_alignParentStart="true"
-                android:gravity="center"
-                android:textColor="@color/colorAccent"
-                android:text="@string/ad_remove_onetime" />
-
-            <Button
-                android:id="@+id/action_ad_remove"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_centerInParent="true"
-                android:textColor="@color/colorAccent"
-                android:text="@string/execute" />
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="36dp"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
                 android:gravity="center"
                 android:textColor="@color/colorAccent"
                 android:text="@string/ad_remove_donate" />
@@ -66,38 +42,13 @@
                 android:layout_alignParentEnd="true"
                 android:layout_centerInParent="true"
                 android:textColor="@color/colorAccent"
+                android:textAllCaps="false"
                 android:text="@string/execute" />
         </RelativeLayout>
 
-        <!-- 인앱 구매로 광고 제거 -->
-        <!--<RelativeLayout-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="36dp"-->
-            <!--android:layout_marginLeft="15dp"-->
-            <!--android:layout_marginRight="15dp"-->
-            <!--android:orientation="horizontal">-->
-
-            <!--<TextView-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="match_parent"-->
-                <!--android:layout_alignParentStart="true"-->
-                <!--android:gravity="center"-->
-                <!--android:textColor="@color/colorAccent"-->
-                <!--android:text="AD remove by donation" />-->
-
-            <!--<Button-->
-                <!--android:id="@+id/action_clear_cache"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_alignParentEnd="true"-->
-                <!--android:layout_centerInParent="true"-->
-                <!--android:textColor="@color/colorAccent"-->
-                <!--android:text="Donate" />-->
-        <!--</RelativeLayout>-->
-
         <TextView
             android:layout_width="match_parent"
-            android:layout_height="36dp"
+            android:layout_height="@dimen/setting_item_height"
             android:layout_marginStart="10dp"
             android:gravity="center_vertical"
             android:text="@string/explorer"
@@ -107,15 +58,16 @@
         <!-- 썸네일 비활성화, 기본값: false -->
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="36dp"
+            android:layout_height="@dimen/setting_item_height"
             android:layout_marginLeft="15dp"
             android:layout_marginRight="15dp"
             android:orientation="horizontal">
 
             <TextView
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
                 android:gravity="center"
                 android:text="@string/thumbnail_disabled" />
 
@@ -129,7 +81,7 @@
 
         <TextView
             android:layout_width="match_parent"
-            android:layout_height="36dp"
+            android:layout_height="@dimen/setting_item_height"
             android:layout_marginStart="10dp"
             android:gravity="center_vertical"
             android:text="@string/viewer"
@@ -140,15 +92,16 @@
         <RelativeLayout
             android:id="@+id/layout_japanese_direction"
             android:layout_width="match_parent"
-            android:layout_height="36dp"
+            android:layout_height="@dimen/setting_item_height"
             android:layout_marginLeft="15dp"
             android:layout_marginRight="15dp"
             android:orientation="horizontal">
 
             <TextView
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
                 android:gravity="center"
                 android:text="@string/japanese_direction" />
 
@@ -164,15 +117,16 @@
         <!-- 나이트 모드, 기본값: false -->
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="36dp"
+            android:layout_height="@dimen/setting_item_height"
             android:layout_marginLeft="15dp"
             android:layout_marginRight="15dp"
             android:orientation="horizontal">
 
             <TextView
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
                 android:gravity="center"
                 android:text="@string/night_mode" />
 
@@ -187,15 +141,16 @@
         <!-- 페이징 애니메이션 비활성화, 기본값: false -->
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="36dp"
+            android:layout_height="@dimen/setting_item_height"
             android:layout_marginLeft="15dp"
             android:layout_marginRight="15dp"
             android:orientation="horizontal">
 
             <TextView
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
                 android:gravity="center"
                 android:text="@string/paging_animation_disabled" />
 
@@ -210,7 +165,7 @@
         <!-- 페이징 애니메이션 비활성화, 기본값: false -->
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="36dp"
+            android:layout_height="@dimen/setting_item_height"
             android:layout_marginLeft="15dp"
             android:layout_marginRight="15dp"
             android:orientation="horizontal">
@@ -218,24 +173,27 @@
             <TextView
                 android:id="@+id/auto_paging_time_key"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
                 android:gravity="center"
                 android:text="@string/auto_paging_time" />
 
             <SeekBar
                 android:id="@+id/seek_time"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_toStartOf="@+id/auto_paging_time_value"
+                android:layout_centerVertical="true"
                 android:layout_toEndOf="@+id/auto_paging_time_key" />
 
             <TextView
                 android:id="@+id/auto_paging_time_value"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:layout_marginEnd="6dp"
+                android:layout_centerVertical="true"
                 android:gravity="center"
                 android:text="0" />
 
@@ -243,7 +201,7 @@
 
         <TextView
             android:layout_width="match_parent"
-            android:layout_height="36dp"
+            android:layout_height="@dimen/setting_item_height"
             android:layout_marginStart="10dp"
             android:gravity="center_vertical"
             android:text="@string/history"
@@ -252,15 +210,16 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="36dp"
+            android:layout_height="@dimen/setting_item_height"
             android:layout_marginLeft="15dp"
             android:layout_marginRight="15dp"
             android:orientation="horizontal">
 
             <TextView
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
                 android:gravity="center"
                 android:text="@string/action_clear_cache" />
 
@@ -270,21 +229,23 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:layout_centerInParent="true"
+                android:textAllCaps="false"
                 android:text="@string/execute" />
         </RelativeLayout>
 
         <RelativeLayout
             android:id="@+id/layout_action_clear_history"
             android:layout_width="match_parent"
-            android:layout_height="36dp"
+            android:layout_height="@dimen/setting_item_height"
             android:layout_marginLeft="15dp"
             android:layout_marginRight="15dp"
             android:orientation="horizontal">
 
             <TextView
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
                 android:gravity="center"
                 android:text="@string/action_clear_history" />
 
@@ -294,12 +255,13 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:layout_centerInParent="true"
+                android:textAllCaps="false"
                 android:text="@string/execute" />
         </RelativeLayout>
 
         <TextView
             android:layout_width="match_parent"
-            android:layout_height="36dp"
+            android:layout_height="@dimen/setting_item_height"
             android:layout_marginStart="10dp"
             android:gravity="center_vertical"
             android:text="@string/system"
@@ -309,15 +271,16 @@
         <!-- 버전 확인 -->
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="36dp"
+            android:layout_height="@dimen/setting_item_height"
             android:layout_marginLeft="15dp"
             android:layout_marginRight="15dp"
             android:orientation="horizontal">
 
             <TextView
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
                 android:gravity="center"
                 android:text="@string/version" />
 
@@ -334,11 +297,12 @@
         <RelativeLayout
             android:id="@+id/pro_purchase"
             android:layout_width="match_parent"
-            android:layout_height="36dp"
+            android:layout_height="@dimen/setting_item_height"
             android:layout_marginLeft="15dp"
             android:layout_marginRight="15dp"
             android:orientation="horizontal"
-            android:visibility="gone">
+            android:visibility="gone"
+            tools:visibility="visible">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -353,21 +317,23 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:layout_centerInParent="true"
+                android:textAllCaps="false"
                 android:text="@string/purchase" />
         </RelativeLayout>
 
         <!-- 오픈소스 라이센스 -->
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="36dp"
+            android:layout_height="@dimen/setting_item_height"
             android:layout_marginLeft="15dp"
             android:layout_marginRight="15dp"
             android:orientation="horizontal">
 
             <TextView
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
                 android:gravity="center"
                 android:text="@string/action_license" />
 
@@ -377,6 +343,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:layout_centerInParent="true"
+                android:textAllCaps="false"
                 android:text="@string/check" />
         </RelativeLayout>
 
