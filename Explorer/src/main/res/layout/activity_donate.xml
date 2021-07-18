@@ -11,17 +11,19 @@
         <!-- 정기적 기부 -->
         <TextView
             android:layout_width="match_parent"
-            android:layout_height="36dp"
+            android:layout_height="@dimen/setting_item_height"
             android:layout_marginStart="10dp"
             android:gravity="center_vertical"
             android:text="@string/donate_regularly"
             android:textColor="@color/colorAccent"
             android:textSize="16sp"
+            android:visibility="gone"
             android:textStyle="bold" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:visibility="gone"
             android:id="@+id/list_regularly">
 
         </androidx.recyclerview.widget.RecyclerView>
@@ -29,7 +31,7 @@
         <!-- 일회성 기부 -->
         <TextView
             android:layout_width="match_parent"
-            android:layout_height="36dp"
+            android:layout_height="@dimen/setting_item_height"
             android:layout_marginStart="10dp"
             android:gravity="center_vertical"
             android:text="@string/donate_onetime"

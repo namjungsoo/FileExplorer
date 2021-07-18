@@ -1,6 +1,7 @@
 package com.duongame.activity
 
 import android.os.Bundle
+import android.view.MenuItem
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.android.billingclient.api.*
@@ -24,15 +25,14 @@ class DonateActivity : BaseActivity() {
     private val scope = MainScope()
 
     // billing client 초기화
-    private val purchasesUpdatedListener =
-        PurchasesUpdatedListener { billingResult, purchases ->
+    private val purchasesUpdatedListener = PurchasesUpdatedListener { billingResult, purchases ->
             // To be implemented in a later section.
             Timber.e("billingResult=${billingResult.responseCode} purchases=${purchases}")
 
             // consume
-            val purchases = purchases ?: return@PurchasesUpdatedListener
+            //val purchases = purchases ?: return@PurchasesUpdatedListener
             scope.launch {
-                for (purchase in purchases) {
+                purchases?.forEach { purchase ->
                     handlePurchase(purchase)
                 }
             }
@@ -68,19 +68,15 @@ class DonateActivity : BaseActivity() {
                     // The BillingClient is ready. You can query purchases here.
                     Timber.e("onBillingSetupFinished")
 
-                    val purchases =
-                        billingClient.queryPurchases(BillingClient.SkuType.INAPP).purchasesList
+                    val purchases = billingClient.queryPurchases(BillingClient.SkuType.INAPP).purchasesList
 
-                    purchases?.let {
-                        scope.launch {
-                            for (purchase in it) {
-                                handlePurchase(purchase)
-                            }
+                    scope.launch {
+                        purchases?.forEach { purchase ->
+                            handlePurchase(purchase)
                         }
                     }
 
                     initRecyclerView()
-                    //initRecyclerView()
                 }
             }
 
@@ -90,6 +86,17 @@ class DonateActivity : BaseActivity() {
                 Timber.e("onBillingServiceDisconnected")
             }
         })
+
+        initToolbar()
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        val id = item.itemId
+        if (id == android.R.id.home) {
+            onBackPressed()
+            return true
+        }
+        return super.onOptionsItemSelected(item)
     }
 
     val onClick: ((skuDetails: SkuDetails) -> Unit) = { skuDetails ->
@@ -120,8 +127,18 @@ class DonateActivity : BaseActivity() {
                 layoutManager = LinearLayoutManager(this@DonateActivity)
             }
         }
-
     }
+
+    private fun initToolbar() {
+        val actionBar = supportActionBar ?: return
+
+        // 로고 버튼
+        actionBar.setDisplayShowHomeEnabled(true)
+
+        // Up 버튼
+        actionBar.setDisplayHomeAsUpEnabled(true)
+    }
+
 
     suspend fun querySkuDetails(listIds: List<String>, type: String): List<SkuDetails>? {
         val params = SkuDetailsParams.newBuilder()
