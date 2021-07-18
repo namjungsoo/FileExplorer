@@ -151,20 +151,4 @@ class DonateActivity : BaseActivity() {
 
         return skuDetailsResult.skuDetailsList
     }
-
-    companion object {
-        // 구매 후에 실제로 광고를 제거해 주어야 한다
-        // 프로그램 로딩시 구매여부를 확인하여 광고를 제거 한다
-
-        // 구매
-        /*
-        donate_month_ 매달 x원씩 후원합니다
-            2000원: 하단 배너광고 제거
-            5000원: 모든 광고 제거
-
-        donate_ 1,3,7,15,30일동안 광고가 제거됩니다 (일회성)
-         */
-        private const val GP_LICENSE_KEY =
-            "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAxHFQGSxElswW8fm3xjwdEWmllAJTrMeeTjCuEbYqS0Uwgdz52AEqMOJucoZRxj7M9xZF1swod0fKOOfntlW4ckfF8/lgOaU/1iTmw5pc5sQ3fHI7YlpuQTyL+txWbknhSsJ0zR6urQOZr0eKu8gv+3R7M7Mo22s91mBg25vWfsHncTLa6JOi9Js1Y1KHrRfo1NBnzvZND9nMFmiG9dUqQ6zLlP2s0Ie5gPOz0iOwuPVrZu5iZgVHSpy5/WlYkLHdkCSiH39QSpix9Cq9yhNT4DE0TQvHJR6dwBUsmgCE4Ifc5/2w20/ZNyHSOvPFZPta0pjXKGhhzCVxlvqskhqFJwIDAQAB"
-    }
 }
