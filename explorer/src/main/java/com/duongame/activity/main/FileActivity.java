@@ -8,7 +8,7 @@ import com.duongame.fragment.ExplorerFragment;
 import com.duongame.helper.AppHelper;
 
 public class FileActivity extends BaseMainActivity {
-    private final static String TAG = FileActivity.class.getSimpleName();;
+    private final static String TAG = FileActivity.class.getSimpleName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
