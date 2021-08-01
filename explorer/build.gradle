@@ -5,7 +5,7 @@ apply plugin: 'com.google.firebase.crashlytics'
 apply plugin: 'kotlin-kapt'
 
 android {
-    compileSdkVersion 29
+    compileSdkVersion 30
 
     lintOptions {
         abortOnError false
@@ -16,8 +16,8 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
     }
 
     defaultConfig {
@@ -26,7 +26,7 @@ android {
         buildConfigField "boolean", "SHOW_AD", "true"
         buildConfigField "boolean", "PREVIEW_ZIP", "false"
         minSdkVersion 16
-        targetSdkVersion 29
+        targetSdkVersion 30
         versionCode 1
         versionName "1.0.0"
     }
