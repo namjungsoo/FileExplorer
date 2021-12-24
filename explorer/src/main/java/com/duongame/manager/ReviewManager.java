@@ -16,13 +16,13 @@ import com.duongame.helper.PreferenceHelper;
  */
 public class ReviewManager {
 
-    private static int[] reviewIndex = {2, 5, 9};
+    private static final int[] reviewIndex = {2, 5, 9};
 
     public static boolean checkReview(final Activity context) {
         // 리뷰 카운트를 체크하여 리뷰가 안되어 있으면 리뷰를 해줌
         boolean ret = false;
-        if (!PreferenceHelper.getReviewed(context)) {
-            final int reviewCount = PreferenceHelper.getReviewCount(context) + 1;
+        if (!PreferenceHelper.INSTANCE.getReviewed()) {
+            final int reviewCount = PreferenceHelper.INSTANCE.getReviewCount() + 1;
 
             for (int i = 0; i < reviewIndex.length; i++) {
                 if (reviewCount == reviewIndex[i]) {// 리뷰할 횟수와 동일하면
@@ -35,7 +35,7 @@ public class ReviewManager {
                             final String packageName = context.getApplicationContext().getPackageName();
 
                             AppHelper.launchMarket(context, packageName);
-                            PreferenceHelper.setReviewed(context, true);
+                            PreferenceHelper.INSTANCE.setReviewed(true);
                         }
                     };
 
@@ -74,7 +74,7 @@ public class ReviewManager {
                 }
             }
 
-            PreferenceHelper.setReviewCount(context, reviewCount);
+            PreferenceHelper.INSTANCE.setReviewCount(reviewCount);
         }
         return ret;
     }

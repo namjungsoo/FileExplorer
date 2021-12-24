@@ -25,6 +25,7 @@ import com.duongame.file.FileHelper;
 import com.duongame.file.LocalExplorer;
 import com.duongame.helper.AppHelper;
 import com.duongame.helper.DateHelper;
+import com.duongame.helper.PreferenceHelper;
 import com.duongame.helper.ToastHelper;
 import com.duongame.task.thumbnail.LoadThumbnailTask;
 import com.duongame.task.thumbnail.LoadZipThumbnailTask;
@@ -214,7 +215,7 @@ public class BookLoader {
         book.extract_file = 0;
         book.side = ExplorerItem.SIDE_LEFT;
         try {
-            if (MainApplication.getInstance(context).isJapaneseDirection()) {
+            if (MainApplication.getInstance(context).getJapaneseDirection()) {
                 book.side = ExplorerItem.SIDE_RIGHT;
             }
         } catch (NullPointerException e) {
@@ -309,7 +310,7 @@ public class BookLoader {
         loadDefaultThumbnail(context, holder, path);
 
         try {
-            if (!MainApplication.getInstance(context).isThumbnailDisabled()) {// 썸네일 비활성화가 아니라면
+            if (!PreferenceHelper.INSTANCE.getThumbnailDisabled()) {// 썸네일 비활성화가 아니라면
                 final Bitmap bitmap = getThumbnail(path);
                 if (bitmap == null) {
                     switch (FileHelper.getCompressType(path)) {

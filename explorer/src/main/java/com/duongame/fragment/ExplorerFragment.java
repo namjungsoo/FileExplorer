@@ -457,7 +457,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
     }
 
     void initViewType() {
-        changeViewType(PreferenceHelper.getViewType(getActivity()));
+        changeViewType(PreferenceHelper.INSTANCE.getViewType());
     }
 
     public RecyclerView getCurrentView() {
