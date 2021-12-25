@@ -47,8 +47,8 @@ public class SortDialog extends DialogFragment {
         View view = activity.getLayoutInflater().inflate(R.layout.dialog_sort, null, false);
         initUI(view);
 
-        builder.setTitle(AppHelper.getAppName(activity))
-                .setIcon(AppHelper.getIconResId(activity))
+        builder.setTitle(AppHelper.INSTANCE.getAppName())
+                .setIcon(AppHelper.INSTANCE.getIconResId())
                 .setMessage(R.string.msg_file_sort)
                 .setView(view)
                 .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {

@@ -13,6 +13,7 @@ import com.duongame.MainApplication;
 import com.duongame.R;
 import com.duongame.activity.viewer.PagerActivity;
 import com.duongame.attacher.ImageViewAttacher;
+import com.duongame.helper.PreferenceHelper;
 import com.duongame.listener.PagerOnTouchListener;
 
 /**
@@ -104,7 +105,7 @@ public class PdfPagerAdapter extends ViewerPagerAdapter {
 
                     //TODO: 무조건 해주지 않으면 안된다. 알파로 처리되어 있기 때문이다. (RENDER_MODE_FOR_DISPLAY)
                     try {
-                        if (MainApplication.getInstance(context).isNightMode()) {
+                        if (PreferenceHelper.INSTANCE.getNightMode()) {
                             imageView.setBackgroundColor(Color.BLACK);
                         } else {
                             imageView.setBackgroundColor(Color.WHITE);

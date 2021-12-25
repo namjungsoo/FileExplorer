@@ -332,8 +332,8 @@ public class FileHelper {
     public static class DateAscComparator implements Comparator<ExplorerItem> {
         @Override
         public int compare(ExplorerItem lhs, ExplorerItem rhs) {
-            Date lhsDate = DateHelper.getDateFromExplorerDateString(lhs.date);
-            Date rhsDate = DateHelper.getDateFromExplorerDateString(rhs.date);
+            Date lhsDate = DateHelper.INSTANCE.getDateFromExplorerDateString(lhs.date);
+            Date rhsDate = DateHelper.INSTANCE.getDateFromExplorerDateString(rhs.date);
             return lhsDate.compareTo(rhsDate);
         }
     }
@@ -341,8 +341,8 @@ public class FileHelper {
     public static class DateDescComparator implements Comparator<ExplorerItem> {
         @Override
         public int compare(ExplorerItem lhs, ExplorerItem rhs) {
-            Date lhsDate = DateHelper.getDateFromExplorerDateString(lhs.date);
-            Date rhsDate = DateHelper.getDateFromExplorerDateString(rhs.date);
+            Date lhsDate = DateHelper.INSTANCE.getDateFromExplorerDateString(lhs.date);
+            Date rhsDate = DateHelper.INSTANCE.getDateFromExplorerDateString(rhs.date);
             return rhsDate.compareTo(lhsDate);
         }
     }

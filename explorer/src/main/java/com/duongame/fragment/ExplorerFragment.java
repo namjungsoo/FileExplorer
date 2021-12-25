@@ -219,7 +219,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
             ArrayList<ExplorerItem> videoList = FileHelper.getVideoFileList(fileList);
             ArrayList<ExplorerItem> audioList = FileHelper.getAudioFileList(fileList);
 
-            MainApplication app = MainApplication.getInstance(getActivity());
+            MainApplication app = MainApplication.Companion.getInstance();
             if (app != null) {
                 app.setFileList(fileList);
                 app.setImageList(imageList);
@@ -260,20 +260,20 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
         FragmentActivity activity = getActivity();
         if (activity != null) {
 //            PermissionManager.checkStoragePermissions(activity);
-            sortType = PreferenceHelper.getSortType(activity);
-            sortDirection = PreferenceHelper.getSortDirection(activity);
+            sortType = PreferenceHelper.INSTANCE.getSortType();
+            sortDirection = PreferenceHelper.INSTANCE.getSortDirection();
         }
 
-        extSdCard = ExtSdCardHelper.getExternalSdCardPath();
+        extSdCard = ExtSdCardHelper.INSTANCE.getExternalSdCardPath();
         if (extSdCard != null) {
             if (sdcard != null) {
                 sdcard.setVisibility(View.VISIBLE);
             }
         }
 
-        String path = PreferenceHelper.getLastPath(getContext());
+        String path = PreferenceHelper.INSTANCE.getLastPath();
         try {
-            MainApplication.getInstance(activity).setLastPath(path);
+            MainApplication.Companion.getInstance().setLastPath(path);
         } catch (NullPointerException e) {
 
         }
@@ -288,7 +288,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
         BaseMainActivity activity = (BaseMainActivity) getActivity();
         if (activity != null) {
             if (!activity.getShowReview()) {
-                if (AppHelper.isComicz(getContext())) {
+                if (AppHelper.INSTANCE.isComicz()) {
                     BookLoader.openLastBook(activity);
                 }
             }
@@ -315,8 +315,8 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
         new Thread(() -> {
             FragmentActivity activity = getActivity();
             if (activity != null) {
-                PreferenceHelper.setLastPosition(activity, position);
-                PreferenceHelper.setLastTop(activity, top);
+                PreferenceHelper.INSTANCE.setLastPosition(position);
+                PreferenceHelper.INSTANCE.setLastTop(top);
             }
         }).start();
     }
@@ -338,7 +338,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
             public void onClick(View view) {
                 cloud = CLOUD_LOCAL;
                 try {
-                    updateFileList(MainApplication.getInstance(ExplorerFragment.this.getActivity()).getInitialPath());
+                    updateFileList(MainApplication.Companion.getInstance().getInitialPath());
                 } catch (NullPointerException e) {
                 }
             }
@@ -419,7 +419,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
 
             if (dropbox.getVisibility() == View.VISIBLE) {
                 try {
-                    updateFileList(MainApplication.getInstance(getActivity()).getInitialPath());
+                    updateFileList(MainApplication.Companion.getInstance().getInitialPath());
                 } catch (NullPointerException e) {
 
                 }
@@ -445,7 +445,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
 
             if (googleDrive.getVisibility() == View.VISIBLE) {
                 try {
-                    updateFileList(MainApplication.getInstance(getActivity()).getInitialPath());
+                    updateFileList(MainApplication.Companion.getInstance().getInitialPath());
                 } catch (NullPointerException e) {
 
                 }
@@ -524,7 +524,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
             currentView.addOnScrollListener(new ExplorerScrollListener());
         }
 
-        PreferenceHelper.setViewType(getContext(), viewType);
+        PreferenceHelper.INSTANCE.setViewType(viewType);
     }
 
     // 새로운 파일이 추가 되었을때 스캔을 하라는 의미이다.
@@ -556,7 +556,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
 
     public void gotoUpDirectory() {
         try {
-            String path = MainApplication.getInstance(getActivity()).getLastPath();
+            String path = MainApplication.Companion.getInstance().getLastPath();
             path = path.substring(0, path.lastIndexOf('/'));
             if (path.length() == 0) {
                 path = "/";
@@ -572,7 +572,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
     void onClickDirectory(ExplorerItem item) {
         try {
             String newPath;
-            String lastPath = MainApplication.getInstance(getActivity()).getLastPath();
+            String lastPath = MainApplication.Companion.getInstance().getLastPath();
             if (lastPath.equals("/")) {
                 newPath = lastPath + item.name;
             } else {
@@ -609,7 +609,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
             mode = MODE_PLAYER;
         }
 
-        ArrayList<ExplorerItem> audioList = MainApplication.getInstance(activity).getAudioList();
+        ArrayList<ExplorerItem> audioList = MainApplication.Companion.getInstance().getAudioList();
         for (int i = 0; i < audioList.size(); i++) {
             if (audioList.get(i).path.equals(item.path)) {
                 activity.playAudio(i);
@@ -634,7 +634,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
                 intent.addFlags(FLAG_GRANT_READ_URI_PERMISSION);
                 startActivity(intent);
             } catch (Exception e) {
-                ToastHelper.error(activity, R.string.toast_error);
+                ToastHelper.INSTANCE.error(activity, R.string.toast_error);
             }
         } else {
             final Intent intent = new Intent(Intent.ACTION_VIEW);
@@ -649,7 +649,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
 
         // 파일이 있으면 팝업을 통해서 확인해야 함
         if (file.exists()) {
-            final String title = AppHelper.getAppName(activity);
+            final String title = AppHelper.INSTANCE.getAppName();
             final String content = getString(R.string.msg_overwrite);
             final DialogInterface.OnClickListener positiveListener = new DialogInterface.OnClickListener() {
                 @SuppressLint("StringFormatInvalid")
@@ -657,7 +657,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
                 public void onClick(DialogInterface dialogInterface, int i) {
                     // 확인을 눌렀으므로 다운로드하여 덮어씌움
                     task.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, item);// metadata = fileId
-                    ToastHelper.showToast(activity, String.format(getResources().getString(R.string.toast_cloud_download), item.name));
+                    ToastHelper.INSTANCE.showToast(activity, String.format(getResources().getString(R.string.toast_cloud_download), item.name));
 
                     dialogInterface.dismiss();
                 }
@@ -670,7 +670,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
             };
 
             if (BuildConfig.SHOW_AD) {
-                AlertHelper.showAlertWithAd(activity,
+                AlertHelper.INSTANCE.showAlertWithAd(activity,
                         title,
                         content,
                         //positive
@@ -680,7 +680,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
                         null);
                 AdBannerManager.initPopupAd(activity);// 항상 초기화 해주어야 함
             } else {
-                AlertHelper.showAlert(activity,
+                AlertHelper.INSTANCE.showAlert(activity,
                         title,
                         content,
                         null,
@@ -698,7 +698,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
 
     void downloadAndOpen(final Activity activity, final ExplorerItem item, final CloudDownloadTask task) {
         task.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, item);
-        ToastHelper.showToast(activity, String.format(getResources().getString(R.string.toast_cloud_download), item.name));
+        ToastHelper.INSTANCE.showToast(activity, String.format(getResources().getString(R.string.toast_cloud_download), item.name));
     }
 
     void onClickBookDropbox(final Activity activity, final ExplorerItem item) {
@@ -761,7 +761,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
 
     void runUnzipTask(ExplorerItem item, String name) {
         try {
-            String path = MainApplication.getInstance(getActivity()).getLastPath();
+            String path = MainApplication.Companion.getInstance().getLastPath();
             String targetPath;
             if (name == null) {
                 targetPath = path;
@@ -832,15 +832,15 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
 
         try {
             // path/zipname 폴더가 있는지 확인
-            final String lastPath = MainApplication.getInstance(getActivity()).getLastPath();
+            final String lastPath = MainApplication.Companion.getInstance().getLastPath();
             final String newPath = FileHelper.getNewFileName(lastPath + "/" + base);
             String newName = newPath.replace(lastPath + "/", "");
 
             // 새로나온 폴더의 이름을 edit에 반영함
             editFileName.setText(newName);
 
-            AlertHelper.showAlert(activity,
-                    AppHelper.getAppName(activity),
+            AlertHelper.INSTANCE.showAlert(activity,
+                    AppHelper.INSTANCE.getAppName(),
                     getString(R.string.msg_file_unzip),
                     view,
                     new DialogInterface.OnClickListener() {
@@ -871,7 +871,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
                     if (getSelectedFileCount() == 1) {
                         renameFileWithDialog(item);
                     } else {
-                        ToastHelper.warning(getActivity(), R.string.toast_multi_rename_error);
+                        ToastHelper.INSTANCE.warning(getActivity(), R.string.toast_multi_rename_error);
                     }
                 } else {// 선택 모드로 진입 + 현재 파일 선택
                     onSelectMode(item, position);
@@ -907,11 +907,11 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
                 sortDirection = dir;
 
                 FragmentActivity activity = getActivity();
-                PreferenceHelper.setSortType(activity, sortType);
-                PreferenceHelper.setSortDirection(activity, sortDirection);
+                PreferenceHelper.INSTANCE.setSortType(sortType);
+                PreferenceHelper.INSTANCE.setSortDirection(sortDirection);
 
                 try {
-                    updateFileList(MainApplication.getInstance(getActivity()).getLastPath());
+                    updateFileList(MainApplication.Companion.getInstance().getLastPath());
                 } catch (NullPointerException e) {
 
                 }
@@ -935,15 +935,15 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
 
         final String base = getString(R.string.new_folder);
         try {
-            final String lastPath = MainApplication.getInstance(getActivity()).getLastPath();
+            final String lastPath = MainApplication.Companion.getInstance().getLastPath();
 
             String newName = FileHelper.getNewFileName(lastPath + "/" + base);
             newName = newName.replace(lastPath + "/", "");
 
             editFileName.setText(newName);
 
-            AlertHelper.showAlert(activity,
-                    AppHelper.getAppName(activity),
+            AlertHelper.INSTANCE.showAlert(activity,
+                    AppHelper.INSTANCE.getAppName(),
                     getString(R.string.msg_new_folder),
                     view, new DialogInterface.OnClickListener() {
                         @Override
@@ -961,16 +961,16 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
 
     void newFolder(String newFolder) {
         try {
-            String lastPath = MainApplication.getInstance(getActivity()).getLastPath();
+            String lastPath = MainApplication.Companion.getInstance().getLastPath();
             File folder = new File(lastPath + "/" + newFolder);
 
             FragmentActivity activity = getActivity();
             if (activity != null) {
                 if (folder.exists()) {
-                    ToastHelper.error(activity, R.string.toast_error);
+                    ToastHelper.INSTANCE.error(activity, R.string.toast_error);
                 } else {
                     boolean ret = folder.mkdirs();
-                    ToastHelper.success(activity, R.string.toast_new_folder);
+                    ToastHelper.INSTANCE.success(activity, R.string.toast_new_folder);
                 }
             }
 
@@ -990,8 +990,8 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
         final EditText editFileName = view.findViewById(R.id.file_name);
         editFileName.setText(item.name);
 
-        AlertHelper.showAlert(activity,
-                AppHelper.getAppName(activity),
+        AlertHelper.INSTANCE.showAlert(activity,
+                AppHelper.INSTANCE.getAppName(),
                 getString(R.string.msg_file_rename),
                 view, new DialogInterface.OnClickListener() {
                     @Override
@@ -1022,9 +1022,9 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
             // 파일 선택 갯수 초기화
             updateSelectedFileCount();
 
-            ToastHelper.success(getActivity(), R.string.toast_file_rename);
+            ToastHelper.INSTANCE.success(getActivity(), R.string.toast_file_rename);
         } catch (Exception e) {
-            ToastHelper.error(getActivity(), R.string.toast_error);
+            ToastHelper.INSTANCE.error(getActivity(), R.string.toast_error);
         }
     }
 
@@ -1139,8 +1139,8 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
         // preference는 쓰레드로 사용하지 않기로 함
         // 현재 패스를 저장
         Timber.e("updateFileList set begin path=" + path + " cloud=" + cloud);
-        PreferenceHelper.setLastPath(getActivity(), path);
-        PreferenceHelper.setLastCloud(getActivity(), cloud);
+        PreferenceHelper.INSTANCE.setLastPath(path);
+        PreferenceHelper.INSTANCE.setLastCloud(cloud);
         Timber.e("updateFileList set end");
 
         // 외장 패스인지 체크하여
@@ -1208,8 +1208,8 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
 
         // preference는 쓰레드로 사용하지 않기로 함
         // 현재 패스를 저장
-        PreferenceHelper.setLastPath(getActivity(), path);
-        PreferenceHelper.setLastCloud(getActivity(), cloud);
+        PreferenceHelper.INSTANCE.setLastPath(path);
+        PreferenceHelper.INSTANCE.setLastCloud(cloud);
 
         storageIndicator.setTargetView(dropbox);
     }
@@ -1248,14 +1248,14 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
 
         // preference는 쓰레드로 사용하지 않기로 함
         // 현재 패스를 저장
-        PreferenceHelper.setLastPath(getActivity(), path);
-        PreferenceHelper.setLastCloud(getActivity(), cloud);
+        PreferenceHelper.INSTANCE.setLastPath(path);
+        PreferenceHelper.INSTANCE.setLastCloud(cloud);
 
         storageIndicator.setTargetView(googleDrive);
     }
 
     private boolean isPathChanged(String path) {
-        String currentPath = PreferenceHelper.getLastPath(getContext());
+        String currentPath = PreferenceHelper.INSTANCE.getLastPath();
         return !currentPath.equals(path);
     }
 
@@ -1270,8 +1270,8 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
     public void onRefresh() {
         Timber.e("onRefresh begin");
         // 외부 resume시에 들어올수도 있으므로 pref에서 읽는다.
-        int lastCloud = PreferenceHelper.getLastCloud(getContext());
-        String lastPath = PreferenceHelper.getLastPath(getContext());
+        int lastCloud = PreferenceHelper.INSTANCE.getLastCloud();
+        String lastPath = PreferenceHelper.INSTANCE.getLastPath();
         Timber.e("onRefresh end");
 
         cloud = lastCloud;
@@ -1295,8 +1295,8 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
             onNormalMode();
         } else {
             try {
-                final String lastPath = MainApplication.getInstance(getActivity()).getLastPath();
-                if (MainApplication.getInstance(getActivity()).isInitialPath(lastPath)) {// user root일 경우
+                final String lastPath = MainApplication.Companion.getInstance().getLastPath();
+                if (MainApplication.Companion.getInstance().isInitialPath(lastPath)) {// user root일 경우
                     super.onBackPressed();
                 } else if (extSdCard != null && extSdCard.equals(lastPath)) {// sd카드 root일 경우
                     super.onBackPressed();
@@ -1412,7 +1412,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
 
             case ExplorerItem.FILETYPE_ZIP:
                 onNormalMode();
-                if (AppHelper.isComicz(getActivity())) {
+                if (AppHelper.INSTANCE.isComicz()) {
                     onClickBook(item);
                 } else {
                     // 파일 탐색기에서는 ZIP파일 관리를 해주자.
@@ -1429,8 +1429,8 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
 
         int count = getSelectedFileCount();
         // 파일을 삭제할건지 경고
-        AlertHelper.showAlert(activity,
-                AppHelper.getAppName(activity),
+        AlertHelper.INSTANCE.showAlert(activity,
+                AppHelper.INSTANCE.getAppName(),
                 String.format(getString(R.string.warn_file_delete), count),
                 null,
                 new DialogInterface.OnClickListener() {
@@ -1469,12 +1469,12 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
                 for (int i = 0; i < fileList.size(); i++) {
                     fileList.get(i).selected = false;
                 }
-                ToastHelper.info(getActivity(), R.string.toast_deselect_all);
+                ToastHelper.INSTANCE.info(getActivity(), R.string.toast_deselect_all);
             } else {
                 for (int i = 0; i < fileList.size(); i++) {
                     fileList.get(i).selected = true;
                 }
-                ToastHelper.info(getActivity(), R.string.toast_select_all);
+                ToastHelper.INSTANCE.info(getActivity(), R.string.toast_select_all);
             }
         }
 
@@ -1501,7 +1501,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
         }
         this.cut = cut;
         try {
-            capturePath = MainApplication.getInstance(getActivity()).getLastPath();
+            capturePath = MainApplication.Companion.getInstance().getLastPath();
         } catch (NullPointerException e) {
 
         }
@@ -1518,8 +1518,8 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
     void warnMoveToSameLocation() {
         // 이동 불가
         FragmentActivity activity = getActivity();
-        AlertHelper.showAlert(activity,
-                AppHelper.getAppName(activity),
+        AlertHelper.INSTANCE.showAlert(activity,
+                AppHelper.INSTANCE.getAppName(),
                 getString(R.string.warn_move_same_folder), null, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
@@ -1550,7 +1550,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
 
     public void pasteFileWithDialog() {
         try {
-            final String pastePath = MainApplication.getInstance(getActivity()).getLastPath();
+            final String pastePath = MainApplication.Companion.getInstance().getLastPath();
 
             // 복사될 폴더와 이동할 폴더가 같다면
             if (capturePath.equals(pastePath)) {
@@ -1562,8 +1562,8 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
                         return;
 
                     // 사본 생성
-                    AlertHelper.showAlert(activity,
-                            AppHelper.getAppName(activity),
+                    AlertHelper.INSTANCE.showAlert(activity,
+                            AppHelper.INSTANCE.getAppName(),
                             getString(R.string.warn_copy_same_folder), null, new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {
@@ -1598,7 +1598,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
             return;
 
         try {
-            String path = MainApplication.getInstance(activity).getLastPath();
+            String path = MainApplication.Companion.getInstance().getLastPath();
             String zipPath = path + "/" + name + ext;
 
             ZipTask task = new ZipTask(activity);
@@ -1626,7 +1626,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
             return;
 
         try {
-            final String path = MainApplication.getInstance(activity).getLastPath();
+            final String path = MainApplication.Companion.getInstance().getLastPath();
 
             View view = activity.getLayoutInflater().inflate(R.layout.dialog_zip, null, false);
             final EditText editFileName = view.findViewById(R.id.file_name);
@@ -1639,7 +1639,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
                     String base = path.substring(path.lastIndexOf("/") + 1);
                     String ext = spinner.getSelectedItem().toString();
 
-                    final String lastPath = MainApplication.getInstance(getActivity()).getLastPath();
+                    final String lastPath = MainApplication.Companion.getInstance().getLastPath();
                     final String newPath = FileHelper.getNewFileName(lastPath + "/" + base + ext);
 
                     String newName = newPath.replace(lastPath + "/", "");
@@ -1655,8 +1655,8 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
                 }
             });
 
-            AlertHelper.showAlert(activity,
-                    AppHelper.getAppName(activity),
+            AlertHelper.INSTANCE.showAlert(activity,
+                    AppHelper.INSTANCE.getAppName(),
                     getString(R.string.msg_file_zip),
                     view,
                     new DialogInterface.OnClickListener() {

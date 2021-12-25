@@ -30,6 +30,7 @@ import com.duongame.R;
 import com.duongame.activity.BaseActivity;
 import com.duongame.activity.SettingsActivity;
 import com.duongame.bitmap.BitmapCacheManager;
+import com.duongame.helper.PreferenceHelper;
 import com.duongame.manager.AdBannerManager;
 import com.google.android.gms.ads.AdView;
 
@@ -155,7 +156,7 @@ public class BaseViewerActivity extends BaseActivity {
 
         iv = findViewById(R.id.img_night);
         tv = findViewById(R.id.text_night);
-        if (MainApplication.getInstance(BaseViewerActivity.this).isNightMode()) {
+        if (PreferenceHelper.INSTANCE.getNightMode()) {
             iv.setColorFilter(ContextCompat.getColor(this, android.R.color.holo_orange_light));
             tv.setTextColor(ContextCompat.getColor(this, android.R.color.holo_orange_light));
         } else {
@@ -170,7 +171,7 @@ public class BaseViewerActivity extends BaseActivity {
 
         iv = findViewById(R.id.img_anim);
         tv = findViewById(R.id.text_anim);
-        if (!MainApplication.getInstance(BaseViewerActivity.this).isPagingAnimationDisabled()) {
+        if (!PreferenceHelper.INSTANCE.getPagingAnimationDisabled()) {
             iv.setColorFilter(ContextCompat.getColor(this, android.R.color.holo_orange_light));
             tv.setTextColor(ContextCompat.getColor(this, android.R.color.holo_orange_light));
         } else {
@@ -206,7 +207,7 @@ public class BaseViewerActivity extends BaseActivity {
             public void onClick(View v) {
                 // 값을 반전시킨다.
                 try {
-                    MainApplication.getInstance(BaseViewerActivity.this).setNightMode(!MainApplication.getInstance(BaseViewerActivity.this).isNightMode());
+                    PreferenceHelper.INSTANCE.setNightMode(!PreferenceHelper.INSTANCE.getNightMode());
                 } catch (NullPointerException e) {
 
                 }
@@ -221,7 +222,7 @@ public class BaseViewerActivity extends BaseActivity {
             public void onClick(View v) {
                 // 값을 반전시킨다.
                 try {
-                    MainApplication.getInstance(BaseViewerActivity.this).setPagingAnimationDisabled(!MainApplication.getInstance(BaseViewerActivity.this).isPagingAnimationDisabled());
+                    PreferenceHelper.INSTANCE.setPagingAnimationDisabled(!PreferenceHelper.INSTANCE.getPagingAnimationDisabled());
                 } catch (NullPointerException e) {
 
                 }

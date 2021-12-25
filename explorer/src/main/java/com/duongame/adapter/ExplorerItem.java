@@ -102,7 +102,7 @@ public class ExplorerItem implements Cloneable, Serializable {
         this.type = type;
 
         if(date != null) {
-            simpleDate = DateHelper.getSimpleDateStringFromExplorerDateString(date);
+            simpleDate = DateHelper.INSTANCE.getSimpleDateStringFromExplorerDateString(date);
         }
     }
 

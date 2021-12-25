@@ -38,7 +38,7 @@ public class PdfActivity extends PagerActivity {
         if (nextBook == null)
             return;
 
-        if(AppHelper.isComicz(this))
+        if(AppHelper.INSTANCE.isComicz())
             openNextBookWithPopup();
     }
 
@@ -59,7 +59,7 @@ public class PdfActivity extends PagerActivity {
 
     @Override
     protected void onPause() {
-        if (AppHelper.isComicz(this)) {
+        if (AppHelper.INSTANCE.isComicz()) {
             final Book book = new Book();
 
             // 고정적인 내용 5개

@@ -46,7 +46,7 @@ public class AdInterstitialManager {
         interstitialAD = new InterstitialAd(context);            // 삽입 광고 생성관련 메소드들.
 
         final String INTERSTITIAL_ID;
-        if (AppHelper.isComicz(context)) {
+        if (AppHelper.INSTANCE.isComicz()) {
             INTERSTITIAL_ID = context.getString(R.string.comicz_admob_interstitial_id);
         } else {
             INTERSTITIAL_ID = context.getString(R.string.file_admob_interstitial_id);

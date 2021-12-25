@@ -97,8 +97,8 @@ public abstract class MultiDialog extends DialogFragment {
         eachProgress.setMax(100);
         totalProgress.setMax(100);
 
-        builder.setTitle(AppHelper.getAppName(activity))
-                .setIcon(AppHelper.getIconResId(activity))
+        builder.setTitle(AppHelper.INSTANCE.getAppName())
+                .setIcon(AppHelper.INSTANCE.getIconResId())
                 .setMessage(messageResId)
                 .setView(view);
 

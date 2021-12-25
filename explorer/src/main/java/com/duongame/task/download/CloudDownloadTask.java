@@ -108,13 +108,13 @@ public abstract class CloudDownloadTask extends AsyncTask<ExplorerItem, FileHelp
         Activity activity = activityWeakReference.get();
         if (activity != null) {
             if (result != null) {// 성공일 경우
-                ToastHelper.info(activity, R.string.toast_cloud_complete);
+                ToastHelper.INSTANCE.info(activity, R.string.toast_cloud_complete);
             } else {
                 // 취소된 경우와 에러가 난 경우가 있다.
                 if (cancelled)
-                    ToastHelper.error(activity, R.string.toast_cancel);
+                    ToastHelper.INSTANCE.error(activity, R.string.toast_cancel);
                 else
-                    ToastHelper.error(activity, R.string.toast_error);
+                    ToastHelper.INSTANCE.error(activity, R.string.toast_error);
             }
         }
 

@@ -97,8 +97,8 @@ public class PagerActivity extends BaseViewerActivity {
         @SuppressLint({"StringFormatInvalid", "LocalSuppress"}) String message = String.format(getString(R.string.msg_next_book), fileName);
 
         if (BuildConfig.SHOW_AD && !isAdRemoveReward()) {
-            AlertHelper.showAlertWithAd(this,
-                    AppHelper.getAppName(this),
+            AlertHelper.INSTANCE.showAlertWithAd(this,
+                    AppHelper.INSTANCE.getAppName(),
                     message,
                     new DialogInterface.OnClickListener() {
                         @Override
@@ -113,8 +113,8 @@ public class PagerActivity extends BaseViewerActivity {
                     }, null
             );
         } else {
-            AlertHelper.showAlert(this,
-                    AppHelper.getAppName(this),
+            AlertHelper.INSTANCE.showAlert(this,
+                    AppHelper.INSTANCE.getAppName(),
                     message,
                     null,
                     new DialogInterface.OnClickListener() {
@@ -173,7 +173,7 @@ public class PagerActivity extends BaseViewerActivity {
         // smooth 연산
         boolean smoothScroll = true;
         try {
-            if (MainApplication.getInstance(PagerActivity.this).isPagingAnimationDisabled()) {
+            if (PreferenceHelper.INSTANCE.getPagingAnimationDisabled()) {
                 smoothScroll = false;
             }
         } catch (NullPointerException e) {
@@ -250,7 +250,7 @@ public class PagerActivity extends BaseViewerActivity {
         textAutoTime.setText(String.valueOf(autoTime));
 
         if (updatePreference) {
-            PreferenceHelper.setAutoPagingTime(this, autoTime);
+            PreferenceHelper.INSTANCE.setAutoPagingTime(autoTime);
         }
     }
 
@@ -261,7 +261,7 @@ public class PagerActivity extends BaseViewerActivity {
         textAutoTime.setVisibility(View.VISIBLE);
 
         lastAutoTime = autoTime;
-        autoTime = PreferenceHelper.getAutoPagingTime(this);
+        autoTime = PreferenceHelper.INSTANCE.getAutoPagingTime();
         updateAutoTime(false);
 
         btnPlusTime = findViewById(R.id.plus_time);

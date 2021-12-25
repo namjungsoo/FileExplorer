@@ -18,6 +18,7 @@ import com.duongame.db.Book;
 import com.duongame.db.BookDB;
 import com.duongame.db.TextBook;
 import com.duongame.file.FileHelper;
+import com.duongame.helper.PreferenceHelper;
 import com.duongame.listener.TextOnTouchListener;
 import com.duongame.manager.FontManager;
 
@@ -85,7 +86,7 @@ public class TextActivity extends BaseViewerActivity {
 
     void updateNightModeText() {
         try {
-            if (MainApplication.getInstance(this).isNightMode()) {
+            if (PreferenceHelper.INSTANCE.getNightMode()) {
                 if(scrollText != null)
                     scrollText.setBackgroundColor(Color.BLACK);
                 if(textContent != null)

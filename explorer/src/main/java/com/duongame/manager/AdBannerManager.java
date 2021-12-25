@@ -36,7 +36,7 @@ public class AdBannerManager {
 
     public static void initBannerAd(Context context, int i) {
         final String BANNER_ID;
-        if (AppHelper.isComicz(context)) {
+        if (AppHelper.INSTANCE.isComicz()) {
             BANNER_ID = context.getString(R.string.comicz_admob_banner_id);
         } else {
             BANNER_ID = context.getString(R.string.file_admob_banner_id);
@@ -86,7 +86,7 @@ public class AdBannerManager {
 
     public static void initPopupAd(Context context) {
         final String POPUP_ID;
-        if (AppHelper.isComicz(context)) {
+        if (AppHelper.INSTANCE.isComicz()) {
             POPUP_ID = context.getString(R.string.comicz_admob_popup_id);
         } else {
             POPUP_ID = context.getString(R.string.file_admob_popup_id);

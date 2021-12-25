@@ -25,7 +25,7 @@ object AlertHelper {
             .setTitle(title)
             .setMessage(message)
             .setView(view)
-            .setIcon(AppHelper.getIconResId(context))
+            .setIcon(AppHelper.iconResId)
             .setOnKeyListener(keyListener)
             .setPositiveButton(context.getString(R.string.ok), posListener)
         if (!okOnly) {
@@ -34,7 +34,6 @@ object AlertHelper {
         builder.show()
     }
 
-    @JvmStatic
     fun showAlert(
         context: Activity,
         title: String?,
@@ -48,7 +47,7 @@ object AlertHelper {
             .setTitle(title)
             .setMessage(message)
             .setView(view)
-            .setIcon(AppHelper.getIconResId(context))
+            .setIcon(AppHelper.iconResId)
             .setOnKeyListener(keyListener)
             .setPositiveButton(context.getString(R.string.ok), posListener)
             .setNegativeButton(context.getString(R.string.cancel), negListener)
@@ -66,11 +65,10 @@ object AlertHelper {
         // adPopupView가 이전의 팝업에 붙어 있을경우 처리해줌
         val adView = AdBannerManager.getAdPopupView() ?: return
         val vg = adView.parent as ViewGroup
-        vg?.removeView(adView)
+        vg.removeView(adView)
         showAlert(context, title, message, adView, posListener, negListener, keyListener)
     }
 
-    @JvmStatic
     fun showAlertWithAd(
         context: Activity,
         title: String?,
@@ -81,12 +79,12 @@ object AlertHelper {
     ) {
         val adView = AdBannerManager.getAdPopupView() ?: return
         val vg = adView.parent as ViewGroup
-        vg?.removeView(adView)
+        vg.removeView(adView)
         val builder = AlertDialog.Builder(context)
             .setTitle(title)
             .setMessage(message)
             .setView(adView)
-            .setIcon(AppHelper.getIconResId(context))
+            .setIcon(AppHelper.iconResId)
             .setOnKeyListener(keyListener)
             .setPositiveButton(context.getString(R.string.ok), posListener)
         if (!okOnly) {

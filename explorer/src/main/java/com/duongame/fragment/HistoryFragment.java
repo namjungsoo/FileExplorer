@@ -48,7 +48,7 @@ public class HistoryFragment extends BaseFragment {
 
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_history, container, false);
         RecyclerView recyclerView = rootView.findViewById(R.id.recycler_history);
-        isHideCompleted = PreferenceHelper.getHideCompleted(activity);
+        isHideCompleted = PreferenceHelper.INSTANCE.getHideCompleted();
 
         Switch switchHide = rootView.findViewById(R.id.switch_hide);
         switchHide.setChecked(isHideCompleted);
@@ -59,7 +59,7 @@ public class HistoryFragment extends BaseFragment {
                 FragmentActivity activity = getActivity();
                 if (activity == null)
                     return;
-                PreferenceHelper.setHideCompleted(activity, isHideCompleted);
+                PreferenceHelper.INSTANCE.setHideCompleted(isHideCompleted);
                 onRefresh();
             }
         });

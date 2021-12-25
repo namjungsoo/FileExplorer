@@ -49,7 +49,7 @@ public class RoundedImageView extends androidx.appcompat.widget.AppCompatImageVi
         if (clipPath == null) {
             clipPath = new Path();
 
-            final float radius = UnitHelper.dpToPx(radiusDp);
+            final float radius = UnitHelper.INSTANCE.dpToPx(radiusDp);
             final float padding = 0;
             final int w = this.getWidth();
             final int h = this.getHeight();

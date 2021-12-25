@@ -4,37 +4,28 @@ import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import com.duongame.MainApplication
 import com.duongame.R
 
 /**
  * Created by namjungsoo on 2017-12-02.
  */
 object AppHelper {
-    fun isPro(context: Context?): Boolean {
-        if (context == null) return false
-        return context.applicationContext.packageName.contains(".pro")
-    }
+    private const val PRO = ".pro"
+    private const val COMICZ = ".comicz"
 
-    fun isComicz(context: Context?): Boolean {
-        if (context == null) return false
-        return context.applicationContext.packageName.contains(".comicz")
-    }
+    val isPro = MainApplication.instance.applicationContext.packageName.contains(PRO)
+    val isComicz = MainApplication.instance.applicationContext.packageName.contains(COMICZ)
 
-    fun getAppName(context: Context?): String {
-        if (context == null) return ""
-        return if (isComicz(context)) {
-            context.resources.getString(R.string.comicz_name_free)
-        } else {
-            context.resources.getString(R.string.file_name_free)
-        }
+    val appName = if (isComicz) {
+        MainApplication.instance.applicationContext.resources.getString(R.string.comicz_name_free)
+    } else {
+        MainApplication.instance.applicationContext.resources.getString(R.string.file_name_free)
     }
-
-    fun getIconResId(context: Context?): Int {
-        return if (isComicz(context)) {
-            R.mipmap.comicz
-        } else {
-            R.mipmap.explorer
-        }
+    val iconResId = if (isComicz) {
+        R.mipmap.comicz
+    } else {
+        R.mipmap.explorer
     }
 
     fun launchMarket(context: Context, packageName: String) {

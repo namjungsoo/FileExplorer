@@ -52,7 +52,7 @@ public class LocalExplorer extends FileExplorer {
 
             //String date = dateFormat.format(dateSource);
             //String date = dateSource.toString();
-            String date = DateHelper.getExplorerDateString(dateSource);
+            String date = DateHelper.INSTANCE.getExplorerDateString(dateSource);
             long size = eachFile.length();
 
             int type = FileHelper.getFileFolderType(eachFile);

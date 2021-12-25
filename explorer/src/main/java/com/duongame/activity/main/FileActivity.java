@@ -20,7 +20,7 @@ public class FileActivity extends BaseMainActivity {
 
     @Override
     protected int getLayoutResId() {
-        if (AppHelper.isPro(this)) {
+        if (AppHelper.INSTANCE.isPro()) {
             return R.layout.activity_main_file;
         } else {
             return R.layout.activity_main_file_ad;

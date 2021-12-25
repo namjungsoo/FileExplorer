@@ -30,7 +30,7 @@ object ShortcutHelper {
         shortcutIntent.setClassName(context, context.javaClass.name)
         shortcutIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP)
         val iconResource: Parcelable =
-            Intent.ShortcutIconResource.fromContext(context, AppHelper.getIconResId(context))
+            Intent.ShortcutIconResource.fromContext(context, AppHelper.iconResId)
         val intent = Intent()
         intent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, shortcutIntent)
         val resId = 0

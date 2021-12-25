@@ -1,6 +1,5 @@
 package com.duongame
 
-import android.app.Activity
 import android.os.Build
 import android.os.Environment
 import android.os.Process
@@ -10,7 +9,7 @@ import com.duongame.adapter.ExplorerItem
 import com.duongame.helper.PreferenceHelper
 import timber.log.Timber
 import timber.log.Timber.DebugTree
-import java.util.ArrayList
+import java.util.*
 
 class MainApplication : MultiDexApplication() {
     var fileList: ArrayList<ExplorerItem>? = null
@@ -19,8 +18,14 @@ class MainApplication : MultiDexApplication() {
     var videoList: ArrayList<ExplorerItem>? = null
     var audioList: ArrayList<ExplorerItem>? = null
 
-    var initialPath = Environment.getExternalStorageDirectory().absolutePath
+    val initialPath = Environment.getExternalStorageDirectory().absolutePath
     var lastPath: String? = null
+
+    init {
+        instance = this
+    }
+
+    fun isInitialPath(lastPath: String): Boolean = initialPath == lastPath
 
     override fun onCreate() {
         super.onCreate()
@@ -46,9 +51,7 @@ class MainApplication : MultiDexApplication() {
     }
 
     companion object {
-        @JvmStatic
-        fun getInstance(activity: Activity?): MainApplication? {
-            return if (activity == null) null else activity.application as MainApplication
-        }
+        lateinit var instance: MainApplication
+            private set
     }
 }

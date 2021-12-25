@@ -35,18 +35,18 @@ public class ComicActivity extends BaseMainActivity {
         initTabs();
         Timber.e("initTabs end");
 
-        if (!PreferenceHelper.getPermissionAgreed(this)) {
-            AlertHelper.showAlert(this,
-                    AppHelper.getAppName(this),
+        if (!PreferenceHelper.INSTANCE.getPermissionAgreed()) {
+            AlertHelper.INSTANCE.showAlert(this,
+                    AppHelper.INSTANCE.getAppName(),
                     getString(R.string.required_permission),
                     null,
                     (dialog, which) -> {
-                        PreferenceHelper.setPermissionAgreed(ComicActivity.this, true);
+                        PreferenceHelper.INSTANCE.setPermissionAgreed(true);
                         PermissionManager.checkStoragePermissions(ComicActivity.this);
                     },
                     (dialog, which) -> {
                         try {
-                            MainApplication.getInstance(ComicActivity.this).exit(ComicActivity.this);
+                            MainApplication.Companion.getInstance().exit(ComicActivity.this);
                         } catch (NullPointerException e) {
 
                         }
@@ -57,7 +57,7 @@ public class ComicActivity extends BaseMainActivity {
 
     @Override
     protected int getLayoutResId() {
-        if (AppHelper.isPro(this)) {
+        if (AppHelper.INSTANCE.isPro()) {
             return R.layout.activity_main_comic;
         } else {
             return R.layout.activity_main_comic_ad;

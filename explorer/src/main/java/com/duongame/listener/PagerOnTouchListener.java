@@ -6,6 +6,7 @@ import android.view.View;
 
 import com.duongame.MainApplication;
 import com.duongame.activity.viewer.PagerActivity;
+import com.duongame.helper.PreferenceHelper;
 
 import java.lang.ref.WeakReference;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -70,7 +71,7 @@ public class PagerOnTouchListener extends BaseOnTouchListener {
                 if (listener.getActionDownTime() < listener.getActionUpTime()) {
                     PagerActivity activity = listener.getActivityWeakReference().get();
                     boolean smoothScroll = true;
-                    if (MainApplication.getInstance(activity).isPagingAnimationDisabled()) {
+                    if (PreferenceHelper.INSTANCE.getPagingAnimationDisabled()) {
                         smoothScroll = false;
                     }
                     activity.getPager().setCurrentItem(page, smoothScroll);

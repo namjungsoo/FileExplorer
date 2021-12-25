@@ -72,7 +72,7 @@ public class BaseFragment extends Fragment {
             try {
                 BaseActivity activity = (BaseActivity) getActivity();
                 if (!activity.isFinishing()) {
-                    MainApplication.getInstance(getActivity()).exit(activity);
+                    MainApplication.Companion.getInstance().exit(activity);
                 }
             } catch (NullPointerException | ClassCastException e) {
                 e.printStackTrace();
@@ -83,7 +83,7 @@ public class BaseFragment extends Fragment {
             // 토스트를 띄운다.
             FragmentActivity activity = getActivity();
             if (activity != null) {
-                ToastHelper.info(activity, R.string.back_pressed);
+                ToastHelper.INSTANCE.info(activity, R.string.back_pressed);
             }
         }
     }

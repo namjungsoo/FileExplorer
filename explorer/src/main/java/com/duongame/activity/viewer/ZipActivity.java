@@ -63,7 +63,7 @@ public class ZipActivity extends PagerActivity {
         if (nextBook == null)
             return;
 
-        if(AppHelper.isComicz(this))
+        if(AppHelper.INSTANCE.isComicz())
             openNextBookWithPopup();
     }
 
@@ -137,7 +137,7 @@ public class ZipActivity extends PagerActivity {
 
     @Override
     protected void onPause() {
-        if (AppHelper.isComicz(this)) {
+        if (AppHelper.INSTANCE.isComicz()) {
             zipLoader.cancelTask();
 
             final Book book = new Book();
@@ -229,7 +229,7 @@ public class ZipActivity extends PagerActivity {
                 };
 
                 if (BuildConfig.SHOW_AD && !isAdRemoveReward()) {
-                    AlertHelper.showAlertWithAd(this,
+                    AlertHelper.INSTANCE.showAlertWithAd(this,
                             title,
                             content,
                             positiveListener,
@@ -237,7 +237,7 @@ public class ZipActivity extends PagerActivity {
                             true);
                     AdBannerManager.initPopupAd(this);// 항상 초기화 해주어야 함
                 } else {
-                    AlertHelper.showAlert(this,
+                    AlertHelper.INSTANCE.showAlert(this,
                             title,
                             content,
                             null,

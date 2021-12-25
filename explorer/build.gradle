@@ -80,7 +80,7 @@ android {
     productFlavors {
         development {
             dimension "mode"
-            minSdkVersion 24
+            minSdkVersion 16
             resConfigs("ko", "xxhdpi")
             aaptOptions.cruncherEnabled = false
         }

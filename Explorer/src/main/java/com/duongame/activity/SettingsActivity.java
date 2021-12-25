@@ -105,7 +105,7 @@ public class SettingsActivity extends BaseActivity {
     void clearHistory() {
         BookDB.clearBooks(SettingsActivity.this);
 
-        ToastHelper.showToast(this, getResources().getString(R.string.msg_clear_history));
+        ToastHelper.INSTANCE.showToast(this, getResources().getString(R.string.msg_clear_history));
     }
 
     void clearCache() {
@@ -116,13 +116,13 @@ public class SettingsActivity extends BaseActivity {
         final File file = getFilesDir();
         deleteRecursive(file);
 
-        ToastHelper.showToast(this, getResources().getString(R.string.msg_clear_cache));
+        ToastHelper.INSTANCE.showToast(this, getResources().getString(R.string.msg_clear_cache));
     }
 
     void showLicense() {
         if (BuildConfig.SHOW_AD && !isAdRemoveReward()) {
-            AlertHelper.showAlertWithAd(this,
-                    AppHelper.getAppName(this),
+            AlertHelper.INSTANCE.showAlertWithAd(this,
+                    AppHelper.INSTANCE.getAppName(),
                     "Icon license: designed by Smashicons from Flaticon",
                     new DialogInterface.OnClickListener() {
                         @Override
@@ -132,8 +132,8 @@ public class SettingsActivity extends BaseActivity {
                     }, null, true);
             AdBannerManager.initPopupAd(this);// 항상 초기화 해주어야 함
         } else {
-            AlertHelper.showAlert(this,
-                    AppHelper.getAppName(this),
+            AlertHelper.INSTANCE.showAlert(this,
+                    AppHelper.INSTANCE.getAppName(),
                     "Icon license: designed by Smashicons from Flaticon",
                     null,
                     new DialogInterface.OnClickListener() {
@@ -147,7 +147,7 @@ public class SettingsActivity extends BaseActivity {
     }
 
     void initUI() {
-        if(!AppHelper.isComicz(this)) {
+        if(!AppHelper.INSTANCE.isComicz()) {
             findViewById(R.id.layout_japanese_direction).setVisibility(View.GONE);
             findViewById(R.id.layout_action_clear_history).setVisibility(View.GONE);
         }
@@ -177,7 +177,7 @@ public class SettingsActivity extends BaseActivity {
         // 자동 페이징 시간 설정
         SeekBar autoPagingTime = findViewById(R.id.seek_time);
         final TextView autoPagingTimeValue = findViewById(R.id.auto_paging_time_value);
-        int time = PreferenceHelper.getAutoPagingTime(this);
+        int time = PreferenceHelper.INSTANCE.getAutoPagingTime();
         autoPagingTime.setMax(10);
 
         autoPagingTime.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -195,18 +195,18 @@ public class SettingsActivity extends BaseActivity {
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
                 Timber.e("stop track " + seekBar.getProgress());
-                PreferenceHelper.setAutoPagingTime(SettingsActivity.this, seekBar.getProgress());
+                PreferenceHelper.INSTANCE.setAutoPagingTime(seekBar.getProgress());
             }
         });
         autoPagingTimeValue.setText(String.valueOf(time));
         autoPagingTime.setProgress(time);
 
         try {
-            MainApplication application = MainApplication.getInstance(this);
-            nightMode.setChecked(application.isNightMode());
-            thumbnailDisabled.setChecked(application.isThumbnailDisabled());
-            japaneseDirection.setChecked(application.isJapaneseDirection());
-            pagingAnimationDisabled.setChecked(application.isPagingAnimationDisabled());
+            //MainApplication application = MainApplication.getInstance(this);
+            nightMode.setChecked(PreferenceHelper.INSTANCE.getNightMode());
+            thumbnailDisabled.setChecked(PreferenceHelper.INSTANCE.getThumbnailDisabled());
+            japaneseDirection.setChecked(PreferenceHelper.INSTANCE.getJapaneseDirection());
+            pagingAnimationDisabled.setChecked(PreferenceHelper.INSTANCE.getPagingAnimationDisabled());
         } catch (NullPointerException e) {
 
         }
@@ -216,7 +216,7 @@ public class SettingsActivity extends BaseActivity {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 try {
-                    MainApplication.getInstance(SettingsActivity.this).setNightMode(isChecked);
+                    PreferenceHelper.INSTANCE.setNightMode(isChecked);
                 } catch (NullPointerException e) {
 
                 }
@@ -227,7 +227,7 @@ public class SettingsActivity extends BaseActivity {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 try {
-                    MainApplication.getInstance(SettingsActivity.this).setThumbnailDisabled(isChecked);
+                    PreferenceHelper.INSTANCE.setThumbnailDisabled(isChecked);
                 } catch (NullPointerException e) {
 
                 }
@@ -238,7 +238,7 @@ public class SettingsActivity extends BaseActivity {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 try {
-                    MainApplication.getInstance(SettingsActivity.this).setJapaneseDirection(isChecked);
+                    PreferenceHelper.INSTANCE.setJapaneseDirection(isChecked);
                 } catch (NullPointerException e) {
 
                 }
@@ -249,7 +249,7 @@ public class SettingsActivity extends BaseActivity {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 try {
-                    MainApplication.getInstance(SettingsActivity.this).setPagingAnimationDisabled(isChecked);
+                    PreferenceHelper.INSTANCE.setPagingAnimationDisabled(isChecked);
                 } catch (NullPointerException e) {
 
                 }
@@ -287,7 +287,7 @@ public class SettingsActivity extends BaseActivity {
         version.setText("v" + BuildConfig.VERSION_NAME + "/" + BuildConfig.VERSION_CODE);
 
         View view = findViewById(R.id.pro_purchase);
-        if (!AppHelper.isPro(this)) {
+        if (!AppHelper.INSTANCE.isPro()) {
             view.setVisibility(View.VISIBLE);
 
             String packageName = getApplicationContext().getPackageName();
@@ -299,7 +299,7 @@ public class SettingsActivity extends BaseActivity {
             purchase.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    AppHelper.launchMarket(SettingsActivity.this, proPackageName);
+                    AppHelper.INSTANCE.launchMarket(SettingsActivity.this, proPackageName);
                 }
             });
         }

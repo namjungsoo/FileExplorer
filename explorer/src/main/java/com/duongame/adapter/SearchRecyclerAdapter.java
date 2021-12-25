@@ -15,6 +15,7 @@ import com.duongame.MainApplication;
 import com.duongame.R;
 import com.duongame.bitmap.BitmapCacheManager;
 import com.duongame.file.FileHelper;
+import com.duongame.helper.PreferenceHelper;
 import com.duongame.helper.UnitHelper;
 import com.duongame.task.thumbnail.LoadThumbnailTask;
 import com.duongame.task.thumbnail.LoadZipThumbnailTask;
@@ -98,7 +99,7 @@ public class SearchRecyclerAdapter extends RecyclerView.Adapter<SearchRecyclerAd
 
     boolean isThumbnailEnabled() {
         try {
-            return !MainApplication.getInstance(context).isThumbnailDisabled();
+            return !PreferenceHelper.INSTANCE.getThumbnailDisabled();
         } catch (NullPointerException e) {
             return true;
         }
@@ -157,10 +158,10 @@ public class SearchRecyclerAdapter extends RecyclerView.Adapter<SearchRecyclerAd
             size = itemView.findViewById(R.id.text_size);
             iconSmall = itemView.findViewById(R.id.file_small_icon);
 
-            name.getLayoutParams().height = UnitHelper.dpToPx(20);
+            name.getLayoutParams().height = UnitHelper.INSTANCE.dpToPx(20);
             path = itemView.findViewById(R.id.text_path);
             path.setVisibility(View.VISIBLE);
-            path.getLayoutParams().height = UnitHelper.dpToPx(20);
+            path.getLayoutParams().height = UnitHelper.INSTANCE.dpToPx(20);
 
             name.setMaxLines(1);
             name.setSingleLine(true);

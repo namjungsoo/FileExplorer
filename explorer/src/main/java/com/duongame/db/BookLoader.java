@@ -45,7 +45,7 @@ public class BookLoader {
         // 다음 책을 찾는다.
         // 현재 폴더인지 아닌지 확인한다.
         try {
-            String lastPath = MainApplication.getInstance(context).getLastPath();
+            String lastPath = MainApplication.Companion.getInstance().getLastPath();
 
             ArrayList<ExplorerItem> filteredList = new ArrayList<>();
             ArrayList<ExplorerItem> fileList;
@@ -54,7 +54,7 @@ public class BookLoader {
 
             // 현재 폴더에서 읽은 것이면
             if (lastPath.equals(folderPath)) {
-                fileList = MainApplication.getInstance(context).getFileList();
+                fileList = MainApplication.Companion.getInstance().getFileList();
 
             } else {
                 // 검색을 해서 찾는다.
@@ -146,7 +146,7 @@ public class BookLoader {
                 // 아무것도 하지 않고 false 리턴한다.
             }
         }
-        ToastHelper.error(context, R.string.msg_no_lastbook);
+        ToastHelper.INSTANCE.error(context, R.string.msg_no_lastbook);
         return false;
     }
 
@@ -215,7 +215,7 @@ public class BookLoader {
         book.extract_file = 0;
         book.side = ExplorerItem.SIDE_LEFT;
         try {
-            if (MainApplication.getInstance(context).getJapaneseDirection()) {
+            if (PreferenceHelper.INSTANCE.getJapaneseDirection()) {
                 book.side = ExplorerItem.SIDE_RIGHT;
             }
         } catch (NullPointerException e) {
@@ -266,7 +266,7 @@ public class BookLoader {
                 .setTitle(context.getString(R.string.comicz_name_free))
                 .setView(view)
                 .setMessage(String.format(context.getString(R.string.msg_last_page), book.current_page + 1))
-                .setIcon(AppHelper.getIconResId(context))
+                .setIcon(AppHelper.INSTANCE.getIconResId())
                 // 연속해서 읽을경우
                 .setPositiveButton(context.getString(R.string.ok), new DialogInterface.OnClickListener() {
                     @Override
@@ -360,7 +360,7 @@ public class BookLoader {
     public static void updateBookHolder(Activity context, HistoryRecyclerAdapter.HistoryViewHolder holder, Book book) {
         holder.name.setText(book.name);
         holder.size.setText(FileHelper.getMinimizedSize(book.size));
-        holder.date.setText(DateHelper.getExplorerDateStringFromDbDateString(book.date));
+        holder.date.setText(DateHelper.INSTANCE.getExplorerDateStringFromDbDateString(book.date));
         holder.page.setText(getPageText(book));
         holder.percent.setText(getPercentText(book));
         holder.progressBar.setMax(100);

@@ -61,7 +61,7 @@ public class AdRewardManager {
                         // 리워드가 성공적으로 호출되었으면 시간을 늘려준다.
                         // 시간을 늘려주고 결과를 토스트로 뿌려준다.
                         Date date = new Date();
-                        Timber.e("reward", "now=" + date.toString() + " " + " long=" + date.getTime());
+                        Timber.e("reward now=" + date.toString() + " " + " long=" + date.getTime());
 
                         long nowTime = date.getTime();
                         Calendar c = Calendar.getInstance();
@@ -69,16 +69,16 @@ public class AdRewardManager {
                         date = c.getTime();
 
                         long nextTime = date.getTime();
-                        Timber.e("reward", "now + 1 hour=" + date.toString() + " " + date.getTime());
+                        Timber.e("reward now + 1 hour=" + date.toString() + " " + date.getTime());
 
-                        long rewardTime = PreferenceHelper.getAdRemoveTimeReward(context);
+                        long rewardTime = PreferenceHelper.INSTANCE.getAdRemoveTimeReward();
 
                         // 이전에 리워드 받았던 시간(이전의 nextTime)이 현재 시간보다 작아야 가능
                         if (rewardTime < nowTime) {
-                            PreferenceHelper.setAdRemoveTimeReward(context, nextTime);
-                            ToastHelper.success(context, R.string.ad_remove_success);
+                            PreferenceHelper.INSTANCE.setAdRemoveTimeReward(nextTime);
+                            ToastHelper.INSTANCE.success(context, R.string.ad_remove_success);
                         } else {
-                            ToastHelper.error(context, R.string.ad_remove_fail);
+                            ToastHelper.INSTANCE.error(context, R.string.ad_remove_fail);
                         }
                     }
 
@@ -110,7 +110,7 @@ public class AdRewardManager {
             return;
 
         final String REWARD_ID;
-        if(AppHelper.isComicz(context)) {
+        if(AppHelper.INSTANCE.isComicz()) {
             REWARD_ID = context.getString(R.string.comicz_admob_popup_id);
         } else {
             REWARD_ID = context.getString(R.string.file_admob_popup_id);
@@ -127,7 +127,7 @@ public class AdRewardManager {
             mRewardedVideoAd.show();
         } else {
             // 광고가 준비되지 않았다는 메세지를 출력
-            ToastHelper.error(context, R.string.ad_not_loaded);
+            ToastHelper.INSTANCE.error(context, R.string.ad_not_loaded);
         }
     }
 

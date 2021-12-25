@@ -3,6 +3,7 @@ package com.duongame.activity.main;
 import android.animation.Animator;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
@@ -208,7 +209,7 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
                     long version = mFirebaseRemoteConfig.getLong("latest_version");
                     boolean force = mFirebaseRemoteConfig.getBoolean("force_update");
                     if (BuildConfig.VERSION_CODE < version) {
-                        ToastHelper.info(BaseMainActivity.this, R.string.toast_new_version);
+                        ToastHelper.INSTANCE.info(BaseMainActivity.this, R.string.toast_new_version);
                         if (force) {
                             // 강제로 플레이 스토어로 이동함
                             gotoAppStorePage(getApplicationContext().getPackageName());
@@ -268,7 +269,7 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
         }
 
         //TODO: 코믹z만 클라우드 지원. 추후 다른 앱에서 지원하려면 해제해야함
-        if (AppHelper.isComicz(this)) {
+        if (AppHelper.INSTANCE.isComicz()) {
             Timber.e("onResume begin");
 
             if (isDropboxLoginClicked) {
@@ -304,7 +305,7 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
         @Override
         protected Void doInBackground(Void... voids) {
             Timber.e("GoogleDriveLoginTask.doInBackground begin");
-            accountName = PreferenceHelper.getAccountGoogleDrive(BaseMainActivity.this);
+            accountName = PreferenceHelper.INSTANCE.getAccountGoogleDrive();
             GoogleDriveManager.login(BaseMainActivity.this, accountName);
             Timber.e("GoogleDriveLoginTask.doInBackground end");
             return null;
@@ -338,11 +339,11 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
         @Override
         protected Boolean doInBackground(Void... voids) {
             Timber.e("DropboxLoginTask.doInBackground begin");
-            String accessToken = PreferenceHelper.getAccountDropbox(BaseMainActivity.this);
+            String accessToken = PreferenceHelper.INSTANCE.getAccountDropbox();
             if (accessToken == null) {
                 accessToken = Auth.getOAuth2Token();
                 if (accessToken != null) {
-                    PreferenceHelper.setAccountDropbox(BaseMainActivity.this, accessToken);
+                    PreferenceHelper.INSTANCE.setAccountDropbox(accessToken);
                     DropboxClientFactory.init(accessToken);
                     return true;
                 } else {
@@ -517,8 +518,8 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
 
         if (id == R.id.action_license) {
             if (BuildConfig.SHOW_AD && !isAdRemoveReward()) {
-                AlertHelper.showAlertWithAd(this,
-                        AppHelper.getAppName(this),
+                AlertHelper.INSTANCE.showAlertWithAd(this,
+                        AppHelper.INSTANCE.getAppName(),
                         "Icon license: designed by Smashicons from Flaticon",
                         new DialogInterface.OnClickListener() {
                             @Override
@@ -528,8 +529,8 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
                         }, null, true);
                 AdBannerManager.initPopupAd(this);// 항상 초기화 해주어야 함
             } else {
-                AlertHelper.showAlert(this,
-                        AppHelper.getAppName(this),
+                AlertHelper.INSTANCE.showAlert(this,
+                        AppHelper.INSTANCE.getAppName(),
                         "Icon license: designed by Smashicons from Flaticon",
                         null,
                         new DialogInterface.OnClickListener() {
@@ -552,7 +553,7 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
 
         if (id == R.id.action_exit) {
             try {
-                MainApplication.getInstance(this).exit(this);
+                MainApplication.Companion.getInstance().exit(this);
                 return true;
             } catch (NullPointerException e) {
 
@@ -769,7 +770,7 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
     }
 
     protected void updateViewTypeMenuIcon() {
-        int viewType = PreferenceHelper.getViewType(this);
+        int viewType = PreferenceHelper.INSTANCE.getViewType();
         int resId = 0;
         switch (viewType) {
             case SWITCH_LIST:
@@ -823,7 +824,7 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
         if (explorerFragment != null)
             explorerFragment.onRefresh();
 
-        ToastHelper.showToast(this, getResources().getString(R.string.msg_clear_cache));
+        ToastHelper.INSTANCE.showToast(this, getResources().getString(R.string.msg_clear_cache));
     }
 
     protected void clearHistory() {
@@ -833,14 +834,14 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
         if (fragment != null)
             fragment.onRefresh();
 
-        ToastHelper.showToast(this, getResources().getString(R.string.msg_clear_history));
+        ToastHelper.INSTANCE.showToast(this, getResources().getString(R.string.msg_clear_history));
     }
 
     public void showPlayerUI() {
         Timber.e("showPlayerUI");
 //        miniPlayer.setTranslationY(UnitHelper.dpToPx(56));
         position = 0;
-        showUI(miniPlayer, UnitHelper.dpToPx(56));
+        showUI(miniPlayer, UnitHelper.INSTANCE.dpToPx(56));
     }
 
     public void hidePlayerUI() {
@@ -859,7 +860,7 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
                 player.seekTo(position);
                 player.start();
             } else {
-                ArrayList<ExplorerItem> audioList = MainApplication.getInstance(this).getAudioList();
+                ArrayList<ExplorerItem> audioList = MainApplication.Companion.getInstance().getAudioList();
                 ExplorerItem item = audioList.get(track);
                 player.reset();
                 player.setDataSource(item.path);
@@ -875,7 +876,7 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
             }
             btnPlay.setImageResource(R.drawable.ic_player_pause);
         } catch (Exception e) {
-            ToastHelper.error(this, R.string.toast_error);
+            ToastHelper.INSTANCE.error(this, R.string.toast_error);
         }
     }
 
@@ -886,7 +887,7 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
     }
 
     public void forwardAudio() {
-        ArrayList<ExplorerItem> audioList = MainApplication.getInstance(this).getAudioList();
+        ArrayList<ExplorerItem> audioList = MainApplication.Companion.getInstance().getAudioList();
         if (this.track < audioList.size() - 1) {
             position = 0;
             playAudio(this.track + 1);
@@ -973,7 +974,7 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
     public void showBottomUI() {
         Timber.e("showBottomUI");
 //        bottom.setTranslationY(UnitHelper.dpToPx(48));
-        showUI(bottom, UnitHelper.dpToPx(48));
+        showUI(bottom, UnitHelper.INSTANCE.dpToPx(48));
 
         // 타이틀을 숫자(선택된 파일 갯수)와 화살표로 변경
         ActionBar actionBar = getSupportActionBar();
@@ -992,7 +993,7 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
         // 원래 타이틀로 돌려준다.
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
-            actionBar.setTitle(AppHelper.getAppName(this));
+            actionBar.setTitle(AppHelper.INSTANCE.getAppName());
             actionBar.setDisplayHomeAsUpEnabled(false);
         }
 
@@ -1039,7 +1040,7 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
         // 로그인이 안되어 있으면 로그인을 한다.
 
         int app_key;
-        if (AppHelper.isPro(this)) {
+        if (AppHelper.INSTANCE.isPro()) {
             app_key = R.string.app_key_dropbox_pro;
         } else {
             app_key = R.string.app_key_dropbox_free;
@@ -1052,7 +1053,7 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
 
     void logoutDropbox(final MenuItem item) {
         // 로그인이 되어 있으면 팝업후에 로그아웃을 하고, account를 null로 만든다.
-        final String title = AppHelper.getAppName(this);
+        final String title = AppHelper.INSTANCE.getAppName();
         final String content = String.format(getString(R.string.msg_cloud_logout), getString(R.string.dropbox));
         final DialogInterface.OnClickListener positiveListener = new DialogInterface.OnClickListener() {
             @Override
@@ -1061,7 +1062,7 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
                     item.setTitle(getString(R.string.dropbox));
                     item.setChecked(false);
                 }
-                PreferenceHelper.setAccountDropbox(BaseMainActivity.this, null);
+                PreferenceHelper.INSTANCE.setAccountDropbox(null);
                 // 로그아웃후에는 explorer에서 toolbar에서 dropbox image button을 삭제해야 한다.
                 // 그리고 갈곳이 없으니 home으로 간다.
                 getExplorerFragment().updateDropboxUI(false);
@@ -1069,7 +1070,7 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
         };
 
         if (BuildConfig.SHOW_AD && !isAdRemoveReward()) {
-            AlertHelper.showAlertWithAd(this,
+            AlertHelper.INSTANCE.showAlertWithAd(this,
                     title,
                     content,
                     positiveListener,
@@ -1077,7 +1078,7 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
                     false);
             AdBannerManager.initPopupAd(this);// 항상 초기화 해주어야 함
         } else {
-            AlertHelper.showAlert(this,
+            AlertHelper.INSTANCE.showAlert(this,
                     title,
                     content,
                     null,
@@ -1089,7 +1090,7 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
 
     // 드롭박스 클릭시
     private void onDropbox(final MenuItem item) {
-        final String account = PreferenceHelper.getAccountDropbox(this);
+        final String account = PreferenceHelper.INSTANCE.getAccountDropbox();
         if (account == null) {
             loginDropbox(item);
         } else {
@@ -1107,7 +1108,7 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
 
     public void logoutGoogleDrive(final MenuItem item) {
         // 로그인이 되어 있으면 팝업후에 로그아웃을 하고, account를 null로 만든다.
-        final String title = AppHelper.getAppName(this);
+        final String title = AppHelper.INSTANCE.getAppName();
         final String content = String.format(getString(R.string.msg_cloud_logout), getString(R.string.google_drive));
         final DialogInterface.OnClickListener positiveListener = new DialogInterface.OnClickListener() {
             @Override
@@ -1117,7 +1118,7 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
                     item.setChecked(false);
                 }
                 // 로그인이 되어 있으면 팝업후에 로그아웃을 하고, account를 null로 만든다.
-                PreferenceHelper.setAccountGoogleDrive(BaseMainActivity.this, null);
+                PreferenceHelper.INSTANCE.setAccountGoogleDrive(null);
 
                 // 로그아웃후에는 explorer에서 toolbar에서 dropbox image button을 삭제해야 한다.
                 // 그리고 갈곳이 없으니 home으로 간다.
@@ -1126,7 +1127,7 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
         };
 
         if (BuildConfig.SHOW_AD && !isAdRemoveReward()) {
-            AlertHelper.showAlertWithAd(this,
+            AlertHelper.INSTANCE.showAlertWithAd(this,
                     title,
                     content,
                     positiveListener,
@@ -1134,7 +1135,7 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
                     false);
             AdBannerManager.initPopupAd(this);// 항상 초기화 해주어야 함
         } else {
-            AlertHelper.showAlert(this,
+            AlertHelper.INSTANCE.showAlert(this,
                     title,
                     content,
                     null,
@@ -1146,7 +1147,7 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
 
     // 구글 드라이브 클릭시
     private void onGoogleDrive(final MenuItem item) {
-        final String account = PreferenceHelper.getAccountGoogleDrive(this);
+        final String account = PreferenceHelper.INSTANCE.getAccountGoogleDrive();
         if (account == null) {
             loginGoogleDrive(item);
         } else {
@@ -1185,7 +1186,7 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
             startActivity(intent);
         } else if (id == R.id.action_exit) {
             try {
-                MainApplication.getInstance(this).exit(this);
+                MainApplication.Companion.getInstance().exit(this);
             } catch (NullPointerException ignored) {
             }
         }
@@ -1224,7 +1225,7 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
                 googleDriveItem.setChecked(true);
                 googleDriveItem.setTitle(accountName);
                 getExplorerFragment().updateGoogleDriveUI(true);
-                PreferenceHelper.setAccountGoogleDrive(BaseMainActivity.this, accountName);
+                PreferenceHelper.INSTANCE.setAccountGoogleDrive(accountName);
             }
         } else {
             if (googleDriveItem != null) {

@@ -64,10 +64,10 @@ public class OverwriteDialog extends DialogFragment {
         fileName.setText(path);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(activity)
-                .setTitle(AppHelper.getAppName(activity))
+                .setTitle(AppHelper.INSTANCE.getAppName())
                 .setMessage(R.string.msg_overwrite)
                 .setView(view)
-                .setIcon(AppHelper.getIconResId(activity))
+                .setIcon(AppHelper.INSTANCE.getIconResId())
                 // 덮어쓰기
                 .setPositiveButton(R.string.overwrite, new DialogInterface.OnClickListener() {
                     @Override

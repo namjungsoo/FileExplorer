@@ -69,7 +69,7 @@ public class BaseActivity extends AppCompatActivity {
     }
 
     public boolean isAdRemoveReward() {
-        long rewardTime = PreferenceHelper.getAdRemoveTimeReward(this);
+        long rewardTime = PreferenceHelper.INSTANCE.getAdRemoveTimeReward();
         Date date = new Date();
         if (rewardTime > date.getTime()) {
             return true;
@@ -79,7 +79,7 @@ public class BaseActivity extends AppCompatActivity {
 
     public void showInterstitialAd(Runnable runnable) {
         if (BuildConfig.SHOW_AD && !isAdRemoveReward()) {
-            final int count = PreferenceHelper.getExitAdCount(this);
+            final int count = PreferenceHelper.INSTANCE.getExitAdCount();
 
             // 2번중에 1번을 띄워준다.
             if (count % AdInterstitialManager.getMaxCount() == 1) {// 전면 팝업후 종료 팝업
@@ -89,10 +89,10 @@ public class BaseActivity extends AppCompatActivity {
                         runnable.run();
                 } else {
                     // 보여졌다면, 여기서 카운트 증가하고 광고가 끝난후 내부에서 run을 함
-                    PreferenceHelper.setExitAdCount(this, count + 1);
+                    PreferenceHelper.INSTANCE.setExitAdCount(count + 1);
                 }
             } else {
-                PreferenceHelper.setExitAdCount(this, count + 1);
+                PreferenceHelper.INSTANCE.setExitAdCount(count + 1);
                 if (runnable != null)
                     runnable.run();
             }

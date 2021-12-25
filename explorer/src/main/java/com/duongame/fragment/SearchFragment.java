@@ -74,7 +74,7 @@ public class SearchFragment extends BaseFragment {
                         .setRecursiveDirectory(true)
                         .setExcludeDirectory(true)
                         .setImageListEnable(false)
-                        .search(MainApplication.getInstance(activity).getInitialPath());
+                        .search(MainApplication.Companion.getInstance().getInitialPath());
             } catch (NullPointerException e) {
                 return false;
             }

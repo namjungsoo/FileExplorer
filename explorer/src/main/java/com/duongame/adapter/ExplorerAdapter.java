@@ -22,6 +22,7 @@ import com.duongame.R;
 import com.duongame.bitmap.BitmapCacheManager;
 import com.duongame.bitmap.BitmapLoader;
 import com.duongame.fragment.ExplorerFragment;
+import com.duongame.helper.PreferenceHelper;
 import com.duongame.task.thumbnail.LoadGifThumbnailTask;
 import com.duongame.task.thumbnail.LoadThumbnailTask;
 import com.duongame.task.thumbnail.LoadZipThumbnailTask;
@@ -250,7 +251,7 @@ public class ExplorerAdapter extends RecyclerView.Adapter<ExplorerAdapter.Explor
 
     boolean isThumbnailEnabled() {
         try {
-            return !MainApplication.getInstance(context).isThumbnailDisabled();
+            return !PreferenceHelper.INSTANCE.getThumbnailDisabled();
         } catch (NullPointerException e) {
             return true;
         }
