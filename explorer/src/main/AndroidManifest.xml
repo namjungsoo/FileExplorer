@@ -4,7 +4,7 @@
     package="com.duongame">
 
     <application
-        android:name=".MainApplication"
+        android:name=".App"
         android:theme="@style/SplashTheme">
 
         <activity

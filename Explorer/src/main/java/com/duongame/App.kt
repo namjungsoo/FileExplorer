@@ -11,7 +11,7 @@ import timber.log.Timber
 import timber.log.Timber.DebugTree
 import java.util.*
 
-class MainApplication : MultiDexApplication() {
+class App : MultiDexApplication() {
     var fileList: ArrayList<ExplorerItem>? = null
 
     var imageList: ArrayList<ExplorerItem>? = null
@@ -51,7 +51,7 @@ class MainApplication : MultiDexApplication() {
     }
 
     companion object {
-        lateinit var instance: MainApplication
+        lateinit var instance: App
             private set
     }
 }

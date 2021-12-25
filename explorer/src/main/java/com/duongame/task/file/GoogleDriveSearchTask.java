@@ -3,7 +3,7 @@ package com.duongame.task.file;
 import android.os.AsyncTask;
 import android.view.MenuItem;
 
-import com.duongame.MainApplication;
+import com.duongame.App;
 import com.duongame.R;
 import com.duongame.activity.main.BaseMainActivity;
 import com.duongame.adapter.ExplorerItem;
@@ -208,13 +208,13 @@ public class GoogleDriveSearchTask extends AsyncTask<String, Void, FileExplorer.
             //FIX: Index Out of Bound
             // 쓰레드에서 메인쓰레드로 옮김
             fragment.setFileList(result.fileList);
-            MainApplication.Companion.getInstance().setFileList(result.fileList);
-            MainApplication.Companion.getInstance().setImageList(result.imageList);
+            App.Companion.getInstance().setFileList(result.fileList);
+            App.Companion.getInstance().setImageList(result.imageList);
             fragment.getAdapter().setFileList(fragment.getFileList());
 
             fragment.getAdapter().notifyDataSetChanged();
 
-            MainApplication.Companion.getInstance().setLastPath(path);
+            App.Companion.getInstance().setLastPath(path);
             fragment.getTextPath().setText(path);
             fragment.getTextPath().requestLayout();
 

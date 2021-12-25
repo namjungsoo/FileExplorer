@@ -32,7 +32,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.duongame.BuildConfig;
-import com.duongame.MainApplication;
+import com.duongame.App;
 import com.duongame.R;
 import com.duongame.activity.main.BaseMainActivity;
 import com.duongame.activity.viewer.PhotoActivity;
@@ -219,7 +219,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
             ArrayList<ExplorerItem> videoList = FileHelper.getVideoFileList(fileList);
             ArrayList<ExplorerItem> audioList = FileHelper.getAudioFileList(fileList);
 
-            MainApplication app = MainApplication.Companion.getInstance();
+            App app = App.Companion.getInstance();
             if (app != null) {
                 app.setFileList(fileList);
                 app.setImageList(imageList);
@@ -273,7 +273,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
 
         String path = PreferenceHelper.INSTANCE.getLastPath();
         try {
-            MainApplication.Companion.getInstance().setLastPath(path);
+            App.Companion.getInstance().setLastPath(path);
         } catch (NullPointerException e) {
 
         }
@@ -338,7 +338,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
             public void onClick(View view) {
                 cloud = CLOUD_LOCAL;
                 try {
-                    updateFileList(MainApplication.Companion.getInstance().getInitialPath());
+                    updateFileList(App.Companion.getInstance().getInitialPath());
                 } catch (NullPointerException e) {
                 }
             }
@@ -419,7 +419,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
 
             if (dropbox.getVisibility() == View.VISIBLE) {
                 try {
-                    updateFileList(MainApplication.Companion.getInstance().getInitialPath());
+                    updateFileList(App.Companion.getInstance().getInitialPath());
                 } catch (NullPointerException e) {
 
                 }
@@ -445,7 +445,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
 
             if (googleDrive.getVisibility() == View.VISIBLE) {
                 try {
-                    updateFileList(MainApplication.Companion.getInstance().getInitialPath());
+                    updateFileList(App.Companion.getInstance().getInitialPath());
                 } catch (NullPointerException e) {
 
                 }
@@ -556,7 +556,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
 
     public void gotoUpDirectory() {
         try {
-            String path = MainApplication.Companion.getInstance().getLastPath();
+            String path = App.Companion.getInstance().getLastPath();
             path = path.substring(0, path.lastIndexOf('/'));
             if (path.length() == 0) {
                 path = "/";
@@ -572,7 +572,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
     void onClickDirectory(ExplorerItem item) {
         try {
             String newPath;
-            String lastPath = MainApplication.Companion.getInstance().getLastPath();
+            String lastPath = App.Companion.getInstance().getLastPath();
             if (lastPath.equals("/")) {
                 newPath = lastPath + item.name;
             } else {
@@ -609,7 +609,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
             mode = MODE_PLAYER;
         }
 
-        ArrayList<ExplorerItem> audioList = MainApplication.Companion.getInstance().getAudioList();
+        ArrayList<ExplorerItem> audioList = App.Companion.getInstance().getAudioList();
         for (int i = 0; i < audioList.size(); i++) {
             if (audioList.get(i).path.equals(item.path)) {
                 activity.playAudio(i);
@@ -761,7 +761,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
 
     void runUnzipTask(ExplorerItem item, String name) {
         try {
-            String path = MainApplication.Companion.getInstance().getLastPath();
+            String path = App.Companion.getInstance().getLastPath();
             String targetPath;
             if (name == null) {
                 targetPath = path;
@@ -832,7 +832,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
 
         try {
             // path/zipname 폴더가 있는지 확인
-            final String lastPath = MainApplication.Companion.getInstance().getLastPath();
+            final String lastPath = App.Companion.getInstance().getLastPath();
             final String newPath = FileHelper.getNewFileName(lastPath + "/" + base);
             String newName = newPath.replace(lastPath + "/", "");
 
@@ -911,7 +911,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
                 PreferenceHelper.INSTANCE.setSortDirection(sortDirection);
 
                 try {
-                    updateFileList(MainApplication.Companion.getInstance().getLastPath());
+                    updateFileList(App.Companion.getInstance().getLastPath());
                 } catch (NullPointerException e) {
 
                 }
@@ -935,7 +935,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
 
         final String base = getString(R.string.new_folder);
         try {
-            final String lastPath = MainApplication.Companion.getInstance().getLastPath();
+            final String lastPath = App.Companion.getInstance().getLastPath();
 
             String newName = FileHelper.getNewFileName(lastPath + "/" + base);
             newName = newName.replace(lastPath + "/", "");
@@ -961,7 +961,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
 
     void newFolder(String newFolder) {
         try {
-            String lastPath = MainApplication.Companion.getInstance().getLastPath();
+            String lastPath = App.Companion.getInstance().getLastPath();
             File folder = new File(lastPath + "/" + newFolder);
 
             FragmentActivity activity = getActivity();
@@ -1295,8 +1295,8 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
             onNormalMode();
         } else {
             try {
-                final String lastPath = MainApplication.Companion.getInstance().getLastPath();
-                if (MainApplication.Companion.getInstance().isInitialPath(lastPath)) {// user root일 경우
+                final String lastPath = App.Companion.getInstance().getLastPath();
+                if (App.Companion.getInstance().isInitialPath(lastPath)) {// user root일 경우
                     super.onBackPressed();
                 } else if (extSdCard != null && extSdCard.equals(lastPath)) {// sd카드 root일 경우
                     super.onBackPressed();
@@ -1501,7 +1501,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
         }
         this.cut = cut;
         try {
-            capturePath = MainApplication.Companion.getInstance().getLastPath();
+            capturePath = App.Companion.getInstance().getLastPath();
         } catch (NullPointerException e) {
 
         }
@@ -1550,7 +1550,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
 
     public void pasteFileWithDialog() {
         try {
-            final String pastePath = MainApplication.Companion.getInstance().getLastPath();
+            final String pastePath = App.Companion.getInstance().getLastPath();
 
             // 복사될 폴더와 이동할 폴더가 같다면
             if (capturePath.equals(pastePath)) {
@@ -1598,7 +1598,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
             return;
 
         try {
-            String path = MainApplication.Companion.getInstance().getLastPath();
+            String path = App.Companion.getInstance().getLastPath();
             String zipPath = path + "/" + name + ext;
 
             ZipTask task = new ZipTask(activity);
@@ -1626,7 +1626,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
             return;
 
         try {
-            final String path = MainApplication.Companion.getInstance().getLastPath();
+            final String path = App.Companion.getInstance().getLastPath();
 
             View view = activity.getLayoutInflater().inflate(R.layout.dialog_zip, null, false);
             final EditText editFileName = view.findViewById(R.id.file_name);
@@ -1639,7 +1639,7 @@ public class ExplorerFragment extends BaseFragment implements ExplorerAdapter.On
                     String base = path.substring(path.lastIndexOf("/") + 1);
                     String ext = spinner.getSelectedItem().toString();
 
-                    final String lastPath = MainApplication.Companion.getInstance().getLastPath();
+                    final String lastPath = App.Companion.getInstance().getLastPath();
                     final String newPath = FileHelper.getNewFileName(lastPath + "/" + base + ext);
 
                     String newName = newPath.replace(lastPath + "/", "");

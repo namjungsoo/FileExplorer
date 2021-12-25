@@ -3,7 +3,6 @@ package com.duongame.activity.main;
 import android.animation.Animator;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
@@ -39,7 +38,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.dropbox.core.android.Auth;
 import com.dropbox.core.v2.users.FullAccount;
 import com.duongame.BuildConfig;
-import com.duongame.MainApplication;
+import com.duongame.App;
 import com.duongame.R;
 import com.duongame.activity.BaseActivity;
 import com.duongame.activity.SettingsActivity;
@@ -553,7 +552,7 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
 
         if (id == R.id.action_exit) {
             try {
-                MainApplication.Companion.getInstance().exit(this);
+                App.Companion.getInstance().exit(this);
                 return true;
             } catch (NullPointerException e) {
 
@@ -860,7 +859,7 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
                 player.seekTo(position);
                 player.start();
             } else {
-                ArrayList<ExplorerItem> audioList = MainApplication.Companion.getInstance().getAudioList();
+                ArrayList<ExplorerItem> audioList = App.Companion.getInstance().getAudioList();
                 ExplorerItem item = audioList.get(track);
                 player.reset();
                 player.setDataSource(item.path);
@@ -887,7 +886,7 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
     }
 
     public void forwardAudio() {
-        ArrayList<ExplorerItem> audioList = MainApplication.Companion.getInstance().getAudioList();
+        ArrayList<ExplorerItem> audioList = App.Companion.getInstance().getAudioList();
         if (this.track < audioList.size() - 1) {
             position = 0;
             playAudio(this.track + 1);
@@ -1186,7 +1185,7 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
             startActivity(intent);
         } else if (id == R.id.action_exit) {
             try {
-                MainApplication.Companion.getInstance().exit(this);
+                App.Companion.getInstance().exit(this);
             } catch (NullPointerException ignored) {
             }
         }

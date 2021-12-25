@@ -9,7 +9,6 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 
-import com.duongame.MainApplication;
 import com.duongame.R;
 import com.duongame.activity.viewer.PagerActivity;
 import com.duongame.attacher.ImageViewAttacher;

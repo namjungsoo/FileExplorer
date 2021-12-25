@@ -4,7 +4,7 @@ import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import com.duongame.MainApplication
+import com.duongame.App
 import com.duongame.R
 
 /**
@@ -14,13 +14,13 @@ object AppHelper {
     private const val PRO = ".pro"
     private const val COMICZ = ".comicz"
 
-    val isPro = MainApplication.instance.applicationContext.packageName.contains(PRO)
-    val isComicz = MainApplication.instance.applicationContext.packageName.contains(COMICZ)
+    val isPro = App.instance.applicationContext.packageName.contains(PRO)
+    val isComicz = App.instance.applicationContext.packageName.contains(COMICZ)
 
     val appName = if (isComicz) {
-        MainApplication.instance.applicationContext.resources.getString(R.string.comicz_name_free)
+        App.instance.applicationContext.resources.getString(R.string.comicz_name_free)
     } else {
-        MainApplication.instance.applicationContext.resources.getString(R.string.file_name_free)
+        App.instance.applicationContext.resources.getString(R.string.file_name_free)
     }
     val iconResId = if (isComicz) {
         R.mipmap.comicz

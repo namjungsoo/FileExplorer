@@ -5,7 +5,7 @@ import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 
-import com.duongame.MainApplication;
+import com.duongame.App;
 import com.duongame.R;
 import com.duongame.activity.BaseActivity;
 import com.duongame.file.FileExplorer;
@@ -72,7 +72,7 @@ public class BaseFragment extends Fragment {
             try {
                 BaseActivity activity = (BaseActivity) getActivity();
                 if (!activity.isFinishing()) {
-                    MainApplication.Companion.getInstance().exit(activity);
+                    App.Companion.getInstance().exit(activity);
                 }
             } catch (NullPointerException | ClassCastException e) {
                 e.printStackTrace();

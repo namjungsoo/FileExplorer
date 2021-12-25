@@ -2,13 +2,11 @@ package com.duongame.helper
 
 import android.content.Context
 import android.content.SharedPreferences
-import com.duongame.helper.PreferenceHelper
 import com.duongame.fragment.ExplorerFragment
 import com.duongame.fragment.BaseFragment
 import android.os.Build
 import android.os.Environment
 import androidx.core.content.edit
-import com.duongame.MainApplication
 import java.util.*
 
 /**

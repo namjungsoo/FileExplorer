@@ -18,7 +18,6 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.SwitchCompat;
 
 import com.duongame.BuildConfig;
-import com.duongame.MainApplication;
 import com.duongame.R;
 import com.duongame.bitmap.BitmapCacheManager;
 import com.duongame.db.BookDB;
@@ -27,7 +26,6 @@ import com.duongame.helper.AppHelper;
 import com.duongame.helper.PreferenceHelper;
 import com.duongame.helper.ToastHelper;
 import com.duongame.manager.AdBannerManager;
-import com.duongame.manager.AdRewardManager;
 import com.google.android.gms.ads.AdView;
 
 import java.io.File;

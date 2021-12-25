@@ -11,7 +11,6 @@ import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.duongame.MainApplication;
 import com.duongame.R;
 import com.duongame.bitmap.BitmapCacheManager;
 import com.duongame.file.FileHelper;

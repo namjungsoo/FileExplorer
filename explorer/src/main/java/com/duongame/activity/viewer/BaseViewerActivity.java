@@ -25,7 +25,6 @@ import androidx.appcompat.app.ActionBar;
 import androidx.core.content.ContextCompat;
 
 import com.duongame.BuildConfig;
-import com.duongame.MainApplication;
 import com.duongame.R;
 import com.duongame.activity.BaseActivity;
 import com.duongame.activity.SettingsActivity;

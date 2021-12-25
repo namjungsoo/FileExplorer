@@ -4,7 +4,6 @@ import android.os.AsyncTask;
 import android.view.MotionEvent;
 import android.view.View;
 
-import com.duongame.MainApplication;
 import com.duongame.activity.viewer.PagerActivity;
 import com.duongame.helper.PreferenceHelper;
 

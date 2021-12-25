@@ -14,7 +14,6 @@ import android.widget.TextView;
 import androidx.viewpager.widget.ViewPager;
 
 import com.duongame.BuildConfig;
-import com.duongame.MainApplication;
 import com.duongame.R;
 import com.duongame.adapter.ViewerPagerAdapter;
 import com.duongame.bitmap.BitmapCacheManager;

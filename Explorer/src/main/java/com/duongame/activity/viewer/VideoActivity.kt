@@ -2,7 +2,7 @@ package com.duongame.activity.viewer
 
 import android.net.Uri
 import android.os.Bundle
-import com.duongame.MainApplication
+import com.duongame.App
 import com.duongame.R
 import com.duongame.adapter.ExplorerItem
 import com.google.android.exoplayer2.DefaultRenderersFactory
@@ -23,7 +23,7 @@ class VideoActivity : BaseViewerActivity() {
 
     private fun buildMediaSourceMulti(): ConcatenatingMediaSource {
         val ret = ConcatenatingMediaSource()
-        val app = MainApplication.instance
+        val app = App.instance
         val videoList = app.videoList ?: return ret
         for (video in videoList) {
             ret.addMediaSource(buildMediaSource(video.path))
@@ -64,7 +64,7 @@ class VideoActivity : BaseViewerActivity() {
 
         val mediaSource = buildMediaSourceMulti()
         var windowIndex = -1
-        MainApplication.instance.videoList?.let { videoList ->
+        App.instance.videoList?.let { videoList ->
             for (i in videoList.indices) {
                 if (videoList[i].path == item.path) {
                     windowIndex = i

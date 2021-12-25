@@ -17,7 +17,6 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.target.ImageViewTarget;
 import com.duongame.BuildConfig;
-import com.duongame.MainApplication;
 import com.duongame.R;
 import com.duongame.bitmap.BitmapCacheManager;
 import com.duongame.bitmap.BitmapLoader;

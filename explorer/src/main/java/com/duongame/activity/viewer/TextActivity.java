@@ -12,7 +12,6 @@ import android.widget.ScrollView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
-import com.duongame.MainApplication;
 import com.duongame.R;
 import com.duongame.db.Book;
 import com.duongame.db.BookDB;

@@ -7,7 +7,6 @@ import android.widget.ImageView;
 
 import androidx.viewpager.widget.PagerAdapter;
 
-import com.duongame.MainApplication;
 import com.duongame.activity.viewer.PagerActivity;
 import com.duongame.helper.PreferenceHelper;
 
