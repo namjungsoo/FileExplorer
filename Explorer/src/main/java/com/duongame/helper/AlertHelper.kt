@@ -63,9 +63,9 @@ object AlertHelper {
         keyListener: DialogInterface.OnKeyListener?
     ) {
         // adPopupView가 이전의 팝업에 붙어 있을경우 처리해줌
-        val adView = AdBannerManager.getAdPopupView() ?: return
-        val vg = adView.parent as ViewGroup
-        vg.removeView(adView)
+        val adView = AdBannerManager.adPopupView ?: return
+        val vg = adView.parent as ViewGroup?
+        vg?.removeView(adView)
         showAlert(context, title, message, adView, posListener, negListener, keyListener)
     }
 
@@ -77,9 +77,9 @@ object AlertHelper {
         keyListener: DialogInterface.OnKeyListener?,
         okOnly: Boolean
     ) {
-        val adView = AdBannerManager.getAdPopupView() ?: return
-        val vg = adView.parent as ViewGroup
-        vg.removeView(adView)
+        val adView = AdBannerManager.adPopupView ?: return
+        val vg = adView.parent as ViewGroup?
+        vg?.removeView(adView)
         val builder = AlertDialog.Builder(context)
             .setTitle(title)
             .setMessage(message)
