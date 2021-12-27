@@ -297,17 +297,7 @@ abstract class BaseMainActivity : BaseActivity(), NavigationView.OnNavigationIte
 
         protected override fun doInBackground(vararg params: Void?): Boolean? {
             Timber.e("DropboxLoginTask.doInBackground begin")
-            var accessToken = accountDropbox
-            if (accessToken == null) {
-                accessToken = Auth.getOAuth2Token()
-                return if (accessToken != null) {
-                    accountDropbox = accessToken
-                    DropboxClientFactory.init(accessToken)
-                    true
-                } else {
-                    false
-                }
-            }
+            val accessToken = accountDropbox
             DropboxClientFactory.init(accessToken)
             Timber.e("DropboxLoginTask.doInBackground end")
             return true
@@ -895,7 +885,7 @@ abstract class BaseMainActivity : BaseActivity(), NavigationView.OnNavigationIte
                 item.title = getString(R.string.dropbox)
                 item.isChecked = false
             }
-            accountDropbox = null
+            accountDropbox = ""
             // 로그아웃후에는 explorer에서 toolbar에서 dropbox image button을 삭제해야 한다.
             // 그리고 갈곳이 없으니 home으로 간다.
             explorerFragment.updateDropboxUI(false)
@@ -926,7 +916,7 @@ abstract class BaseMainActivity : BaseActivity(), NavigationView.OnNavigationIte
     // 드롭박스 클릭시
     private fun onDropbox(item: MenuItem) {
         val account = accountDropbox
-        if (account == null) {
+        if (account.isNotEmpty()) {
             loginDropbox(item)
         } else {
             logoutDropbox(item)
@@ -952,7 +942,7 @@ abstract class BaseMainActivity : BaseActivity(), NavigationView.OnNavigationIte
                 item.isChecked = false
             }
             // 로그인이 되어 있으면 팝업후에 로그아웃을 하고, account를 null로 만든다.
-            accountGoogleDrive = null
+            accountGoogleDrive = ""
 
             // 로그아웃후에는 explorer에서 toolbar에서 dropbox image button을 삭제해야 한다.
             // 그리고 갈곳이 없으니 home으로 간다.
@@ -984,7 +974,7 @@ abstract class BaseMainActivity : BaseActivity(), NavigationView.OnNavigationIte
     // 구글 드라이브 클릭시
     private fun onGoogleDrive(item: MenuItem) {
         val account = accountGoogleDrive
-        if (account == null) {
+        if (account.isNotEmpty()) {
             loginGoogleDrive(item)
         } else {
             logoutGoogleDrive(item)

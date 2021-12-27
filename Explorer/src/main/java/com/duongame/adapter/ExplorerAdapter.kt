@@ -314,10 +314,6 @@ abstract class ExplorerAdapter(fileList: ArrayList<ExplorerItem>) :
         return 0
     }
 
-    companion object {
-        private const val DEBUG = false
-    }
-
     init {
         this.fileList = fileList
     }

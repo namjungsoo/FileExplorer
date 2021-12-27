@@ -121,9 +121,4 @@ class PdfPagerAdapter(activity: PagerActivity) : ViewerPagerAdapter() {
         // 아무것도 안함
         // task를 사용안함
     }
-
-    companion object {
-        private const val TAG = "PdfPagerAdapter"
-    }
-
 }

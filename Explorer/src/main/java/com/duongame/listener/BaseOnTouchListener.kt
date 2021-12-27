@@ -100,10 +100,6 @@ abstract class BaseOnTouchListener internal constructor(activity: Activity?) : O
 
     protected abstract fun handleActionUp(): Boolean
 
-    companion object {
-        private const val DEBUG = false
-    }
-
     init {
         val configuration = ViewConfiguration.get(activity)
         touchSlop = configuration.scaledTouchSlop shr 1

@@ -22,7 +22,7 @@ import java.util.*
 class GoogleDriveSearchTask(fragment: ExplorerFragment) :
     AsyncTask<String?, Void?, FileExplorer.Result?>() {
     private val fragmentWeakReference: WeakReference<ExplorerFragment>
-    private var path: String? = null
+    private var path: String = ""
     override fun onPreExecute() {
         super.onPreExecute() // AsyncTask는 아무것도 안함
         val fragment = fragmentWeakReference.get() ?: return
@@ -62,8 +62,7 @@ class GoogleDriveSearchTask(fragment: ExplorerFragment) :
 
     // /개인적인/남채은
     protected override fun doInBackground(vararg strings: String?): FileExplorer.Result? {
-        path = strings[0]
-        if (path == null) path = "/"
+        path = strings[0] ?: return null
         val fragment = fragmentWeakReference.get() ?: return null
 
         /*
@@ -72,7 +71,7 @@ class GoogleDriveSearchTask(fragment: ExplorerFragment) :
         [2] = "남채은"
          */
         var fileId: String? = null
-        val folders = path!!.split("/").toTypedArray()
+        val folders = path.split("/").toTypedArray()
         if (folders.size < 2) {
             fileId = "root"
         } else {
@@ -93,7 +92,7 @@ class GoogleDriveSearchTask(fragment: ExplorerFragment) :
         val folderList = ArrayList<ExplorerItem>()
         val normalList = ArrayList<ExplorerItem>()
         do {
-            var result: FileList? = null
+            var result: FileList?
             result = try {
                 driveService.files().list()
                     .setQ("'$fileId' in parents")
@@ -108,7 +107,7 @@ class GoogleDriveSearchTask(fragment: ExplorerFragment) :
                 e.printStackTrace()
                 return null
             } ?: return null
-            for (file in result.getFiles()) {
+            for (file in result.files) {
                 var type = ExplorerItem.FILETYPE_FILE
                 if (file.mimeType == "application/vnd.google-apps.folder") type =
                     ExplorerItem.FILETYPE_FOLDER
@@ -129,7 +128,7 @@ class GoogleDriveSearchTask(fragment: ExplorerFragment) :
                 //fileList.add(item);
                 Timber.e("name=" + file.name + " createdTime=" + file.createdTime + " fileId=" + file.id + " mime=" + file.mimeType)
             }
-            pageToken = result.getNextPageToken()
+            pageToken = result.nextPageToken
         } while (pageToken != null)
         val comparator = NameAscComparator()
         Collections.sort(folderList, comparator)
@@ -154,11 +153,11 @@ class GoogleDriveSearchTask(fragment: ExplorerFragment) :
             fragment.fileList = result.fileList
             instance.fileList = result.fileList
             instance.imageList = result.imageList
-            fragment.adapter!!.fileList = fragment.fileList!!
-            fragment.adapter!!.notifyDataSetChanged()
+            fragment.adapter.fileList = fragment.fileList!!
+            fragment.adapter.notifyDataSetChanged()
             instance.lastPath = path
-            fragment.textPath!!.text = path
-            fragment.textPath!!.requestLayout()
+            fragment.binding.textPath.text = path
+            fragment.binding.textPath.requestLayout()
             fragment.setCanClick(true)
         } catch (e: NullPointerException) {
         }

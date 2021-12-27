@@ -6,17 +6,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.CompoundButton
-import android.widget.Switch
-import android.widget.ViewSwitcher
+import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.duongame.R
 import com.duongame.adapter.HistoryRecyclerAdapter
+import com.duongame.databinding.FragmentHistoryBinding
 import com.duongame.db.Book
 import com.duongame.db.BookDB.Companion.clearBook
 import com.duongame.db.BookDB.Companion.getBooks
 import com.duongame.db.BookLoader.loadContinue
-import com.duongame.helper.PreferenceHelper.hideCompleted
+import com.duongame.helper.PreferenceHelper
 import com.duongame.view.DividerItemDecoration
 import java.io.File
 import java.lang.ref.WeakReference
@@ -26,24 +25,19 @@ import java.util.*
  * Created by namjungsoo on 2016. 12. 30..
  */
 class HistoryFragment : BaseFragment() {
-    private var switcherContents: ViewSwitcher? = null
     private var recyclerAdapter: HistoryRecyclerAdapter? = null
     private var bookList: ArrayList<Book> = arrayListOf()
-    private var isHideCompleted = false
+
+    private lateinit var binding: FragmentHistoryBinding
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        val activity = activity ?: return null
-        val rootView = inflater.inflate(R.layout.fragment_history, container, false) as ViewGroup
-        val recyclerView = rootView.findViewById<RecyclerView>(R.id.recycler_history)
-        isHideCompleted = hideCompleted
-        val switchHide = rootView.findViewById<Switch>(R.id.switch_hide)
-        switchHide.isChecked = isHideCompleted
-        switchHide.setOnCheckedChangeListener(CompoundButton.OnCheckedChangeListener { buttonView, isChecked ->
-            isHideCompleted = isChecked
-            val activity = getActivity() ?: return@OnCheckedChangeListener
-            hideCompleted = isHideCompleted
+    ): View {
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_history, container, false)
+        binding.switchHide.isChecked = PreferenceHelper.hideCompleted
+        binding.switchHide.setOnCheckedChangeListener(CompoundButton.OnCheckedChangeListener { buttonView, isChecked ->
+            PreferenceHelper.hideCompleted = isChecked
             onRefresh()
         })
         recyclerAdapter = HistoryRecyclerAdapter(this, null)
@@ -55,22 +49,21 @@ class HistoryFragment : BaseFragment() {
                 loadContinue(activity, book)
             }
         })
-        recyclerView.adapter = recyclerAdapter
-        recyclerView.layoutManager = LinearLayoutManager(activity)
-        recyclerView.addItemDecoration(
+        binding.recyclerHistory.adapter = recyclerAdapter
+        binding.recyclerHistory.layoutManager = LinearLayoutManager(activity)
+        binding.recyclerHistory.addItemDecoration(
             DividerItemDecoration(
                 activity,
                 DividerItemDecoration.VERTICAL_LIST
             )
         )
-        switcherContents = rootView.findViewById(R.id.switcher_contents)
-        return rootView
+        return binding.root
     }
 
     internal class RefreshTask(fragment: HistoryFragment) : AsyncTask<Void?, Void?, Void?>() {
         var fragmentWeakReferencea: WeakReference<HistoryFragment> = WeakReference(fragment)
 
-        protected override fun doInBackground(vararg params: Void?): Void? {
+        override fun doInBackground(vararg params: Void?): Void? {
             var fragment = fragmentWeakReferencea.get() ?: return null
             val activity = fragment.activity ?: return null
 
@@ -91,7 +84,7 @@ class HistoryFragment : BaseFragment() {
                     }
                 } catch (e: Exception) {
                 }
-                if (fragment.isHideCompleted) {
+                if (PreferenceHelper.hideCompleted) {
                     if (book.percent < 100) {
                         fragment.bookList.add(book)
                     }
@@ -118,9 +111,9 @@ class HistoryFragment : BaseFragment() {
 
             // 결과가 있을때 없을때를 구분해서 SWICTH 함
             if (fragment.bookList.size > 0) {
-                fragment.switcherContents?.displayedChild = 0
+                fragment.binding.switcherContents.displayedChild = 0
             } else {
-                fragment.switcherContents?.displayedChild = 1
+                fragment.binding.switcherContents.displayedChild = 1
             }
         }
 
@@ -131,16 +124,8 @@ class HistoryFragment : BaseFragment() {
         task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR)
     }
 
-    override fun onPause() {
-        super.onPause()
-    }
-
     override fun onResume() {
         super.onResume()
         onRefresh()
-    }
-
-    companion object {
-        private const val DEBUG = false
     }
 }

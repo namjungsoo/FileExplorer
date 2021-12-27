@@ -130,8 +130,4 @@ class PdfActivity : PagerActivity() {
             }
         }
     }
-
-    companion object {
-        private const val TAG = "PhotoActivity"
-    }
 }

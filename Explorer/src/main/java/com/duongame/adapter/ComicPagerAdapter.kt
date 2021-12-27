@@ -68,8 +68,4 @@ class ComicPagerAdapter(fm: FragmentManager, private val context: Activity) : Fr
     //    public boolean isViewFromObject(View view, Object object) {
     //        return view == object;
     //    }
-    companion object {
-        private const val DEBUG = false
-        private const val TAG = "ComicPagerAdapter"
-    }
 }

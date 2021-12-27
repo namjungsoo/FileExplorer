@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import android.widget.*
 import android.widget.AdapterView.OnItemSelectedListener
 import androidx.core.content.FileProvider
+import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -24,6 +25,9 @@ import com.duongame.activity.viewer.VideoActivity
 import com.duongame.adapter.*
 import com.duongame.bitmap.BitmapCacheManager.getThumbnailCount
 import com.duongame.bitmap.BitmapCacheManager.removeAllThumbnails
+import com.duongame.databinding.DialogSingleBinding
+import com.duongame.databinding.DialogZipBinding
+import com.duongame.databinding.FragmentExplorerBinding
 import com.duongame.db.BookLoader.load
 import com.duongame.db.BookLoader.openLastBook
 import com.duongame.db.ExplorerItemDB.Companion.getInstance
@@ -34,7 +38,6 @@ import com.duongame.file.FileHelper.filterVideoFileList
 import com.duongame.file.FileHelper.getNameWithoutTar
 import com.duongame.file.FileHelper.getNewFileName
 import com.duongame.file.FileHelper.getParentPath
-import com.duongame.helper.AlertHelper
 import com.duongame.helper.AlertHelper.showAlert
 import com.duongame.helper.AlertHelper.showAlertWithAd
 import com.duongame.helper.AppHelper.appName
@@ -61,7 +64,6 @@ import com.duongame.task.file.*
 import com.duongame.task.zip.UnzipTask
 import com.duongame.task.zip.ZipTask
 import com.duongame.view.DividerItemDecoration
-import com.duongame.view.Indicator
 import timber.log.Timber
 import java.io.File
 import java.util.*
@@ -71,45 +73,17 @@ import java.util.*
  */
 class ExplorerFragment : BaseFragment(), ExplorerAdapter.OnItemClickListener,
     ExplorerAdapter.OnItemLongClickListener {
-    // Android UI 관련
-    // 패스 관련
-    var textPath: TextView? = null
-        private set
-    private var scrollPath: HorizontalScrollView? = null
-
-    // 컨텐츠 관련
-    var currentView: RecyclerView? = null
-        private set
-    private var rootView: View? = null
-
-    // 뷰 스위처
-    private var switcherViewType: ViewSwitcher? = null
-    var switcherContents: ViewSwitcher? = null
-        private set
-    var permissionButton: Button? = null
-        private set
-    var textNoFiles: TextView? = null
-        private set
-
-    // 기타
-    private var home: ImageButton? = null
-    private var up: ImageButton? = null
-    private var sdcard: ImageButton? = null
-    private var extSdCard: String? = null
-    private var dropbox: ImageButton? = null
-    private var googleDrive: ImageButton? = null
-    private var itemDecoration: DividerItemDecoration? = null
-    private var storageIndicator: Indicator? = null
 
     // Model 관련
     // 파일 관련
-    var adapter: ExplorerAdapter? = null
-        private set
-    var fileList: ArrayList<ExplorerItem>? = null
+    lateinit var currentView: RecyclerView
+    lateinit var adapter: ExplorerAdapter
+    var fileList: ArrayList<ExplorerItem> = arrayListOf()
 
     // 붙이기 관련
-    private var selectedFileList: ArrayList<ExplorerItem>? = null
+    private var selectedFileList: ArrayList<ExplorerItem> = arrayListOf()
     private var cut = false
+
     private var localSearchTask: LocalSearchTask? = null
     private var dropboxSearchTask: DropboxSearchTask? = null
     private var googleDriveSearchTask: GoogleDriveSearchTask? = null
@@ -119,6 +93,7 @@ class ExplorerFragment : BaseFragment(), ExplorerAdapter.OnItemClickListener,
     //    private boolean pasteMode = false;// 붙여넣기 모드는 뒤로가기 버튼이 있고
     private var mode = MODE_NORMAL
     private lateinit var capturePath: String
+    private var extSdCard: String = ""
 
     // 정렬
     var sortType = 0
@@ -132,6 +107,8 @@ class ExplorerFragment : BaseFragment(), ExplorerAdapter.OnItemClickListener,
     private var backupGoogleDrive = false
     private var handler: Handler? = null
     protected var playerMode = false
+    lateinit var binding: FragmentExplorerBinding
+
     fun isCanClick(): Boolean {
         return canClick
     }
@@ -160,18 +137,16 @@ class ExplorerFragment : BaseFragment(), ExplorerAdapter.OnItemClickListener,
             val videoList = filterVideoFileList(fileList)
             val audioList = filterAudioFileList(fileList)
             val app = instance
-            if (app != null) {
-                app.fileList = fileList
-                app.imageList = imageList
-                app.videoList = videoList
-                app.audioList = audioList
-            }
+            app.fileList = fileList
+            app.imageList = imageList
+            app.videoList = videoList
+            app.audioList = audioList
 
             // DB에 저장된게 있으면 adapter에 적용
             if (fileList.size > 0) {
-                adapter!!.fileList = fileList
-                handler!!.postAtFrontOfQueue {
-                    adapter!!.notifyDataSetChanged()
+                adapter?.fileList = fileList
+                handler?.postAtFrontOfQueue {
+                    adapter?.notifyDataSetChanged()
 
                     // 이제 클릭할수 있음
                     // 프로그레스바 안보이기
@@ -185,32 +160,24 @@ class ExplorerFragment : BaseFragment(), ExplorerAdapter.OnItemClickListener,
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        rootView = inflater.inflate(R.layout.fragment_explorer, container, false)
+    ): View {
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_explorer, container, false)
+
         initUI()
         Timber.e("initUI end")
         initViewType()
         Timber.e("initViewType end")
         loadFileListFromLocalDB()
-        val activity = activity
-        if (activity != null) {
-//            PermissionManager.checkStoragePermissions(activity);
-            sortType = PreferenceHelper.sortType
-            sortDirection = PreferenceHelper.sortDirection
-        }
+        sortType = PreferenceHelper.sortType
+        sortDirection = PreferenceHelper.sortDirection
         extSdCard = externalSdCardPath
         if (extSdCard != null) {
-            if (sdcard != null) {
-                sdcard?.visibility = View.VISIBLE
-            }
+            binding.btnSdcard.visibility = View.VISIBLE
         }
         val path = lastPath
-        try {
-            instance.lastPath = path
-        } catch (e: NullPointerException) {
-        }
+        instance.lastPath = path
         Timber.e("onCreateView end")
-        return rootView
+        return binding.root
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -252,143 +219,105 @@ class ExplorerFragment : BaseFragment(), ExplorerAdapter.OnItemClickListener,
         get() = mode == MODE_PASTE
 
     private fun initUI() {
-        switcherContents = rootView?.findViewById(R.id.switcher_contents)
-        switcherViewType = rootView?.findViewById(R.id.switcher)
-        textPath = rootView?.findViewById(R.id.text_path)
-        scrollPath = rootView?.findViewById(R.id.scroll_path)
-        fileList = ArrayList()
-        home = rootView?.findViewById(R.id.btn_home)
-        home?.setOnClickListener(View.OnClickListener {
+        binding.btnHome.setOnClickListener(View.OnClickListener {
             cloud = CLOUD_LOCAL
             try {
                 updateFileList(instance.initialPath)
             } catch (e: NullPointerException) {
             }
         })
-        up = rootView!!.findViewById(R.id.btn_up)
-        up?.setOnClickListener(View.OnClickListener { // up으로 갈수있는 조건은 normal, paste 모드이다.
+        binding.btnUp.setOnClickListener { // up으로 갈수있는 조건은 normal, paste 모드이다.
             // 나머지는 normal로 모드를 변경한다.
             if (mode == MODE_NORMAL || mode == MODE_PASTE) gotoUpDirectory() else onNormalMode()
-        })
-        sdcard = rootView!!.findViewById(R.id.btn_sdcard)
-        sdcard?.setOnClickListener(View.OnClickListener {
-            if (extSdCard != null) {
-                cloud = CLOUD_LOCAL
-                updateFileList(extSdCard)
-            }
-        })
-        storageIndicator = rootView!!.findViewById(R.id.storage_indicator)
-        dropbox = rootView!!.findViewById(R.id.btn_dropbox)
-        dropbox?.setOnClickListener(View.OnClickListener {
+        }
+        binding.btnSdcard.setOnClickListener {
+            cloud = CLOUD_LOCAL
+            updateFileList(extSdCard)
+        }
+        binding.btnDropbox.setOnClickListener {
             cloud = CLOUD_DROPBOX
             updateFileList("/")
-        })
-        dropbox?.setVisibility(if (backupDropbox) View.VISIBLE else View.GONE)
-        googleDrive = rootView!!.findViewById(R.id.btn_gdrive)
-        googleDrive?.setOnClickListener(View.OnClickListener {
+        }
+        binding.btnDropbox.visibility = if (backupDropbox) View.VISIBLE else View.GONE
+
+        binding.btnGdrive.setOnClickListener {
             cloud = CLOUD_GOOGLEDRIVE
             updateFileList("/")
-        })
-        googleDrive?.setVisibility(if (backupGoogleDrive) View.VISIBLE else View.GONE)
-        storageIndicator?.refresh()
-        textNoFiles = rootView!!.findViewById(R.id.text_no_files)
-        permissionButton = rootView!!.findViewById(R.id.btn_permission)
-        if (permissionButton != null) {
-            permissionButton!!.setOnClickListener { checkStoragePermissions(activity) }
         }
+        binding.btnGdrive.visibility = if (backupGoogleDrive) View.VISIBLE else View.GONE
+
+        binding.storageIndicator.refresh()
+        binding.btnPermission.setOnClickListener { checkStoragePermissions(activity) }
     }
 
     fun updateDropboxUI(show: Boolean) {
         Timber.e("updateDropboxUI $show")
-        if (dropbox == null) {
-            backupDropbox = show
-            return
-        }
+
         if (show) {
-            dropbox!!.visibility = View.VISIBLE
+            binding.btnDropbox.visibility = View.VISIBLE
         } else {
             // 로그아웃인 상황이니 최초로 간다.
             cloud = CLOUD_LOCAL
-            if (dropbox!!.visibility == View.VISIBLE) {
-                try {
-                    updateFileList(instance.initialPath)
-                } catch (e: NullPointerException) {
-                }
-                dropbox!!.visibility = View.GONE
+            if (binding.btnDropbox.visibility == View.VISIBLE) {
+                updateFileList(instance.initialPath)
+                binding.btnDropbox.visibility = View.GONE
             }
         }
-        storageIndicator!!.refresh()
+        binding.storageIndicator.refresh()
     }
 
     fun updateGoogleDriveUI(show: Boolean) {
         Timber.e("updateGoogleDriveUI $show")
-        if (googleDrive == null) {
-            backupGoogleDrive = show
-            return
-        }
+
         if (show) {
-            googleDrive!!.visibility = View.VISIBLE
+            binding.btnGdrive.visibility = View.VISIBLE
         } else {
             // 로그아웃인 상황이니 최초로 간다.
             cloud = CLOUD_LOCAL
-            if (googleDrive!!.visibility == View.VISIBLE) {
-                try {
-                    updateFileList(instance.initialPath)
-                } catch (e: NullPointerException) {
-                }
-                googleDrive!!.visibility = View.GONE
+            if (binding.btnGdrive.visibility == View.VISIBLE) {
+                updateFileList(instance.initialPath)
+                binding.btnGdrive.visibility = View.GONE
             }
         }
-        storageIndicator!!.refresh()
+        binding.storageIndicator.refresh()
     }
 
-    fun initViewType() {
+    private fun initViewType() {
         changeViewType(PreferenceHelper.viewType)
     }
 
     fun changeViewType(viewType: Int) {
         val activity = activity ?: return
         this.viewType = viewType
-        if (switcherViewType != null) switcherViewType!!.displayedChild = viewType
+        binding.switcher.displayedChild = viewType
         when (viewType) {
             SWITCH_LIST -> {
-                synchronized(this) { adapter = ExplorerListAdapter(fileList!!) }
-                currentView = rootView!!.findViewById(R.id.list_explorer)
-                if (currentView != null) {
-                    currentView!!.layoutManager = LinearLayoutManager(activity)
-                    if (itemDecoration == null) {
-                        itemDecoration =
-                            DividerItemDecoration(activity, DividerItemDecoration.VERTICAL_LIST)
-                        currentView!!.addItemDecoration(itemDecoration!!)
-                    }
-                }
+                synchronized(this) { adapter = ExplorerListAdapter(fileList) }
+
+                currentView = binding.listExplorer
+                currentView.layoutManager = LinearLayoutManager(activity)
+                currentView.addItemDecoration(DividerItemDecoration(activity, DividerItemDecoration.VERTICAL_LIST))
             }
             SWITCH_GRID -> {
-                synchronized(this) { adapter = ExplorerGridAdapter(fileList!!) }
-                currentView = rootView!!.findViewById(R.id.grid_explorer)
-                if (currentView != null) {
-                    currentView!!.layoutManager = GridLayoutManager(activity, 4)
-                }
+                synchronized(this) { adapter = ExplorerGridAdapter(fileList) }
+
+                currentView = binding.gridExplorer
+                currentView.layoutManager = GridLayoutManager(activity, 4)
             }
             SWITCH_NARROW -> {
-                synchronized(this) { adapter = ExplorerNarrowAdapter(fileList!!) }
-                currentView = rootView!!.findViewById(R.id.list_explorer)
-                if (currentView != null) {
-                    currentView!!.layoutManager = LinearLayoutManager(activity)
-                    if (itemDecoration == null) {
-                        itemDecoration =
-                            DividerItemDecoration(activity, DividerItemDecoration.VERTICAL_LIST)
-                        currentView!!.addItemDecoration(itemDecoration!!)
-                    }
-                }
+                synchronized(this) { adapter = ExplorerNarrowAdapter(fileList) }
+
+                currentView = binding.listExplorer
+                currentView.layoutManager = LinearLayoutManager(activity)
+                currentView.addItemDecoration(DividerItemDecoration(activity, DividerItemDecoration.VERTICAL_LIST))
             }
         }
-        adapter?.mode = mode
-        adapter?.setOnItemClickListener(this)
-        adapter?.setOnLongItemClickListener(this)
+        adapter.mode = mode
+        adapter.setOnItemClickListener(this)
+        adapter.setOnLongItemClickListener(this)
 
-        currentView?.adapter = adapter
-        currentView?.addOnScrollListener(ExplorerScrollListener())
+        currentView.adapter = adapter
+        currentView.addOnScrollListener(ExplorerScrollListener())
         PreferenceHelper.viewType = viewType
     }
 
@@ -398,12 +327,12 @@ class ExplorerFragment : BaseFragment(), ExplorerAdapter.OnItemClickListener,
     // 중요하지 않은 작업이므로 전체 try-catch를 건다.
     fun requestThumbnailScan() {
         try {
-            if (fileResult == null) return
-            val imageList = fileResult!!.imageList ?: return
+            val fileResult = fileResult ?: return
+            val imageList = fileResult.imageList
             val activity = activity
             for (item in imageList) {
                 if (activity == null) break
-                if (item == null || item.path == null) continue
+                if (item == null) continue
                 activity.sendBroadcast(
                     Intent(
                         Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,
@@ -419,7 +348,7 @@ class ExplorerFragment : BaseFragment(), ExplorerAdapter.OnItemClickListener,
         try {
             var path = instance.lastPath
             path = path!!.substring(0, path.lastIndexOf('/'))
-            if (path.length == 0) {
+            if (path.isEmpty()) {
                 path = "/"
             }
             backupPosition()
@@ -649,8 +578,7 @@ class ExplorerFragment : BaseFragment(), ExplorerAdapter.OnItemClickListener,
             return
         }
         val activity = activity ?: return
-        val view = activity.layoutInflater.inflate(R.layout.dialog_single, null, false)
-        val editFileName = view.findViewById<EditText>(R.id.file_name)
+        val binding: DialogSingleBinding = DataBindingUtil.inflate(layoutInflater, R.layout.dialog_single, null, false)
 
         // zip파일의 이름을 기준으로 함
         var base = item.name.substring(0, item.name.lastIndexOf("."))
@@ -662,12 +590,12 @@ class ExplorerFragment : BaseFragment(), ExplorerAdapter.OnItemClickListener,
             val newName = newPath.replace("$lastPath/", "")
 
             // 새로나온 폴더의 이름을 edit에 반영함
-            editFileName.setText(newName)
+            binding.fileName.setText(newName)
             showAlert(activity,
                 appName,
                 getString(R.string.msg_file_unzip),
                 view,
-                { dialogInterface, i -> runUnzipTask(item, editFileName.text.toString()) },
+                { dialogInterface, i -> runUnzipTask(item, binding.fileName.text.toString()) },
                 null,
                 null
             )
@@ -702,9 +630,8 @@ class ExplorerFragment : BaseFragment(), ExplorerAdapter.OnItemClickListener,
         get() {
             var count = 0
             synchronized(this) {
-                if (fileList == null) return 0
-                for (i in fileList!!.indices) {
-                    if (fileList!![i].selected) {
+                for (i in fileList.indices) {
+                    if (fileList[i].selected) {
                         count++
                     }
                 }
@@ -737,19 +664,18 @@ class ExplorerFragment : BaseFragment(), ExplorerAdapter.OnItemClickListener,
 
     fun newFolderWithDialog() {
         val activity = activity ?: return
-        val view = activity.layoutInflater.inflate(R.layout.dialog_single, null, false)
-        val editFileName = view.findViewById<EditText>(R.id.file_name)
+        val binding: DialogSingleBinding = DataBindingUtil.inflate(layoutInflater, R.layout.dialog_single, null, false)
         val base = getString(R.string.new_folder)
         try {
             val lastPath = instance.lastPath
             var newName = getNewFileName("$lastPath/$base")
             newName = newName.replace("$lastPath/", "")
-            editFileName.setText(newName)
+            binding.fileName.setText(newName)
             showAlert(activity,
                 appName,
                 getString(R.string.msg_new_folder),
                 view, { dialog, which ->
-                    val newFolder = editFileName.text.toString()
+                    val newFolder = binding.fileName.text.toString()
                     newFolder(newFolder)
                 }, null, null)
         } catch (e: NullPointerException) {
@@ -778,14 +704,13 @@ class ExplorerFragment : BaseFragment(), ExplorerAdapter.OnItemClickListener,
 
     fun renameFileWithDialog(item: ExplorerItem) {
         val activity = activity ?: return
-        val view = activity.layoutInflater.inflate(R.layout.dialog_single, null, false)
-        val editFileName = view.findViewById<EditText>(R.id.file_name)
-        editFileName.setText(item.name)
+        val binding: DialogSingleBinding = DataBindingUtil.inflate(layoutInflater, R.layout.dialog_single, null, false)
+        binding.fileName.setText(item.name)
         showAlert(activity,
             appName,
             getString(R.string.msg_file_rename),
             view, { dialog, which ->
-                val newName = editFileName.text.toString()
+                val newName = binding.fileName.text.toString()
                 renameFile(item, newName)
             }, null, null)
     }
@@ -816,12 +741,11 @@ class ExplorerFragment : BaseFragment(), ExplorerAdapter.OnItemClickListener,
 
     fun onAdapterItemClick(position: Int) {
         synchronized(this) {
-            if (fileList == null) return
 
             //TODO: 여기서 IndexOutOfBoundsException 발생함. 동기화 문제.
-            if (fileList!!.size <= position) // 포지션이 이상하면 return
+            if (fileList.size <= position) // 포지션이 이상하면 return
                 return
-            val item = fileList!![position] ?: return
+            val item = fileList[position] ?: return
             if (mode == MODE_SELECT) {
                 onSelectItemClick(item, position)
             } else {
@@ -836,24 +760,24 @@ class ExplorerFragment : BaseFragment(), ExplorerAdapter.OnItemClickListener,
 //        PositionManager.setTop(LocalExplorer.getLastPath(), getCurrentViewScrollTop());
     }
 
-    val currentViewScrollTop: Int
-        get() = if (currentView!!.childCount > 0) {
-            currentView!!.getChildAt(0).top
+    private val currentViewScrollTop: Int
+        get() = if (currentView.childCount > 0) {
+            currentView.getChildAt(0).top
         } else 0
 
     fun moveToSelection(path: String?) {
         val position = getPosition(path!!)
         val top = getTop(path)
-        currentView!!.clearFocus()
-        currentView!!.post {
-            currentView!!.requestFocusFromTouch()
+        currentView.clearFocus()
+        currentView.post {
+            currentView.requestFocusFromTouch()
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 // only for gingerbread and newer versions
-                currentView!!.scrollToPosition(position)
+                currentView.scrollToPosition(position)
             } else {
-                currentView!!.scrollToPosition(position)
+                currentView.scrollToPosition(position)
             }
-            currentView!!.clearFocus()
+            currentView.clearFocus()
         }
     }
 
@@ -869,13 +793,9 @@ class ExplorerFragment : BaseFragment(), ExplorerAdapter.OnItemClickListener,
         }
     }
 
-    fun updateFileList(path: String?, isPathChanged: Boolean) {
-        if (adapter == null) {
-            return
-        }
-
+    fun updateFileList(path: String, isPathChanged: Boolean) {
         // 선택모드인지 설정해준다.
-        adapter?.mode = mode
+        adapter.mode = mode
 
         // 썸네일이 꽉찼을때는 비워준다.
         if (getThumbnailCount() > MAX_THUMBNAILS) {
@@ -885,21 +805,19 @@ class ExplorerFragment : BaseFragment(), ExplorerAdapter.OnItemClickListener,
         //FIX:
         //LocalSearchTask task = new LocalSearchTask(isPathChanged(path));
         //task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, path);
-        if (localSearchTask != null) {
-            localSearchTask!!.cancel(true)
-        }
+        localSearchTask?.cancel(true)
 
         // 최초 로딩시에만 적용됨
         var disableUpdateCanClick = false
-        if (adapter!!.itemCount > 0) { // 이미 DB에서 데이터를 로딩했으므로 canClick을 업데이트 하지 않
+        if (adapter.itemCount > 0) { // 이미 DB에서 데이터를 로딩했으므로 canClick을 업데이트 하지 않
             disableUpdateCanClick = true
         }
         localSearchTask = LocalSearchTask(this, isPathChanged, disableUpdateCanClick)
-        localSearchTask!!.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, path)
+        localSearchTask?.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, path)
 
         // 패스 UI를 가장 오른쪽으로 스크롤
         // 이동이 완료되기전에 이미 이동한다.
-        scrollPath!!.post { scrollPath!!.fullScroll(View.FOCUS_RIGHT) }
+        binding.scrollPath.post { binding.scrollPath.fullScroll(View.FOCUS_RIGHT) }
 
         // preference는 쓰레드로 사용하지 않기로 함
         // 현재 패스를 저장
@@ -912,9 +830,9 @@ class ExplorerFragment : BaseFragment(), ExplorerAdapter.OnItemClickListener,
         var isExtSdCard = false
         if (extSdCard != null && path!!.startsWith(extSdCard!!)) isExtSdCard = true
         if (isExtSdCard) {
-            storageIndicator!!.setTargetView(sdcard)
+            binding.storageIndicator.setTargetView(binding.btnSdcard)
         } else {
-            storageIndicator!!.setTargetView(home)
+            binding.storageIndicator.setTargetView(binding.btnHome)
         }
 
         // 오래 걸림. 이것도 쓰레드로...
@@ -923,13 +841,13 @@ class ExplorerFragment : BaseFragment(), ExplorerAdapter.OnItemClickListener,
 
     //TODO: 차후에 pull to refresh로 새로고침 해줘야 함
     //HACK: 모두 전체 새로 읽기로 수정함
-    fun updateFileList(path: String?) {
+    fun updateFileList(path: String) {
         //updateFileList(path, isPathChanged(path));
         if (cloud == CLOUD_LOCAL) {
-            if (path == null) updateFileList(null, true) else updateFileList(
-                path,
-                isPathChanged(path)
-            )
+            if (path.isEmpty())
+                updateFileList("", true)
+            else
+                updateFileList(path, isPathChanged(path))
         } else if (cloud == CLOUD_DROPBOX) {
             updateDropboxList(path)
         } else if (cloud == CLOUD_GOOGLEDRIVE) {
@@ -937,9 +855,9 @@ class ExplorerFragment : BaseFragment(), ExplorerAdapter.OnItemClickListener,
         }
     }
 
-    fun updateDropboxList(path: String?) {
+    fun updateDropboxList(path: String) {
         // 선택모드인지 설정해준다.
-        adapter?.mode = mode
+        adapter.mode = mode
 
         // 썸네일이 꽉찼을때는 비워준다.
         if (getThumbnailCount() > MAX_THUMBNAILS) {
@@ -956,18 +874,18 @@ class ExplorerFragment : BaseFragment(), ExplorerAdapter.OnItemClickListener,
 
         // 패스 UI를 가장 오른쪽으로 스크롤
         // 이동이 완료되기전에 이미 이동한다.
-        scrollPath?.post { scrollPath?.fullScroll(View.FOCUS_RIGHT) }
+        binding.scrollPath.post { binding.scrollPath.fullScroll(View.FOCUS_RIGHT) }
 
         // preference는 쓰레드로 사용하지 않기로 함
         // 현재 패스를 저장
         lastPath = path
         lastCloud = cloud
-        storageIndicator?.setTargetView(dropbox)
+        binding.storageIndicator.setTargetView(binding.btnDropbox)
     }
 
-    fun updateGoogleDriveList(path: String?) {
+    fun updateGoogleDriveList(path: String) {
         // 선택모드인지 설정해준다.
-        adapter?.mode = mode
+        adapter.mode = mode
 
         // 썸네일이 꽉찼을때는 비워준다.
         if (getThumbnailCount() > MAX_THUMBNAILS) {
@@ -983,13 +901,13 @@ class ExplorerFragment : BaseFragment(), ExplorerAdapter.OnItemClickListener,
 
         // 패스 UI를 가장 오른쪽으로 스크롤
         // 이동이 완료되기전에 이미 이동한다.
-        scrollPath?.post { scrollPath?.fullScroll(View.FOCUS_RIGHT) }
+        binding.scrollPath.post { binding.scrollPath.fullScroll(View.FOCUS_RIGHT) }
 
         // preference는 쓰레드로 사용하지 않기로 함
         // 현재 패스를 저장
         lastPath = path
         lastCloud = cloud
-        storageIndicator?.setTargetView(googleDrive)
+        binding.storageIndicator.setTargetView(binding.btnGdrive)
     }
 
     private fun isPathChanged(path: String): Boolean {
@@ -998,8 +916,8 @@ class ExplorerFragment : BaseFragment(), ExplorerAdapter.OnItemClickListener,
     }
 
     private fun softRefresh() {
-        adapter?.mode = mode
-        adapter?.notifyDataSetChanged()
+        adapter.mode = mode
+        adapter.notifyDataSetChanged()
     }
 
     override fun onRefresh() {
@@ -1029,7 +947,7 @@ class ExplorerFragment : BaseFragment(), ExplorerAdapter.OnItemClickListener,
         } else {
             try {
                 val lastPath = instance.lastPath
-                if (instance.isInitialPath(lastPath!!)) { // user root일 경우
+                if (instance.isInitialPath(lastPath)) { // user root일 경우
                     super.onBackPressed()
                 } else if (extSdCard != null && extSdCard == lastPath) { // sd카드 root일 경우
                     super.onBackPressed()
@@ -1087,7 +1005,7 @@ class ExplorerFragment : BaseFragment(), ExplorerAdapter.OnItemClickListener,
         item.selected = !item.selected
 
         // 아이템을 찾아서 UI를 업데이트 해주어야 함
-        adapter!!.notifyItemChanged(position)
+        adapter.notifyItemChanged(position)
 
         // 선택된 파일 카운트 업데이트
         updateSelectedFileCount()
@@ -1158,15 +1076,14 @@ class ExplorerFragment : BaseFragment(), ExplorerAdapter.OnItemClickListener,
     fun selectAll() {
         // 전체가 선택된 상태라면 전부 선택 초기화를 해줌
         synchronized(this) {
-            if (fileList == null) return
-            if (fileList!!.size == selectedFileCount) {
-                for (i in fileList!!.indices) {
-                    fileList!![i].selected = false
+            if (fileList.size == selectedFileCount) {
+                for (i in fileList.indices) {
+                    fileList[i].selected = false
                 }
                 info(activity, R.string.toast_deselect_all)
             } else {
-                for (i in fileList!!.indices) {
-                    fileList!![i].selected = true
+                for (i in fileList.indices) {
+                    fileList[i].selected = true
                 }
                 info(activity, R.string.toast_select_all)
             }
@@ -1182,19 +1099,15 @@ class ExplorerFragment : BaseFragment(), ExplorerAdapter.OnItemClickListener,
         // 선택된 파일을 목록을 작성
         selectedFileList = ArrayList()
         synchronized(this) {
-            if (fileList == null) return
-            for (i in fileList!!.indices) {
-                val item = fileList!![i]
+            for (i in fileList.indices) {
+                val item = fileList[i]
                 if (item.selected) {
-                    selectedFileList!!.add(item)
+                    selectedFileList.add(item)
                 }
             }
         }
         this.cut = cut
-        try {
-            capturePath = instance.lastPath.toString()
-        } catch (e: NullPointerException) {
-        }
+        capturePath = instance.lastPath.toString()
 
         // 붙이기 모드로 바꿈
         onPasteMode()
@@ -1264,10 +1177,9 @@ class ExplorerFragment : BaseFragment(), ExplorerAdapter.OnItemClickListener,
         // 선택된 파일만 압축할 리스트에 추가해 줌
         val zipList = ArrayList<ExplorerItem>()
         synchronized(this) {
-            if (fileList == null) return
-            for (i in fileList!!.indices) {
-                if (fileList!![i].selected) {
-                    zipList.add(fileList!![i])
+            for (i in fileList.indices) {
+                if (fileList[i].selected) {
+                    zipList.add(fileList[i])
                 }
             }
         }
@@ -1292,10 +1204,9 @@ class ExplorerFragment : BaseFragment(), ExplorerAdapter.OnItemClickListener,
         val activity = activity ?: return
         try {
             val path = instance.lastPath
-            val view = activity.layoutInflater.inflate(R.layout.dialog_zip, null, false)
-            val editFileName = view.findViewById<EditText>(R.id.file_name)
-            val spinner = view.findViewById<Spinner>(R.id.zip_type)
-            spinner.onItemSelectedListener = object : OnItemSelectedListener {
+            val binding: DialogZipBinding = DataBindingUtil.inflate(layoutInflater, R.layout.dialog_zip, null, false)
+
+            binding.zipType.onItemSelectedListener = object : OnItemSelectedListener {
                 override fun onItemSelected(
                     adapterView: AdapterView<*>?,
                     view: View,
@@ -1304,14 +1215,14 @@ class ExplorerFragment : BaseFragment(), ExplorerAdapter.OnItemClickListener,
                 ) {
                     // zip파일의 이름을 현재 패스 기준으로 함
                     val base = path!!.substring(path.lastIndexOf("/") + 1)
-                    val ext = spinner.selectedItem.toString()
+                    val ext = binding.zipType.selectedItem.toString()
                     val lastPath = instance.lastPath
                     val newPath = getNewFileName("$lastPath/$base$ext")
                     var newName = newPath.replace("$lastPath/", "")
                     newName = newName.replace(ext, "")
 
                     // 새로나온 폴더의 이름을 edit에 반영함
-                    editFileName.setText(newName)
+                    binding.fileName.setText(newName)
                 }
 
                 override fun onNothingSelected(adapterView: AdapterView<*>?) {}
@@ -1321,8 +1232,8 @@ class ExplorerFragment : BaseFragment(), ExplorerAdapter.OnItemClickListener,
                 getString(R.string.msg_file_zip),
                 view,
                 { dialogInterface, i ->
-                    val name = editFileName.text.toString()
-                    val ext = spinner.selectedItem.toString()
+                    val name = binding.fileName.text.toString()
+                    val ext = binding.zipType.selectedItem.toString()
                     runZipTask(name, ext)
                 }, null, null
             )
@@ -1331,8 +1242,6 @@ class ExplorerFragment : BaseFragment(), ExplorerAdapter.OnItemClickListener,
     }
 
     companion object {
-        private const val TAG = "ExplorerFragment"
-        private const val DEBUG = false
         const val SWITCH_LIST = 0
         const val SWITCH_GRID = 1
         const val SWITCH_NARROW = 2

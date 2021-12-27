@@ -24,9 +24,9 @@ class LocalSearchTask(
     fragment: ExplorerFragment?, // 기본값 false
     private val pathChanged: Boolean
 ) : AsyncTask<String?, Void?, FileExplorer.Result?>() {
-    private val fragmentWeakReference: WeakReference<ExplorerFragment?>
+    private val fragmentWeakReference: WeakReference<ExplorerFragment?> = WeakReference(fragment)
     private var disableUpdateCanClick = false
-    private var path: String? = null
+    private lateinit var path: String
     private var comparator: Comparator<ExplorerItem>? = null
 
     constructor(
@@ -58,7 +58,7 @@ class LocalSearchTask(
 
     protected override fun doInBackground(vararg params: String?): FileExplorer.Result? {
         Timber.e("LocalSearchTask doInBackground begin")
-        path = params[0]
+        path = params[0].toString()
         updateComparator()
         val fragment = fragmentWeakReference.get() ?: return null
         val explorer = fragment.fileExplorer ?: return null
@@ -96,38 +96,36 @@ class LocalSearchTask(
             instance.imageList = result.imageList
             instance.videoList = result.videoList
             instance.audioList = result.audioList
-            fragment.adapter!!.fileList = fragment.fileList!!
-            fragment.adapter!!.notifyDataSetChanged()
+            fragment.adapter.fileList = fragment.fileList
+            fragment.adapter.notifyDataSetChanged()
 
             // SearchTask가 resume
             if (pathChanged) {
                 synchronized(fragment) {
-                    if (fragment.fileList != null && fragment.fileList!!.size > 0) {
-                        fragment.currentView!!.scrollToPosition(0)
-                        fragment.currentView!!.invalidate()
+                    if (fragment.fileList.size > 0) {
+                        fragment.currentView.scrollToPosition(0)
+                        fragment.currentView.invalidate()
                     }
                 }
             }
 
             // 성공했을때 현재 패스를 업데이트
             instance.lastPath = path
-            fragment.textPath!!.text = path
-            fragment.textPath!!.requestLayout()
-            if (fragment.switcherContents != null) {
-                if (fragment.fileList == null || fragment.fileList!!.size <= 0) {
-                    fragment.switcherContents!!.displayedChild = 1
+            fragment.binding.textPath.text = path
+            fragment.binding.textPath.requestLayout()
+            if (fragment.fileList.size <= 0) {
+                fragment.binding.switcherContents!!.displayedChild = 1
 
-                    // 퍼미션이 있으면 퍼미션 버튼을 보이지 않게 함
-                    if (checkStoragePermissions(fragment.activity)) {
-                        fragment.permissionButton!!.visibility = View.GONE
-                        fragment.textNoFiles!!.visibility = View.VISIBLE
-                    } else {
-                        fragment.permissionButton!!.visibility = View.VISIBLE
-                        fragment.textNoFiles!!.visibility = View.GONE
-                    }
+                // 퍼미션이 있으면 퍼미션 버튼을 보이지 않게 함
+                if (checkStoragePermissions(fragment.activity)) {
+                    fragment.binding.btnPermission.visibility = View.GONE
+                    fragment.binding.textNoFiles.visibility = View.VISIBLE
                 } else {
-                    fragment.switcherContents!!.displayedChild = 0
+                    fragment.binding.btnPermission.visibility = View.VISIBLE
+                    fragment.binding.textNoFiles.visibility = View.GONE
                 }
+            } else {
+                fragment.binding.switcherContents.displayedChild = 0
             }
             fragment.setCanClick(true)
             Thread {
@@ -148,7 +146,6 @@ class LocalSearchTask(
     }
 
     init {
-        fragmentWeakReference = WeakReference(fragment)
         Timber.e("LocalSearchTask begin")
     }
 }

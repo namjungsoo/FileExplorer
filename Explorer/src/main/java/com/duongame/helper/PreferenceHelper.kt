@@ -13,7 +13,6 @@ import java.util.*
  * Created by 정수 on 2015-11-15.
  */
 object PreferenceHelper {
-    private const val DEBUG = false
     private const val PREF_NAME = "FileExplorer"
     private const val IS_SHORTCUT = "is_shortcut"
 
@@ -64,8 +63,8 @@ object PreferenceHelper {
             }
         }
 
-    var lastPath: String?
-        get() = pref?.getString(LAST_PATH, Environment.getExternalStorageDirectory().absolutePath)
+    var lastPath: String
+        get() = pref?.getString(LAST_PATH, Environment.getExternalStorageDirectory().absolutePath) ?: ""
         set(value) {
             pref?.edit {
                 putString(LAST_PATH, value)
@@ -137,16 +136,16 @@ object PreferenceHelper {
         }
 
     //BEGIN: Cloud Drive
-    var accountDropbox: String?
-        get() = pref?.getString(ACCOUNT_DROPBOX, null)
+    var accountDropbox: String
+        get() = pref?.getString(ACCOUNT_DROPBOX, null) ?: ""
         set(value) {
             pref?.edit {
                 putString(ACCOUNT_DROPBOX, value)
             }
         }
 
-    var accountGoogleDrive: String?
-        get() = pref?.getString(ACCOUNT_GOOGLE_DRIVE, null)
+    var accountGoogleDrive: String
+        get() = pref?.getString(ACCOUNT_GOOGLE_DRIVE, null) ?: ""
         set(value) {
             pref?.edit {
                 putString(ACCOUNT_GOOGLE_DRIVE, value)

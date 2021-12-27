@@ -193,9 +193,4 @@ class PhotoPagerAdapter(val activity: PagerActivity, var useGifAni: Boolean) : V
         }
         taskList.clear()
     }
-
-    companion object {
-        private const val TAG = "PhotoPagerAdapter"
-    }
-
 }

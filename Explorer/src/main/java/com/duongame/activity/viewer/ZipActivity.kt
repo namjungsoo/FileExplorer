@@ -467,8 +467,4 @@ class ZipActivity : PagerActivity() {
 //            })
 //        }
 //    }
-
-    companion object {
-        private const val TAG = "ZipActivity"
-    }
 }

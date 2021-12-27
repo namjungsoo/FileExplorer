@@ -215,7 +215,6 @@ class LoadBitmapTask(
         }
 
     companion object {
-        private val TAG = LoadBitmapTask::class.java.simpleName
         private const val RETRY_INTERVAL_MS = 100
         private const val RETRY_COUNT = 5
 

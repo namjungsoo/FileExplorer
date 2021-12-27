@@ -94,8 +94,4 @@ class Book {
             }
         }
     }
-
-    companion object {
-        private val TAG = Book::class.java.simpleName
-    }
 }

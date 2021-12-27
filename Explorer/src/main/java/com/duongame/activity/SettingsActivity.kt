@@ -3,16 +3,16 @@ package com.duongame.activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import android.widget.SeekBar.OnSeekBarChangeListener
-import androidx.appcompat.widget.SwitchCompat
+import androidx.databinding.DataBindingUtil
 import com.duongame.BuildConfig
 import com.duongame.R
 import com.duongame.bitmap.BitmapCacheManager
+import com.duongame.databinding.ActivitySettingsBinding
 import com.duongame.db.BookDB
 import com.duongame.helper.AlertHelper.showAlert
 import com.duongame.helper.AlertHelper.showAlertWithAd
@@ -40,6 +40,7 @@ import timber.log.Timber
 // 6. ZIP 파일 인코딩
 // 7. 이미지 프로세싱
 class SettingsActivity : BaseActivity() {
+    private lateinit var binding: ActivitySettingsBinding
     private var adView: AdView? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -106,8 +107,8 @@ class SettingsActivity : BaseActivity() {
 
     private fun initUI() {
         if (!isComicz) {
-            findViewById<View>(R.id.layout_japanese_direction).visibility = View.GONE
-            findViewById<View>(R.id.layout_action_clear_history).visibility = View.GONE
+            binding.layoutJapaneseDirection.visibility = View.GONE
+            binding.layoutActionClearHistory.visibility = View.GONE
         }
 
 //        Button adRemove = findViewById(R.id.action_ad_remove);
@@ -117,25 +118,18 @@ class SettingsActivity : BaseActivity() {
 //                AdRewardManager.show(SettingsActivity.this);
 //            }
 //        });
-        val donate = findViewById<Button>(R.id.action_ad_donate)
-        donate.setOnClickListener {
+        binding.actionAdDonate.setOnClickListener {
             val intent = Intent(this@SettingsActivity, DonateActivity::class.java)
             startActivity(intent)
         }
-        val nightMode = findViewById<SwitchCompat>(R.id.night_mode)
-        val thumbnailDisabled = findViewById<SwitchCompat>(R.id.thumbnail_disabled)
-        val japaneseDirection = findViewById<SwitchCompat>(R.id.japanese_direction)
-        val pagingAnimationDisabled = findViewById<SwitchCompat>(R.id.paging_animation_disabled)
 
         // 자동 페이징 시간 설정
-        val autoPagingTime = findViewById<SeekBar>(R.id.seek_time)
-        val autoPagingTimeValue = findViewById<TextView>(R.id.auto_paging_time_value)
         val time = PreferenceHelper.autoPagingTime
-        autoPagingTime.max = 10
-        autoPagingTime.setOnSeekBarChangeListener(object : OnSeekBarChangeListener {
+        binding.seekTime.max = 10
+        binding.seekTime.setOnSeekBarChangeListener(object : OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
                 Timber.e("change track " + seekBar.progress)
-                autoPagingTimeValue.text = seekBar.progress.toString()
+                binding.autoPagingTimeValue.text = seekBar.progress.toString()
             }
 
             override fun onStartTrackingTouch(seekBar: SeekBar) {
@@ -147,66 +141,46 @@ class SettingsActivity : BaseActivity() {
                 PreferenceHelper.autoPagingTime = seekBar.progress
             }
         })
-        autoPagingTimeValue.text = time.toString()
-        autoPagingTime.progress = time
-        try {
-            //MainApplication application = MainApplication.getInstance(this);
-            nightMode.isChecked = PreferenceHelper.nightMode
-            thumbnailDisabled.isChecked = PreferenceHelper.thumbnailDisabled
-            japaneseDirection.isChecked = PreferenceHelper.japaneseDirection
-            pagingAnimationDisabled.isChecked = PreferenceHelper.pagingAnimationDisabled
-        } catch (e: NullPointerException) {
-        }
+
+        binding.autoPagingTimeValue.text = time.toString()
+        binding.seekTime.progress = time
+
+        binding.nightMode.isChecked = PreferenceHelper.nightMode
+        binding.thumbnailDisabled.isChecked = PreferenceHelper.thumbnailDisabled
+        binding.japaneseDirection.isChecked = PreferenceHelper.japaneseDirection
+        binding.pagingAnimationDisabled.isChecked = PreferenceHelper.pagingAnimationDisabled
 
         // viewer
-        nightMode.setOnCheckedChangeListener { _, isChecked ->
-            try {
-                PreferenceHelper.nightMode = isChecked
-            } catch (e: NullPointerException) {
-            }
+        binding.nightMode.setOnCheckedChangeListener { _, isChecked ->
+            PreferenceHelper.nightMode = isChecked
         }
-        thumbnailDisabled.setOnCheckedChangeListener { _, isChecked ->
-            try {
-                PreferenceHelper.thumbnailDisabled = isChecked
-            } catch (e: NullPointerException) {
-            }
+        binding.thumbnailDisabled.setOnCheckedChangeListener { _, isChecked ->
+            PreferenceHelper.thumbnailDisabled = isChecked
         }
-        japaneseDirection.setOnCheckedChangeListener { _, isChecked ->
-            try {
-                PreferenceHelper.japaneseDirection = isChecked
-            } catch (e: NullPointerException) {
-            }
+        binding.japaneseDirection.setOnCheckedChangeListener { _, isChecked ->
+            PreferenceHelper.japaneseDirection = isChecked
         }
-        pagingAnimationDisabled.setOnCheckedChangeListener { _, isChecked ->
-            try {
-                PreferenceHelper.pagingAnimationDisabled = isChecked
-            } catch (e: NullPointerException) {
-            }
+        binding.pagingAnimationDisabled.setOnCheckedChangeListener { _, isChecked ->
+            PreferenceHelper.pagingAnimationDisabled = isChecked
         }
 
         // history
-        val cache = findViewById<Button>(R.id.action_clear_cache)
-        cache.setOnClickListener { clearCache() }
-        val history = findViewById<Button>(R.id.action_clear_history)
-        history.setOnClickListener { clearHistory() }
+        binding.actionClearCache.setOnClickListener { clearCache() }
+        binding.actionClearHistory.setOnClickListener { clearHistory() }
 
         // system
-        val license = findViewById<Button>(R.id.action_license)
-        license.setOnClickListener { // 라이센스 팝업 띄우기
+        binding.actionLicense.setOnClickListener { // 라이센스 팝업 띄우기
             showLicense()
         }
-        val version = findViewById<TextView>(R.id.version)
-        version.text = "v" + BuildConfig.VERSION_NAME + "/" + BuildConfig.VERSION_CODE
-        val view = findViewById<View>(R.id.pro_purchase)
+        binding.version.text = "v" + BuildConfig.VERSION_NAME + "/" + BuildConfig.VERSION_CODE
         if (!isPro) {
-            view.visibility = View.VISIBLE
+            binding.proPurchase.visibility = View.VISIBLE
             val packageName = applicationContext.packageName
             val proPackageName = packageName.replace(".free", ".pro")
 
             // pro 구매하기
             // pro version일때는 숨겨야 함
-            val purchase = findViewById<Button>(R.id.purchase)
-            purchase.setOnClickListener { launchMarket(this@SettingsActivity, proPackageName) }
+            binding.purchase.setOnClickListener { launchMarket(this@SettingsActivity, proPackageName) }
         }
     }
 
@@ -223,8 +197,9 @@ class SettingsActivity : BaseActivity() {
     private fun initContentView() {
         if (BuildConfig.SHOW_AD) {
             AdBannerManager.initBannerAd(this, 2)
-            val inflater = getSystemService(LAYOUT_INFLATER_SERVICE) as LayoutInflater
-            val activityView = inflater.inflate(R.layout.activity_settings, null, true)
+            binding = DataBindingUtil.inflate(layoutInflater, R.layout.activity_settings, null, true)
+            val activityView = binding.root
+
             val layout = RelativeLayout(this)
             layout.layoutParams = RelativeLayout.LayoutParams(
                 RelativeLayout.LayoutParams.MATCH_PARENT,
@@ -252,7 +227,8 @@ class SettingsActivity : BaseActivity() {
             layout.addView(activityView)
             setContentView(layout)
         } else {
-            setContentView(R.layout.activity_settings)
+            //setContentView(R.layout.activity_settings)
+            binding = DataBindingUtil.setContentView(this, R.layout.activity_settings)
         }
     }
 

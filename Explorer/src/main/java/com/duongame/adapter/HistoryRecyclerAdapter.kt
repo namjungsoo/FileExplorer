@@ -105,8 +105,4 @@ class HistoryRecyclerAdapter(
             more = itemView.findViewById(R.id.btn_more)
         }
     }
-
-    companion object {
-        private const val TAG = "HistoryAdapter"
-    }
 }

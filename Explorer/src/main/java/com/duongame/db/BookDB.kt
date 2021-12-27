@@ -34,7 +34,6 @@ class BookDB(context: Context?, name: String?, factory: CursorFactory?, version:
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {}
 
     companion object {
-        private const val TAG = "BookDB"
         private var mBookDB: BookDB? = null
         fun getInstance(context: Context?): BookDB? {
             if (mBookDB == null) {

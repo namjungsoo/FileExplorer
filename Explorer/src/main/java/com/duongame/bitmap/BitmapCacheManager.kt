@@ -13,7 +13,6 @@ import java.util.concurrent.ConcurrentHashMap
  * Created by namjungsoo on 2016-11-16.
  */
 object BitmapCacheManager {
-    private const val DEBUG = false
     private val thumbnailCache: MutableMap<String, ArrayList<BitmapCache>> =
         ConcurrentHashMap() // 썸네일
     private val bitmapCache: MutableMap<String, BitmapCache> = ConcurrentHashMap() // 일반 이미지

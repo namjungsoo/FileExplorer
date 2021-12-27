@@ -2,15 +2,17 @@ package com.duongame.activity
 
 import android.os.Bundle
 import android.view.MenuItem
+import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.android.billingclient.api.*
 import com.duongame.R
 import com.duongame.adapter.DonateAdapter
+import com.duongame.databinding.ActivityDonateBinding
 import kotlinx.coroutines.*
 import timber.log.Timber
 
 class DonateActivity : BaseActivity() {
+    private lateinit var binding: ActivityDonateBinding
     private val purchaseIds = listOf(
         "donate_1000",
         "donate_2000",
@@ -53,8 +55,8 @@ class DonateActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_donate)
-
+        //setContentView(R.layout.activity_donate)
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_donate)
         Timber.e("onCreate")
 
         billingClient = BillingClient.newBuilder(this)
@@ -113,14 +115,14 @@ class DonateActivity : BaseActivity() {
     private fun initRecyclerView() {
         scope.launch {
             val inapp = querySkuDetails(purchaseIds, BillingClient.SkuType.INAPP) ?: return@launch
-            findViewById<RecyclerView>(R.id.list_onetime).run {
+            binding.listOnetime.run {
                 val donateAdapter = DonateAdapter(inapp)
                 donateAdapter.setOnClickCallback(onClick)
                 adapter = donateAdapter
                 layoutManager = LinearLayoutManager(this@DonateActivity)
             }
             val subs = querySkuDetails(subscriptionIds, BillingClient.SkuType.SUBS) ?: return@launch
-            findViewById<RecyclerView>(R.id.list_regularly).run {
+            binding.listRegularly.run {
                 val donateAdapter = DonateAdapter(subs)
                 donateAdapter.setOnClickCallback(onClick)
                 adapter = donateAdapter

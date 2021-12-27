@@ -85,8 +85,4 @@ class SortDialog : DialogFragment() {
             }
         }
     }
-
-    companion object {
-        private val TAG = SortDialog::class.java.simpleName
-    }
 }

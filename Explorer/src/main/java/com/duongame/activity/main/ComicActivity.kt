@@ -71,8 +71,4 @@ class ComicActivity : BaseMainActivity() {
         val tab = findViewById<TabLayout>(R.id.tab)
         tab.setupWithViewPager(pager)
     }
-
-    companion object {
-        private val TAG = ComicActivity::class.java.simpleName
-    }
 }

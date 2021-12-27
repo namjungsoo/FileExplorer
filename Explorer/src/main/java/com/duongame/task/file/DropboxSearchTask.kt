@@ -20,7 +20,7 @@ import java.util.*
 class DropboxSearchTask(fragment: ExplorerFragment) :
     AsyncTask<String?, Void?, FileExplorer.Result?>() {
     private val fragmentWeakReference: WeakReference<ExplorerFragment>
-    private var path: String? = null
+    private var path: String = ""
     override fun onPreExecute() {
         super.onPreExecute() // AsyncTask는 아무것도 안함
         val fragment = fragmentWeakReference.get() ?: return
@@ -54,15 +54,14 @@ class DropboxSearchTask(fragment: ExplorerFragment) :
     }
 
     protected override fun doInBackground(vararg strings: String?): FileExplorer.Result? {
-        path = strings[0]
-        if (path == null) path = "/"
+        path = strings[0] ?: return null
         //            ExplorerFragment fragment = fragmentWeakReference.get();
 //            if (fragment == null)
 //                return null;
-        if (path == "/") path = path!!.replace("/", "")
+        if (path == "/") path = path.replace("/", "")
         try {
-            val client = client
-            val requests = client!!.files()
+            val client = client ?: return null
+            val requests = client.files()
             val listFolderResult = requests.listFolder(path)
             val fileList = ArrayList<ExplorerItem>()
             if (listFolderResult != null) {
@@ -106,15 +105,15 @@ class DropboxSearchTask(fragment: ExplorerFragment) :
             fragment.fileList = result.fileList
             instance.fileList = result.fileList
             instance.imageList = result.imageList
-            fragment.adapter!!.fileList = fragment.fileList!!
-            fragment.adapter!!.notifyDataSetChanged()
+            fragment.adapter.fileList = fragment.fileList
+            fragment.adapter.notifyDataSetChanged()
 
             // 성공했을때 현재 패스를 업데이트
             // 드롭박스에서만 앞에 /를 붙여준다.
-            if (path!!.length == 0) path = "/"
+            if (path.isEmpty()) path = "/"
             instance.lastPath = path
-            fragment.textPath!!.text = path
-            fragment.textPath!!.requestLayout()
+            fragment.binding.textPath.text = path
+            fragment.binding.textPath.requestLayout()
             fragment.setCanClick(true)
         } catch (e: NullPointerException) {
         }

@@ -12,14 +12,14 @@ import timber.log.Timber.DebugTree
 import java.util.*
 
 class App : MultiDexApplication() {
-    var fileList: ArrayList<ExplorerItem>? = null
+    var fileList: ArrayList<ExplorerItem> = arrayListOf()
 
-    var imageList: ArrayList<ExplorerItem>? = null
-    var videoList: ArrayList<ExplorerItem>? = null
-    var audioList: ArrayList<ExplorerItem>? = null
+    var imageList: ArrayList<ExplorerItem> = arrayListOf()
+    var videoList: ArrayList<ExplorerItem> = arrayListOf()
+    var audioList: ArrayList<ExplorerItem> = arrayListOf()
 
     val initialPath = Environment.getExternalStorageDirectory().absolutePath
-    var lastPath: String? = null
+    var lastPath: String = ""
 
     init {
         instance = this
@@ -37,8 +37,7 @@ class App : MultiDexApplication() {
         Timber.e("MainApplication.onCreate end")
     }
 
-    fun exit(activity: BaseActivity?) {
-        if (activity == null) return
+    fun exit(activity: BaseActivity) {
         activity.showInterstitialAd(Runnable {
             activity.moveTaskToBack(true)
             if (Build.VERSION.SDK_INT >= 21) {

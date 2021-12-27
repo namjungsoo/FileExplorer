@@ -22,8 +22,7 @@ import java.io.*
  * Created by namjungsoo on 2016. 11. 17..
  */
 object BitmapLoader {
-    const val TAG = "BitmapLoader"
-    const val MICRO_KIND_SIZE = 96
+    private const val MICRO_KIND_SIZE = 96
 
     fun loadThumbnail(context: Context, type: Int, path: String): Bitmap? {
         var bitmap: Bitmap? = null
