@@ -37,7 +37,6 @@ object GoogleDriveManager {
         credential!!.selectedAccountName = accountName
     }
 
-    @JvmStatic
     fun login(context: Activity) {
         loginCore(context)
         context.startActivityForResult(
@@ -46,7 +45,6 @@ object GoogleDriveManager {
         )
     }
 
-    @JvmStatic
     fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?): Boolean {
         if (requestCode == REQUEST_ACCOUNT_PICKER || requestCode == REQUEST_AUTHORIZATION) {
             if (resultCode == Activity.RESULT_OK) {

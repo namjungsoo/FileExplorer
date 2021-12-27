@@ -94,7 +94,6 @@ object BookLoader {
         return null
     }
 
-    @JvmStatic
     fun openNextBook(context: Activity, path: String) {
         var book = BookDB.getBook(context, path)
         if (book == null) {
@@ -104,7 +103,6 @@ object BookLoader {
     }
 
     // 액티비티 시작할때
-    @JvmStatic
     fun openLastBook(context: Activity): Boolean {
         val book = BookDB.getLastBook(context)
         if (book != null && book.percent < 100) {
@@ -126,7 +124,6 @@ object BookLoader {
     }
 
     // 직접 메뉴에서 마지막 책읽기를 선택한 경우
-    @JvmStatic
     fun openLastBookDirect(context: Activity): Boolean {
         val book = BookDB.getLastBook(context)
         if (book != null && book.percent < 100) {
@@ -158,7 +155,6 @@ object BookLoader {
     }
 
     // 히스토리일 경우는 바로 읽음
-    @JvmStatic
     fun loadContinue(context: Activity, book: Book?) {
         val nextBook = findNextBook(context, book!!.path, book.type)
         val intent = Intent(context, getViewerClass(book))
@@ -228,7 +224,6 @@ object BookLoader {
     }
 
     // 탐색기, 검색일 경우 여기서 읽음
-    @JvmStatic
     fun load(context: Activity, item: ExplorerItem, cancelToRead: Boolean) {
         val book = getHistory(context, item)
 
@@ -291,7 +286,6 @@ object BookLoader {
         }
     }
 
-    @JvmStatic
     fun loadBookBitmap(context: Context, holder: HistoryViewHolder, path: String?) {
         // zip 파일의 썸네일을 읽자
         if (isText(path!!)) {

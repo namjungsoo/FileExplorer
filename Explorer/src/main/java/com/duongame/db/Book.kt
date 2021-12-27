@@ -10,45 +10,23 @@ import com.duongame.db.TextBook
  */
 class Book {
     // 변하지 않음
-    lateinit var path // 패스
-            : String
-    @JvmField
-    var name // 파일명
-            : String? = null
-    @JvmField
+    lateinit var path: String// 패스
+    var name: String? = null// 파일명
     var type = ExplorerItem.FILETYPE_ZIP
-    @JvmField
-    var size // zip파일 사이즈
-            : Long = 0
-    @JvmField
-    var total_file // 최대 파일 수
-            = 0
+    var size: Long = 0// zip파일 사이즈
+    var total_file = 0// 최대 파일 수
 
     // 동적으로 변함
-    @JvmField
-    var current_page // 현재 페이지 인덱스. 텍스트의 경우 현재 페이지*1000 + 0~99.9%
-            = 0
-    @JvmField
-    var total_page // 최대 페이지 수. 전체를 다 로딩하지 않으면 알수 없음. 텍스트의 경우 전체 라인수
-            = 0
-    @JvmField
-    var current_file // 현재 파일 인덱스
-            = 0
-    @JvmField
-    var extract_file // 압축 풀린 파일수. zip에만 해당함. total_file == extract_file이면 로딩이 완료된것
-            = 0
-    @JvmField
+    var current_page = 0// 현재 페이지 인덱스. 텍스트의 경우 현재 페이지*1000 + 0~99.9%
+    var total_page = 0// 최대 페이지 수. 전체를 다 로딩하지 않으면 알수 없음. 텍스트의 경우 전체 라인수
+    var current_file = 0// 현재 파일 인덱스
+    var extract_file = 0// 압축 풀린 파일수. zip에만 해당함. total_file == extract_file이면 로딩이 완료된것
     var side = ExplorerItem.SIDE_ALL // 책넘김 방법
-    @JvmField
     var date: String? = null
-    @JvmField
-    var last_file // 마지막 이미지 파일의 파일명
-            : String? = null
+    var last_file: String? = null// 마지막 이미지 파일의 파일명
 
     // DB에 저장되지 않음
-    @JvmField
-    var percent // 0~100을 가진다.
-            = 0
+    var percent = 0// 0~100을 가진다.
 
     override fun toString(): String {
         return "path=" + path +

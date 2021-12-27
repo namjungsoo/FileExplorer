@@ -16,7 +16,6 @@ object PermissionManager {
     var isStoragePermissions = false
     var isContactsPermissions = false
 
-    @JvmStatic
     fun checkContactsPermission(context: Activity?): Boolean {
         if (isContactsPermissions) return true
         if (context == null) return true
@@ -38,7 +37,6 @@ object PermissionManager {
         return true
     }
 
-    @JvmStatic
     fun checkStoragePermissions(context: Activity?): Boolean {
         if (isStoragePermissions) return true
         if (context == null) return true
@@ -64,7 +62,6 @@ object PermissionManager {
         return true
     }
 
-    @JvmStatic
     fun onRequestStoragePermissionsResult(
         requestCode: Int,
         permissions: Array<String>,
@@ -84,7 +81,6 @@ object PermissionManager {
         }
     }
 
-    @JvmStatic
     fun onRequestContactsPermissionsResult(
         requestCode: Int,
         permissions: Array<String>?,

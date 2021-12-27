@@ -266,7 +266,6 @@ class SettingsActivity : BaseActivity() {
     }
 
     companion object {
-        @JvmStatic
         fun getLocalIntent(context: Context?): Intent {
             return Intent(context, SettingsActivity::class.java)
         }

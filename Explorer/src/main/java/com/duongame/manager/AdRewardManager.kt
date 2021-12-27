@@ -17,7 +17,7 @@ import java.util.*
 
 object AdRewardManager {
     private var mRewardedVideoAd: RewardedVideoAd? = null
-    @JvmStatic
+
     fun init(context: Context) {
         val handler = Handler()
 

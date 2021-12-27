@@ -57,7 +57,6 @@ open class PagerActivity : BaseViewerActivity() {
     private var btnPlusTime: Button? = null
     private var btnMinusTime: Button? = null
     private var timer: Timer? = null
-    @JvmField
     protected var isGoingNextBook = false
     protected lateinit var nextBook: String
 

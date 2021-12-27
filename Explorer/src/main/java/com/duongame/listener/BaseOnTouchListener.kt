@@ -17,13 +17,10 @@ abstract class BaseOnTouchListener internal constructor(activity: Activity?) : O
         AXIS_X, AXIS_Y, AXIS_BOTH
     }
 
-    @JvmField
     var touchAxis = Axis.AXIS_X
 
     // touch
-    @JvmField
     var isBeingDragged = false
-    @JvmField
     var lastMotionPt = PointF()
     private val initialMotionPt = PointF()
 

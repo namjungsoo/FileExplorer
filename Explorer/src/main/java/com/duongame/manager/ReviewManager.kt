@@ -22,7 +22,6 @@ import com.duongame.manager.AdBannerManager.initPopupAd
 object ReviewManager {
     private val reviewIndex = intArrayOf(2, 5, 9)
 
-    @JvmStatic
     fun checkReview(context: Activity): Boolean {
         // 리뷰 카운트를 체크하여 리뷰가 안되어 있으면 리뷰를 해줌
         var ret = false

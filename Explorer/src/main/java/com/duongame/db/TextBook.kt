@@ -7,18 +7,15 @@ import com.duongame.db.TextBook
  * Created by namjungsoo on 2017-11-05.
  */
 object TextBook {
-    @JvmField
     var LINES_PER_PAGE = 1000
 
     // 현재페이지 까지의 누적 라인 갯수/전체 라인의 갯수
-    @JvmStatic
     fun getPageText(book: Book): String {
         val totalLineCount = book.total_page
         return "" + totalLineCount * book.percent / 100 + "/" + totalLineCount
     }
 
     // setLastBook에 저장될 Book을 만듬
-    @JvmStatic
     fun buildTextBook(
         path: String,
         name: String,
@@ -48,7 +45,6 @@ object TextBook {
         return book
     }
 
-    @JvmStatic
     fun buildTextBook2(
         path: String,
         name: String,

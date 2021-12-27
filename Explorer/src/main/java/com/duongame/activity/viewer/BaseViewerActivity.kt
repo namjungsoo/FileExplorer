@@ -55,30 +55,22 @@ open class BaseViewerActivity : BaseActivity() {
     protected var actionBar: ActionBar? = null
 
     // bottom panel
-    @JvmField
     protected var textName: TextView? = null
     protected var bottomPanel: LinearLayout? = null
     protected var topPanel: LinearLayout? = null
-    @JvmField
     protected var textPage: TextView? = null
-    @JvmField
     protected var textInfo: TextView? = null
-    @JvmField
     protected var textSize: TextView? = null
-    @JvmField
     protected var seekPage: SeekBar? = null
-    @JvmField
     protected var contentViewResId = 0
 
     //private View mainView;
     private var adView: AdView? = null
     protected var nightMode: LinearLayout? = null
-    @JvmField
     protected var pagingAnim: LinearLayout? = null
-    @JvmField
     protected var leftPage: Button? = null
-    @JvmField
     protected var rightPage: Button? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         initContentView()

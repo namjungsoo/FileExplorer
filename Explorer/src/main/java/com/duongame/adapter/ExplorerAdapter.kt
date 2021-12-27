@@ -75,21 +75,13 @@ abstract class ExplorerAdapter(fileList: ArrayList<ExplorerItem>) :
     class ExplorerViewHolder(itemView: View?) : RecyclerView.ViewHolder(
         itemView!!
     ) {
-        @JvmField
-        var iconSmall // 현재 사용안함. 작은 아이콘을 위해서 남겨둠
-                : ImageView
+        var iconSmall: ImageView// 현재 사용안함. 작은 아이콘을 위해서 남겨둠
         var icon: ImageView
-        @JvmField
         var name: TextView
-        @JvmField
         var date: TextView
-        @JvmField
         var size: TextView
         var check: CheckBox
-        var type // FileType
-                = 0
-//        @JvmField
-//        var position = 0
+        var type = 0// FileType
 
         init {
             icon = itemView!!.findViewById(R.id.file_icon)

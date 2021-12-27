@@ -382,8 +382,7 @@ abstract class BaseMainActivity : BaseActivity(), NavigationView.OnNavigationIte
 
         // 메뉴를 흰색으로 변경
         this.menu = menu
-        var item: MenuItem
-        item = menu.findItem(R.id.action_sort)
+        var item: MenuItem = menu.findItem(R.id.action_sort)
         item.icon.setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP)
         item = menu.findItem(R.id.action_new_folder)
         item.icon.setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP)
@@ -413,20 +412,14 @@ abstract class BaseMainActivity : BaseActivity(), NavigationView.OnNavigationIte
         val id = item.itemId
         if (id == R.id.action_view_type) {
             val fragment = explorerFragment
-            if (fragment != null) {
-                fragment.changeViewType((fragment.viewType + 1) % 3)
-                updateViewTypeMenuIcon()
-                return true
-            }
-            return false
+            fragment.changeViewType((fragment.viewType + 1) % 3)
+            updateViewTypeMenuIcon()
+            return true
         }
         if (id == R.id.action_sort) {
             val fragment = explorerFragment
-            if (fragment != null) {
-                fragment.sortFileWithDialog()
-                return true
-            }
-            return false
+            fragment.sortFileWithDialog()
+            return true
         }
         if (id == R.id.action_open_lastbook) {
             openLastBookDirect(this)

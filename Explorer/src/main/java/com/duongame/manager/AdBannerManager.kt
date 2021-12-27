@@ -14,7 +14,6 @@ import timber.log.Timber
  */
 object AdBannerManager {
     private val adBannerView = arrayOfNulls<AdView>(3)
-    @JvmStatic
     var adPopupView: AdView? = null
         private set
 
@@ -27,13 +26,11 @@ object AdBannerManager {
         return adView
     }
 
-    @JvmStatic
     fun initBannerAdExt(context: Context, i: Int, adView: AdView?) {
         adBannerView[i] = adView
         initBannerAdCommon(context, i)
     }
 
-    @JvmStatic
     fun initBannerAd(context: Context, i: Int) {
         val BANNER_ID: String = if (isComicz) {
             context.getString(R.string.comicz_admob_banner_id)
@@ -75,7 +72,6 @@ object AdBannerManager {
         //requestAd(i);
     }
 
-    @JvmStatic
     fun initPopupAd(context: Context) {
         val POPUP_ID: String
         POPUP_ID = if (isComicz) {
@@ -119,14 +115,12 @@ object AdBannerManager {
     }
 
     // adView를 xml에서 만들어서 셋팅할때를 ext라 하며, 이때는 popup만 초기화한다.
-    @JvmStatic
     fun initExt(context: Context) {
 //        initBannerAdExt(context, 0, adView);
 //        initBannerAd(context, 1);
         initPopupAd(context)
     }
 
-    @JvmStatic
     fun getAdBannerView(i: Int): AdView? {
         return adBannerView[i]
     }
@@ -144,7 +138,6 @@ object AdBannerManager {
         }
     }
 
-    @JvmStatic
     fun requestAd(i: Int) {
         val adView = getAdBannerView(i)
         requestAd(adView)

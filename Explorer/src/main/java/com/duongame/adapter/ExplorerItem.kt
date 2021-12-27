@@ -21,48 +21,36 @@ class ExplorerItem(// 파일명+패스이다.
     var type: Int
 ) : Cloneable, Serializable {
     // 이미지 ZIP 데이터
-    @JvmField
     @Ignore
     var side = SIDE_ALL
 
     @Ignore
-    var index // 내자신의 인덱스
-            = 0
+    var index = 0// 내자신의 인덱스
 
     @Ignore
-    var orgIndex // 원본의 인덱스(zip파일에 해당함)
-            = 0
+    var orgIndex = 0// 원본의 인덱스(zip파일에 해당함)
 
-    @JvmField
     @Ignore
-    var position // adapter의 position
-            = 0
+    var position = 0// adapter의 position
 
     // ZIP 추가 데이터
-    @JvmField
     @Ignore
     var width = 0
 
-    @JvmField
     @Ignore
     var height = 0
 
     // 로딩큐 우선순위
     @Ignore
-    var priority // 0이면 최우선, 1이면 낮음
-            = 0
+    var priority = 0// 0이면 최우선, 1이면 낮음
 
-    @JvmField
     @Ignore
-    var selected // 선택되었는가 표시
-            = false
+    var selected = false// 선택되었는가 표시
 
     //    public WeakReference<ImageView> imageViewRef;
-    @JvmField
     @Ignore
     var attacher: ImageViewAttacher? = null
 
-    @JvmField
     @Ignore
     var metadata: Any? = null
 
@@ -103,8 +91,7 @@ class ExplorerItem(// 파일명+패스이다.
         const val FILETYPE_IMAGE = 1 // JPG, PNG, GIF
         const val FILETYPE_VIDEO = 2 // MP4, FLV, (AVI, MKV, MOV, WMV, 3GP, K3G, ASF)
         const val FILETYPE_AUDIO = 3 // MP3
-        const val FILETYPE_ZIP =
-            4 // ZIP, RAR, 7Z, CBZ, CBR, CB7, TAR, TAR.GZ, (TAR.TB2), TGZ, (TB2)
+        const val FILETYPE_ZIP = 4 // ZIP, RAR, 7Z, CBZ, CBR, CB7, TAR, TAR.GZ, (TAR.TB2), TGZ, (TB2)
         const val FILETYPE_PDF = 6
         const val FILETYPE_TEXT = 7 // TXT, LOG, JSON
         const val FILETYPE_FILE = 8

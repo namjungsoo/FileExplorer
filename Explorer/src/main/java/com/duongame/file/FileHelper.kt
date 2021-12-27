@@ -23,7 +23,6 @@ object FileHelper {
     private const val GIGA = (1024 * 1024 * 1024).toLong()
     const val BLOCK_SIZE = 8 * KILO.toInt()
 
-    @JvmStatic
     fun getFileNameCharset(context: Context): String? {
         val locale: Locale = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             context.resources.configuration.locales[0]
@@ -39,7 +38,6 @@ object FileHelper {
         return charset
     }
 
-    @JvmStatic
     fun getNameWithoutTar(name: String): String {
         return if (name.endsWith(".tar") || name.endsWith(".TAR")) {
             name.substring(0, name.length - 4)
@@ -53,7 +51,6 @@ object FileHelper {
         return if (size < 0) "" else formatter.format(size)
     }
 
-    @JvmStatic
     fun getFileSize(path: String?): Long {
         return try {
             val file = File(path)
@@ -63,14 +60,12 @@ object FileHelper {
         }
     }
 
-    @JvmStatic
     fun getFileName(path: String): String {
         return path.substring(path.lastIndexOf("/") + 1)
     }
 
     // Zip 압축을 풀때 기존에 폴더가 있으면 새로운 폴더명으로 풀어준다.
     // 폴더를 생성할때는 새로운 폴더명이 있으면 있다고 확인을 한다.
-    @JvmStatic
     fun getNewFileName(path: String): String {
         val file = File(path)
         if (!file.exists()) return path
@@ -105,7 +100,6 @@ object FileHelper {
         return builder.toString()
     }
 
-    @JvmStatic
     fun getMinimizedSize(size: Long): String {
         if (size < 0) return ""
         return when {
@@ -127,7 +121,6 @@ object FileHelper {
         }
     }
 
-    @JvmStatic
     fun getCompressType(path: String): Int {
         if (path.endsWith(".zip") || path.endsWith(".cbz") ||
             path.endsWith(".ZIP") || path.endsWith(".CBZ")
@@ -155,7 +148,6 @@ object FileHelper {
     }
 
     // 파일 타입과 아이콘 타입은 종류가 다르므로 직접 입력하도록 함
-    @JvmStatic
     fun getFileFolderIconResId(fileName: String): Int {
         val type = getFileFolderType(fileName)
         var resId = R.drawable.ic_file_normal
@@ -184,7 +176,6 @@ object FileHelper {
     }
 
     // 폴더는 제외한다
-    @JvmStatic
     fun getFileType(fileName: String): Int {
         var type = ExplorerItem.FILETYPE_FILE
 
@@ -208,7 +199,6 @@ object FileHelper {
         return getFileFolderType(file)
     }
 
-    @JvmStatic
     fun getFileFolderType(eachFile: File): Int {
         val type =
             if (eachFile.isDirectory) ExplorerItem.FILETYPE_FOLDER else ExplorerItem.FILETYPE_FILE
@@ -221,46 +211,39 @@ object FileHelper {
         return false
     }
 
-    @JvmStatic
     fun isText(filename: String): Boolean {
         return filename.endsWith(".txt") || filename.endsWith(".log") || filename.endsWith(".json") ||
             filename.endsWith(".TXT") || filename.endsWith(".LOG") || filename.endsWith(".JSON")
     }
 
-    @JvmStatic
     fun isImage(filename: String): Boolean {
         return isJpegImage(filename) || isPngImage(filename) || isGifImage(
                 filename
             )
     }
 
-    @JvmStatic
     fun isGifImage(filename: String): Boolean {
         return filename.endsWith(".gif") ||
             filename.endsWith(".GIF")
     }
 
-    @JvmStatic
     fun isPngImage(filename: String): Boolean {
         return filename.endsWith(".png") ||
             filename.endsWith(".PNG")
     }
 
-    @JvmStatic
     fun isJpegImage(filename: String): Boolean {
         return filename.endsWith(".jpg") || filename.endsWith(".jpeg") ||
             filename.endsWith(".JPG") || filename.endsWith(".JPEG")
     }
-
     //endregion
-    @JvmStatic
+
     fun getZipCacheFile(context: Context, filename: String): File {
         val filesDir = context.filesDir.absolutePath
         val cachePath = "$filesDir/$filename"
         return File(cachePath)
     }
 
-    @JvmStatic
     fun getZipCachePath(context: Context, filename: String): String {
         val filesDir = context.filesDir.absolutePath
         return "$filesDir/$filename"
@@ -277,7 +260,7 @@ object FileHelper {
     //        }
     //    }
     //endregion
-    @JvmStatic
+
     fun setPdfFileNameFromPage(pdf: String, page: Int): String {
         return "$pdf.$page"
     }
@@ -287,18 +270,15 @@ object FileHelper {
         return page.toInt()
     }
 
-    @JvmStatic
     fun getFullPath(path: String, name: String): String {
         return "$path/$name"
     }
 
     // 마지막에 /를 포함하지 않는다.
-    @JvmStatic
     fun getParentPath(path: String): String {
         return path.substring(0, path.lastIndexOf('/'))
     }
 
-    @JvmStatic
     fun filterImageFileList(fileList: List<ExplorerItem>): ArrayList<ExplorerItem> {
         val imageList = ArrayList<ExplorerItem>()
         for (item in fileList) {
@@ -309,7 +289,6 @@ object FileHelper {
         return imageList
     }
 
-    @JvmStatic
     fun filterVideoFileList(fileList: List<ExplorerItem>): ArrayList<ExplorerItem> {
         val videoList = ArrayList<ExplorerItem>()
         for (item in fileList) {
@@ -320,7 +299,6 @@ object FileHelper {
         return videoList
     }
 
-    @JvmStatic
     fun filterAudioFileList(fileList: List<ExplorerItem>): ArrayList<ExplorerItem> {
         val audioList = ArrayList<ExplorerItem>()
         for (item in fileList) {
@@ -332,13 +310,9 @@ object FileHelper {
     }
 
     class Progress {
-        @JvmField
         var percent = 0
-        @JvmField
         var index = 0
-        @JvmField
         var fileName: String? = null
-        @JvmField
         var count = 0
     }
 

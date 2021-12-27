@@ -24,7 +24,7 @@ import java.io.*
 object BitmapLoader {
     const val TAG = "BitmapLoader"
     const val MICRO_KIND_SIZE = 96
-    @JvmStatic
+
     fun loadThumbnail(context: Context, type: Int, path: String): Bitmap? {
         var bitmap: Bitmap? = null
         when (type) {
@@ -37,7 +37,6 @@ object BitmapLoader {
         return bitmap
     }
 
-    @JvmStatic
     fun drawableToBitmap(drawable: Drawable): Bitmap {
         var bitmap: Bitmap
         if (drawable is BitmapDrawable) {
@@ -131,7 +130,6 @@ object BitmapLoader {
         return null
     }
 
-    @JvmStatic
     fun getZipThumbnailFileName(context: Context?, path: String?): String? {
         // ZIP파일 안에 있는 이미지 파일을 찾자.
         var image: String? = null
@@ -180,7 +178,6 @@ object BitmapLoader {
         }
     }
 
-    @JvmStatic
     fun getThumbnail(context: Context, path: String?, exifRotation: Boolean): Bitmap? {
         val cursor = context.contentResolver.query(
             MediaStore.Images.Media.EXTERNAL_CONTENT_URI, arrayOf(MediaStore.MediaColumns._ID),
@@ -302,7 +299,6 @@ object BitmapLoader {
         }
     }
 
-    @JvmStatic
     fun decodeBounds(path: String?): BitmapFactory.Options {
         val options = BitmapFactory.Options()
         options.inJustDecodeBounds = true
@@ -324,7 +320,6 @@ object BitmapLoader {
         return options
     }
 
-    @JvmStatic
     fun decodeSampleBitmapFromFile(
         path: String?,
         reqWidth: Int,
@@ -428,7 +423,6 @@ object BitmapLoader {
         return bitmap
     }
 
-    @JvmStatic
     fun decodeSquareThumbnailFromFile(path: String?, size: Int, exifRotation: Boolean): Bitmap? {
         val options = BitmapFactory.Options()
         options.inJustDecodeBounds = true
@@ -562,7 +556,6 @@ object BitmapLoader {
 
     //HACK: 이것을 사용하지 말것 -> GIF 일때는 이것을 사용하여야 한다.
     // 왼쪽 오른쪽을 자른 비트맵을 리턴한다
-    @JvmStatic
     fun splitBitmapSide(bitmap: Bitmap, item: ExplorerItem): SplittedBitmap? {
         // 이미 캐시된 페이지가 있으면
         val key: String
@@ -622,21 +615,14 @@ object BitmapLoader {
     }
 
     class SplittedBitmap {
-        @JvmField
         var key: String? = null
-        @JvmField
         var keyOther: String? = null
-        @JvmField
         var page: Bitmap? = null
-        @JvmField
-        var pageOther // if cached, null
-                : Bitmap? = null
+        var pageOther: Bitmap? = null// if cached, null
 
         // non split
         // nullable
-        @JvmField
         var path: String? = null
-        @JvmField
         var bitmap: Bitmap? = null
     }
 }

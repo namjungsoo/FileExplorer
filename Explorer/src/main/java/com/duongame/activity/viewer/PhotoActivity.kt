@@ -80,7 +80,6 @@ class PhotoActivity : PagerActivity() {
 
     companion object {
         private const val TAG = "PhotoActivity"
-        @JvmStatic
         fun getLocalIntent(context: Context?, item: ExplorerItem): Intent {
             val intent = Intent(context, PhotoActivity::class.java)
             // 풀패스에서 폴더만 떼옴

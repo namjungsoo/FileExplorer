@@ -61,7 +61,6 @@ class BookDB(context: Context?, name: String?, factory: CursorFactory?, version:
             return book
         }
 
-        @JvmStatic
         fun clearBook(context: Context?, path: String?) {
             var path = path
             if (path == null) return
@@ -73,7 +72,6 @@ class BookDB(context: Context?, name: String?, factory: CursorFactory?, version:
             //        db.close();
         }
 
-        @JvmStatic
         fun clearBooks(context: Context?) {
             val db = getInstance(context)!!.writableDatabase
             val sql = "DELETE FROM book"
@@ -101,7 +99,6 @@ class BookDB(context: Context?, name: String?, factory: CursorFactory?, version:
         }
 
         // 최근 50개 읽은 책 리스트를 반환
-        @JvmStatic
         fun getBooks(context: Context?): ArrayList<Book> {
             val db = getInstance(context)!!.readableDatabase
             val sql = "SELECT * FROM book ORDER BY date DESC LIMIT 50"
@@ -132,7 +129,6 @@ class BookDB(context: Context?, name: String?, factory: CursorFactory?, version:
         }
 
         // 마지막 책을 셋팅
-        @JvmStatic
         fun setLastBook(context: Context?, book: Book?) {
             if (book == null) return
 

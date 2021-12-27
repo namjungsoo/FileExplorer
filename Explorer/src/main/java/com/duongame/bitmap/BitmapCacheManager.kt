@@ -20,10 +20,8 @@ object BitmapCacheManager {
     private val pageCache: MutableMap<String, BitmapCache> = ConcurrentHashMap() // zip파일 잘린 이미지
 
     // path와 side정보를 string으로 변환
-    @JvmStatic
     fun changePathToPage(item: ExplorerItem): String {
-        val path: String
-        path = if (item.side == ExplorerItem.SIDE_LEFT) {
+        val path: String = if (item.side == ExplorerItem.SIDE_LEFT) {
             item.path + ".left"
         } else if (item.side == ExplorerItem.SIDE_RIGHT) {
             item.path + ".right"
@@ -34,7 +32,6 @@ object BitmapCacheManager {
     }
 
     // current_page
-    @JvmStatic
     fun setPage(key: String?, bitmap: Bitmap?, imageView: ImageView?) {
         if (key == null) return
         var cache = pageCache[key]
@@ -64,7 +61,6 @@ object BitmapCacheManager {
         }
     }
 
-    @JvmStatic
     fun getPage(key: String): Bitmap? {
         val cache = pageCache[key] ?: return null
         return cache.bitmap
@@ -96,7 +92,6 @@ object BitmapCacheManager {
         Timber.e("removeBitmapCache imageView set bitmap null")
     }
 
-    @JvmStatic
     fun removePage(key: String) {
         val cache = pageCache[key] ?: return
         Timber.e("removePage removeBitmapCache")
@@ -116,7 +111,6 @@ object BitmapCacheManager {
 
     // 비트맵은 SIDE_ALL인 경우 1:1 맵핑이 됨
     // image bitmap
-    @JvmStatic
     fun setBitmap(path: String?, bitmap: Bitmap, imageView: ImageView?) {
         if (path == null) return
         var cache = bitmapCache[path]
@@ -142,13 +136,11 @@ object BitmapCacheManager {
         }
     }
 
-    @JvmStatic
     fun getBitmap(path: String): Bitmap? {
         val cache = bitmapCache[path] ?: return null
         return cache.bitmap
     }
 
-    @JvmStatic
     fun removeBitmap(path: String) {
         val cache = bitmapCache[path] ?: return
         Timber.e("removeBitmap removeBitmapCache")
@@ -167,7 +159,6 @@ object BitmapCacheManager {
     }
 
     //TODO: 하나의 썸네일이 여러곳에서 사용될수 있으니 해당 부분에 대해서 조치를 해야함
-    @JvmStatic
     fun setThumbnail(path: String?, bitmap: Bitmap, imageView: ImageView?) {
         if (path == null) {
             Timber.e("setThumbnail path is null")
@@ -210,7 +201,6 @@ object BitmapCacheManager {
         }
     }
 
-    @JvmStatic
     fun getThumbnail(path: String): Bitmap? {
         Timber.e("getThumbnail $path")
         val cacheList = thumbnailCache[path] ?: return null
@@ -221,12 +211,10 @@ object BitmapCacheManager {
         return cacheList[0].bitmap
     }
 
-    @JvmStatic
     fun getThumbnailCount(): Int {
         return thumbnailCache.size
     }
 
-    @JvmStatic
     fun removeAllThumbnails() {
         for (key in thumbnailCache.keys) {
             val cacheList = thumbnailCache[key] ?: continue

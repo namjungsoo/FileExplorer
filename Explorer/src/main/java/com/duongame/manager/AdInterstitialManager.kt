@@ -15,10 +15,8 @@ object AdInterstitialManager {
     private var interstitialAD: InterstitialAd? = null
     private var runnable: Runnable? = null
 
-    @JvmStatic
     var maxCount = 2 // 기본값은 2이고 remote config에 의해서 조정된다.
 
-    @JvmStatic
     fun request() {
         requestNewInterstitial()
     }
@@ -31,7 +29,6 @@ object AdInterstitialManager {
         interstitialAD!!.loadAd(adRequest)
     }
 
-    @JvmStatic
     fun init(context: Context) {
         interstitialAD = InterstitialAd(context) // 삽입 광고 생성관련 메소드들.
         val INTERSTITIAL_ID: String
@@ -73,7 +70,6 @@ object AdInterstitialManager {
         } // 광고의 리스너를 설정합니다.
     }
 
-    @JvmStatic
     fun showAd(runnable: Runnable?): Boolean {
         AdInterstitialManager.runnable = runnable
         if (interstitialAD == null) return false

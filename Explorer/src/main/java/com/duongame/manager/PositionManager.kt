@@ -14,7 +14,6 @@ object PositionManager {
         positionMap[path] = position
     }
 
-    @JvmStatic
     fun getPosition(path: String): Int {
         return if (positionMap.containsKey(path)) {
             positionMap[path]!!
@@ -25,7 +24,6 @@ object PositionManager {
         topMap[path] = top
     }
 
-    @JvmStatic
     fun getTop(path: String): Int {
         return if (topMap.containsKey(path)) {
             topMap[path]!!
