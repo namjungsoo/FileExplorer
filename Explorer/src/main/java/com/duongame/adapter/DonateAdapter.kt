@@ -16,8 +16,7 @@ class DonateAdapter(private val items: List<SkuDetails>) : RecyclerView.Adapter<
     }
 
     // 클릭 콜백
-    class DonateViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-    }
+    class DonateViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DonateViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_donate, parent, false)

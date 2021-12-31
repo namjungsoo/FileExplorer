@@ -15,6 +15,10 @@ android {
         viewBinding false
     }
 
+    dataBinding {
+        enabled = true
+    }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_11
         targetCompatibility JavaVersion.VERSION_11
@@ -80,7 +84,7 @@ android {
     productFlavors {
         development {
             dimension "mode"
-            minSdkVersion 24
+            minSdkVersion 16
             resConfigs("ko", "xxhdpi")
             aaptOptions.cruncherEnabled = false
         }
