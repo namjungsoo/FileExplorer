@@ -51,7 +51,38 @@ android {
 
             // android studio가 직접 컴파일하지 않게 함
             jni.srcDirs = []
+
+            manifest.srcFile 'src/main/AndroidManifest.xml'
         }
+
+        fileFreeDevelopment {
+            manifest.srcFile 'src/fileFree/AndroidManifest.xml'
+        }
+        fileFreeProduction {
+            manifest.srcFile 'src/fileFree/AndroidManifest.xml'
+        }
+
+        fileProDevelopment {
+            manifest.srcFile 'src/filePro/AndroidManifest.xml'
+        }
+        fileProProduction {
+            manifest.srcFile 'src/filePro/AndroidManifest.xml'
+        }
+
+        comiczFreeDevelopment {
+            manifest.srcFile 'src/comiczFree/AndroidManifest.xml'
+        }
+        comiczFreeProduction {
+            manifest.srcFile 'src/comiczFree/AndroidManifest.xml'
+        }
+
+        comiczProDevelopment {
+            manifest.srcFile 'src/comiczPro/AndroidManifest.xml'
+        }
+        comiczProProduction {
+            manifest.srcFile 'src/comiczPro/AndroidManifest.xml'
+        }
+
     }
 
     buildTypes {
