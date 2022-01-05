@@ -2,6 +2,8 @@ package com.duongame.activity.main
 
 import android.os.Bundle
 import android.view.Menu
+import android.view.View
+import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.LinearLayout
 import android.widget.ProgressBar
@@ -9,17 +11,48 @@ import android.widget.TextView
 import androidx.databinding.DataBindingUtil
 import androidx.drawerlayout.widget.DrawerLayout
 import com.duongame.R
-import com.duongame.databinding.ActivityMainFileBinding
+import com.duongame.databinding.ActivityMainFileAdBinding
 import com.duongame.fragment.ExplorerFragment
+import com.duongame.manager.AdBannerManager
 import com.google.android.material.navigation.NavigationView
 
-class FileActivity: BaseMainActivity() {
-    lateinit var binding: ActivityMainFileBinding
+class FileAdActivity : BaseComicActivity() {
+    lateinit var binding : ActivityMainFileAdBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         applyTheme()
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_main_file)
+
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_main_file_ad)
+        AdBannerManager.initBannerAdExt(this, 0, binding.adView)
+
         super.onCreate(savedInstanceState)
+    }
+
+    override fun onResume() {
+        binding.adView.resume()
+
+        if (isAdRemoveReward) {
+            binding.adView.visibility = View.GONE
+        } else {
+            binding.adView.visibility = View.VISIBLE
+        }
+        super.onResume()
+    }
+
+    override fun onPause() {
+        binding.adView.pause()
+        super.onPause()
+    }
+
+    override fun onDestroy() {
+        val vg = binding.adView.parent as ViewGroup
+        vg.removeView(binding.adView)
+
+        binding.adView.removeAllViews()
+        binding.adView.destroy()
+
+        showInterstitialAd(null)
+        super.onDestroy()
     }
 
     override var progressBarLoading: ProgressBar = binding.file.progressLoading

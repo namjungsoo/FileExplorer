@@ -7,7 +7,6 @@ import android.app.Activity
 import android.content.ActivityNotFoundException
 import android.content.DialogInterface
 import android.content.Intent
-import android.content.res.ColorStateList
 import android.graphics.Color
 import android.graphics.PorterDuff
 import android.media.MediaPlayer
@@ -20,7 +19,6 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.view.ViewGroup
 import android.widget.*
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.widget.Toolbar
@@ -56,7 +54,6 @@ import com.duongame.helper.ToastHelper.info
 import com.duongame.helper.ToastHelper.showToast
 import com.duongame.helper.UnitHelper.dpToPx
 import com.duongame.manager.AdBannerManager.adPopupView
-import com.duongame.manager.AdBannerManager.initBannerAdExt
 import com.duongame.manager.AdBannerManager.initExt
 import com.duongame.manager.AdBannerManager.initPopupAd
 import com.duongame.manager.AdBannerManager.requestAd
@@ -70,7 +67,6 @@ import com.duongame.manager.PermissionManager.checkContactsPermission
 import com.duongame.manager.PermissionManager.onRequestContactsPermissionsResult
 import com.duongame.manager.PermissionManager.onRequestStoragePermissionsResult
 import com.duongame.manager.ReviewManager.checkReview
-import com.google.android.gms.ads.AdView
 import com.google.android.gms.ads.MobileAds
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
@@ -80,50 +76,53 @@ import timber.log.Timber
  * Created by Jungsoo on 2017-10-05.
  */
 abstract class BaseMainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedListener {
-    protected var mFirebaseRemoteConfig: FirebaseRemoteConfig? = null
+    private lateinit var mFirebaseRemoteConfig: FirebaseRemoteConfig
 
     // admob
-    protected var activityView: View? = null
-    protected var adView: AdView? = null
-    protected var mainView: View? = null
-    protected var menu: Menu? = null
-    protected var bottom: LinearLayout? = null
-    protected var miniPlayer: LinearLayout? = null
+    protected lateinit var menu: Menu
 
-    // bottom
-    var btnCopy: ImageButton? = null
-    var btnCut: ImageButton? = null
-    var btnPaste: ImageButton? = null
-    var btnArchive: ImageButton? = null
-    var btnDelete: ImageButton? = null
-
-    // miniPlayer
-    var btnRewind: ImageButton? = null
-    var btnForward: ImageButton? = null
-    var btnPlay: ImageButton? = null
-    var btnClose: ImageButton? = null
-    var textTitle: TextView? = null
-    var player = MediaPlayer()
+    private var player = MediaPlayer()
     var position = 0
     var track = 0
     var showReview = false
         protected set
     var isDrawerOpened = false
         protected set
-    var drawer: DrawerLayout? = null
-    var grayStateList: ColorStateList? = null
-    var navigationView: NavigationView? = null
-    var progressBarLoading: ProgressBar? = null
+
     var isDropboxLoginClicked = false
     var isGoogleDriveLoginClicked = false
-    var handler: Handler? = null
+    var handler: Handler = Handler()
 
-    protected abstract val layoutResId: Int
+    abstract var progressBarLoading: ProgressBar
+    abstract var navigationMenu: Menu
+    abstract var bottom: LinearLayout
+    abstract var miniPlayer: LinearLayout
+
     protected abstract val menuResId: Int
     protected abstract val explorerFragment: ExplorerFragment
     protected abstract val currentFragment: BaseFragment
 
-    fun gotoAppStorePage(packageName: String) {
+    // file operation UI
+    abstract var btnArchive: ImageButton
+    abstract var btnCopy: ImageButton
+    abstract var btnCut: ImageButton
+    abstract var btnDelete: ImageButton
+    abstract var btnPaste: ImageButton
+
+    abstract var btnClose: ImageButton
+    abstract var btnForward: ImageButton
+    abstract var btnRewind: ImageButton
+    abstract var btnPlay: ImageButton
+
+    abstract var drawer: DrawerLayout
+    abstract var navigationView: NavigationView
+    abstract var textTitle: TextView
+
+    protected fun applyTheme() {
+        setTheme(R.style.ExplorerTheme)
+    }
+
+    private fun gotoAppStorePage(packageName: String) {
         try {
             val marketLaunch = Intent(Intent.ACTION_VIEW)
             marketLaunch.data = Uri.parse("market://details?id=$packageName")
@@ -138,7 +137,7 @@ abstract class BaseMainActivity : BaseActivity(), NavigationView.OnNavigationIte
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        handler = Handler()
+//        handler = Handler()
         Timber.e("onCreate begin")
         if (BuildConfig.SHOW_AD) {
             Thread {
@@ -176,15 +175,15 @@ abstract class BaseMainActivity : BaseActivity(), NavigationView.OnNavigationIte
         Timber.e("initDrawer end")
         showReview = checkReview(this@BaseMainActivity)
         mFirebaseRemoteConfig = FirebaseRemoteConfig.getInstance()
-        mFirebaseRemoteConfig!!.fetch(0).addOnCompleteListener { task ->
+        mFirebaseRemoteConfig.fetch(0).addOnCompleteListener { task ->
             if (task.isSuccessful) {
-                mFirebaseRemoteConfig!!.fetchAndActivate()
-                val adMaxCount = mFirebaseRemoteConfig!!.getLong("ad_max_count")
+                mFirebaseRemoteConfig.fetchAndActivate()
+                val adMaxCount = mFirebaseRemoteConfig.getLong("ad_max_count")
                 if (adMaxCount > 0) {
                     maxCount = adMaxCount.toInt()
                 }
-                val version = mFirebaseRemoteConfig!!.getLong("latest_version")
-                val force = mFirebaseRemoteConfig!!.getBoolean("force_update")
+                val version = mFirebaseRemoteConfig.getLong("latest_version")
+                val force = mFirebaseRemoteConfig.getBoolean("force_update")
                 if (BuildConfig.VERSION_CODE < version) {
                     info(this@BaseMainActivity, R.string.toast_new_version)
                     if (force) {
@@ -194,8 +193,8 @@ abstract class BaseMainActivity : BaseActivity(), NavigationView.OnNavigationIte
                 }
 
                 // 앱 마이그레이션 관련
-                val from = mFirebaseRemoteConfig!!.getString("migration_from")
-                val to = mFirebaseRemoteConfig!!.getString("migration_to")
+                val from = mFirebaseRemoteConfig.getString("migration_from")
+                val to = mFirebaseRemoteConfig.getString("migration_to")
                 if (from == applicationContext.packageName) {
                     gotoAppStorePage(to)
                 }
@@ -204,37 +203,8 @@ abstract class BaseMainActivity : BaseActivity(), NavigationView.OnNavigationIte
         Timber.e("onCreate end")
     }
 
-    override fun onDestroy() {
-        if (adView != null) {
-            val vg = adView!!.parent as ViewGroup
-            vg?.removeView(adView)
-            adView!!.removeAllViews()
-            adView!!.destroy()
-        }
-
-        // 전면 광고 노출
-        showInterstitialAd(null)
-        super.onDestroy()
-    }
-
-    override fun onPause() {
-        if (adView != null) {
-            adView!!.pause()
-        }
-        super.onPause()
-    }
-
     override fun onResume() {
         super.onResume()
-        if (adView != null) {
-            adView!!.resume()
-            // 광고 리워드 제거 시간 중인가?
-            if (isAdRemoveReward) {
-                adView!!.visibility = View.GONE
-            } else {
-                adView!!.visibility = View.VISIBLE
-            }
-        }
 
         //TODO: 코믹z만 클라우드 지원. 추후 다른 앱에서 지원하려면 해제해야함
         if (isComicz) {
@@ -322,8 +292,7 @@ abstract class BaseMainActivity : BaseActivity(), NavigationView.OnNavigationIte
                 override fun onComplete(result: FullAccount?) {
                     val email = result?.email
                     val name = result?.name?.displayName
-                    if (navigationView == null) return
-                    val menu = navigationView!!.menu ?: return
+                    val menu = navigationMenu
                     val dropboxItem = menu.findItem(R.id.nav_dropbox)
                     if (dropboxItem != null) {
                         // 로그인이 되었으므로 타이틀을 바꿔준다.
@@ -480,75 +449,47 @@ abstract class BaseMainActivity : BaseActivity(), NavigationView.OnNavigationIte
 
     private fun initContentView() {
         if (BuildConfig.SHOW_AD) {
-            setContentView(layoutResId)
-            // getContentView
-            mainView = findViewById(R.id.activity_main)
-            val adView = findViewById<AdView>(R.id.adView)
-            initBannerAdExt(this, 0, adView)
-            handler!!.postDelayed({
+            handler.postDelayed({
                 Timber.e("requestAd begin")
                 requestAd(0)
                 Timber.e("requestAd end")
             }, 1000)
-        } else {
-            Timber.e("initContentView setContentView begin")
-            setContentView(layoutResId)
-
-            // getContentView
-            mainView = findViewById(android.R.id.content)
-            Timber.e("initContentView setContentView end")
         }
-        Timber.e("initContentView initBottomUI begin")
         initBottomUI()
-        Timber.e("initContentView initBottomUI end")
         initPlayerUI()
     }
 
+
     private fun initBottomUI() {
-        // 최초에는 하단으로 숨겨둠
-        bottom = findViewById(R.id.bottom)
-        //        bottom.setTranslationY(UnitHelper.dpToPx(48));
-        btnCopy = bottom?.findViewById(R.id.btn_copy)
-        btnCopy?.setEnabled(false)
-        btnCopy?.setOnClickListener(View.OnClickListener { explorerFragment.captureSelectedFile(false) })
-        btnCut = bottom?.findViewById(R.id.btn_cut)
-        btnCut?.setEnabled(false)
-        btnCut?.setOnClickListener(View.OnClickListener { explorerFragment.captureSelectedFile(true) })
-        btnPaste = bottom?.findViewById(R.id.btn_paste)
-        btnPaste?.setEnabled(false)
-        btnPaste?.setOnClickListener(View.OnClickListener { explorerFragment.pasteFileWithDialog() })
-        btnArchive = bottom?.findViewById(R.id.btn_archive)
-        btnArchive?.setEnabled(false)
-        btnArchive?.setOnClickListener(View.OnClickListener { explorerFragment.zipFileWithDialog() })
-        btnDelete = bottom?.findViewById(R.id.btn_delete)
-        btnDelete?.setEnabled(false)
-        btnDelete?.setOnClickListener(View.OnClickListener { explorerFragment.deleteFileWithDialog() })
-        progressBarLoading = findViewById(R.id.progress_loading)
+        btnCopy.isEnabled = false
+        btnCopy.setOnClickListener { explorerFragment.captureSelectedFile(false) }
+        btnCut.isEnabled = false
+        btnCut.setOnClickListener { explorerFragment.captureSelectedFile(true) }
+        btnPaste.isEnabled = false
+        btnPaste.setOnClickListener { explorerFragment.pasteFileWithDialog() }
+        btnArchive.isEnabled = false
+        btnArchive.setOnClickListener { explorerFragment.zipFileWithDialog() }
+        btnDelete.isEnabled = false
+        btnDelete.setOnClickListener { explorerFragment.deleteFileWithDialog() }
     }
 
     private fun initPlayerUI() {
-        // miniplayer
-        miniPlayer = findViewById(R.id.miniplayer)
-        //        miniPlayer.setTranslationY(UnitHelper.dpToPx(56));
-        textTitle = findViewById(R.id.txt_title)
-
-        // 원래 대로 돌아옴
-        btnClose = findViewById(R.id.btn_close)
-        btnClose?.setOnClickListener(
-            View.OnClickListener { v: View? -> explorerFragment.onNormalMode() }
-        )
-        btnForward = findViewById(R.id.btn_forward)
-        btnForward?.setOnClickListener(View.OnClickListener { v: View? -> forwardAudio() })
-        btnRewind = findViewById(R.id.btn_rewind)
-        btnRewind?.setOnClickListener(View.OnClickListener { v: View? -> rewardAudio() })
-        btnPlay = findViewById(R.id.btn_play_pause)
-        btnPlay?.setOnClickListener(View.OnClickListener { v: View? ->
+        btnClose.setOnClickListener {
+            explorerFragment.onNormalMode()
+        }
+        btnForward.setOnClickListener {
+            forwardAudio()
+        }
+        btnRewind.setOnClickListener {
+            rewardAudio()
+        }
+        btnPlay.setOnClickListener {
             if (player.isPlaying) {
                 pauseAudio()
             } else {
                 playAudio(track)
             }
-        })
+        }
     }
 
     internal inner class MyActionBarDrawerToggle(
@@ -586,32 +527,27 @@ abstract class BaseMainActivity : BaseActivity(), NavigationView.OnNavigationIte
         }
     }
 
-    fun initDrawer() {
+    private fun initDrawer() {
         val toolbar = findViewById<View>(R.id.toolbar) as Toolbar
-        drawer = findViewById<View>(R.id.drawer_layout) as DrawerLayout
-        if (drawer != null) {
-            val toggle: ActionBarDrawerToggle = MyActionBarDrawerToggle(
-                this,
-                drawer,
-                toolbar,
-                R.string.navigation_drawer_open,
-                R.string.navigation_drawer_close
-            )
-            drawer!!.addDrawerListener(toggle)
-            toggle.syncState()
-        }
+        drawer = findViewById<View>(R.id.drawer) as DrawerLayout
+        val toggle: ActionBarDrawerToggle = MyActionBarDrawerToggle(
+            this,
+            drawer,
+            toolbar,
+            R.string.navigation_drawer_open,
+            R.string.navigation_drawer_close
+        )
+        drawer.addDrawerListener(toggle)
+        toggle.syncState()
         navigationView = findViewById<View>(R.id.nav_view) as NavigationView
 
         // comicz만 존재한다.
-        if (navigationView != null) {
-            navigationView!!.setNavigationItemSelectedListener(this)
-            navigationView!!.itemIconTintList = null
-            grayStateList = navigationView!!.itemIconTintList
-        }
+        navigationView.setNavigationItemSelectedListener(this)
+        navigationView.itemIconTintList = null
     }
 
     fun closeDrawer() {
-        if (drawer != null) drawer!!.closeDrawers()
+        drawer.closeDrawers()
     }
 
     override fun onRequestPermissionsResult(
@@ -623,7 +559,7 @@ abstract class BaseMainActivity : BaseActivity(), NavigationView.OnNavigationIte
         onRequestStoragePermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == PermissionManager.PERMISSION_CONTACTS) {
             val fragment = currentFragment
-            if (fragment != null) fragment.onRefresh()
+            fragment.onRefresh()
         }
         onRequestContactsPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == PermissionManager.PERMISSION_CONTACTS) {
@@ -654,15 +590,13 @@ abstract class BaseMainActivity : BaseActivity(), NavigationView.OnNavigationIte
         //FIX:
         // 모든 썸네일에서 imagebitmap을 찾아서 null해준다.
         // 그 중에 drawable도 있다.
-        val explorerFragment: ExplorerFragment? = explorerFragment
-        if (explorerFragment != null) {
-            val recyclerView = explorerFragment.currentView
-            if (recyclerView != null && recyclerView.childCount > 0) {
-                for (i in 0 until recyclerView.childCount) {
-                    val view = recyclerView.getChildAt(i) ?: break
-                    val imageView = view.findViewById<ImageView>(R.id.file_icon) ?: break
-                    imageView.setImageBitmap(null)
-                }
+        val explorerFragment: ExplorerFragment = explorerFragment
+        val recyclerView = explorerFragment.currentView
+        if (recyclerView.childCount > 0) {
+            for (i in 0 until recyclerView.childCount) {
+                val view = recyclerView.getChildAt(i) ?: break
+                val imageView = view.findViewById<ImageView>(R.id.file_icon) ?: break
+                imageView.setImageBitmap(null)
             }
         }
         BitmapCacheManager.removeAllThumbnails()
@@ -670,26 +604,26 @@ abstract class BaseMainActivity : BaseActivity(), NavigationView.OnNavigationIte
         BitmapCacheManager.removeAllBitmaps()
         val file = filesDir
         deleteRecursive(file)
-        explorerFragment?.onRefresh()
+        explorerFragment.onRefresh()
         showToast(this, resources.getString(R.string.msg_clear_cache))
     }
 
     protected fun clearHistory() {
         clearBooks(this)
         val fragment = currentFragment
-        if (fragment != null) fragment.onRefresh()
+        fragment.onRefresh()
         showToast(this, resources.getString(R.string.msg_clear_history))
     }
 
-    fun showPlayerUI() {
-        Timber.e("showPlayerUI")
+    fun showPlayer() {
+        Timber.e("showPlayer")
         //        miniPlayer.setTranslationY(UnitHelper.dpToPx(56));
         position = 0
         showUI(miniPlayer, dpToPx(56))
     }
 
-    fun hidePlayerUI() {
-        Timber.e("hidePlayerUI")
+    fun hidePlayer() {
+        Timber.e("hidePlayer")
         stopAudio()
         hideUI(miniPlayer)
     }
@@ -705,16 +639,16 @@ abstract class BaseMainActivity : BaseActivity(), NavigationView.OnNavigationIte
                 player.start()
             } else {
                 val audioList = instance.audioList
-                val item = audioList!![track]
+                val item = audioList[track]
                 player.reset()
                 player.setDataSource(item.path)
                 player.prepareAsync()
-                player.setOnCompletionListener { mp: MediaPlayer? -> forwardAudio() }
+                player.setOnCompletionListener { forwardAudio() }
                 player.setOnPreparedListener { mp: MediaPlayer -> mp.start() }
                 this.track = track
                 textTitle!!.text = item.name
             }
-            btnPlay!!.setImageResource(R.drawable.ic_player_pause)
+            btnPlay.setImageResource(R.drawable.ic_player_pause)
         } catch (e: Exception) {
             error(this, R.string.toast_error)
         }
@@ -723,12 +657,12 @@ abstract class BaseMainActivity : BaseActivity(), NavigationView.OnNavigationIte
     fun pauseAudio() {
         player.pause()
         position = player.currentPosition
-        btnPlay!!.setImageResource(R.drawable.ic_player_play)
+        btnPlay.setImageResource(R.drawable.ic_player_play)
     }
 
     fun forwardAudio() {
         val audioList = instance.audioList
-        if (track < audioList!!.size - 1) {
+        if (track < audioList.size - 1) {
             position = 0
             playAudio(track + 1)
         }
@@ -741,9 +675,9 @@ abstract class BaseMainActivity : BaseActivity(), NavigationView.OnNavigationIte
         }
     }
 
-    private fun showUI(bottomView: View?, initPositionY: Int) {
+    protected fun showUI(bottomView: View, initPositionY: Int) {
 //        final int defaultHeight = mainView.getHeight();
-        bottomView!!.visibility = View.VISIBLE
+        bottomView.visibility = View.VISIBLE
         bottomView.translationY = initPositionY.toFloat()
         bottomView.post {
             Timber.e("bottomView.height=" + bottomView.height)
@@ -771,13 +705,13 @@ abstract class BaseMainActivity : BaseActivity(), NavigationView.OnNavigationIte
         }
     }
 
-    private fun hideUI(bottomView: View?) {
+    protected fun hideUI(bottomView: View) {
 //        final int defaultHeight = mainView.getHeight();
         Timber.e("hideUI")
 
         // setUpdateListener requires API 19
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            bottomView!!.animate().translationYBy(bottomView.height.toFloat())
+            bottomView.animate().translationYBy(bottomView.height.toFloat())
                 .setUpdateListener { animation ->
                     val offset = (animation.animatedValue as Float * bottomView.height).toInt()
                     //                Timber.e("" + animation.getAnimatedValue() + " " + offset + " " + mainView.getHeight());
@@ -796,7 +730,7 @@ abstract class BaseMainActivity : BaseActivity(), NavigationView.OnNavigationIte
             val oa = ObjectAnimator.ofFloat(
                 bottomView,
                 View.TRANSLATION_Y,
-                bottomView!!.translationY,
+                bottomView.translationY,
                 bottomView.translationY + bottomView.height
             )
             oa.duration = 300
@@ -805,8 +739,8 @@ abstract class BaseMainActivity : BaseActivity(), NavigationView.OnNavigationIte
     }
 
     // from onSelectMode()
-    fun showBottomUI() {
-        Timber.e("showBottomUI")
+    fun showBottom() {
+        Timber.e("showBottom")
         //        bottom.setTranslationY(UnitHelper.dpToPx(48));
         showUI(bottom, dpToPx(48))
 
@@ -817,8 +751,8 @@ abstract class BaseMainActivity : BaseActivity(), NavigationView.OnNavigationIte
     }
 
     // from onNormalMode()
-    fun hideBottomUI() {
-        Timber.e("hideBottomUI")
+    fun hideBottom() {
+        Timber.e("hideBottom")
         hideUI(bottom)
 
         // 원래 타이틀로 돌려준다.
@@ -835,27 +769,30 @@ abstract class BaseMainActivity : BaseActivity(), NavigationView.OnNavigationIte
         if (actionBar != null) {
             actionBar.title = "" + count
         }
+
         if (count > 0) {
-            btnArchive!!.isEnabled = true
-            btnCopy!!.isEnabled = true
-            btnCut!!.isEnabled = true
-            btnDelete!!.isEnabled = true
-            btnPaste!!.isEnabled = false
+            btnArchive.isEnabled = true
+            btnCopy.isEnabled = true
+            btnCut.isEnabled = true
+            btnDelete.isEnabled = true
+            btnPaste.isEnabled = false
         } else {
-            btnArchive!!.isEnabled = false
-            btnCopy!!.isEnabled = false
-            btnCut!!.isEnabled = false
-            btnDelete!!.isEnabled = false
-            btnPaste!!.isEnabled = false
+            btnArchive.isEnabled = false
+            btnCopy.isEnabled = false
+            btnCut.isEnabled = false
+            btnDelete.isEnabled = false
+            btnPaste.isEnabled = false
         }
+
     }
 
     fun updatePasteMode() {
-        btnArchive!!.isEnabled = false
-        btnCopy!!.isEnabled = false
-        btnCut!!.isEnabled = false
-        btnDelete!!.isEnabled = false
-        btnPaste!!.isEnabled = true
+        btnArchive.isEnabled = false
+        btnCopy.isEnabled = false
+        btnCut.isEnabled = false
+        btnDelete.isEnabled = false
+        btnPaste.isEnabled = true
+
         val actionBar = supportActionBar
         actionBar?.setTitle(R.string.paste)
         updateSelectMenuIcon(false, true)
@@ -863,8 +800,7 @@ abstract class BaseMainActivity : BaseActivity(), NavigationView.OnNavigationIte
 
     fun loginDropbox(item: MenuItem?) {
         // 로그인이 안되어 있으면 로그인을 한다.
-        val app_key: Int
-        app_key = if (isPro) {
+        val app_key: Int = if (isPro) {
             R.string.app_key_dropbox_pro
         } else {
             R.string.app_key_dropbox_free
@@ -982,9 +918,9 @@ abstract class BaseMainActivity : BaseActivity(), NavigationView.OnNavigationIte
     }
 
     val googleDriveMenuItem: MenuItem?
-        get() = if (menu == null) null else menu!!.findItem(R.id.nav_google_drive)
+        get() = menu.findItem(R.id.nav_google_drive)
     val dropboxMenuItem: MenuItem?
-        get() = if (menu == null) null else menu!!.findItem(R.id.nav_dropbox)
+        get() = menu.findItem(R.id.nav_dropbox)
 
     //TODO: 나중에 직접 구현할것
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
@@ -1000,12 +936,9 @@ abstract class BaseMainActivity : BaseActivity(), NavigationView.OnNavigationIte
             val intent = getLocalIntent(this)
             startActivity(intent)
         } else if (id == R.id.action_exit) {
-            try {
-                instance.exit(this)
-            } catch (ignored: NullPointerException) {
-            }
+            instance.exit(this)
         }
-        val drawer = findViewById<View>(R.id.drawer_layout) as DrawerLayout
+        val drawer = findViewById<View>(R.id.drawer) as DrawerLayout
         drawer.closeDrawer(GravityCompat.START)
         return true
     }
@@ -1024,8 +957,7 @@ abstract class BaseMainActivity : BaseActivity(), NavigationView.OnNavigationIte
         Timber.e("loadGoogleDrive")
 
         // 로그인이 성공했다고 봄
-        if (navigationView == null) return
-        val menu = navigationView!!.menu ?: return
+        val menu = navigationMenu
         val googleDriveItem = menu.findItem(R.id.nav_google_drive)
         if (accountName != null && accountName.length > 0) {
             if (googleDriveItem != null) {

@@ -388,7 +388,7 @@ class ExplorerFragment : BaseFragment(), ExplorerAdapter.OnItemClickListener,
         // 플레이를 한다
         val activity = activity as BaseMainActivity? ?: return
         if (mode != MODE_PLAYER) {
-            activity.showPlayerUI()
+            activity.showPlayer()
             mode = MODE_PLAYER
         }
         val audioList = instance.audioList
@@ -961,7 +961,7 @@ class ExplorerFragment : BaseFragment(), ExplorerAdapter.OnItemClickListener,
 
     private fun exitPlayerMode() {
         if (mode == MODE_PLAYER) {
-            (activity as BaseMainActivity?)!!.hidePlayerUI()
+            (activity as BaseMainActivity?)!!.hidePlayer()
         }
     }
 
@@ -976,7 +976,7 @@ class ExplorerFragment : BaseFragment(), ExplorerAdapter.OnItemClickListener,
 
         // 하단 UI 표시
         val activity = activity ?: return
-        (activity as BaseMainActivity).showBottomUI()
+        (activity as BaseMainActivity).showBottom()
     }
 
     private fun onPasteMode() {
@@ -996,7 +996,7 @@ class ExplorerFragment : BaseFragment(), ExplorerAdapter.OnItemClickListener,
 
         // 하단 UI 숨김
         val activity = activity ?: return
-        (activity as BaseMainActivity).hideBottomUI()
+        (activity as BaseMainActivity).hideBottom()
     }
 
     // 이건 뭐지?
