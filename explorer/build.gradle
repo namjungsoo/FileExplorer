@@ -7,9 +7,6 @@ apply plugin: 'kotlin-kapt'
 android {
     compileSdkVersion 30
 
-    lintOptions {
-        abortOnError false
-    }
 
     buildFeatures {
         viewBinding false
@@ -50,7 +47,6 @@ android {
             jniLibs.srcDirs = ["src/main/libs"]
 
             // android studio가 직접 컴파일하지 않게 함
-            jni.srcDirs = []
 
             manifest.srcFile 'src/main/AndroidManifest.xml'
         }
@@ -116,7 +112,7 @@ android {
         development {
             dimension "mode"
             minSdkVersion 16
-            resConfigs("ko", "xxhdpi")
+            resConfigs 'ko', 'xxhdpi'
             aaptOptions.cruncherEnabled = false
         }
         production {
@@ -181,6 +177,10 @@ android {
             addManifestPlaceholders([DB_APP_KEY: "db-k78nqdn19p4864o"])
         }
     }
+    lint {
+        abortOnError false
+    }
+    namespace 'com.duongame'
 
     // Android studio 3.1.0 이상
     // D:\git\FileExplorer\explorer\release에 output을 내도록 수정
