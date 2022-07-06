@@ -63,7 +63,7 @@ public abstract class ViewerPagerAdapter extends PagerAdapter {
                 0, 0, 0, 1, 0});
 
         try {
-            if (App.getInstance(context).isNightMode()) {
+            if (App.INSTANCE.isNightMode()) {
                 colorMatrix = new ColorMatrix(new float[]{
                         -1, 0, 0, 0, 192,
                         0, -1, 0, 0, 192,

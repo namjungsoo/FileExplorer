@@ -85,7 +85,7 @@ public class TextActivity extends BaseViewerActivity {
 
     void updateNightModeText() {
         try {
-            if (App.getInstance(this).isNightMode()) {
+            if (App.INSTANCE.isNightMode()) {
                 if(scrollText != null)
                     scrollText.setBackgroundColor(Color.BLACK);
                 if(textContent != null)

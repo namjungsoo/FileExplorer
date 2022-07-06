@@ -23,7 +23,7 @@ class VideoActivity : BaseViewerActivity() {
 
     private fun buildMediaSourceMulti(): ConcatenatingMediaSource {
         val ret = ConcatenatingMediaSource()
-        for (video in App.getInstance(this).videoList) {
+        for (video in App.INSTANCE.videoList) {
             ret.addMediaSource(buildMediaSource(video.path))
         }
         return ret
@@ -62,8 +62,8 @@ class VideoActivity : BaseViewerActivity() {
 
         val mediaSource = buildMediaSourceMulti()
         var windowIndex = -1
-        for (i in App.getInstance(this).videoList.indices) {
-            if (App.getInstance(this).videoList[i].path == item.path) {
+        for (i in App.INSTANCE.videoList.indices) {
+            if (App.INSTANCE.videoList[i].path == item.path) {
                 windowIndex = i
                 break
             }

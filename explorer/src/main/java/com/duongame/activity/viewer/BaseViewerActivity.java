@@ -155,7 +155,7 @@ public class BaseViewerActivity extends BaseActivity {
 
         iv = findViewById(R.id.img_night);
         tv = findViewById(R.id.text_night);
-        if (App.getInstance(BaseViewerActivity.this).isNightMode()) {
+        if (App.INSTANCE.isNightMode()) {
             iv.setColorFilter(ContextCompat.getColor(this, android.R.color.holo_orange_light));
             tv.setTextColor(ContextCompat.getColor(this, android.R.color.holo_orange_light));
         } else {
@@ -170,7 +170,7 @@ public class BaseViewerActivity extends BaseActivity {
 
         iv = findViewById(R.id.img_anim);
         tv = findViewById(R.id.text_anim);
-        if (!App.getInstance(BaseViewerActivity.this).isPagingAnimationDisabled()) {
+        if (!App.INSTANCE.isPagingAnimationDisabled()) {
             iv.setColorFilter(ContextCompat.getColor(this, android.R.color.holo_orange_light));
             tv.setTextColor(ContextCompat.getColor(this, android.R.color.holo_orange_light));
         } else {
@@ -206,7 +206,7 @@ public class BaseViewerActivity extends BaseActivity {
             public void onClick(View v) {
                 // 값을 반전시킨다.
                 try {
-                    App.getInstance(BaseViewerActivity.this).setNightMode(!App.getInstance(BaseViewerActivity.this).isNightMode());
+                    App.INSTANCE.setNightMode(!App.INSTANCE.isNightMode());
                 } catch (NullPointerException e) {
 
                 }
@@ -221,7 +221,7 @@ public class BaseViewerActivity extends BaseActivity {
             public void onClick(View v) {
                 // 값을 반전시킨다.
                 try {
-                    App.getInstance(BaseViewerActivity.this).setPagingAnimationDisabled(!App.getInstance(BaseViewerActivity.this).isPagingAnimationDisabled());
+                    App.INSTANCE.setPagingAnimationDisabled(!App.INSTANCE.isPagingAnimationDisabled());
                 } catch (NullPointerException e) {
 
                 }

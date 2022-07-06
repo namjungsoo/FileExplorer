@@ -72,7 +72,7 @@ public class BaseFragment extends Fragment {
             try {
                 BaseActivity activity = (BaseActivity) getActivity();
                 if (!activity.isFinishing()) {
-                    App.getInstance(getActivity()).exit(activity);
+                    App.INSTANCE.exit(activity);
                 }
             } catch (NullPointerException | ClassCastException e) {
                 e.printStackTrace();

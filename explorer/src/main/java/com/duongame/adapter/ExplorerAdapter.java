@@ -250,7 +250,7 @@ public class ExplorerAdapter extends RecyclerView.Adapter<ExplorerAdapter.Explor
 
     boolean isThumbnailEnabled() {
         try {
-            return !App.getInstance(context).isThumbnailDisabled();
+            return !App.INSTANCE.isThumbnailDisabled();
         } catch (NullPointerException e) {
             return true;
         }

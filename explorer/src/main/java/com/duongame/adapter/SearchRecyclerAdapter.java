@@ -98,7 +98,7 @@ public class SearchRecyclerAdapter extends RecyclerView.Adapter<SearchRecyclerAd
 
     boolean isThumbnailEnabled() {
         try {
-            return !App.getInstance(context).isThumbnailDisabled();
+            return !App.INSTANCE.isThumbnailDisabled();
         } catch (NullPointerException e) {
             return true;
         }

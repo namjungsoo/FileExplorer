@@ -552,7 +552,7 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
 
         if (id == R.id.action_exit) {
             try {
-                App.getInstance(this).exit(this);
+                App.INSTANCE.exit(this);
                 return true;
             } catch (NullPointerException e) {
 
@@ -859,7 +859,7 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
                 player.seekTo(position);
                 player.start();
             } else {
-                ArrayList<ExplorerItem> audioList = App.getInstance(this).getAudioList();
+                ArrayList<ExplorerItem> audioList = App.INSTANCE.getAudioList();
                 ExplorerItem item = audioList.get(track);
                 player.reset();
                 player.setDataSource(item.path);
@@ -886,7 +886,7 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
     }
 
     public void forwardAudio() {
-        ArrayList<ExplorerItem> audioList = App.getInstance(this).getAudioList();
+        ArrayList<ExplorerItem> audioList = App.INSTANCE.getAudioList();
         if (this.track < audioList.size() - 1) {
             position = 0;
             playAudio(this.track + 1);
@@ -1185,7 +1185,7 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
             startActivity(intent);
         } else if (id == R.id.action_exit) {
             try {
-                App.getInstance(this).exit(this);
+                App.INSTANCE.exit(this);
             } catch (NullPointerException ignored) {
             }
         }

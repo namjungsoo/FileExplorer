@@ -46,7 +46,7 @@ public class ComicActivity extends BaseMainActivity {
                     },
                     (dialog, which) -> {
                         try {
-                            App.getInstance(ComicActivity.this).exit(ComicActivity.this);
+                            App.INSTANCE.exit(ComicActivity.this);
                         } catch (NullPointerException e) {
 
                         }

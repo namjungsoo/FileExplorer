@@ -136,10 +136,10 @@ public class LocalSearchTask extends AsyncTask<String, Void, FileExplorer.Result
             //FIX: Index Out of Bound
             // 쓰레드에서 메인쓰레드로 옮김
             fragment.setFileList(result.fileList);
-            App.getInstance(fragment.getActivity()).setFileList(result.fileList);
-            App.getInstance(fragment.getActivity()).setImageList(result.imageList);
-            App.getInstance(fragment.getActivity()).setVideoList(result.videoList);
-            App.getInstance(fragment.getActivity()).setAudioList(result.audioList);
+            App.INSTANCE.setFileList(result.fileList);
+            App.INSTANCE.setImageList(result.imageList);
+            App.INSTANCE.setVideoList(result.videoList);
+            App.INSTANCE.setAudioList(result.audioList);
             fragment.getAdapter().setFileList(fragment.getFileList());
 
             fragment.getAdapter().notifyDataSetChanged();
@@ -155,7 +155,7 @@ public class LocalSearchTask extends AsyncTask<String, Void, FileExplorer.Result
             }
 
             // 성공했을때 현재 패스를 업데이트
-            App.getInstance(fragment.getActivity()).setLastPath(path);
+            App.INSTANCE.setLastPath(path);
             fragment.getTextPath().setText(path);
             fragment.getTextPath().requestLayout();
 

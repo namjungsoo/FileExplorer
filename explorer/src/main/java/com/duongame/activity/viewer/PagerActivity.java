@@ -173,7 +173,7 @@ public class PagerActivity extends BaseViewerActivity {
         // smooth 연산
         boolean smoothScroll = true;
         try {
-            if (App.getInstance(PagerActivity.this).isPagingAnimationDisabled()) {
+            if (App.INSTANCE.isPagingAnimationDisabled()) {
                 smoothScroll = false;
             }
         } catch (NullPointerException e) {

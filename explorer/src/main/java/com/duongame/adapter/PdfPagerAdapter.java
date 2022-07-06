@@ -104,7 +104,7 @@ public class PdfPagerAdapter extends ViewerPagerAdapter {
 
                     //TODO: 무조건 해주지 않으면 안된다. 알파로 처리되어 있기 때문이다. (RENDER_MODE_FOR_DISPLAY)
                     try {
-                        if (App.getInstance(context).isNightMode()) {
+                        if (App.INSTANCE.isNightMode()) {
                             imageView.setBackgroundColor(Color.BLACK);
                         } else {
                             imageView.setBackgroundColor(Color.WHITE);

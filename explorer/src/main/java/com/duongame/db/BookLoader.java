@@ -44,7 +44,7 @@ public class BookLoader {
         // 다음 책을 찾는다.
         // 현재 폴더인지 아닌지 확인한다.
         try {
-            String lastPath = App.getInstance(context).getLastPath();
+            String lastPath = App.INSTANCE.getLastPath();
 
             ArrayList<ExplorerItem> filteredList = new ArrayList<>();
             ArrayList<ExplorerItem> fileList;
@@ -53,7 +53,7 @@ public class BookLoader {
 
             // 현재 폴더에서 읽은 것이면
             if (lastPath.equals(folderPath)) {
-                fileList = App.getInstance(context).getFileList();
+                fileList = App.INSTANCE.getFileList();
 
             } else {
                 // 검색을 해서 찾는다.
@@ -214,7 +214,7 @@ public class BookLoader {
         book.extract_file = 0;
         book.side = ExplorerItem.SIDE_LEFT;
         try {
-            if (App.getInstance(context).isJapaneseDirection()) {
+            if (App.INSTANCE.isJapaneseDirection()) {
                 book.side = ExplorerItem.SIDE_RIGHT;
             }
         } catch (NullPointerException e) {
@@ -309,7 +309,7 @@ public class BookLoader {
         loadDefaultThumbnail(context, holder, path);
 
         try {
-            if (!App.getInstance(context).isThumbnailDisabled()) {// 썸네일 비활성화가 아니라면
+            if (!App.INSTANCE.isThumbnailDisabled()) {// 썸네일 비활성화가 아니라면
                 final Bitmap bitmap = getThumbnail(path);
                 if (bitmap == null) {
                     switch (FileHelper.getCompressType(path)) {

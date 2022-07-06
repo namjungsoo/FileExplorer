@@ -201,7 +201,7 @@ public class SettingsActivity extends BaseActivity {
         autoPagingTime.setProgress(time);
 
         try {
-            App application = App.getInstance(this);
+            App application = App.INSTANCE;
             nightMode.setChecked(application.isNightMode());
             thumbnailDisabled.setChecked(application.isThumbnailDisabled());
             japaneseDirection.setChecked(application.isJapaneseDirection());
@@ -215,7 +215,7 @@ public class SettingsActivity extends BaseActivity {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 try {
-                    App.getInstance(SettingsActivity.this).setNightMode(isChecked);
+                    App.INSTANCE.setNightMode(isChecked);
                 } catch (NullPointerException e) {
 
                 }
@@ -226,7 +226,7 @@ public class SettingsActivity extends BaseActivity {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 try {
-                    App.getInstance(SettingsActivity.this).setThumbnailDisabled(isChecked);
+                    App.INSTANCE.setThumbnailDisabled(isChecked);
                 } catch (NullPointerException e) {
 
                 }
@@ -237,7 +237,7 @@ public class SettingsActivity extends BaseActivity {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 try {
-                    App.getInstance(SettingsActivity.this).setJapaneseDirection(isChecked);
+                    App.INSTANCE.setJapaneseDirection(isChecked);
                 } catch (NullPointerException e) {
 
                 }
@@ -248,7 +248,7 @@ public class SettingsActivity extends BaseActivity {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 try {
-                    App.getInstance(SettingsActivity.this).setPagingAnimationDisabled(isChecked);
+                    App.INSTANCE.setPagingAnimationDisabled(isChecked);
                 } catch (NullPointerException e) {
 
                 }
