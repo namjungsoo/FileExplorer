@@ -4,7 +4,7 @@ import android.os.Bundle;
 
 import androidx.viewpager.widget.ViewPager;
 
-import com.duongame.MainApplication;
+import com.duongame.App;
 import com.duongame.R;
 import com.duongame.adapter.ComicPagerAdapter;
 import com.duongame.fragment.BaseFragment;
@@ -46,7 +46,7 @@ public class ComicActivity extends BaseMainActivity {
                     },
                     (dialog, which) -> {
                         try {
-                            MainApplication.getInstance(ComicActivity.this).exit(ComicActivity.this);
+                            App.getInstance(ComicActivity.this).exit(ComicActivity.this);
                         } catch (NullPointerException e) {
 
                         }

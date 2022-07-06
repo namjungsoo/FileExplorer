@@ -12,7 +12,7 @@ import android.widget.ScrollView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
-import com.duongame.MainApplication;
+import com.duongame.App;
 import com.duongame.R;
 import com.duongame.db.Book;
 import com.duongame.db.BookDB;
@@ -85,7 +85,7 @@ public class TextActivity extends BaseViewerActivity {
 
     void updateNightModeText() {
         try {
-            if (MainApplication.getInstance(this).isNightMode()) {
+            if (App.getInstance(this).isNightMode()) {
                 if(scrollText != null)
                     scrollText.setBackgroundColor(Color.BLACK);
                 if(textContent != null)

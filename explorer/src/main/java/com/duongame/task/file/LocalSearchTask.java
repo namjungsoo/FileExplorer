@@ -3,7 +3,7 @@ package com.duongame.task.file;
 import android.os.AsyncTask;
 import android.view.View;
 
-import com.duongame.MainApplication;
+import com.duongame.App;
 import com.duongame.adapter.ExplorerItem;
 import com.duongame.db.ExplorerItemDB;
 import com.duongame.db.ExplorerItemDao;
@@ -136,10 +136,10 @@ public class LocalSearchTask extends AsyncTask<String, Void, FileExplorer.Result
             //FIX: Index Out of Bound
             // 쓰레드에서 메인쓰레드로 옮김
             fragment.setFileList(result.fileList);
-            MainApplication.getInstance(fragment.getActivity()).setFileList(result.fileList);
-            MainApplication.getInstance(fragment.getActivity()).setImageList(result.imageList);
-            MainApplication.getInstance(fragment.getActivity()).setVideoList(result.videoList);
-            MainApplication.getInstance(fragment.getActivity()).setAudioList(result.audioList);
+            App.getInstance(fragment.getActivity()).setFileList(result.fileList);
+            App.getInstance(fragment.getActivity()).setImageList(result.imageList);
+            App.getInstance(fragment.getActivity()).setVideoList(result.videoList);
+            App.getInstance(fragment.getActivity()).setAudioList(result.audioList);
             fragment.getAdapter().setFileList(fragment.getFileList());
 
             fragment.getAdapter().notifyDataSetChanged();
@@ -155,7 +155,7 @@ public class LocalSearchTask extends AsyncTask<String, Void, FileExplorer.Result
             }
 
             // 성공했을때 현재 패스를 업데이트
-            MainApplication.getInstance(fragment.getActivity()).setLastPath(path);
+            App.getInstance(fragment.getActivity()).setLastPath(path);
             fragment.getTextPath().setText(path);
             fragment.getTextPath().requestLayout();
 

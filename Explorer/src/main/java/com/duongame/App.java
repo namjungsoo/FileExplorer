@@ -16,7 +16,7 @@ import timber.log.Timber;
 // 여기서 말하는 Analytics란 Google Analytics(이하 GA)를 말한다.
 // GA 앱의 구분은 GA_TRACKING_ID로 하며, free/pro의 구분은 없다.
 // FA 앱의 구분은 자동으로 이루어 진다. package name에 의존적이다.
-public class MainApplication extends MultiDexApplication {
+public class App extends MultiDexApplication {
     // path
     private ArrayList<ExplorerItem> fileList;
 
@@ -33,11 +33,11 @@ public class MainApplication extends MultiDexApplication {
     private boolean japaneseDirection;
     private boolean pagingAnimationDisabled;
 
-    public static MainApplication getInstance(Activity activity) {
+    public static App getInstance(Activity activity) {
         if (activity == null)
             return null;
 
-        return (MainApplication) activity.getApplication();
+        return (App) activity.getApplication();
     }
 
     @Override

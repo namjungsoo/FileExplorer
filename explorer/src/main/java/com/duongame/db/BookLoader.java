@@ -11,7 +11,7 @@ import android.view.View;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.ContextCompat;
 
-import com.duongame.MainApplication;
+import com.duongame.App;
 import com.duongame.R;
 import com.duongame.activity.viewer.BaseViewerActivity;
 import com.duongame.activity.viewer.PdfActivity;
@@ -44,7 +44,7 @@ public class BookLoader {
         // 다음 책을 찾는다.
         // 현재 폴더인지 아닌지 확인한다.
         try {
-            String lastPath = MainApplication.getInstance(context).getLastPath();
+            String lastPath = App.getInstance(context).getLastPath();
 
             ArrayList<ExplorerItem> filteredList = new ArrayList<>();
             ArrayList<ExplorerItem> fileList;
@@ -53,7 +53,7 @@ public class BookLoader {
 
             // 현재 폴더에서 읽은 것이면
             if (lastPath.equals(folderPath)) {
-                fileList = MainApplication.getInstance(context).getFileList();
+                fileList = App.getInstance(context).getFileList();
 
             } else {
                 // 검색을 해서 찾는다.
@@ -214,7 +214,7 @@ public class BookLoader {
         book.extract_file = 0;
         book.side = ExplorerItem.SIDE_LEFT;
         try {
-            if (MainApplication.getInstance(context).isJapaneseDirection()) {
+            if (App.getInstance(context).isJapaneseDirection()) {
                 book.side = ExplorerItem.SIDE_RIGHT;
             }
         } catch (NullPointerException e) {
@@ -309,7 +309,7 @@ public class BookLoader {
         loadDefaultThumbnail(context, holder, path);
 
         try {
-            if (!MainApplication.getInstance(context).isThumbnailDisabled()) {// 썸네일 비활성화가 아니라면
+            if (!App.getInstance(context).isThumbnailDisabled()) {// 썸네일 비활성화가 아니라면
                 final Bitmap bitmap = getThumbnail(path);
                 if (bitmap == null) {
                     switch (FileHelper.getCompressType(path)) {

@@ -38,7 +38,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.dropbox.core.android.Auth;
 import com.dropbox.core.v2.users.FullAccount;
 import com.duongame.BuildConfig;
-import com.duongame.MainApplication;
+import com.duongame.App;
 import com.duongame.R;
 import com.duongame.activity.BaseActivity;
 import com.duongame.activity.SettingsActivity;
@@ -552,7 +552,7 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
 
         if (id == R.id.action_exit) {
             try {
-                MainApplication.getInstance(this).exit(this);
+                App.getInstance(this).exit(this);
                 return true;
             } catch (NullPointerException e) {
 
@@ -859,7 +859,7 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
                 player.seekTo(position);
                 player.start();
             } else {
-                ArrayList<ExplorerItem> audioList = MainApplication.getInstance(this).getAudioList();
+                ArrayList<ExplorerItem> audioList = App.getInstance(this).getAudioList();
                 ExplorerItem item = audioList.get(track);
                 player.reset();
                 player.setDataSource(item.path);
@@ -886,7 +886,7 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
     }
 
     public void forwardAudio() {
-        ArrayList<ExplorerItem> audioList = MainApplication.getInstance(this).getAudioList();
+        ArrayList<ExplorerItem> audioList = App.getInstance(this).getAudioList();
         if (this.track < audioList.size() - 1) {
             position = 0;
             playAudio(this.track + 1);
@@ -1185,7 +1185,7 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
             startActivity(intent);
         } else if (id == R.id.action_exit) {
             try {
-                MainApplication.getInstance(this).exit(this);
+                App.getInstance(this).exit(this);
             } catch (NullPointerException ignored) {
             }
         }

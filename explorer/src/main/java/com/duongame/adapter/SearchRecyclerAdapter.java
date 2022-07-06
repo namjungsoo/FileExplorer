@@ -11,7 +11,7 @@ import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.duongame.MainApplication;
+import com.duongame.App;
 import com.duongame.R;
 import com.duongame.bitmap.BitmapCacheManager;
 import com.duongame.file.FileHelper;
@@ -98,7 +98,7 @@ public class SearchRecyclerAdapter extends RecyclerView.Adapter<SearchRecyclerAd
 
     boolean isThumbnailEnabled() {
         try {
-            return !MainApplication.getInstance(context).isThumbnailDisabled();
+            return !App.getInstance(context).isThumbnailDisabled();
         } catch (NullPointerException e) {
             return true;
         }

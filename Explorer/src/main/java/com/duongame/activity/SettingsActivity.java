@@ -18,7 +18,7 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.SwitchCompat;
 
 import com.duongame.BuildConfig;
-import com.duongame.MainApplication;
+import com.duongame.App;
 import com.duongame.R;
 import com.duongame.bitmap.BitmapCacheManager;
 import com.duongame.db.BookDB;
@@ -27,7 +27,6 @@ import com.duongame.helper.AppHelper;
 import com.duongame.helper.PreferenceHelper;
 import com.duongame.helper.ToastHelper;
 import com.duongame.manager.AdBannerManager;
-import com.duongame.manager.AdRewardManager;
 import com.google.android.gms.ads.AdView;
 
 import java.io.File;
@@ -202,7 +201,7 @@ public class SettingsActivity extends BaseActivity {
         autoPagingTime.setProgress(time);
 
         try {
-            MainApplication application = MainApplication.getInstance(this);
+            App application = App.getInstance(this);
             nightMode.setChecked(application.isNightMode());
             thumbnailDisabled.setChecked(application.isThumbnailDisabled());
             japaneseDirection.setChecked(application.isJapaneseDirection());
@@ -216,7 +215,7 @@ public class SettingsActivity extends BaseActivity {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 try {
-                    MainApplication.getInstance(SettingsActivity.this).setNightMode(isChecked);
+                    App.getInstance(SettingsActivity.this).setNightMode(isChecked);
                 } catch (NullPointerException e) {
 
                 }
@@ -227,7 +226,7 @@ public class SettingsActivity extends BaseActivity {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 try {
-                    MainApplication.getInstance(SettingsActivity.this).setThumbnailDisabled(isChecked);
+                    App.getInstance(SettingsActivity.this).setThumbnailDisabled(isChecked);
                 } catch (NullPointerException e) {
 
                 }
@@ -238,7 +237,7 @@ public class SettingsActivity extends BaseActivity {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 try {
-                    MainApplication.getInstance(SettingsActivity.this).setJapaneseDirection(isChecked);
+                    App.getInstance(SettingsActivity.this).setJapaneseDirection(isChecked);
                 } catch (NullPointerException e) {
 
                 }
@@ -249,7 +248,7 @@ public class SettingsActivity extends BaseActivity {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 try {
-                    MainApplication.getInstance(SettingsActivity.this).setPagingAnimationDisabled(isChecked);
+                    App.getInstance(SettingsActivity.this).setPagingAnimationDisabled(isChecked);
                 } catch (NullPointerException e) {
 
                 }
