@@ -5,7 +5,5 @@ package com.duongame;
  */
 
 public class ExplorerConfig {
-    public static int GRID_THUMBNAIL_SIZE_DP = 78;
-    public static int LIST_THUMBNAIL_SIZE_DP = 60;
     public final static int MAX_THUMBNAILS = 1000;
 }
