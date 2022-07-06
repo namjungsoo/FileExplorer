@@ -722,7 +722,7 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
     void initDrawer() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 
-        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer = (DrawerLayout) findViewById(R.id.drawer);
         if (drawer != null) {
             ActionBarDrawerToggle toggle = new MyActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
 
@@ -1190,7 +1190,7 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
             }
         }
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }

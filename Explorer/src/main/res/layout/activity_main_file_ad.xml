@@ -13,7 +13,7 @@
         app:adUnitId="@string/file_admob_banner_id" />
 
     <androidx.drawerlayout.widget.DrawerLayout
-        android:id="@+id/drawer_layout"
+        android:id="@+id/drawer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@id/adView">
