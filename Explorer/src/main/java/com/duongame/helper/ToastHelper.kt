@@ -9,6 +9,7 @@ import es.dmoral.toasty.Toasty
  * Created by 정수 on 2015-11-15.
  */
 object ToastHelper {
+    @JvmStatic
     fun showToast(context: Context?, resId: Int) {
         val context = context ?: return
         val message = context.getString(resId)

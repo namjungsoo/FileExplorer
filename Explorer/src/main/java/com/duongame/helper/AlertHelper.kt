@@ -14,6 +14,8 @@ import com.duongame.manager.AdBannerManager
  */
 object AlertHelper {
     private const val TAG = "AlertHelper"
+
+    @JvmStatic
     fun showAlert(
         context: Activity,
         title: String?,
@@ -57,6 +59,7 @@ object AlertHelper {
         builder.show()
     }
 
+    @JvmStatic
     fun showAlertWithAd(
         context: Activity,
         title: String?,
