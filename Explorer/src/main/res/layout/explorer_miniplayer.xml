@@ -1,71 +1,73 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--    android:layout_gravity="bottom"-->
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/miniplayer"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_alignParentBottom="true"
-    android:background="@android:color/darker_gray"
-    android:orientation="vertical"
-    app:layout_constraintBottom_toBottomOf="parent"
-    android:visibility="gone">
+<?xml version="1.0" encoding="utf-8"?><!--    android:layout_gravity="bottom"-->
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <!--        android:background="@android:color/darker_gray"-->
     <LinearLayout
-        android:id="@+id/lin_miniplayer"
+        android:id="@+id/miniplayer"
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:gravity="center_vertical"
-        android:orientation="horizontal">
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@android:color/darker_gray"
+        android:orientation="vertical"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent">
 
-        <ImageView
-            android:id="@+id/img_albumart"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_marginLeft="5dp"
-            android:scaleType="fitXY"
-            android:src="@drawable/ic_file_mp3"/>
-
-        <TextView
-            android:id="@+id/txt_title"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="5dp"
-            android:layout_weight="1"
+        <!--        android:background="@android:color/darker_gray"-->
+        <LinearLayout
+            android:id="@+id/lin_miniplayer"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
             android:gravity="center_vertical"
-            android:text="Sample Title"
-            android:textColor="@android:color/black"/>
+            android:orientation="horizontal">
 
-        <ImageButton
-            android:id="@+id/btn_rewind"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:background="?attr/selectableItemBackground"
-            android:src="@drawable/ic_player_rewind"/>
+            <ImageView
+                android:id="@+id/img_albumart"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginLeft="5dp"
+                android:scaleType="fitXY"
+                android:src="@drawable/ic_file_mp3" />
 
-        <ImageButton
-            android:id="@+id/btn_play_pause"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:background="?attr/selectableItemBackground"
-            android:src="@drawable/ic_player_play"/>
+            <TextView
+                android:id="@+id/txt_title"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="5dp"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:text="Sample Title"
+                android:textColor="@android:color/black" />
 
-        <ImageButton
-            android:id="@+id/btn_forward"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:background="?attr/selectableItemBackground"
-            android:src="@drawable/ic_player_forward"/>
+            <ImageButton
+                android:id="@+id/btn_rewind"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="?attr/selectableItemBackground"
+                android:src="@drawable/ic_player_rewind" />
 
-        <ImageButton
-            android:id="@+id/btn_close"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:scaleType="fitCenter"
-            android:padding="5dp"
-            android:background="?attr/selectableItemBackground"
-            android:src="@drawable/ic_player_close"/>
+            <ImageButton
+                android:id="@+id/btn_play_pause"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="?attr/selectableItemBackground"
+                android:src="@drawable/ic_player_play" />
 
+            <ImageButton
+                android:id="@+id/btn_forward"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="?attr/selectableItemBackground"
+                android:src="@drawable/ic_player_forward" />
+
+            <ImageButton
+                android:id="@+id/btn_close"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="?attr/selectableItemBackground"
+                android:padding="5dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_player_close" />
+
+        </LinearLayout>
     </LinearLayout>
-</LinearLayout>
+</layout>

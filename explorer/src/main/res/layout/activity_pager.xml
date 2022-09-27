@@ -1,29 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/activity_pager"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/colorBlackBackground"
-    tools:context=".activity.viewer.PagerActivity">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <com.duongame.view.ViewPagerEx
-        android:id="@+id/pager"
+    <FrameLayout
+        android:id="@+id/activity_pager"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:background="@color/colorBlackBackground"
+        tools:context=".activity.viewer.PagerActivity">
 
-    <!--<TextView-->
-    <!--android:layout_gravity="center_horizontal"-->
-    <!--android:layout_width="wrap_content"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:id="@+id/text_path"-->
-    <!--android:textColor="@android:color/holo_orange_dark"-->
-    <!--android:textSize="12dp"-->
-    <!--android:visibility="invisible"-->
-    <!--android:ellipsize="start"/>-->
+        <com.duongame.view.ViewPagerEx
+            android:id="@+id/pager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
 
-    <include layout="@layout/panel_top" />
+        <!--<TextView-->
+        <!--android:layout_gravity="center_horizontal"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:id="@+id/text_path"-->
+        <!--android:textColor="@android:color/holo_orange_dark"-->
+        <!--android:textSize="12dp"-->
+        <!--android:visibility="invisible"-->
+        <!--android:ellipsize="start"/>-->
 
-    <include layout="@layout/panel_bottom" />
+        <include layout="@layout/panel_top" />
 
-</FrameLayout>
+        <include layout="@layout/panel_bottom" />
+
+    </FrameLayout>
+</layout>
