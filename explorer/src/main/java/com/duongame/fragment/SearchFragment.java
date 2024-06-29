@@ -17,7 +17,7 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.duongame.MainApplication;
+import com.duongame.App;
 import com.duongame.R;
 import com.duongame.adapter.ExplorerItem;
 import com.duongame.adapter.SearchRecyclerAdapter;
@@ -74,7 +74,7 @@ public class SearchFragment extends BaseFragment {
                         .setRecursiveDirectory(true)
                         .setExcludeDirectory(true)
                         .setImageListEnable(false)
-                        .search(MainApplication.getInstance(activity).getInitialPath());
+                        .search(App.INSTANCE.getInitialPath());
             } catch (NullPointerException e) {
                 return false;
             }

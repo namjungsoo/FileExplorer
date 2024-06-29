@@ -1,73 +1,73 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
 
     <LinearLayout
-        android:id="@+id/panel_top"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
+        android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:background="@color/colorDivider" />
-
         <LinearLayout
+            android:id="@+id/panel_top"
             android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:orientation="horizontal">
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:orientation="vertical">
 
-            <Switch
-                android:id="@+id/switch_hide"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="5dp"
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:background="@color/colorDivider" />
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
-                android:textStyle="bold"
-                android:textColor="#808080"
-                android:text="@string/hide_completed_file"
-                android:gravity="center_vertical"
-                />
+                android:orientation="horizontal">
 
+                <Switch
+                    android:id="@+id/switch_hide"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="5dp"
+                    android:gravity="center_vertical"
+                    android:text="@string/hide_completed_file"
+                    android:textColor="#808080"
+                    android:textStyle="bold" />
+            </LinearLayout>
 
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:background="@color/colorDivider" />
         </LinearLayout>
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:background="@color/colorDivider" />
-    </LinearLayout>
-
-    <ViewSwitcher
-        android:id="@+id/switcher_contents"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recycler_history"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
-
-        <LinearLayout
+        <ViewSwitcher
+            android:id="@+id/switcher_contents"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <TextView
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recycler_history"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:gravity="center"
-                android:text="@string/no_contents" />
-        </LinearLayout>
+                android:layout_height="match_parent" />
 
-        <!--<ListView-->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:text="@string/no_contents" />
+            </LinearLayout>
+
+            <!--<ListView-->
             <!--android:id="@+id/list_history"-->
             <!--android:layout_width="match_parent"-->
             <!--android:layout_height="match_parent" />-->
 
-    </ViewSwitcher>
-</LinearLayout>
+        </ViewSwitcher>
+    </LinearLayout>
+</layout>

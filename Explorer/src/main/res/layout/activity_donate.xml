@@ -1,50 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_height="match_parent">
 
-        <!-- 정기적 기부 -->
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/setting_item_height"
-            android:layout_marginStart="10dp"
-            android:gravity="center_vertical"
-            android:text="@string/donate_regularly"
-            android:textColor="@color/colorAccent"
-            android:textSize="16sp"
-            android:visibility="gone"
-            android:textStyle="bold" />
-
-        <androidx.recyclerview.widget.RecyclerView
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:visibility="gone"
-            android:id="@+id/list_regularly">
+            android:orientation="vertical">
 
-        </androidx.recyclerview.widget.RecyclerView>
+            <!-- 정기적 기부 -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/setting_item_height"
+                android:layout_marginStart="10dp"
+                android:gravity="center_vertical"
+                android:text="@string/donate_regularly"
+                android:textColor="@color/colorAccent"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:visibility="gone" />
 
-        <!-- 일회성 기부 -->
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/setting_item_height"
-            android:layout_marginStart="10dp"
-            android:gravity="center_vertical"
-            android:text="@string/donate_onetime"
-            android:textColor="@color/colorAccent"
-            android:textSize="16sp"
-            android:textStyle="bold" />
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/list_regularly"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/list_onetime">
+            </androidx.recyclerview.widget.RecyclerView>
 
-        </androidx.recyclerview.widget.RecyclerView>
+            <!-- 일회성 기부 -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/setting_item_height"
+                android:layout_marginStart="10dp"
+                android:gravity="center_vertical"
+                android:text="@string/donate_onetime"
+                android:textColor="@color/colorAccent"
+                android:textSize="16sp"
+                android:textStyle="bold" />
 
-    </LinearLayout>
-</ScrollView>
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/list_onetime"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+            </androidx.recyclerview.widget.RecyclerView>
+
+        </LinearLayout>
+    </ScrollView>
+</layout>

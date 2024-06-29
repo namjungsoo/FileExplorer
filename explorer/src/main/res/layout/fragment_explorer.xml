@@ -1,220 +1,223 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/fragment_explorer"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <LinearLayout
-        android:id="@+id/panel_top"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:orientation="vertical">
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:background="@color/colorDivider" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <ImageButton
-                android:id="@+id/btn_up"
-                style="@style/ExplorerButton"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_marginLeft="4dp"
-                android:paddingBottom="8dp"
-                android:paddingLeft="8dp"
-                android:paddingRight="8dp"
-                android:paddingTop="8dp"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:scaleType="fitXY"
-                android:src="@drawable/ic_menu_back"
-                android:tint="@color/colorPrimary" />
-
-            <ImageButton
-                android:id="@+id/btn_home"
-                style="@style/ExplorerButton"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_marginLeft="-4dp"
-                android:paddingBottom="8dp"
-                android:paddingLeft="8dp"
-                android:paddingRight="8dp"
-                android:paddingTop="8dp"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:scaleType="fitXY"
-                android:src="@drawable/ic_menu_home"
-                android:tint="@color/colorPrimary" />
-
-            <ImageButton
-                android:id="@+id/btn_sdcard"
-                style="@style/ExplorerButton"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_marginLeft="-4dp"
-                android:paddingBottom="8dp"
-                android:paddingLeft="8dp"
-                android:paddingRight="8dp"
-                android:paddingTop="8dp"
-                android:scaleType="fitXY"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:src="@drawable/ic_menu_sdcard"
-                android:tint="@color/colorPrimary"
-                android:visibility="gone" />
-
-            <ImageButton
-                android:id="@+id/btn_dropbox"
-                style="@style/ExplorerButton"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_marginLeft="-4dp"
-                android:paddingBottom="8dp"
-                android:paddingLeft="8dp"
-                android:paddingRight="8dp"
-                android:paddingTop="8dp"
-                android:scaleType="fitXY"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:src="@drawable/ic_dropbox"
-                android:visibility="gone" />
-
-            <ImageButton
-                android:id="@+id/btn_gdrive"
-                style="@style/ExplorerButton"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_marginLeft="-4dp"
-                android:paddingBottom="8dp"
-                android:paddingLeft="8dp"
-                android:paddingRight="8dp"
-                android:paddingTop="8dp"
-                android:scaleType="fitXY"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:src="@drawable/ic_google_drive"
-                android:visibility="gone" />
-
-            <HorizontalScrollView
-                android:id="@+id/scroll_path"
-                android:layout_width="wrap_content"
-                android:layout_height="40dp"
-                android:scrollbars="none">
-
-                <TextView
-                    android:id="@+id/text_path"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_margin="5dp"
-                    android:gravity="center_vertical"
-                    android:textSize="14dp"
-                    android:textStyle="bold" />
-            </HorizontalScrollView>
-
-        </LinearLayout>
-
-        <com.duongame.view.Indicator
-            android:id="@+id/storage_indicator"
-            android:layout_width="match_parent"
-            android:layout_marginTop="-4dp"
-            android:layout_height="4dp" />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:background="@color/colorDivider" />
-    </LinearLayout>
-
-
-    <!-- 컨텐츠를 담는 그릇 -->
-    <ViewSwitcher
-        android:id="@+id/switcher_contents"
+    <RelativeLayout
+        android:id="@+id/fragment_explorer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/panel_top">
+        android:orientation="vertical">
 
-        <!-- Grid와 List 중에서 스위치 -->
-        <ViewSwitcher
-            android:id="@+id/switcher"
+        <LinearLayout
+            android:id="@+id/panel_top"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:orientation="vertical">
 
-            <!--app:layout_behavior="@string/appbar_scrolling_view_behavior"-->
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/list_explorer"
+            <View
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_height="0.5dp"
+                android:background="@color/colorDivider" />
 
-            <!--app:layout_behavior="@string/appbar_scrolling_view_behavior"-->
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/grid_explorer"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:columnWidth="90dp"
-                android:gravity="center"
-                android:numColumns="auto_fit"
-                android:stretchMode="columnWidth" />
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <ImageButton
+                    android:id="@+id/btn_up"
+                    style="@style/ExplorerButton"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_marginLeft="4dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:paddingLeft="8dp"
+                    android:paddingTop="8dp"
+                    android:paddingRight="8dp"
+                    android:paddingBottom="8dp"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/ic_menu_back"
+                    android:tint="@color/colorPrimary" />
+
+                <ImageButton
+                    android:id="@+id/btn_home"
+                    style="@style/ExplorerButton"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_marginLeft="-4dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:paddingLeft="8dp"
+                    android:paddingTop="8dp"
+                    android:paddingRight="8dp"
+                    android:paddingBottom="8dp"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/ic_menu_home"
+                    android:tint="@color/colorPrimary" />
+
+                <ImageButton
+                    android:id="@+id/btn_sdcard"
+                    style="@style/ExplorerButton"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_marginLeft="-4dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:paddingLeft="8dp"
+                    android:paddingTop="8dp"
+                    android:paddingRight="8dp"
+                    android:paddingBottom="8dp"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/ic_menu_sdcard"
+                    android:tint="@color/colorPrimary"
+                    android:visibility="gone" />
+
+                <ImageButton
+                    android:id="@+id/btn_dropbox"
+                    style="@style/ExplorerButton"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_marginLeft="-4dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:paddingLeft="8dp"
+                    android:paddingTop="8dp"
+                    android:paddingRight="8dp"
+                    android:paddingBottom="8dp"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/ic_dropbox"
+                    android:visibility="gone" />
+
+                <ImageButton
+                    android:id="@+id/btn_gdrive"
+                    style="@style/ExplorerButton"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_marginLeft="-4dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:paddingLeft="8dp"
+                    android:paddingTop="8dp"
+                    android:paddingRight="8dp"
+                    android:paddingBottom="8dp"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/ic_google_drive"
+                    android:visibility="gone" />
+
+                <HorizontalScrollView
+                    android:id="@+id/scroll_path"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:scrollbars="none">
+
+                    <TextView
+                        android:id="@+id/text_path"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_margin="5dp"
+                        android:gravity="center_vertical"
+                        android:textSize="14dp"
+                        android:textStyle="bold" />
+                </HorizontalScrollView>
+
+            </LinearLayout>
+
+            <com.duongame.view.Indicator
+                android:id="@+id/storage_indicator"
+                android:layout_width="match_parent"
+                android:layout_height="4dp"
+                android:layout_marginTop="-4dp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:background="@color/colorDivider" />
+        </LinearLayout>
+
+
+        <!-- 컨텐츠를 담는 그릇 -->
+        <ViewSwitcher
+            android:id="@+id/switcher_contents"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/panel_top">
+
+            <!-- Grid와 List 중에서 스위치 -->
+            <ViewSwitcher
+                android:id="@+id/switcher"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <!--app:layout_behavior="@string/appbar_scrolling_view_behavior"-->
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/list_explorer"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+
+                <!--app:layout_behavior="@string/appbar_scrolling_view_behavior"-->
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/grid_explorer"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:columnWidth="90dp"
+                    android:gravity="center"
+                    android:numColumns="auto_fit"
+                    android:stretchMode="columnWidth" />
+
+            </ViewSwitcher>
+
+            <!-- 파일이 없거나 권한이 없거나 파일이 없다. -->
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <Button
+                    android:id="@+id/btn_permission"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="@string/permissions"
+                    android:visibility="gone" />
+
+                <TextView
+                    android:id="@+id/text_no_files"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="@string/no_files"
+                    android:visibility="gone" />
+            </FrameLayout>
 
         </ViewSwitcher>
 
-        <!-- 파일이 없거나 권한이 없거나 파일이 없다. -->
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+        <!--<LinearLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_alignParentBottom="true"-->
+        <!--android:orientation="horizontal">-->
 
-            <Button
-                android:id="@+id/btn_permission"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text="@string/permissions"
-                android:visibility="gone" />
+        <!--<Button-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:text="복사" />-->
 
-            <TextView
-                android:id="@+id/text_no_files"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text="@string/no_files"
-                android:visibility="gone" />
-        </FrameLayout>
+        <!--<Button-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:text="이동" />-->
 
-    </ViewSwitcher>
+        <!--<Button-->
+        <!--android:text="붙이기"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content" />-->
 
-    <!--<LinearLayout-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:layout_alignParentBottom="true"-->
-    <!--android:orientation="horizontal">-->
+        <!--<Button-->
+        <!--android:text="압축"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content" />-->
 
-    <!--<Button-->
-    <!--android:layout_width="wrap_content"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:text="복사" />-->
+        <!--<Button-->
+        <!--android:text="삭제"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content" />-->
 
-    <!--<Button-->
-    <!--android:layout_width="wrap_content"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:text="이동" />-->
+        <!--</LinearLayout>-->
 
-    <!--<Button-->
-    <!--android:text="붙이기"-->
-    <!--android:layout_width="wrap_content"-->
-    <!--android:layout_height="wrap_content" />-->
-
-    <!--<Button-->
-    <!--android:text="압축"-->
-    <!--android:layout_width="wrap_content"-->
-    <!--android:layout_height="wrap_content" />-->
-
-    <!--<Button-->
-    <!--android:text="삭제"-->
-    <!--android:layout_width="wrap_content"-->
-    <!--android:layout_height="wrap_content" />-->
-
-    <!--</LinearLayout>-->
-
-</RelativeLayout>
+    </RelativeLayout>
+</layout>

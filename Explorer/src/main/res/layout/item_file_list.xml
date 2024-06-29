@@ -1,56 +1,59 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="70dp"
-    android:background="?android:attr/selectableItemBackground">
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <LinearLayout
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginBottom="5dp"
-        android:layout_marginStart="9dp"
-        android:layout_marginEnd="9dp"
-        android:layout_marginTop="5dp"
-        android:orientation="horizontal">
+        android:layout_height="70dp"
+        android:background="?android:attr/selectableItemBackground">
 
-        <FrameLayout
-            android:layout_width="65dp"
-            android:layout_height="60dp"
-            android:layout_marginEnd="5dp">
-
-            <ImageView
-                android:id="@+id/file_icon"
-                android:layout_width="60dp"
-                android:layout_height="60dp" />
-
-            <ImageView
-                android:id="@+id/file_small_icon"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_gravity="bottom|end"
-                android:visibility="invisible" />
-        </FrameLayout>
-
-        <!-- 전체 높이 60dp -->
         <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="60dp"
-            android:layout_weight="1"
-            android:orientation="vertical">
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginStart="9dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="9dp"
+            android:layout_marginBottom="5dp"
+            android:orientation="horizontal">
 
-            <TextView
-                android:id="@+id/text_name"
-                android:layout_width="match_parent"
-                android:layout_height="40dp"
+            <FrameLayout
+                android:layout_width="65dp"
+                android:layout_height="60dp"
+                android:layout_marginEnd="5dp">
 
-                android:ellipsize="end"
-                android:maxLines="2"
-                android:singleLine="false"
+                <ImageView
+                    android:id="@+id/file_icon"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp" />
 
-                android:gravity="bottom|start"
-                android:textColor="#000000"
-                android:textSize="14sp" />
+                <ImageView
+                    android:id="@+id/file_small_icon"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_gravity="bottom|end"
+                    android:visibility="invisible" />
+            </FrameLayout>
 
-            <!--<TextView-->
+            <!-- 전체 높이 60dp -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="60dp"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/text_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+
+                    android:ellipsize="end"
+                    android:gravity="bottom|start"
+                    android:maxLines="2"
+
+                    android:singleLine="false"
+                    android:textColor="#000000"
+                    android:textSize="14sp" />
+
+                <!--<TextView-->
                 <!--android:id="@+id/text_path"-->
                 <!--android:layout_width="match_parent"-->
                 <!--android:layout_height="0dp"-->
@@ -59,33 +62,34 @@
                 <!--android:textSize="13sp"-->
                 <!--android:visibility="gone" />-->
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="20dp">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="20dp">
 
-                <TextView
-                    android:id="@+id/text_size"
-                    android:layout_width="0dp"
-                    android:layout_height="20dp"
-                    android:layout_weight="1"
-                    android:gravity="end"
-                    android:textSize="13sp" />
+                    <TextView
+                        android:id="@+id/text_size"
+                        android:layout_width="0dp"
+                        android:layout_height="20dp"
+                        android:layout_weight="1"
+                        android:gravity="end"
+                        android:textSize="13sp" />
 
-                <TextView
-                    android:id="@+id/text_date"
-                    android:layout_width="0dp"
-                    android:layout_height="20dp"
-                    android:layout_weight="2"
-                    android:gravity="end"
-                    android:textSize="13sp" />
+                    <TextView
+                        android:id="@+id/text_date"
+                        android:layout_width="0dp"
+                        android:layout_height="20dp"
+                        android:layout_weight="2"
+                        android:gravity="end"
+                        android:textSize="13sp" />
+                </LinearLayout>
             </LinearLayout>
         </LinearLayout>
-    </LinearLayout>
 
-    <CheckBox
-        android:id="@+id/check_file"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:visibility="invisible" />
+        <CheckBox
+            android:id="@+id/check_file"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="invisible" />
 
-</FrameLayout>
+    </FrameLayout>
+</layout>

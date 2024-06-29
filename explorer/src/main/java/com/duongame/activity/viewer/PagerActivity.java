@@ -14,7 +14,7 @@ import android.widget.TextView;
 import androidx.viewpager.widget.ViewPager;
 
 import com.duongame.BuildConfig;
-import com.duongame.MainApplication;
+import com.duongame.App;
 import com.duongame.R;
 import com.duongame.adapter.ViewerPagerAdapter;
 import com.duongame.bitmap.BitmapCacheManager;
@@ -173,7 +173,7 @@ public class PagerActivity extends BaseViewerActivity {
         // smooth 연산
         boolean smoothScroll = true;
         try {
-            if (MainApplication.getInstance(PagerActivity.this).isPagingAnimationDisabled()) {
+            if (App.INSTANCE.isPagingAnimationDisabled()) {
                 smoothScroll = false;
             }
         } catch (NullPointerException e) {

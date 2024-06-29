@@ -7,7 +7,7 @@ import android.widget.ImageView;
 
 import androidx.viewpager.widget.PagerAdapter;
 
-import com.duongame.MainApplication;
+import com.duongame.App;
 import com.duongame.activity.viewer.PagerActivity;
 
 import java.util.ArrayList;
@@ -63,7 +63,7 @@ public abstract class ViewerPagerAdapter extends PagerAdapter {
                 0, 0, 0, 1, 0});
 
         try {
-            if (MainApplication.getInstance(context).isNightMode()) {
+            if (App.INSTANCE.isNightMode()) {
                 colorMatrix = new ColorMatrix(new float[]{
                         -1, 0, 0, 0, 192,
                         0, -1, 0, 0, 192,

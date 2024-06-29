@@ -38,7 +38,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.dropbox.core.android.Auth;
 import com.dropbox.core.v2.users.FullAccount;
 import com.duongame.BuildConfig;
-import com.duongame.MainApplication;
+import com.duongame.App;
 import com.duongame.R;
 import com.duongame.activity.BaseActivity;
 import com.duongame.activity.SettingsActivity;
@@ -552,7 +552,7 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
 
         if (id == R.id.action_exit) {
             try {
-                MainApplication.getInstance(this).exit(this);
+                App.INSTANCE.exit(this);
                 return true;
             } catch (NullPointerException e) {
 
@@ -722,7 +722,7 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
     void initDrawer() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 
-        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer = (DrawerLayout) findViewById(R.id.drawer);
         if (drawer != null) {
             ActionBarDrawerToggle toggle = new MyActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
 
@@ -859,7 +859,7 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
                 player.seekTo(position);
                 player.start();
             } else {
-                ArrayList<ExplorerItem> audioList = MainApplication.getInstance(this).getAudioList();
+                ArrayList<ExplorerItem> audioList = App.INSTANCE.getAudioList();
                 ExplorerItem item = audioList.get(track);
                 player.reset();
                 player.setDataSource(item.path);
@@ -886,7 +886,7 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
     }
 
     public void forwardAudio() {
-        ArrayList<ExplorerItem> audioList = MainApplication.getInstance(this).getAudioList();
+        ArrayList<ExplorerItem> audioList = App.INSTANCE.getAudioList();
         if (this.track < audioList.size() - 1) {
             position = 0;
             playAudio(this.track + 1);
@@ -1185,12 +1185,12 @@ public abstract class BaseMainActivity extends BaseActivity implements Navigatio
             startActivity(intent);
         } else if (id == R.id.action_exit) {
             try {
-                MainApplication.getInstance(this).exit(this);
+                App.INSTANCE.exit(this);
             } catch (NullPointerException ignored) {
             }
         }
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }

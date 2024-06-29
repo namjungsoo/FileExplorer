@@ -1,69 +1,71 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--    android:layout_gravity="bottom"-->
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/bottom"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_alignParentBottom="true"
-    android:background="@color/colorPrimary"
-    android:orientation="horizontal"
-    app:layout_constraintBottom_toBottomOf="parent"
-    android:visibility="gone">
+<?xml version="1.0" encoding="utf-8"?><!--    android:layout_gravity="bottom"-->
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <ImageButton
-        android:id="@+id/btn_copy"
-        android:layout_width="72dp"
-        android:layout_height="48dp"
-        android:background="?attr/selectableItemBackgroundBorderless"
-        android:padding="8dp"
+    <LinearLayout
+        android:id="@+id/bottom"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@color/colorPrimary"
+        android:orientation="horizontal"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent">
 
-        android:scaleType="fitCenter"
-        android:src="@drawable/btn_copy"
-        android:text="@string/copy" />
+        <ImageButton
+            android:id="@+id/btn_copy"
+            android:layout_width="72dp"
+            android:layout_height="48dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:padding="8dp"
 
-    <ImageButton
-        android:id="@+id/btn_cut"
-        android:layout_width="72dp"
-        android:layout_height="48dp"
-        android:background="?attr/selectableItemBackgroundBorderless"
-        android:padding="8dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/btn_copy"
+            android:text="@string/copy" />
 
-        android:scaleType="fitCenter"
-        android:src="@drawable/btn_cut"
-        android:text="@string/cut" />
+        <ImageButton
+            android:id="@+id/btn_cut"
+            android:layout_width="72dp"
+            android:layout_height="48dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:padding="8dp"
 
-    <ImageButton
-        android:id="@+id/btn_paste"
-        android:layout_width="72dp"
-        android:layout_height="48dp"
-        android:background="?attr/selectableItemBackgroundBorderless"
-        android:padding="8dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/btn_cut"
+            android:text="@string/cut" />
 
-        android:scaleType="fitCenter"
-        android:src="@drawable/btn_paste"
-        android:text="@string/paste" />
+        <ImageButton
+            android:id="@+id/btn_paste"
+            android:layout_width="72dp"
+            android:layout_height="48dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:padding="8dp"
 
-    <!-- zip하는것 밖에 없다. unzip은 zip파일을 그냥 실행시키면 된다. -->
-    <ImageButton
-        android:id="@+id/btn_archive"
-        android:layout_width="72dp"
-        android:layout_height="48dp"
-        android:background="?attr/selectableItemBackgroundBorderless"
-        android:padding="8dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/btn_paste"
+            android:text="@string/paste" />
 
-        android:scaleType="fitCenter"
-        android:src="@drawable/btn_archive"
-        android:text="@string/archive" />
+        <!-- zip하는것 밖에 없다. unzip은 zip파일을 그냥 실행시키면 된다. -->
+        <ImageButton
+            android:id="@+id/btn_archive"
+            android:layout_width="72dp"
+            android:layout_height="48dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:padding="8dp"
 
-    <ImageButton
-        android:id="@+id/btn_delete"
-        android:layout_width="72dp"
-        android:layout_height="48dp"
-        android:background="?attr/selectableItemBackgroundBorderless"
-        android:padding="8dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/btn_archive"
+            android:text="@string/archive" />
 
-        android:scaleType="fitCenter"
-        android:src="@drawable/btn_delete"
-        android:text="@string/delete" />
-</LinearLayout>
+        <ImageButton
+            android:id="@+id/btn_delete"
+            android:layout_width="72dp"
+            android:layout_height="48dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:padding="8dp"
+
+            android:scaleType="fitCenter"
+            android:src="@drawable/btn_delete"
+            android:text="@string/delete" />
+    </LinearLayout>
+</layout>

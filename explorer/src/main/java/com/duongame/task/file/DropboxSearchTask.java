@@ -10,7 +10,7 @@ import com.dropbox.core.v2.files.FileMetadata;
 import com.dropbox.core.v2.files.FolderMetadata;
 import com.dropbox.core.v2.files.ListFolderResult;
 import com.dropbox.core.v2.files.Metadata;
-import com.duongame.MainApplication;
+import com.duongame.App;
 import com.duongame.R;
 import com.duongame.activity.main.BaseMainActivity;
 import com.duongame.adapter.ExplorerItem;
@@ -145,8 +145,8 @@ public class DropboxSearchTask extends AsyncTask<String, Void, FileExplorer.Resu
             //FIX: Index Out of Bound
             // 쓰레드에서 메인쓰레드로 옮김
             fragment.setFileList(result.fileList);
-            MainApplication.getInstance(fragment.getActivity()).setFileList(result.fileList);
-            MainApplication.getInstance(fragment.getActivity()).setImageList(result.imageList);
+            App.INSTANCE.setFileList(result.fileList);
+            App.INSTANCE.setImageList(result.imageList);
             fragment.getAdapter().setFileList(fragment.getFileList());
 
             fragment.getAdapter().notifyDataSetChanged();
@@ -156,7 +156,7 @@ public class DropboxSearchTask extends AsyncTask<String, Void, FileExplorer.Resu
             if (path.length() == 0)
                 path = "/";
 
-            MainApplication.getInstance(fragment.getActivity()).setLastPath(path);
+            App.INSTANCE.setLastPath(path);
             fragment.getTextPath().setText(path);
             fragment.getTextPath().requestLayout();
 
