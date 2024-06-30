@@ -1,13 +1,27 @@
 package com.duongame.activity
 
 import android.os.Bundle
+import android.util.Log
 import android.view.MenuItem
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.android.billingclient.api.*
+import com.android.billingclient.api.BillingClient
+import com.android.billingclient.api.BillingClientStateListener
+import com.android.billingclient.api.BillingFlowParams
+import com.android.billingclient.api.BillingResult
+import com.android.billingclient.api.ConsumeParams
+import com.android.billingclient.api.Purchase
+import com.android.billingclient.api.PurchasesUpdatedListener
+import com.android.billingclient.api.SkuDetails
+import com.android.billingclient.api.SkuDetailsParams
+import com.android.billingclient.api.consumePurchase
+import com.android.billingclient.api.querySkuDetails
 import com.duongame.R
 import com.duongame.adapter.DonateAdapter
-import kotlinx.coroutines.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import timber.log.Timber
 
 class DonateActivity : BaseActivity() {
@@ -51,6 +65,28 @@ class DonateActivity : BaseActivity() {
         }
     }
 
+    fun inAppMessage() {
+        val inAppMessageParams = InAppMessageParams.newBuilder()
+            .addInAppMessageCategoryToShow(InAppMessageParams.InAppMessageCategoryId.TRANSACTIONAL)
+            .build()
+
+        Log.e("Jungsoo", "showInAppMessages call")
+        billingClient.showInAppMessages(this, inAppMessageParams) { inAppMessageResult ->
+            Log.e("Jungsoo", "showInAppMessages callback")
+            if (inAppMessageResult.responseCode == InAppMessageResult.InAppMessageResponseCode.NO_ACTION_NEEDED) {
+                // The flow has finished and there is no action needed from developers.
+                Log.e("Jungsoo", "SUBTEST: NO_ACTION_NEEDED")
+            } else if (inAppMessageResult.responseCode == InAppMessageResult.InAppMessageResponseCode.SUBSCRIPTION_STATUS_UPDATED) {
+                Log.e("Jungsoo", "SUBTEST: SUBSCRIPTION_STATUS_UPDATED")
+                // The subscription status changed. For example, a subscription
+                // has been recovered from a suspend state. Developers should
+                // expect the purchase token to be returned with this response
+                // code and use the purchase token with the Google Play
+                // Developer API.
+            }
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_donate)
@@ -77,6 +113,8 @@ class DonateActivity : BaseActivity() {
                     }
 
                     initRecyclerView()
+
+                    inAppMessage()
                 }
             }
 
@@ -107,6 +145,11 @@ class DonateActivity : BaseActivity() {
             val responseCode = billingClient.launchBillingFlow(this, flowParams).responseCode
             Timber.e("responseCode=$responseCode")
         } else if (subscriptionIds.contains(skuDetails.sku)) {// 구독
+            val flowParams = BillingFlowParams.newBuilder()
+                .setSkuDetails(skuDetails)
+                .build()
+            val responseCode = billingClient.launchBillingFlow(this, flowParams).responseCode
+            Timber.e("responseCode=$responseCode")
         }
     }
 
