@@ -1,7 +1,6 @@
 package com.duongame.activity
 
 import android.os.Bundle
-import android.util.Log
 import android.view.MenuItem
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -65,28 +64,6 @@ class DonateActivity : BaseActivity() {
         }
     }
 
-    fun inAppMessage() {
-        val inAppMessageParams = InAppMessageParams.newBuilder()
-            .addInAppMessageCategoryToShow(InAppMessageParams.InAppMessageCategoryId.TRANSACTIONAL)
-            .build()
-
-        Log.e("Jungsoo", "showInAppMessages call")
-        billingClient.showInAppMessages(this, inAppMessageParams) { inAppMessageResult ->
-            Log.e("Jungsoo", "showInAppMessages callback")
-            if (inAppMessageResult.responseCode == InAppMessageResult.InAppMessageResponseCode.NO_ACTION_NEEDED) {
-                // The flow has finished and there is no action needed from developers.
-                Log.e("Jungsoo", "SUBTEST: NO_ACTION_NEEDED")
-            } else if (inAppMessageResult.responseCode == InAppMessageResult.InAppMessageResponseCode.SUBSCRIPTION_STATUS_UPDATED) {
-                Log.e("Jungsoo", "SUBTEST: SUBSCRIPTION_STATUS_UPDATED")
-                // The subscription status changed. For example, a subscription
-                // has been recovered from a suspend state. Developers should
-                // expect the purchase token to be returned with this response
-                // code and use the purchase token with the Google Play
-                // Developer API.
-            }
-        }
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_donate)
@@ -113,8 +90,6 @@ class DonateActivity : BaseActivity() {
                     }
 
                     initRecyclerView()
-
-                    inAppMessage()
                 }
             }
 
