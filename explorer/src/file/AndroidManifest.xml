@@ -11,7 +11,9 @@
         android:largeHeap="true"
         android:theme="@style/SplashTheme"
         tools:node="merge">
-        <activity android:name=".activity.main.FileActivity">
+        <activity
+            android:name=".activity.main.FileActivity"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />

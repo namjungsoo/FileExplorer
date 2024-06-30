@@ -3,10 +3,11 @@ package com.duongame.adapter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.android.billingclient.api.SkuDetails
 import com.duongame.R
-import kotlinx.android.synthetic.main.item_donate.view.*
 
 class DonateAdapter(private val items: List<SkuDetails>) : RecyclerView.Adapter<DonateAdapter.DonateViewHolder>() {
     var onClick: ((skuDetails: SkuDetails) -> Unit)? = null
@@ -26,8 +27,8 @@ class DonateAdapter(private val items: List<SkuDetails>) : RecyclerView.Adapter<
 
     override fun onBindViewHolder(holder: DonateViewHolder, position: Int) {
         val title = items[position].title.substring(0, items[position].title.indexOf('('))
-        holder.itemView.title.text = title
-        holder.itemView.execute.setOnClickListener {
+        holder.itemView.findViewById<TextView>(R.id.title).text = title
+        holder.itemView.findViewById<Button>(R.id.execute).setOnClickListener {
             onClick?.let { callback ->
                 callback(items[position])
             }

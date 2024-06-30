@@ -4,10 +4,24 @@ import android.os.Bundle
 import android.view.MenuItem
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.android.billingclient.api.*
+import com.android.billingclient.api.BillingClient
+import com.android.billingclient.api.BillingClientStateListener
+import com.android.billingclient.api.BillingFlowParams
+import com.android.billingclient.api.BillingResult
+import com.android.billingclient.api.ConsumeParams
+import com.android.billingclient.api.Purchase
+import com.android.billingclient.api.PurchasesUpdatedListener
+import com.android.billingclient.api.SkuDetails
+import com.android.billingclient.api.SkuDetailsParams
+import com.android.billingclient.api.consumePurchase
+import com.android.billingclient.api.queryPurchasesAsync
+import com.android.billingclient.api.querySkuDetails
 import com.duongame.R
 import com.duongame.adapter.DonateAdapter
-import kotlinx.coroutines.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import timber.log.Timber
 
 class DonateActivity : BaseActivity() {
@@ -68,10 +82,9 @@ class DonateActivity : BaseActivity() {
                     // The BillingClient is ready. You can query purchases here.
                     Timber.e("onBillingSetupFinished")
 
-                    val purchases = billingClient.queryPurchases(BillingClient.SkuType.INAPP).purchasesList
-
                     scope.launch {
-                        purchases?.forEach { purchase ->
+                        val purchases = billingClient.queryPurchasesAsync(BillingClient.SkuType.INAPP).purchasesList
+                        purchases.forEach { purchase ->
                             handlePurchase(purchase)
                         }
                     }

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     package="com.duongame">
 
     <application
@@ -9,32 +8,38 @@
 
         <activity
             android:name=".activity.SettingsActivity"
+            android:exported="false"
             android:theme="@style/AppTheme" />
         <activity
             android:name=".activity.DonateActivity"
+            android:exported="false"
             android:theme="@style/AppTheme" />
 
         <activity
             android:name=".activity.viewer.PhotoActivity"
+            android:exported="false"
             android:theme="@style/ComicViewerTheme" />
         <activity
             android:name=".activity.viewer.ZipActivity"
+            android:exported="false"
             android:theme="@style/ComicViewerTheme" />
         <activity
             android:name=".activity.viewer.TextActivity"
+            android:exported="false"
             android:theme="@style/ComicViewerTheme" />
         <activity
             android:name=".activity.viewer.PdfActivity"
+            android:exported="false"
             android:theme="@style/ComicViewerTheme" />
 
         <activity
             android:name=".activity.viewer.VideoActivity"
+            android:exported="false"
             android:theme="@style/ComicViewerTheme" />
 
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.provider"
-            android:exported="false"
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
@@ -45,6 +50,7 @@
         <activity
             android:name="com.dropbox.core.android.AuthActivity"
             android:configChanges="orientation|keyboard"
+            android:exported="true"
             android:launchMode="singleTask">
             <intent-filter>
 
@@ -93,5 +99,5 @@
     <!-- Android P install apk -->
     <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
 
-    <uses-permission android:name="com.android.vending.BILLING"/>
+    <uses-permission android:name="com.android.vending.BILLING" />
 </manifest>

@@ -10,16 +10,17 @@ import com.google.android.exoplayer2.SimpleExoPlayer
 import com.google.android.exoplayer2.source.ConcatenatingMediaSource
 import com.google.android.exoplayer2.source.MediaSource
 import com.google.android.exoplayer2.source.ProgressiveMediaSource
+import com.google.android.exoplayer2.ui.PlayerView
 import com.google.android.exoplayer2.upstream.DataSource
 import com.google.android.exoplayer2.upstream.DataSpec
 import com.google.android.exoplayer2.upstream.FileDataSource
-import kotlinx.android.synthetic.main.activity_video.*
 import java.io.File
 
 
 class VideoActivity : BaseViewerActivity() {
     private lateinit var player: SimpleExoPlayer
     private var positionMs: Long = 0L // pause/resume을 위해서 설정함
+    private lateinit var exoPlayerView: PlayerView
 
     private fun buildMediaSourceMulti(): ConcatenatingMediaSource {
         val ret = ConcatenatingMediaSource()
@@ -58,6 +59,7 @@ class VideoActivity : BaseViewerActivity() {
         // intent로부터 item받아서 source 처리하기
         val item: ExplorerItem = intent.extras?.get("item") as ExplorerItem
         player = buildPlayer()
+        exoPlayerView = findViewById<PlayerView>(R.id.exoPlayerView)
         exoPlayerView.player = player
 
         val mediaSource = buildMediaSourceMulti()
